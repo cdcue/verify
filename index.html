@@ -12,7 +12,7 @@
 <title>التحقق من الشواهد · Vérification des attestations</title>
 <meta name="description" content="التحقق من صحة الشواهد · Vérification de l'authenticité des attestations · Certificate verification">
 <meta property="og:title" content="التحقق من الشواهد · Vérification des attestations">
-<meta property="og:description" content="Centre de Double Compétence Université-Entreprise">
+<meta property="og:description" content="منصة الشواهد · Plateforme des attestations · Certificates platform">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b3b5c'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' fill='none' stroke='%23d9a441' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -167,7 +167,7 @@
       <label for="s" data-t="serial"></label>
       <div class="field">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-        <input name="s" id="s" placeholder="CDCUE-2026-P0001" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
+        <input name="s" id="s" placeholder="ABC-2026-P0001" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
       </div>
     </div>
     <div class="codefield" id="codebox" hidden>
@@ -198,16 +198,16 @@
 // ---------- settings: the only lines to edit ----------
 // the Apps Script web app (its /exec address): only the data comes from Google, read without any Google account
 const API = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
-// the organization's name in each language, and optionally its logo (a logo.png uploaded next to this file)
-const ORG = {ar: 'مركز الكفاءة المزدوجة بين الجامعة والمقاولة', fr: 'Centre de Double Compétence Université-Entreprise',
-             en: 'Centre of Dual Competence University-Enterprise'};
+// the platform's name in each language (it serves every organizer: each certificate shows its own),
+// and optionally its logo (a logo.png uploaded next to this file)
+const NAME = {ar: 'منصة الشواهد', fr: 'Plateforme des attestations', en: 'Certificates platform'};
 const LOGO = '';  // for example 'logo.png'
 
 const T = {
-  ar: {platform: 'منصة التحقق من الشواهد', title: 'التحقق من صحة شهادة', lead: 'أدخل رقم الشهادة المطبوع عليها، أو امسح رمز QR الموجود فيها، للتأكد من أنها صادرة عن المركز.',
-       serial: 'رقم الشهادة', code: 'رمز التحقق', verify: 'تحقق', hint: 'الرقم مطبوع على الشهادة، مثل CDCUE-2026-P0001.',
-       loading: 'جارٍ التحقق...', okT: 'شهادة صحيحة', okD: 'صادرة عن المركز ومسجلة في سجل الشواهد الرسمي.',
-       lockD: 'هذه الشهادة صادرة عن المركز. لعرض تفاصيلها كاملة وتحميلها: امسح رمز QR الموجود عليها، أو أدخل رمز التحقق.',
+  ar: {platform: 'التحقق من صحة الشواهد وتحميلها', title: 'التحقق من صحة شهادة', lead: 'أدخل رقم الشهادة المطبوع عليها، أو امسح رمز QR الموجود فيها، للتأكد من أنها صادرة فعلاً عن الجهة المذكورة فيها.',
+       serial: 'رقم الشهادة', code: 'رمز التحقق', verify: 'تحقق', hint: 'الرقم مطبوع على الشهادة، مثل ABC-2026-P0001.',
+       loading: 'جارٍ التحقق...', okT: 'شهادة صحيحة', okD: 'صادرة عن الجهة المنظمة المذكورة أدناه ومسجلة في سجل الشواهد الرسمي.',
+       lockD: 'هذه الشهادة صحيحة وصادرة عن الجهة المذكورة أدناه. لعرض تفاصيلها كاملة وتحميلها: امسح رمز QR الموجود عليها، أو أدخل رمز التحقق.',
        revT: 'شهادة ملغاة', revD: 'أُلغيت هذه الشهادة ولم تعد صالحة.', reason: 'سبب الإلغاء',
        noT: 'لا توجد شهادة بهذا الرقم', noD: 'تأكد من كتابة الرقم كما هو مطبوع على الشهادة (الحروف والأرقام والشرطات).',
        errT: 'تعذر الاتصال', errD: 'تحقق من اتصالك بالإنترنت ثم أعد المحاولة.', retry: 'إعادة المحاولة',
@@ -215,12 +215,12 @@ const T = {
        download: 'تحميل الشهادة (PDF)', linkedin: 'أضف إلى LinkedIn', share: 'مشاركة الرابط', print: 'طباعة نتيجة التحقق', copied: 'نُسخ الرابط',
        stampT: 'وثيقة موثقة', stampD: 'تحقق منها في', masked: 'الاسم مخفي جزئياً لحماية صاحب الشهادة.',
        s1: 'امسح رمز QR', s1d: 'بكاميرا الهاتف، يفتح هذه الصفحة مباشرة.', s2: 'أو أدخل الرقم', s2d: 'الرقم المطبوع على الشهادة.',
-       s3: 'تأكد من النتيجة', s3d: 'البيانات تُقرأ مباشرة من السجل الرسمي.', footer: 'منصة الشواهد'},
-  fr: {platform: 'Plateforme de vérification des attestations', title: "Vérifier l'authenticité d'une attestation",
-       lead: "Saisissez le numéro imprimé sur l'attestation ou scannez son code QR pour confirmer qu'elle a bien été délivrée par le Centre.",
-       serial: "Numéro de l'attestation", code: 'Code de vérification', verify: 'Vérifier', hint: "Le numéro figure sur l'attestation, par ex. CDCUE-2026-P0001.",
-       loading: 'Vérification en cours...', okT: 'Attestation authentique', okD: 'Délivrée par le Centre et inscrite au registre officiel des attestations.',
-       lockD: "Cette attestation a bien été délivrée par le Centre. Pour l'afficher en entier et la télécharger : scannez son code QR ou saisissez le code de vérification.",
+       s3: 'تأكد من النتيجة', s3d: 'البيانات تُقرأ مباشرة من السجل الرسمي.', footer: 'البيانات تُقرأ مباشرة من سجل الجهة المصدرة'},
+  fr: {platform: 'Vérification et téléchargement des attestations', title: "Vérifier l'authenticité d'une attestation",
+       lead: "Saisissez le numéro imprimé sur l'attestation ou scannez son code QR pour confirmer qu'elle a bien été délivrée par l'organisme qui y figure.",
+       serial: "Numéro de l'attestation", code: 'Code de vérification', verify: 'Vérifier', hint: "Le numéro figure sur l'attestation, par ex. ABC-2026-P0001.",
+       loading: 'Vérification en cours...', okT: 'Attestation authentique', okD: "Délivrée par l'organisateur indiqué ci-dessous et inscrite au registre officiel des attestations.",
+       lockD: "Cette attestation est authentique et a été délivrée par l'organisateur indiqué ci-dessous. Pour l'afficher en entier et la télécharger : scannez son code QR ou saisissez le code de vérification.",
        revT: 'Attestation annulée', revD: "Cette attestation a été annulée et n'est plus valable.", reason: "Motif de l'annulation",
        noT: 'Aucune attestation avec ce numéro', noD: "Vérifiez que le numéro est saisi exactement comme sur l'attestation (lettres, chiffres et tirets).",
        errT: 'Connexion impossible', errD: 'Vérifiez votre connexion Internet puis réessayez.', retry: 'Réessayer',
@@ -229,11 +229,11 @@ const T = {
        stampT: 'Document vérifié', stampD: 'Vérifié le', masked: 'Nom partiellement masqué pour protéger le titulaire.',
        s1: 'Scannez le code QR', s1d: "Avec l'appareil photo du téléphone : cette page s'ouvre directement.", s2: 'Ou saisissez le numéro',
        s2d: "Le numéro imprimé sur l'attestation.", s3: 'Consultez le résultat', s3d: 'Les données sont lues directement dans le registre officiel.',
-       footer: 'Plateforme des attestations'},
-  en: {platform: 'Certificate verification platform', title: 'Verify a certificate', lead: 'Enter the number printed on the certificate or scan its QR code to confirm it was issued by the Centre.',
-       serial: 'Certificate number', code: 'Verification code', verify: 'Verify', hint: 'The number is printed on the certificate, e.g. CDCUE-2026-P0001.',
-       loading: 'Verifying...', okT: 'Authentic certificate', okD: 'Issued by the Centre and recorded in the official certificate register.',
-       lockD: 'This certificate was issued by the Centre. To see it in full and download it: scan its QR code or enter the verification code.',
+       footer: "Données lues directement dans le registre de l'organisme émetteur"},
+  en: {platform: 'Verify and download certificates', title: 'Verify a certificate', lead: 'Enter the number printed on the certificate or scan its QR code to confirm it was really issued by the organization named on it.',
+       serial: 'Certificate number', code: 'Verification code', verify: 'Verify', hint: 'The number is printed on the certificate, e.g. ABC-2026-P0001.',
+       loading: 'Verifying...', okT: 'Authentic certificate', okD: 'Issued by the organizer shown below and recorded in the official certificate register.',
+       lockD: 'This certificate is authentic and was issued by the organizer shown below. To see it in full and download it: scan its QR code or enter the verification code.',
        revT: 'Revoked certificate', revD: 'This certificate has been revoked and is no longer valid.', reason: 'Reason',
        noT: 'No certificate with this number', noD: 'Check that the number is typed exactly as printed (letters, digits and dashes).',
        errT: 'Connection failed', errD: 'Check your Internet connection and try again.', retry: 'Try again',
@@ -241,7 +241,7 @@ const T = {
        download: 'Download certificate (PDF)', linkedin: 'Add to LinkedIn', share: 'Share link', print: 'Print the result', copied: 'Link copied',
        stampT: 'Verified document', stampD: 'Verified on', masked: "Name partly hidden to protect the holder's privacy.",
        s1: 'Scan the QR code', s1d: 'With the phone camera: it opens this page directly.', s2: 'Or type the number', s2d: 'The number printed on the certificate.',
-       s3: 'Check the result', s3d: 'Data is read directly from the official register.', footer: 'Certificates platform'},
+       s3: 'Check the result', s3d: 'Data is read directly from the official register.', footer: "Data read directly from the issuer's register"},
 };
 const LOCALE = {ar: 'ar-MA-u-nu-latn', fr: 'fr-FR', en: 'en-GB'};
 const ICON = {
@@ -285,9 +285,9 @@ function setLang(l) {
   document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
   document.querySelectorAll('[data-t]').forEach(n => { n.textContent = t[n.dataset.t]; });
   document.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
-  $('org').textContent = $('orgFoot').textContent = ORG[l] || ORG.fr;
+  $('org').textContent = $('orgFoot').textContent = NAME[l];
   $('langField').value = l;
-  document.title = t.platform + ' · ' + (ORG[l] || ORG.fr);
+  document.title = NAME[l] + ' · ' + t.platform;
   if (last) render(last);
 }
 
