@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline';
+  connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; media-src 'self' blob: mediastream:">
+<title>مسح بطاقات الخروج · منصة الشواهد</title>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" crossorigin="anonymous"></script>
+<style>
+  :root { --bg:#0b1f3a; --card:#13294b; --ink:#fff; --muted:#aab6c8; --ok:#12a38a; --warn:#e8a317; --bad:#e5484d; --gold:#c9a227; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI", Tahoma, sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:14px 16px 6px; }
+  h1 { font-size:18px; margin:0; }
+  .muted { color:var(--muted); font-size:13px; }
+  .count { display:flex; gap:10px; padding:8px 16px; }
+  .count div { flex:1; background:var(--card); border-radius:10px; padding:8px 10px; text-align:center; font-size:13px; }
+  .count b { display:block; font-size:26px; color:var(--gold); }
+  #cam { position:relative; margin:8px 16px; border-radius:14px; overflow:hidden; background:#000; aspect-ratio:3/4; display:none; }
+  #cam video { width:100%; height:100%; object-fit:cover; display:block; }
+  #cam .frame { position:absolute; inset:18%; border:3px solid rgba(255,255,255,.75); border-radius:16px; }
+  #flash { position:fixed; inset:0; display:none; align-items:center; justify-content:center; flex-direction:column;
+           text-align:center; padding:24px; font-size:22px; font-weight:700; z-index:5; }
+  #flash .icon { font-size:96px; line-height:1; margin-bottom:10px; }
+  button { display:block; width:calc(100% - 32px); margin:10px 16px; padding:14px; font-size:17px; font-weight:600;
+           border:0; border-radius:12px; background:var(--gold); color:#0b1f3a; text-align:center; font-family:inherit; }
+  button.sec { background:var(--card); color:var(--ink); }
+  .manual { display:flex; gap:8px; margin:6px 16px; }
+  .manual input { flex:1; padding:12px; font-size:17px; border-radius:10px; border:0; direction:ltr; }
+  .manual button { width:auto; margin:0; padding:12px 18px; }
+  #net { margin:6px 16px; padding:8px 12px; border-radius:10px; background:#5a3d06; font-size:14px; display:none; }
+  #denied { margin:30px 16px; padding:16px; border-radius:12px; background:var(--card); line-height:1.8; display:none; }
+  ul { list-style:none; margin:8px 16px 24px; padding:0; }
+  li { background:var(--card); border-radius:10px; padding:10px 12px; margin-bottom:6px; display:flex; gap:10px; align-items:center; }
+  li .s { font-size:20px; }
+  li .t { direction:ltr; color:var(--muted); font-size:13px; margin-inline-start:auto; }
+</style>
+</head>
+<body>
+<header>
+  <h1>مسح بطاقات الخروج</h1>
+  <div class="muted" id="what">جارٍ التحميل...</div>
+</header>
+<div id="denied">هذا الرابط غير صالح أو استُبدل برابط جديد.<br>اطلب من المنظم الرابط الحالي (رمز QR في لوحة النشاط).</div>
+<div id="main">
+  <div class="count"><div><b id="present">–</b>حضور مؤكد</div><div><b id="total">–</b>مسجل</div><div><b id="mine">0</b>مسحتَ الآن</div></div>
+  <div id="net"></div>
+  <button id="start">تشغيل الكاميرا وبدء المسح</button>
+  <div id="cam"><video playsinline muted></video><div class="frame"></div></div>
+  <div class="manual"><input id="manual" inputmode="numeric" placeholder="أو اكتب رقم البطاقة: 12"><button class="sec" id="send">تأكيد</button></div>
+  <ul id="log"></ul>
+</div>
+<div id="flash"><div class="icon"></div><div class="msg"></div></div>
+
+<script>
+  // the Apps Script web app (same /exec address as the verification page); the activity's secret is after "#"
+  const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
+  const TOKEN = decodeURIComponent(location.hash.slice(1));
+  const KEY = 'shawahid-pending-' + TOKEN.slice(0, 8);  // scans kept on this phone while the network is down
+  const $ = id => document.getElementById(id);
+  const video = document.querySelector('video'), flash = $('flash'), canvas = document.createElement('canvas');
+  let busy = false, audio = null, mine = 0, last = {t: '', at: 0};
+  const LOOK = {
+    ok: ['✓', '#12a38a', j => ['تم تأكيد حضور', j.name]],
+    already: ['✓', '#2e6be6', j => ['مؤكد سابقاً في هذه الحصة', j.name]],
+    unregistered: ['!', '#e8a317', j => [`البطاقة ${j.ticket} غير مسجلة في الاستمارة`, 'احتُفظ بها، وتُؤكَّد عند تسجيل صاحبها']],
+    duplicate: ['!', '#e8a317', j => [`البطاقة ${j.ticket} مسجلة باسمين`, 'يُحسم الأمر من لوحة التحكم']],
+    invalid: ['✕', '#e5484d', j => [`الرقم ${j.ticket} غير موجود ضمن البطاقات المطبوعة`, '']],
+    saved: ['⏳', '#5a3d06', j => [`حُفظت البطاقة ${j.ticket} في الهاتف`, 'تُرسل تلقائياً عند عودة الاتصال']],
+  };
+
+  const pending = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } };
+  const setPending = p => { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) {} showNet(); };
+  function showNet() {
+    const n = pending().length;
+    $('net').style.display = n ? 'block' : 'none';
+    $('net').textContent = `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال بالإنترنت`;
+  }
+
+  async function call(body) {  // text/plain keeps the request simple: no preflight, no Google account needed
+    const r = await fetch(EXEC, {method: 'POST', body: JSON.stringify(Object.assign({token: TOKEN}, body)), credentials: 'omit'});
+    return r.json();
+  }
+  function beep(ok) {
+    if (!audio) return;
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.frequency.value = ok ? 880 : 300; g.gain.value = 0.15;
+    o.connect(g); g.connect(audio.destination); o.start(); o.stop(audio.currentTime + (ok ? 0.12 : 0.35));
+  }
+  function counts(j) {
+    if (j.present !== undefined) { $('present').textContent = j.present; $('total').textContent = j.total; }
+  }
+  function show(j) {
+    const [icon, color, text] = LOOK[j.status], [line1, line2] = text(j);
+    flash.style.background = color; flash.querySelector('.icon').textContent = icon;
+    const msg = flash.querySelector('.msg');
+    msg.textContent = line1;  // names come from the public form: text only, never HTML
+    if (line2) { msg.append(document.createElement('br')); msg.append(line2); }
+    flash.style.display = 'flex';
+    const good = j.status === 'ok' || j.status === 'already';
+    beep(good); if (navigator.vibrate) navigator.vibrate(good ? 120 : [80, 60, 80]);
+    setTimeout(() => flash.style.display = 'none', good ? 1100 : 2200);
+    const li = document.createElement('li'), s = document.createElement('span'), n = document.createElement('span'), t = document.createElement('span');
+    s.className = 's'; s.textContent = icon; s.style.color = color;
+    n.textContent = j.name || line1; t.className = 't'; t.textContent = j.ticket;
+    li.append(s, n, t); $('log').prepend(li);
+    if (j.status === 'ok') $('mine').textContent = ++mine;
+    counts(j);
+  }
+
+  async function scan(raw) {
+    const t = String(raw).trim();
+    if (!t || (t === last.t && Date.now() - last.at < 5000)) return;  // the camera sees the same ticket many times
+    last = {t, at: Date.now()};
+    const ticket = (t.toUpperCase().match(/T\d+-\d+/) || [t])[0];
+    try {
+      const j = await call({action: 'scan', ticket: t});
+      if (j.status === 'denied') return denied();
+      if (LOOK[j.status]) show(j);
+    } catch (e) {
+      setPending(pending().concat([t]));
+      show({status: 'saved', ticket});
+    }
+  }
+  async function retry() {  // scans kept during a network cut leave as soon as it is back, oldest first
+    const p = pending();
+    if (!p.length || busy) return;
+    try {
+      const j = await call({action: 'scan', ticket: p[0]});
+      setPending(pending().slice(1));
+      counts(j);
+    } catch (e) { /* still offline */ }
+  }
+  setInterval(retry, 8000);
+
+  function denied() { $('main').style.display = 'none'; $('denied').style.display = 'block'; $('what').textContent = ''; }
+  async function info() {
+    try {
+      const j = await call({action: 'info'});
+      if (j.status === 'denied') return denied();
+      $('what').textContent = `${j.title} · ${j.dates || ''}` + (j.sessions > 1 ? ` · الحصة ${j.session} من ${j.sessions}` : '');
+      counts(j);
+    } catch (e) { $('what').textContent = 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف'; }
+  }
+  if (TOKEN.length < 20) denied(); else { info(); setInterval(info, 20000); showNet(); }
+
+  $('start').onclick = async () => {
+    audio = new (window.AudioContext || window.webkitAudioContext)();
+    try {
+      video.srcObject = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment', width: {ideal: 1280}}, audio: false});
+    } catch (e) { return alert('تعذر تشغيل الكاميرا. اسمح للمتصفح باستعمالها، أو اكتب أرقام البطاقات.'); }
+    await video.play();
+    $('cam').style.display = 'block'; $('start').style.display = 'none';
+    const det = 'BarcodeDetector' in window ? new BarcodeDetector({formats: ['qr_code']}) : null;
+    loop(det);
+  };
+  async function loop(det) {  // Android reads QR codes itself; iPhone through the jsQR library
+    if (!busy && video.readyState >= 2 && flash.style.display !== 'flex') {
+      busy = true;
+      try {
+        let hit = null;
+        if (det) {
+          hit = (await det.detect(video)).map(c => c.rawValue).find(v => /T\d+-\d+/i.test(v));
+        } else if (window.jsQR) {
+          const w = 640, h = Math.round(video.videoHeight * w / video.videoWidth);
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d', {willReadFrequently: true});
+          ctx.drawImage(video, 0, 0, w, h);
+          const code = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, {inversionAttempts: 'dontInvert'});
+          hit = code && /T\d+-\d+/i.test(code.data) ? code.data : null;
+        }
+        if (hit) await scan(hit);
+      } catch (e) {} finally { busy = false; }
+    }
+    setTimeout(() => loop(det), 200);
+  }
+  $('send').onclick = async () => {
+    const v = $('manual').value.trim(); if (!v) return;
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    last = {t: '', at: 0};
+    await scan(v);
+    $('manual').value = '';
+  };
+</script>
+</body>
+</html>
