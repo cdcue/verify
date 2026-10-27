@@ -84,7 +84,6 @@
   .btn:active { transform: translateY(1px); }
   .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
   .btn.ghost { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); }
-  .btn.li { background: #0a66c2; color: #fff; }
   .hint { font-size: 13px; color: var(--muted); margin: 0; }
   @media (min-width: 720px) {
     .search { grid-template-columns: 1fr auto; align-items: end; padding: 24px; }
@@ -207,12 +206,12 @@ const T = {
   ar: {platform: 'التحقق من صحة الشواهد وتحميلها', title: 'التحقق من صحة شهادة', lead: 'أدخل رقم الشهادة المطبوع عليها، أو امسح رمز QR الموجود فيها، للتأكد من أنها صادرة فعلاً عن الجهة المذكورة فيها.',
        serial: 'رقم الشهادة', code: 'رمز التحقق', verify: 'تحقق', hint: 'الرقم مطبوع على الشهادة، مثل ABC-2026-P0001.',
        loading: 'جارٍ التحقق...', okT: 'شهادة صحيحة', okD: 'صادرة عن الجهة المنظمة المذكورة أدناه ومسجلة في سجل الشواهد الرسمي.',
-       lockD: 'هذه الشهادة صحيحة وصادرة عن الجهة المذكورة أدناه. لعرض تفاصيلها كاملة وتحميلها: امسح رمز QR الموجود عليها، أو أدخل رمز التحقق.',
+       lockD: 'هذه الشهادة صحيحة وصادرة عن الجهة المذكورة أدناه. لعرض تفاصيلها كاملة وتحميلها: أدخل رمز التحقق الذي وصل إلى صاحبها في بريده الإلكتروني.',
        revT: 'شهادة ملغاة', revD: 'أُلغيت هذه الشهادة ولم تعد صالحة.', reason: 'سبب الإلغاء',
        noT: 'لا توجد شهادة بهذا الرقم', noD: 'تأكد من كتابة الرقم كما هو مطبوع على الشهادة (الحروف والأرقام والشرطات).',
        errT: 'تعذر الاتصال', errD: 'تحقق من اتصالك بالإنترنت ثم أعد المحاولة.', retry: 'إعادة المحاولة',
        fSerial: 'رقم الشهادة', fName: 'الاسم', fActivity: 'النشاط', fDates: 'التاريخ', fOrg: 'الجهة المنظمة', fType: 'نوع الشهادة', fIssued: 'تاريخ الإصدار',
-       download: 'تحميل الشهادة (PDF)', linkedin: 'أضف إلى LinkedIn', share: 'مشاركة الرابط', print: 'طباعة نتيجة التحقق', copied: 'نُسخ الرابط',
+       download: 'تحميل الشهادة (PDF)', share: 'مشاركة الرابط', print: 'طباعة نتيجة التحقق', copied: 'نُسخ الرابط',
        stampT: 'وثيقة موثقة', stampD: 'تحقق منها في', masked: 'الاسم مخفي جزئياً لحماية صاحب الشهادة.',
        s1: 'امسح رمز QR', s1d: 'بكاميرا الهاتف، يفتح هذه الصفحة مباشرة.', s2: 'أو أدخل الرقم', s2d: 'الرقم المطبوع على الشهادة.',
        s3: 'تأكد من النتيجة', s3d: 'البيانات تُقرأ مباشرة من السجل الرسمي.', footer: 'البيانات تُقرأ مباشرة من سجل الجهة المصدرة'},
@@ -220,12 +219,12 @@ const T = {
        lead: "Saisissez le numéro imprimé sur l'attestation ou scannez son code QR pour confirmer qu'elle a bien été délivrée par l'organisme qui y figure.",
        serial: "Numéro de l'attestation", code: 'Code de vérification', verify: 'Vérifier', hint: "Le numéro figure sur l'attestation, par ex. ABC-2026-P0001.",
        loading: 'Vérification en cours...', okT: 'Attestation authentique', okD: "Délivrée par l'organisateur indiqué ci-dessous et inscrite au registre officiel des attestations.",
-       lockD: "Cette attestation est authentique et a été délivrée par l'organisateur indiqué ci-dessous. Pour l'afficher en entier et la télécharger : scannez son code QR ou saisissez le code de vérification.",
+       lockD: "Cette attestation est authentique et a été délivrée par l'organisateur indiqué ci-dessous. Pour l'afficher en entier et la télécharger : saisissez le code de vérification reçu par son titulaire dans son e-mail.",
        revT: 'Attestation annulée', revD: "Cette attestation a été annulée et n'est plus valable.", reason: "Motif de l'annulation",
        noT: 'Aucune attestation avec ce numéro', noD: "Vérifiez que le numéro est saisi exactement comme sur l'attestation (lettres, chiffres et tirets).",
        errT: 'Connexion impossible', errD: 'Vérifiez votre connexion Internet puis réessayez.', retry: 'Réessayer',
        fSerial: 'Numéro', fName: 'Nom', fActivity: 'Activité', fDates: 'Date', fOrg: 'Organisateur', fType: "Type d'attestation", fIssued: 'Date de délivrance',
-       download: "Télécharger l'attestation (PDF)", linkedin: 'Ajouter à LinkedIn', share: 'Partager le lien', print: 'Imprimer le résultat', copied: 'Lien copié',
+       download: "Télécharger l'attestation (PDF)", share: 'Partager le lien', print: 'Imprimer le résultat', copied: 'Lien copié',
        stampT: 'Document vérifié', stampD: 'Vérifié le', masked: 'Nom partiellement masqué pour protéger le titulaire.',
        s1: 'Scannez le code QR', s1d: "Avec l'appareil photo du téléphone : cette page s'ouvre directement.", s2: 'Ou saisissez le numéro',
        s2d: "Le numéro imprimé sur l'attestation.", s3: 'Consultez le résultat', s3d: 'Les données sont lues directement dans le registre officiel.',
@@ -233,12 +232,12 @@ const T = {
   en: {platform: 'Verify and download certificates', title: 'Verify a certificate', lead: 'Enter the number printed on the certificate or scan its QR code to confirm it was really issued by the organization named on it.',
        serial: 'Certificate number', code: 'Verification code', verify: 'Verify', hint: 'The number is printed on the certificate, e.g. ABC-2026-P0001.',
        loading: 'Verifying...', okT: 'Authentic certificate', okD: 'Issued by the organizer shown below and recorded in the official certificate register.',
-       lockD: 'This certificate is authentic and was issued by the organizer shown below. To see it in full and download it: scan its QR code or enter the verification code.',
+       lockD: 'This certificate is authentic and was issued by the organizer shown below. To see it in full and download it: enter the verification code its holder received by email.',
        revT: 'Revoked certificate', revD: 'This certificate has been revoked and is no longer valid.', reason: 'Reason',
        noT: 'No certificate with this number', noD: 'Check that the number is typed exactly as printed (letters, digits and dashes).',
        errT: 'Connection failed', errD: 'Check your Internet connection and try again.', retry: 'Try again',
        fSerial: 'Number', fName: 'Name', fActivity: 'Activity', fDates: 'Date', fOrg: 'Organizer', fType: 'Certificate type', fIssued: 'Issue date',
-       download: 'Download certificate (PDF)', linkedin: 'Add to LinkedIn', share: 'Share link', print: 'Print the result', copied: 'Link copied',
+       download: 'Download certificate (PDF)', share: 'Share link', print: 'Print the result', copied: 'Link copied',
        stampT: 'Verified document', stampD: 'Verified on', masked: "Name partly hidden to protect the holder's privacy.",
        s1: 'Scan the QR code', s1d: 'With the phone camera: it opens this page directly.', s2: 'Or type the number', s2d: 'The number printed on the certificate.',
        s3: 'Check the result', s3d: 'Data is read directly from the official register.', footer: "Data read directly from the issuer's register"},
@@ -309,13 +308,6 @@ function details(row, full) {
 function pair(label, value, wide) {  // one label over its value; pairs flow in one or two columns
   return el('div', {className: wide ? 'wide' : ''}, el('dt', {textContent: label}), el('dd', {dir: 'auto'}, value));
 }
-function linkedin(row) {
-  const d = new Date(row.issued), here = location.origin + location.pathname;
-  const q = {startTask: 'CERTIFICATION_NAME', name: row.type + ' — ' + row.activity, organizationName: row.org,
-             issueYear: d.getFullYear() || '', issueMonth: (d.getMonth() + 1) || '',
-             certUrl: here + '?s=' + encodeURIComponent(row.serial) + (code ? '&k=' + encodeURIComponent(code) : ''), certId: row.serial};
-  return 'https://www.linkedin.com/profile/add?' + new URLSearchParams(q);
-}
 function shareLink() {
   const url = location.origin + location.pathname + '?s=' + encodeURIComponent(serial) + (code ? '&k=' + encodeURIComponent(code) : '');
   if (navigator.share) return navigator.share({title: T[lang].okT, url}).catch(() => {});
@@ -348,8 +340,7 @@ function render(r) {
   }
   const side = el('div', {className: 'side'});
   if (/^https:\/\//.test(row.link)) side.append(el('a', {className: 'btn', href: row.link, target: '_blank', rel: 'noopener', textContent: t.download}));
-  side.append(el('a', {className: 'btn li', href: linkedin(row), target: '_blank', rel: 'noopener', textContent: t.linkedin}),
-              el('button', {className: 'btn ghost', type: 'button', textContent: t.share, onclick: shareLink}),
+  side.append(el('button', {className: 'btn ghost', type: 'button', textContent: t.share, onclick: shareLink}),
               el('button', {className: 'btn ghost', type: 'button', textContent: t.print, onclick: () => print()}),
               el('div', {className: 'stamp'}, el('b', {textContent: t.stampT}),
                  t.stampD + ' ' + new Intl.DateTimeFormat(LOCALE[lang], {dateStyle: 'medium', timeStyle: 'short'}).format(new Date())));
