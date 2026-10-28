@@ -43,6 +43,8 @@
   .code { font-family:ui-monospace, Consolas, monospace; letter-spacing:2px; font-weight:700; }
   #login { max-width:380px; margin:60px auto; }
   .note { background:var(--warn-soft); color:var(--warn); border-radius:10px; padding:8px 12px; font-size:13px; margin-bottom:12px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  label { display:grid; gap:2px; font-size:13px; color:var(--muted); }
   #toast { position:fixed; bottom:16px; inset-inline:16px; background:#0b1f3a; color:#fff; border-radius:12px; padding:12px 14px; display:none; z-index:5; }
 </style>
 </head>
@@ -132,6 +134,9 @@
       s.onchange = async () => { const r = await call('setsession', {id, s: Number(s.value)}); if (r.status === 'ok') { toast('المسح الآن للحصة ' + r.session + ' في كل الهواتف'); showActivity(id); } };
       head.append(el('div', {className: 'bar', style: 'margin-top:10px'}, el('span', {className: 'muted', textContent: 'الحصة الجارية (للمسح والتأكيد):'}), s));
     }
+    const addBtn = el('button', {className: 'act sec', textContent: '+ إضافة مشارك', style: 'margin-top:10px'});
+    addBtn.onclick = () => addBtn.replaceWith(personForm(a, null, () => head.querySelector('form').replaceWith(addBtn)));
+    head.append(addBtn);
     const draw = () => {
       const s = q.value.trim().toLowerCase();
       const keep = {all: () => true, here, away: p => !here(p), issued: p => p.serial, mail: p => p.mail && p.mail.status === 'error'}[f.value];
@@ -140,7 +145,7 @@
     };
     q.oninput = draw; f.onchange = draw;
     app.replaceChildren(head,
-      el('div', {className: 'note', textContent: `البيانات كما في آخر مزامنة للمنصة (${fmtDate(a.updated) || '—'}). ما تؤكده هنا يُحسب فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`}),
+      el('div', {className: 'note', textContent: `البيانات كما في آخر مزامنة للمنصة (${fmtDate(a.updated) || '—'}). ما تؤكده أو تعدّله هنا يظهر فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`}),
       el('div', {className: 'bar', style: 'margin-bottom:10px'}, el('div', {style: 'flex:2;min-width:200px'}, q), el('div', {style: 'flex:1;min-width:140px'}, f)),
       listBox);
     draw();
@@ -154,6 +159,7 @@
     card.append(el('div', {className: 'top'}, el('b', {textContent: p.name || p.name_ar || p.name_lat}),
       p.ticket ? el('span', {className: 'muted ltr', textContent: p.ticket}) : el('span', {className: 'badge', textContent: 'دون بطاقة'})));
     const tags = el('div', {className: 'bar'});
+    if (p.pending) tags.append(el('span', {className: 'badge warn', textContent: 'تعديل ينتظر المزامنة'}));
     tags.append(here(p) ? el('span', {className: 'badge ok', textContent: a.sessions > 1 ? `حاضر في الحصة ${a.session}` : 'حاضر'})
                         : el('span', {className: 'badge', textContent: 'غير مؤكد'}));
     if (a.sessions > 1 && att.length) tags.append(el('span', {className: 'muted', textContent: 'الحصص: ' + att.join('، ')}));
@@ -191,8 +197,57 @@
       };
       acts.append(b);
     }
-    if (acts.children.length) card.append(acts);
+    const edit = el('button', {className: 'act sec', textContent: '✎ تعديل'});
+    edit.onclick = () => card.replaceWith(personForm(a, p, () => showActivity(a.id)));
+    if (p.uid) acts.append(edit);
+    if (!p.serial) {  // a certificate's holder stays: its number is public
+      const del = el('button', {className: 'act sec', textContent: 'حذف', style: 'color:var(--err)'});
+      del.onclick = async () => {
+        if (!confirm('حذف ' + (p.name || p.name_ar || p.name_lat) + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)')) return;
+        del.disabled = true;
+        const r = await call('edit', {id: a.id, op: 'delete', uid: p.uid});
+        if (r.status === 'ok') { toast('حُذف، ويصل الحذف إلى المنصة عند المزامنة'); showActivity(a.id); } else del.disabled = false;
+      };
+      if (p.uid) acts.append(del);
+    }
+    card.append(acts);
     return card;
+  }
+
+  // add (p null) or correct a person; the app applies it at its next sync, like the same action on the computer
+  function personForm(a, p, close) {
+    const v = p || {}, inputs = {};
+    const field = (k, label, props) => el('label', null, label, inputs[k] = el('input', Object.assign({value: v[k] || ''}, props)));
+    const gender = inputs.gender = el('select', null, ...[['', '—'], ['m', 'ذكر'], ['f', 'أنثى']]
+      .map(([x, t]) => el('option', {value: x, textContent: t, selected: (v.gender || '') === x})));
+    const types = a.types && a.types.length ? a.types : [v.type].filter(Boolean);
+    const type = inputs.type = el('select', {disabled: !!v.serial}, ...types.map(t => el('option', {value: t, textContent: t, selected: v.type === t})));
+    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
+    const save = el('button', {className: 'act', type: 'submit', textContent: p ? 'حفظ التصحيح' : 'إضافة'});
+    const cancel = el('button', {className: 'act sec', type: 'button', textContent: 'إلغاء', onclick: close});
+    const form = el('form', {className: 'card person'}, el('h2', {textContent: p ? 'تصحيح: ' + (v.name || v.name_ar || v.name_lat) : 'مشارك جديد (دون بطاقة)'}),
+      el('div', {className: 'grid2'}, field('first_ar', 'الاسم الشخصي بالعربية'), field('last_ar', 'الاسم العائلي بالعربية'),
+        field('first_lat', 'Prénom', {dir: 'ltr'}), field('last_lat', 'Nom', {dir: 'ltr'})),
+      el('div', {className: 'grid2'}, el('label', null, 'الجنس', gender), el('label', null, 'نوع الشهادة', type)),
+      el('div', {className: 'grid2'}, field('email', 'البريد', {type: 'email', dir: 'ltr'}), field('phone', 'الهاتف', {type: 'tel', dir: 'ltr'})),
+      field('mention', 'الميزة/النتيجة'),
+      v.serial ? el('p', {className: 'muted', textContent: 'له شهادة: تُعاد بالرقم والرابط نفسيهما عند المزامنة.'}) : null,
+      el('div', {className: 'bar'}, save, cancel), err);
+    form.onsubmit = async e => {
+      e.preventDefault();
+      const data = {};
+      // only what changed: a sheet the app has not rewritten yet shows some boxes empty, and they must not erase anything
+      Object.entries(inputs).forEach(([k, x]) => { if (!x.disabled && (!p || x.value.trim() !== String(v[k] || ''))) data[k] = x.value.trim(); });
+      if (p && !Object.keys(data).length) return close();
+      save.disabled = true;
+      try {
+        const r = await call('edit', p ? {id: a.id, op: 'edit', uid: p.uid, data} : {id: a.id, op: 'add', data});
+        if (r.status === 'ok') { toast(p ? 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة' : 'أُضيف، ويصل إلى المنصة عند المزامنة'); return showActivity(a.id); }
+        err.textContent = {noname: 'اكتب الاسم على الأقل', email: 'البريد غير صحيح'}[r.status] || 'تعذر الحفظ';
+      } catch (x) { /* toast shown */ }
+      save.disabled = false;
+    };
+    return form;
   }
 
   function route() {
