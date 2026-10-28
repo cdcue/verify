@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline';
+  connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; form-action 'none'">
+<title>لوحة المنظمين · منصة الشواهد</title>
+<style>
+  :root { --bg:#f3f5f8; --surface:#fff; --ink:#13202e; --muted:#5d6b7a; --line:#e2e7ee; --brand:#0b3b5c; --gold:#c8962f;
+          --ok:#12804a; --ok-soft:#e8f6ee; --warn:#a05a00; --warn-soft:#fff4e2; --err:#b42318; --err-soft:#fdecea; --pri:#1d4ed8; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg:#0d141c; --surface:#141e29; --ink:#e8eef4; --muted:#9aa8b6; --line:#24323f; --brand:#6fb3e4; --gold:#e2b65a;
+    --ok:#4cc48a; --ok-soft:#12291f; --warn:#f0b35a; --warn-soft:#2d2313; --err:#f2867c; --err-soft:#2e1716; --pri:#8cc4ec; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 "Segoe UI", Tahoma, sans-serif; }
+  header { background:#0b1f3a; color:#fff; padding:12px 16px; display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:3; }
+  header b { font-size:17px; flex:1; }
+  header button { background:transparent; color:#cbd5e1; border:1px solid #3b4b63; border-radius:8px; padding:4px 10px; font:inherit; font-size:13px; }
+  main { max-width:900px; margin:0 auto; padding:14px 16px 40px; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:12px; }
+  a.card { display:block; color:inherit; text-decoration:none; }
+  h1 { font-size:20px; margin:0 0 4px; } h2 { font-size:17px; margin:0 0 4px; }
+  .muted { color:var(--muted); font-size:13px; }
+  .nums { display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-top:10px; }
+  .nums div { background:var(--bg); border-radius:10px; padding:6px; text-align:center; font-size:12px; color:var(--muted); }
+  .nums b { display:block; font-size:19px; color:var(--ink); }
+  .badge { display:inline-block; padding:1px 8px; border-radius:20px; font-size:12px; font-weight:600; background:var(--bg); color:var(--muted); margin:2px 0; }
+  .badge.ok { background:var(--ok-soft); color:var(--ok); } .badge.warn { background:var(--warn-soft); color:var(--warn); }
+  .badge.err { background:var(--err-soft); color:var(--err); }
+  input, select { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font:inherit; background:var(--surface); color:var(--ink); }
+  button.act { background:var(--pri); color:#fff; border:0; border-radius:9px; padding:7px 12px; font:inherit; font-size:14px; font-weight:600; cursor:pointer; }
+  button.act.sec { background:var(--bg); color:var(--ink); border:1px solid var(--line); }
+  button:disabled { opacity:.5; }
+  .bar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .person { display:grid; gap:4px; }
+  .person .top { display:flex; gap:8px; align-items:baseline; }
+  .person .top b { flex:1; }
+  .ltr { direction:ltr; unicode-bidi:embed; }
+  .code { font-family:ui-monospace, Consolas, monospace; letter-spacing:2px; font-weight:700; }
+  #login { max-width:380px; margin:60px auto; }
+  .note { background:var(--warn-soft); color:var(--warn); border-radius:10px; padding:8px 12px; font-size:13px; margin-bottom:12px; }
+  #toast { position:fixed; bottom:16px; inset-inline:16px; background:#0b1f3a; color:#fff; border-radius:12px; padding:12px 14px; display:none; z-index:5; }
+</style>
+</head>
+<body>
+<header><b>لوحة المنظمين · منصة الشواهد</b><button id="back" hidden>→ الأنشطة</button><button id="out" hidden>خروج</button></header>
+<main id="app"></main>
+<div id="toast"></div>
+<script>
+  const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
+  const app = document.getElementById('app'), KEY = 'shawahid-dashboard';
+  let session = (() => { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } })();
+  const remember = s => { session = s; try { s ? localStorage.setItem(KEY, s) : localStorage.removeItem(KEY); } catch (e) {} };
+  // every value comes from the registration form or the sheets: text nodes only, never HTML
+  function el(tag, props, ...kids) {
+    const n = Object.assign(document.createElement(tag), props || {});
+    kids.flat().forEach(k => k != null && k !== false && n.append(k instanceof Node ? k : String(k)));
+    return n;
+  }
+  function toast(msg) {
+    const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block';
+    clearTimeout(t.h); t.h = setTimeout(() => t.style.display = 'none', 3500);
+  }
+  async function call(action, extra) {
+    let j;
+    try {
+      const r = await fetch(EXEC, {method: 'POST', credentials: 'omit', body: JSON.stringify(Object.assign({action, session}, extra))});
+      j = await r.json();
+    } catch (e) { toast('تعذر الاتصال بالإنترنت أو بـ Google — أعد المحاولة'); throw e; }
+    if (j.status === 'login') { remember(''); showLogin(); throw new Error('login'); }
+    return j;
+  }
+  const fmtDate = s => { const d = new Date(s); return isNaN(d) ? '' : d.toLocaleString('ar-MA', {dateStyle: 'medium', timeStyle: 'short'}); };
+
+  function showLogin(msg) {
+    document.getElementById('out').hidden = document.getElementById('back').hidden = true;
+    const pw = el('input', {type: 'password', placeholder: 'كلمة السر', autocomplete: 'current-password'});
+    const err = el('p', {className: 'muted', textContent: msg || ''});
+    const go = el('button', {className: 'act', textContent: 'دخول', style: 'width:100%;margin-top:10px;padding:11px'});
+    const submit = async () => {
+      go.disabled = true;
+      try {
+        const j = await call('login', {password: pw.value});
+        if (j.status === 'ok') { remember(j.session); return route(); }
+        err.textContent = {wrong: 'كلمة السر غير صحيحة', locked: 'محاولات خاطئة كثيرة: أعد المحاولة بعد 15 دقيقة',
+                           nopassword: 'لم تُضبط كلمة السر بعد (الإعدادات في المنصة على الحاسوب)'}[j.status] || 'تعذر الدخول';
+      } catch (e) { /* toast shown */ } finally { go.disabled = false; }
+    };
+    go.onclick = submit; pw.onkeydown = e => { if (e.key === 'Enter') submit(); };
+    app.replaceChildren(el('div', {className: 'card', id: 'login'}, el('h1', {textContent: 'دخول المنظمين'}),
+      el('p', {className: 'muted', textContent: 'الأنشطة والمشاركون والحضور والشواهد، من أي هاتف.'}), pw, go, err));
+    pw.focus();
+  }
+
+  async function showList() {
+    document.getElementById('back').hidden = true; document.getElementById('out').hidden = false;
+    app.replaceChildren(el('p', {className: 'muted', textContent: 'جارٍ التحميل...'}));
+    const j = await call('activities');
+    const cards = j.activities.sort((x, y) => Number(y.id) - Number(x.id)).map(a => el('a', {className: 'card', href: '#a' + a.id},
+      el('div', {className: 'bar'}, el('span', {className: 'badge', textContent: a.kind || 'نشاط'}), el('span', {className: 'muted', textContent: a.org})),
+      el('h2', {textContent: a.title}),
+      el('div', {className: 'muted', textContent: (a.dates || '') + (a.sessions > 1 ? ` · ${a.sessions} حصص، المسح الآن للحصة ${a.session}` : '')}),
+      el('div', {className: 'nums'}, ...[['مسجل', a.registered], ['حاضر', a.present], ['شهادة', a.issued], ['بريد', a.emailed]]
+        .map(([k, v]) => el('div', null, el('b', {textContent: v || 0}), k)))));
+    app.replaceChildren(el('h1', {textContent: 'الأنشطة'}),
+      ...(cards.length ? cards : [el('p', {className: 'muted', textContent: 'لا أنشطة منشورة بعد: اضبط كلمة السر في المنصة على الحاسوب ثم زامن نشاطاً.'})]));
+  }
+
+  async function showActivity(id) {
+    document.getElementById('back').hidden = false; document.getElementById('out').hidden = false;
+    app.replaceChildren(el('p', {className: 'muted', textContent: 'جارٍ التحميل...'}));
+    const j = await call('activity', {id});
+    if (j.status !== 'ok') return showList();
+    const a = j.activity, people = j.people;
+    // present now: recorded by the app (its sessions, or "present" for a one-session activity) or by a phone since
+    const here = p => sessionsOf(p).includes(a.session) || (a.sessions === 1 && Number(p.present) === 1);
+    const q = el('input', {type: 'search', placeholder: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...'});
+    const f = el('select', null, ...[['all', 'الكل'], ['here', `حاضرون${a.sessions > 1 ? ' في الحصة ' + a.session : ''}`], ['away', 'غير مؤكدين'],
+      ['issued', 'لهم شهادة'], ['mail', 'مشكلة في البريد']].map(([v, t]) => el('option', {value: v, textContent: t})));
+    const listBox = el('div');
+    const head = el('div', {className: 'card'}, el('h1', {textContent: a.title}),
+      el('div', {className: 'muted', textContent: [a.org, a.dates].filter(Boolean).join(' · ')}),
+      el('div', {className: 'nums'}, ...[['مسجل', people.length], ['حاضر الآن', people.filter(here).length],
+        ['شهادة', people.filter(p => p.serial).length], ['بريد', people.filter(p => Number(p.emailed) === 1).length]]
+        .map(([k, v]) => el('div', null, el('b', {textContent: v}), k))));
+    if (a.sessions > 1) {
+      const s = el('select', {style: 'width:auto'}, ...Array.from({length: a.sessions}, (_, i) => el('option', {value: i + 1, textContent: 'الحصة ' + (i + 1), selected: i + 1 === a.session})));
+      s.onchange = async () => { const r = await call('setsession', {id, s: Number(s.value)}); if (r.status === 'ok') { toast('المسح الآن للحصة ' + r.session + ' في كل الهواتف'); showActivity(id); } };
+      head.append(el('div', {className: 'bar', style: 'margin-top:10px'}, el('span', {className: 'muted', textContent: 'الحصة الجارية (للمسح والتأكيد):'}), s));
+    }
+    const draw = () => {
+      const s = q.value.trim().toLowerCase();
+      const keep = {all: () => true, here, away: p => !here(p), issued: p => p.serial, mail: p => p.mail && p.mail.status === 'error'}[f.value];
+      const shown = people.filter(p => keep(p) && (!s || [p.name, p.name_ar, p.name_lat, p.ticket, p.serial, p.email, p.phone].join(' ').toLowerCase().includes(s)));
+      listBox.replaceChildren(el('p', {className: 'muted', textContent: `${shown.length} من ${people.length}`}), ...shown.map(p => personCard(a, p, here)));
+    };
+    q.oninput = draw; f.onchange = draw;
+    app.replaceChildren(head,
+      el('div', {className: 'note', textContent: `البيانات كما في آخر مزامنة للمنصة (${fmtDate(a.updated) || '—'}). ما تؤكده هنا يُحسب فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`}),
+      el('div', {className: 'bar', style: 'margin-bottom:10px'}, el('div', {style: 'flex:2;min-width:200px'}, q), el('div', {style: 'flex:1;min-width:140px'}, f)),
+      listBox);
+    draw();
+  }
+
+  const sessionsOf = p => [...new Set(String(p.attended || '').split(',').filter(Boolean).map(Number).concat(p.phone_scans))].sort();
+
+  function personCard(a, p, here) {
+    const card = el('div', {className: 'card person'});
+    const att = sessionsOf(p);
+    card.append(el('div', {className: 'top'}, el('b', {textContent: p.name || p.name_ar || p.name_lat}),
+      p.ticket ? el('span', {className: 'muted ltr', textContent: p.ticket}) : el('span', {className: 'badge', textContent: 'دون بطاقة'})));
+    const tags = el('div', {className: 'bar'});
+    tags.append(here(p) ? el('span', {className: 'badge ok', textContent: a.sessions > 1 ? `حاضر في الحصة ${a.session}` : 'حاضر'})
+                        : el('span', {className: 'badge', textContent: 'غير مؤكد'}));
+    if (a.sessions > 1 && att.length) tags.append(el('span', {className: 'muted', textContent: 'الحصص: ' + att.join('، ')}));
+    if (p.type) tags.append(el('span', {className: 'badge', textContent: 'شهادة ' + p.type}));
+    card.append(tags);
+    if (p.serial) {
+      card.append(el('div', {className: 'bar'}, el('span', {className: 'ltr', textContent: p.serial}),
+        p.revoked ? el('span', {className: 'badge err', textContent: 'ملغاة'}) : [
+          p.code ? el('span', null, 'رمز التحقق: ', el('span', {className: 'code ltr', textContent: p.code})) : null,
+          /^https:\/\//.test(p.link) ? el('a', {href: p.link, target: '_blank', rel: 'noopener', textContent: 'تحميل'}) : null]));
+    }
+    const contact = [p.email, p.phone].filter(Boolean).join(' · ');
+    if (contact) card.append(el('div', {className: 'muted ltr', style: 'text-align:right', textContent: contact}));
+    if (p.mail) card.append(el('div', null, el('span', {className: 'badge ' + ({sent: 'ok', error: 'err', pending: 'warn'}[p.mail.status] || ''),
+      textContent: {sent: '✉ أُرسل البريد', error: '✉ تعذر الإرسال', pending: '✉ في الطابور', cancelled: '✉ أُوقف'}[p.mail.status] || p.mail.status}),
+      p.mail.error ? el('span', {className: 'muted', textContent: ' ' + p.mail.error}) : null));
+    const acts = el('div', {className: 'bar'});
+    if (!here(p) && (p.ticket || p.uid)) {
+      const b = el('button', {className: 'act', textContent: a.sessions > 1 ? `✓ حاضر في الحصة ${a.session}` : '✓ تأكيد الحضور'});
+      b.onclick = async () => {
+        b.disabled = true;
+        const r = await call('mark', p.ticket ? {id: a.id, ticket: p.ticket} : {id: a.id, uid: p.uid});
+        if (r.status === 'ok') { p.phone_scans.push(r.session); toast('سُجّل الحضور، ويصل إلى المنصة عند المزامنة'); card.replaceWith(personCard(a, p, here)); }
+        else b.disabled = false;
+      };
+      acts.append(b);
+    }
+    if (p.serial && !p.revoked && p.mail && p.mail.resendable) {
+      const b = el('button', {className: 'act sec', textContent: '↻ إعادة إرسال البريد'});
+      b.onclick = async () => {
+        if (!confirm('إعادة إرسال رسالة الشهادة نفسها إلى ' + p.email + '؟')) return;
+        b.disabled = true;
+        const r = await call('resend', {id: a.id, pid: p.pid});
+        toast(r.status === 'ok' ? 'وُضعت الرسالة في طابور الإرسال' : 'نص الرسالة لم يعد محفوظاً (أقدم من 30 يوماً): أعد الإرسال من المنصة');
+      };
+      acts.append(b);
+    }
+    if (acts.children.length) card.append(acts);
+    return card;
+  }
+
+  function route() {
+    if (!session) return showLogin();
+    const m = location.hash.match(/^#a(\d+)$/);
+    (m ? showActivity(m[1]) : showList()).catch(() => {});
+  }
+  document.getElementById('back').onclick = () => { location.hash = ''; };
+  document.getElementById('out').onclick = async () => { try { await call('logout'); } catch (e) {} remember(''); location.hash = ''; showLogin(); };
+  addEventListener('hashchange', route);
+  route();
+</script>
+</body>
+</html>
