@@ -49,6 +49,8 @@
   label { display:grid; gap:2px; font-size:13px; color:var(--muted); }
   .link { display:flex; gap:6px; align-items:center; background:var(--bg); border-radius:10px; padding:6px 10px; margin:6px 0; }
   .link span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; }
+  label.pick { display:flex; gap:8px; align-items:center; color:var(--ink); font-size:14px; border-top:1px solid var(--line); padding:7px 0; }
+  label.pick input { width:auto; }
   .job { display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; border-top:1px solid var(--line); padding-top:6px; margin-top:6px; font-size:14px; }
   .pc { font-size:13px; margin-bottom:12px; }
   ul.pconly { margin:6px 0 0; padding-inline-start:18px; color:var(--muted); font-size:14px; }
@@ -65,7 +67,7 @@
   const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
   const app = document.getElementById('app'), KEY = 'shawahid-dashboard';
   const ROLE = {scanner: 1, organizer: 2, admin: 3}, ROLE_NAME = {scanner: 'ماسح', organizer: 'منظم', admin: 'مسؤول'};
-  const JOB = {sync: 'مزامنة', issue: 'إصدار الشواهد', email: 'إرسال الشواهد بالبريد', activity: 'نشاط جديد', update: 'تعديل النشاط'};
+  const JOB = {sync: 'مزامنة', issue: 'إصدار الشواهد', email: 'إرسال الشواهد بالبريد', activity: 'نشاط جديد', update: 'تعديل النشاط', bundle: 'شواهد لشخص في عدة أنشطة'};
   let session = (() => { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } })();
   let me = null;  // the signed-in account, as the Apps Script sees it on each answer
   const remember = s => { session = s; try { s ? localStorage.setItem(KEY, s) : localStorage.removeItem(KEY); } catch (e) {} };
@@ -171,8 +173,10 @@
     const top = [el('h1', {textContent: 'الأنشطة'})];
     if (can('organizer')) {
       top.push(pcLine(j.pc));
-      const add = btn('+ نشاط جديد', () => add.replaceWith(activityForm(j.choices, null, () => showList())));
-      top.push(el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {style: 'flex:1;margin:0', textContent: 'طلبات للحاسوب'}), add),
+      const box = el('div');
+      const add = btn('+ نشاط جديد', () => box.replaceChildren(activityForm(j.choices, null, () => showList())));
+      const many = btn('+ شواهد لشخص', () => box.replaceChildren(bundleForm(j.choices, acts, () => showList())), true);
+      top.push(el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {style: 'flex:1;margin:0', textContent: 'طلبات للحاسوب'}), add, many), box,
         jobList(j.jobs) || el('p', {className: 'muted', style: 'margin:4px 0 0', textContent: 'أنشئ نشاطاً من هنا: تُنشأ استمارته وجدوله على الحاسوب، ثم يظهر في هذه اللائحة.'})));
     }
     top.push(el('div', {className: 'card'}, el('h2', {textContent: 'الإجمالي'}),
@@ -227,6 +231,51 @@
         const r = await call('request', a ? {id: a.id, kind: 'update', data} : {kind: 'activity', data});
         if (r.status === 'ok') { toast('أُرسل الطلب، ويُنفَّذ على الحاسوب'); return close(); }
         err.textContent = {notitle: 'اكتب العنوان', exists: 'تعديل سابق ما زال ينتظر الحاسوب'}[r.status] || 'تعذر إرسال الطلب';
+      } catch (x) { /* toast shown */ }
+      save.disabled = false;
+    };
+    return form;
+  }
+
+  // one person (an organizer, a speaker...) given certificates in several past activities at once, then one message
+  function bundleForm(ch, acts, close) {
+    if (!ch) return activityForm(ch);
+    const inputs = {}, picked = new Set();
+    const fld = (k, label, props) => { const [l, i] = field(label, props); inputs[k] = i; return l; };
+    inputs.gender = select([['m', 'ذكر'], ['f', 'أنثى'], ['', '—']], 'm');
+    inputs.type = select(ch.types.map(t => [t, t]), ch.types[0]);
+    const list = el('div');
+    const draw = () => list.replaceChildren(...acts.map(a => {
+      // an app from before 1.8 does not publish its designs: the app itself then says which activity has none
+      const ok = !ch.designs || (ch.designs[a.id] || []).includes(inputs.type.value);
+      if (!ok) picked.delete(a.id);
+      const box = el('input', {type: 'checkbox', checked: picked.has(a.id), disabled: !ok,
+        onchange: () => { box.checked ? picked.add(a.id) : picked.delete(a.id); }});
+      return el('label', {className: 'pick', style: ok ? '' : 'opacity:.5'}, box,
+        el('span', null, el('b', {textContent: a.title}), ' ', el('span', {className: 'muted', textContent: (a.dates || '') + (ok ? '' : ' — لا تصميم لهذا النوع')})));
+    }));
+    inputs.type.onchange = draw; draw();
+    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
+    const save = el('button', {className: 'act', type: 'submit', textContent: 'طلب إنشاء الشواهد وإرسالها'});
+    const form = el('form', {className: 'card person'}, el('h2', {textContent: 'شواهد لشخص في عدة أنشطة'}),
+      el('p', {className: 'muted', style: 'margin-top:0', textContent: 'يُضاف إلى كل نشاط تختاره حاضراً، وتصدر شهادته برقم ذلك النشاط وتصميمه، ثم تصله رسالة واحدة بكل شواهده. إن كان مسجلاً فيه بالبريد نفسه فلا يُكرَّر.'}),
+      el('div', {className: 'grid2'}, fld('first_ar', 'الاسم الشخصي بالعربية'), fld('last_ar', 'الاسم العائلي بالعربية'),
+        fld('first_lat', 'Prénom', {dir: 'ltr'}), fld('last_lat', 'Nom', {dir: 'ltr'})),
+      el('div', {className: 'grid2'}, el('label', null, 'الجنس', inputs.gender), el('label', null, 'نوع الشهادة', inputs.type)),
+      el('div', {className: 'grid2'}, fld('email', 'البريد (تصله عليه الرسالة)', {type: 'email', dir: 'ltr'}), fld('phone', 'الهاتف', {type: 'tel', dir: 'ltr'})),
+      fld('mention', 'الميزة/النتيجة (إن كانت في التصميم)'),
+      el('h2', {style: 'margin:12px 0 0', textContent: 'الأنشطة'}), list,
+      el('div', {className: 'bar', style: 'margin-top:10px'}, save, btn('إلغاء', close, true)), err);
+    form.onsubmit = async e => {
+      e.preventDefault();
+      const data = {acts: [...picked]};
+      Object.entries(inputs).forEach(([k, x]) => { const t = x.value.trim(); if (t !== '') data[k] = t; });
+      if (!data.acts.length) { err.textContent = 'اختر نشاطاً واحداً على الأقل'; return; }
+      save.disabled = true;
+      try {
+        const r = await call('request', {kind: 'bundle', data});
+        if (r.status === 'ok') { toast('أُرسل الطلب، ويُنفَّذ على الحاسوب'); return close(); }
+        err.textContent = {noname: 'اكتب الاسم على الأقل', email: 'البريد غير صحيح', exists: 'الطلب نفسه ما زال ينتظر الحاسوب'}[r.status] || 'تعذر إرسال الطلب';
       } catch (x) { /* toast shown */ }
       save.disabled = false;
     };
