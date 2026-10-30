@@ -124,7 +124,19 @@
       el('span', {className: 'badge ' + ({done: 'ok', error: 'err'}[j.status] || 'warn'),
         textContent: {'': 'ينتظر الحاسوب', running: 'قيد التنفيذ', done: 'تم', error: 'تعذّر'}[j.status] || j.status}),
       el('span', {className: 'muted', textContent: [j.by, fmtDate(j.at)].filter(Boolean).join(' · ')}),
-      j.result ? el('div', {className: 'muted', style: 'flex-basis:100%', textContent: j.result}) : null)));
+      j.result ? el('div', {className: 'muted', style: 'flex-basis:100%', textContent: j.result}) : null, shareBar(j))));
+  }
+
+  function shareBar(j) {  // after one person's certificates: their links to paste in WhatsApp, and one file with all of them
+    let s;
+    try { s = JSON.parse(j.share || 'null'); } catch (e) { return null; }
+    if (!s || !s.text) return null;
+    const copy = btn('📋 نسخ النص والروابط', async () => {
+      try { await navigator.clipboard.writeText(s.text); toast('نُسخ: الصقه في واتساب أو غيره'); } catch (e) { prompt('انسخ النص:', s.text); }
+    }, true);
+    return el('div', {className: 'bar', style: 'flex-basis:100%'}, copy,
+      navigator.share ? btn('مشاركة', () => navigator.share({text: s.text}).catch(() => {}), true) : null,
+      /^https:\/\//.test(s.pdf || '') ? el('a', {href: s.pdf, target: '_blank', rel: 'noopener', textContent: '⬇ ملف واحد بكل الشواهد'}) : null);
   }
 
   function linkBox(url, label) {  // copy, open or share a link from the phone
@@ -240,37 +252,61 @@
   // one person (an organizer, a speaker...) given certificates in several past activities at once, then one message
   function bundleForm(ch, acts, close) {
     if (!ch) return activityForm(ch);
-    const inputs = {}, picked = new Set();
+    const inputs = {}, picked = new Set(), answers = {};
     const fld = (k, label, props) => { const [l, i] = field(label, props); inputs[k] = i; return l; };
     inputs.gender = select([['m', 'ذكر'], ['f', 'أنثى'], ['', '—']], 'm');
     inputs.type = select(ch.types.map(t => [t, t]), ch.types[0]);
-    const list = el('div');
-    const draw = () => list.replaceChildren(...acts.map(a => {
-      // an app from before 1.8 does not publish its designs: the app itself then says which activity has none
-      const ok = !ch.designs || (ch.designs[a.id] || []).includes(inputs.type.value);
-      if (!ok) picked.delete(a.id);
-      const box = el('input', {type: 'checkbox', checked: picked.has(a.id), disabled: !ok,
-        onchange: () => { box.checked ? picked.add(a.id) : picked.delete(a.id); }});
-      return el('label', {className: 'pick', style: ok ? '' : 'opacity:.5'}, box,
-        el('span', null, el('b', {textContent: a.title}), ' ', el('span', {className: 'muted', textContent: (a.dates || '') + (ok ? '' : ' — لا تصميم لهذا النوع')})));
-    }));
-    inputs.type.onchange = draw; draw();
+    // what each activity's design prints for a type (published by the app); an app of 1.8.0 only names the types
+    const needs = (id, t) => ch.needs ? (ch.needs[id] || {})[t]
+      : !ch.designs || (ch.designs[id] || []).includes(t) ? {names: [], mention: false, qs: []} : null;
+    const list = el('div'), asked = el('div', {className: 'grid2'}), note = el('p', {className: 'muted'});
+    const labels = {};
+    let want = new Set(), qs = new Map();  // what the ticked designs print
+    const draw = () => {
+      want = new Set(); qs = new Map();
+      list.replaceChildren(...acts.map(a => {
+        const n = needs(a.id, inputs.type.value);
+        if (!n) picked.delete(a.id);
+        if (n && picked.has(a.id)) { n.names.forEach(x => want.add(x)); if (n.mention) want.add('mention'); n.qs.forEach(q => qs.has(q.title) || qs.set(q.title, q)); }
+        const box = el('input', {type: 'checkbox', checked: picked.has(a.id), disabled: !n,
+          onchange: () => { box.checked ? picked.add(a.id) : picked.delete(a.id); draw(); }});
+        return el('label', {className: 'pick', style: n ? '' : 'opacity:.5'}, box,
+          el('span', null, el('b', {textContent: a.title}), ' ', el('span', {className: 'muted', textContent: (a.dates || '') + (n ? '' : ' — لا تصميم لهذا النوع')})));
+      }));
+      // every detail the ticked designs print is asked for, so no copy comes out with a blank
+      Object.entries({ar: 'first_ar', lat: 'first_lat', mention: 'mention'}).forEach(([k, f]) => { labels[f].textContent = want.has(k) ? ' *' : ''; });
+      asked.replaceChildren(...[...qs.values()].map(q => {
+        const i = (q.options || []).length && q.type !== 'checkbox' ? select([['', '—'], ...q.options.map(o => [o, o])], answers[q.title] || '')
+          : el('input', {value: answers[q.title] || ''});
+        i.oninput = i.onchange = () => { answers[q.title] = i.value; };
+        i.dataset.q = q.title;
+        return el('label', null, q.title + ' *', i);
+      }));
+      note.textContent = want.size || qs.size ? '* يطبعه تصميم الشهادة في الأنشطة المختارة: أكمله حتى تخرج كل النسخ كاملة ومتطابقة.' : '';
+    };
+    const star = (f, l) => { labels[f] = el('span', {style: 'color:var(--err)'}); l.firstChild.after(labels[f]); return l; };
     const err = el('p', {className: 'muted', style: 'color:var(--err)'});
     const save = el('button', {className: 'act', type: 'submit', textContent: 'طلب إنشاء الشواهد وإرسالها'});
     const form = el('form', {className: 'card person'}, el('h2', {textContent: 'شواهد لشخص في عدة أنشطة'}),
-      el('p', {className: 'muted', style: 'margin-top:0', textContent: 'يُضاف إلى كل نشاط تختاره حاضراً، وتصدر شهادته برقم ذلك النشاط وتصميمه، ثم تصله رسالة واحدة بكل شواهده. إن كان مسجلاً فيه بالبريد نفسه فلا يُكرَّر.'}),
-      el('div', {className: 'grid2'}, fld('first_ar', 'الاسم الشخصي بالعربية'), fld('last_ar', 'الاسم العائلي بالعربية'),
-        fld('first_lat', 'Prénom', {dir: 'ltr'}), fld('last_lat', 'Nom', {dir: 'ltr'})),
+      el('p', {className: 'muted', style: 'margin-top:0', textContent: 'يُضاف إلى كل نشاط تختاره حاضراً، وتصدر شهادته برقم ذلك النشاط وتصميمه، ثم تصله رسالة واحدة بكل شواهده، وتجد هنا روابطها وملفاً واحداً بها. إن كان مسجلاً فيه بالبريد نفسه فلا يُكرَّر.'}),
+      el('div', {className: 'grid2'}, star('first_ar', fld('first_ar', 'الاسم الشخصي بالعربية')), fld('last_ar', 'الاسم العائلي بالعربية'),
+        star('first_lat', fld('first_lat', 'Prénom', {dir: 'ltr'})), fld('last_lat', 'Nom', {dir: 'ltr'})),
       el('div', {className: 'grid2'}, el('label', null, 'الجنس', inputs.gender), el('label', null, 'نوع الشهادة', inputs.type)),
       el('div', {className: 'grid2'}, fld('email', 'البريد (تصله عليه الرسالة)', {type: 'email', dir: 'ltr'}), fld('phone', 'الهاتف', {type: 'tel', dir: 'ltr'})),
-      fld('mention', 'الميزة/النتيجة (إن كانت في التصميم)'),
+      star('mention', fld('mention', 'الميزة/النتيجة')), asked, note,
       el('h2', {style: 'margin:12px 0 0', textContent: 'الأنشطة'}), list,
       el('div', {className: 'bar', style: 'margin-top:10px'}, save, btn('إلغاء', close, true)), err);
+    inputs.type.onchange = draw; draw();
     form.onsubmit = async e => {
       e.preventDefault();
-      const data = {acts: [...picked]};
+      const data = {acts: [...picked], answers: {}};
       Object.entries(inputs).forEach(([k, x]) => { const t = x.value.trim(); if (t !== '') data[k] = t; });
+      asked.querySelectorAll('[data-q]').forEach(i => { if (i.value.trim()) data.answers[i.dataset.q] = i.value.trim(); });
       if (!data.acts.length) { err.textContent = 'اختر نشاطاً واحداً على الأقل'; return; }
+      const has = (...ks) => ks.some(k => data[k]);
+      const lack = [want.has('ar') && !has('first_ar', 'last_ar') && 'الاسم بالعربية', want.has('lat') && !has('first_lat', 'last_lat') && 'الاسم باللاتينية',
+        want.has('mention') && !has('mention') && 'الميزة/النتيجة', ...[...qs.keys()].filter(t => !data.answers[t])].filter(Boolean);
+      if (lack.length) { err.textContent = 'أكمل ما يطبعه التصميم: ' + lack.join('، '); return; }
       save.disabled = true;
       try {
         const r = await call('request', {kind: 'bundle', data});
