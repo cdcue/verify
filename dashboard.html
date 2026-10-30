@@ -17,15 +17,17 @@
     --ok:#4cc48a; --ok-soft:#12291f; --warn:#f0b35a; --warn-soft:#2d2313; --err:#f2867c; --err-soft:#2e1716; --pri:#8cc4ec; } }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 "Segoe UI", Tahoma, sans-serif; }
-  header { background:#0b1f3a; color:#fff; padding:12px 16px; display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:3; }
-  header b { font-size:17px; flex:1; }
-  header button { background:transparent; color:#cbd5e1; border:1px solid #3b4b63; border-radius:8px; padding:4px 10px; font:inherit; font-size:13px; }
+  header { background:#0b1f3a; color:#fff; padding:10px 16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; position:sticky; top:0; z-index:3; }
+  header b { font-size:17px; flex:1; min-width:160px; }
+  header button { background:transparent; color:#cbd5e1; border:1px solid #3b4b63; border-radius:8px; padding:4px 10px; font:inherit; font-size:13px; cursor:pointer; }
+  header .who { font-size:12px; color:#cbd5e1; }
   main { max-width:900px; margin:0 auto; padding:14px 16px 40px; }
   .card { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:12px; }
   a.card { display:block; color:inherit; text-decoration:none; }
-  h1 { font-size:20px; margin:0 0 4px; } h2 { font-size:17px; margin:0 0 4px; }
+  h1 { font-size:20px; margin:0 0 4px; } h2 { font-size:17px; margin:0 0 6px; }
   .muted { color:var(--muted); font-size:13px; }
   .nums { display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-top:10px; }
+  .nums.five { grid-template-columns:repeat(5, 1fr); }
   .nums div { background:var(--bg); border-radius:10px; padding:6px; text-align:center; font-size:12px; color:var(--muted); }
   .nums b { display:block; font-size:19px; color:var(--ink); }
   .badge { display:inline-block; padding:1px 8px; border-radius:20px; font-size:12px; font-weight:600; background:var(--bg); color:var(--muted); margin:2px 0; }
@@ -41,22 +43,33 @@
   .person .top b { flex:1; }
   .ltr { direction:ltr; unicode-bidi:embed; }
   .code { font-family:ui-monospace, Consolas, monospace; letter-spacing:2px; font-weight:700; }
-  #login { max-width:380px; margin:60px auto; }
+  #login { max-width:380px; margin:60px auto; display:grid; gap:10px; }
   .note { background:var(--warn-soft); color:var(--warn); border-radius:10px; padding:8px 12px; font-size:13px; margin-bottom:12px; }
   .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   label { display:grid; gap:2px; font-size:13px; color:var(--muted); }
+  .link { display:flex; gap:6px; align-items:center; background:var(--bg); border-radius:10px; padding:6px 10px; margin:6px 0; }
+  .link span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; }
+  .job { display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; border-top:1px solid var(--line); padding-top:6px; margin-top:6px; font-size:14px; }
+  .pc { font-size:13px; margin-bottom:12px; }
+  ul.pconly { margin:6px 0 0; padding-inline-start:18px; color:var(--muted); font-size:14px; }
   #toast { position:fixed; bottom:16px; inset-inline:16px; background:#0b1f3a; color:#fff; border-radius:12px; padding:12px 14px; display:none; z-index:5; }
+  @media (max-width:520px) { .nums.five { grid-template-columns:repeat(3, 1fr); } .grid2 { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
-<header><b>لوحة المنظمين · منصة الشواهد</b><button id="back" hidden>→ الأنشطة</button><button id="out" hidden>خروج</button></header>
+<header><b>لوحة المنظمين · منصة الشواهد</b><span class="who" id="who"></span>
+  <button id="back" hidden>→ الأنشطة</button><button id="users" hidden>الحسابات</button><button id="pw" hidden>كلمة السر</button><button id="out" hidden>خروج</button></header>
 <main id="app"></main>
 <div id="toast"></div>
 <script>
   const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
   const app = document.getElementById('app'), KEY = 'shawahid-dashboard';
+  const ROLE = {scanner: 1, organizer: 2, admin: 3}, ROLE_NAME = {scanner: 'ماسح', organizer: 'منظم', admin: 'مسؤول'};
+  const JOB = {sync: 'مزامنة', issue: 'إصدار الشواهد', email: 'إرسال الشواهد بالبريد', activity: 'نشاط جديد', update: 'تعديل النشاط'};
   let session = (() => { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } })();
+  let me = null;  // the signed-in account, as the Apps Script sees it on each answer
   const remember = s => { session = s; try { s ? localStorage.setItem(KEY, s) : localStorage.removeItem(KEY); } catch (e) {} };
+  const can = role => me && ROLE[me.role] >= ROLE[role];
   // every value comes from the registration form or the sheets: text nodes only, never HTML
   function el(tag, props, ...kids) {
     const n = Object.assign(document.createElement(tag), props || {});
@@ -65,7 +78,7 @@
   }
   function toast(msg) {
     const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block';
-    clearTimeout(t.h); t.h = setTimeout(() => t.style.display = 'none', 3500);
+    clearTimeout(t.h); t.h = setTimeout(() => t.style.display = 'none', 4000);
   }
   async function call(action, extra) {
     let j;
@@ -74,69 +87,183 @@
       j = await r.json();
     } catch (e) { toast('تعذر الاتصال بالإنترنت أو بـ Google — أعد المحاولة'); throw e; }
     if (j.status === 'login') { remember(''); showLogin(); throw new Error('login'); }
+    if (j.status === 'role') { toast('ليس لحسابك هذا الإذن'); throw new Error('role'); }
+    if (j.user) setMe(j.user);
+    // an Apps Script from before the accounts (not redeployed yet) names no user: its only sign-in is the admin's
+    else if (!me && j.status === 'ok' && action !== 'login') setMe({login: 'admin', name: 'المسؤول', role: 'admin'});
     return j;
   }
-  const fmtDate = s => { const d = new Date(s); return isNaN(d) ? '' : d.toLocaleString('ar-MA', {dateStyle: 'medium', timeStyle: 'short'}); };
+  function setMe(u) {
+    me = u;
+    document.getElementById('who').textContent = u.name + ' · ' + (ROLE_NAME[u.role] || u.role);
+    document.getElementById('users').hidden = !can('admin');
+    document.getElementById('pw').hidden = u.login === 'admin';  // the admin's password is set in the app
+    document.getElementById('out').hidden = false;
+  }
+  const fmtDate = s => { const d = new Date(s); return isNaN(d) || !s ? '' : d.toLocaleString('ar-MA', {dateStyle: 'medium', timeStyle: 'short'}); };
+  const nav = (back) => { document.getElementById('back').hidden = !back; };
+  const btn = (text, onclick, sec) => el('button', {className: 'act' + (sec ? ' sec' : ''), type: 'button', textContent: text, onclick});
+  const field = (label, props) => { const i = el('input', props); return [el('label', null, label, i), i]; };
+  const select = (opts, value) => el('select', null, ...opts.map(([v, t]) => el('option', {value: v, textContent: t, selected: String(v) === String(value)})));
+  const loading = () => app.replaceChildren(el('p', {className: 'muted', textContent: 'جارٍ التحميل...'}));
+
+  function pcLine(pc) {  // requests are carried out by the app on the computer: say whether it is there
+    const age = Date.now() - pc;
+    if (!pc) return el('div', {className: 'pc muted', textContent: 'لم تتصل المنصة على الحاسوب بهذه اللوحة بعد: الطلبات تنتظر فتحها.'});
+    return el('div', {className: 'pc'}, age < 3 * 60e3
+      ? el('span', {className: 'badge ok', textContent: '● الحاسوب متصل: الطلبات تُنفَّذ خلال دقيقة'})
+      : el('span', {className: 'badge warn', textContent: '● الحاسوب غير متصل منذ ' + fmtDate(pc) + ': الطلبات تُنفَّذ عند فتح المنصة عليه'}));
+  }
+
+  function jobList(jobs) {
+    if (!jobs || !jobs.length) return null;
+    return el('div', null, ...jobs.map(j => el('div', {className: 'job'},
+      el('b', {textContent: JOB[j.kind] || j.kind}),
+      el('span', {className: 'badge ' + ({done: 'ok', error: 'err'}[j.status] || 'warn'),
+        textContent: {'': 'ينتظر الحاسوب', running: 'قيد التنفيذ', done: 'تم', error: 'تعذّر'}[j.status] || j.status}),
+      el('span', {className: 'muted', textContent: [j.by, fmtDate(j.at)].filter(Boolean).join(' · ')}),
+      j.result ? el('div', {className: 'muted', style: 'flex-basis:100%', textContent: j.result}) : null)));
+  }
+
+  function linkBox(url, label) {  // copy, open or share a link from the phone
+    const copy = btn('نسخ', async () => { try { await navigator.clipboard.writeText(url); toast('نُسخ الرابط'); } catch (e) { prompt('انسخ الرابط:', url); } }, true);
+    const share = navigator.share ? btn('مشاركة', () => navigator.share({title: label, url}).catch(() => {}), true) : null;
+    return el('div', {className: 'link'}, el('span', {className: 'ltr', textContent: url}), copy, share,
+      el('a', {href: url, target: '_blank', rel: 'noopener', textContent: 'فتح'}));
+  }
 
   function showLogin(msg) {
-    document.getElementById('out').hidden = document.getElementById('back').hidden = true;
-    const pw = el('input', {type: 'password', placeholder: 'كلمة السر', autocomplete: 'current-password'});
+    me = null;
+    ['out', 'back', 'users', 'pw'].forEach(id => { document.getElementById(id).hidden = true; });
+    document.getElementById('who').textContent = '';
+    const [lf, login] = field('اسم الدخول', {autocomplete: 'username', dir: 'ltr', placeholder: 'admin للمسؤول'});
+    const [pf, pw] = field('كلمة السر', {type: 'password', autocomplete: 'current-password'});
     const err = el('p', {className: 'muted', textContent: msg || ''});
-    const go = el('button', {className: 'act', textContent: 'دخول', style: 'width:100%;margin-top:10px;padding:11px'});
+    const go = el('button', {className: 'act', textContent: 'دخول', style: 'width:100%;padding:11px'});
     const submit = async () => {
       go.disabled = true;
       try {
-        const j = await call('login', {password: pw.value});
+        const j = await call('login', {login: login.value, password: pw.value});
         if (j.status === 'ok') { remember(j.session); return route(); }
-        err.textContent = {wrong: 'كلمة السر غير صحيحة', locked: 'محاولات خاطئة كثيرة: أعد المحاولة بعد 15 دقيقة',
-                           nopassword: 'لم تُضبط كلمة السر بعد (الإعدادات في المنصة على الحاسوب)'}[j.status] || 'تعذر الدخول';
+        err.textContent = {wrong: 'اسم الدخول أو كلمة السر غير صحيح', locked: 'محاولات خاطئة كثيرة: أعد المحاولة بعد 15 دقيقة',
+                           nopassword: 'لم تُضبط كلمة سر المسؤول بعد (الإعدادات في المنصة على الحاسوب)'}[j.status] || 'تعذر الدخول';
       } catch (e) { /* toast shown */ } finally { go.disabled = false; }
     };
     go.onclick = submit; pw.onkeydown = e => { if (e.key === 'Enter') submit(); };
     app.replaceChildren(el('div', {className: 'card', id: 'login'}, el('h1', {textContent: 'دخول المنظمين'}),
-      el('p', {className: 'muted', textContent: 'الأنشطة والمشاركون والحضور والشواهد، من أي هاتف.'}), pw, go, err));
-    pw.focus();
+      el('p', {className: 'muted', style: 'margin:0', textContent: 'الأنشطة والمشاركون والحضور والشواهد، من أي هاتف أو حاسوب.'}), lf, pf, go, err));
+    login.focus();
   }
 
+  // ---------- activities ----------
+
   async function showList() {
-    document.getElementById('back').hidden = true; document.getElementById('out').hidden = false;
-    app.replaceChildren(el('p', {className: 'muted', textContent: 'جارٍ التحميل...'}));
+    nav(false); loading();
     const j = await call('activities');
-    const cards = j.activities.sort((x, y) => Number(y.id) - Number(x.id)).map(a => el('a', {className: 'card', href: '#a' + a.id},
+    const acts = j.activities.sort((x, y) => Number(y.id) - Number(x.id));
+    const sum = k => acts.reduce((n, a) => n + (Number(a[k]) || 0), 0);
+    const cards = acts.map(a => el('a', {className: 'card', href: '#a' + a.id},
       el('div', {className: 'bar'}, el('span', {className: 'badge', textContent: a.kind || 'نشاط'}), el('span', {className: 'muted', textContent: a.org})),
       el('h2', {textContent: a.title}),
       el('div', {className: 'muted', textContent: (a.dates || '') + (a.sessions > 1 ? ` · ${a.sessions} حصص، المسح الآن للحصة ${a.session}` : '')}),
       el('div', {className: 'nums'}, ...[['مسجل', a.registered], ['حاضر', a.present], ['شهادة', a.issued], ['بريد', a.emailed]]
         .map(([k, v]) => el('div', null, el('b', {textContent: v || 0}), k)))));
-    app.replaceChildren(el('h1', {textContent: 'الأنشطة'}),
-      ...(cards.length ? cards : [el('p', {className: 'muted', textContent: 'لا أنشطة منشورة بعد: اضبط كلمة السر في المنصة على الحاسوب ثم زامن نشاطاً.'})]));
+    const top = [el('h1', {textContent: 'الأنشطة'})];
+    if (can('organizer')) {
+      top.push(pcLine(j.pc));
+      const add = btn('+ نشاط جديد', () => add.replaceWith(activityForm(j.choices, null, () => showList())));
+      top.push(el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {style: 'flex:1;margin:0', textContent: 'طلبات للحاسوب'}), add),
+        jobList(j.jobs) || el('p', {className: 'muted', style: 'margin:4px 0 0', textContent: 'أنشئ نشاطاً من هنا: تُنشأ استمارته وجدوله على الحاسوب، ثم يظهر في هذه اللائحة.'})));
+    }
+    top.push(el('div', {className: 'card'}, el('h2', {textContent: 'الإجمالي'}),
+      el('div', {className: 'nums five'}, ...[['نشاط', acts.length], ['مسجل', sum('registered')], ['حاضر', sum('present')], ['شهادة', sum('issued')], ['بريد', sum('emailed')]]
+        .map(([k, v]) => el('div', null, el('b', {textContent: v}), k)))));
+    app.replaceChildren(...top,
+      ...(cards.length ? cards : [el('p', {className: 'muted', textContent: 'لا أنشطة منشورة بعد: زامن نشاطاً في المنصة على الحاسوب، أو أنشئ واحداً من هنا.'})]),
+      can('organizer') ? pcOnly() : null);
+  }
+
+  function pcOnly() {  // what stays on the computer: heavy work, or files to print
+    return el('div', {className: 'card'}, el('h2', {textContent: 'على الحاسوب (يُفضَّل استخدام الحاسوب)'}),
+      el('ul', {className: 'pconly'}, ...['تصميم الشهادات ومعاينتها', 'أسئلة الاستمارة الإضافية', 'الاستيراد من Excel',
+        'اللوائح والتقارير وملفات الطباعة (PDF وExcel)', 'إلغاء شهادة أو إرجاعها', 'الجهات المنظمة والأنواع والإعدادات',
+        'سلة المحذوفات والنسخ الاحتياطية'].map(t => el('li', {textContent: t}))),
+      el('p', {className: 'muted', style: 'margin:6px 0 0', textContent: 'إصدار الشواهد وإرسالها يُطلب من هنا، ويُنفَّذ على الحاسوب.'}));
+  }
+
+  // new activity (a null) or its details: a request the app carries out like its own form
+  function activityForm(ch, a, close) {
+    if (!ch) return el('div', {className: 'note', textContent: 'لم تنشر المنصة على الحاسوب قوائمها بعد (الجهات والأنواع): افتحها مرة واحدة وهي متصلة بالإنترنت.'});
+    const inputs = {}, v = a || {sessions: 1, tickets: ch.tickets, lang: ch.lang};
+    const f = (k, label, props) => { const [l, i] = field(label, Object.assign({value: v[k] == null ? '' : v[k]}, props)); inputs[k] = i; return l; };
+    const s = (k, label, opts) => { inputs[k] = select(opts, v[k] == null ? opts[0][0] : v[k]); return el('label', null, label, inputs[k]); };
+    const kinds = ch.kinds.map(k => [k, k]);
+    if (a && a.kind && !ch.kinds.includes(a.kind)) kinds.unshift([a.kind, a.kind]);
+    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
+    const save = el('button', {className: 'act', type: 'submit', textContent: a ? 'طلب التعديل' : 'طلب إنشاء النشاط'});
+    const form = el('form', {className: 'card person'}, el('h2', {textContent: a ? 'تعديل النشاط' : 'نشاط جديد'}),
+      f('title', 'العنوان', {required: true, maxLength: 200}),
+      el('div', {className: 'grid2'}, s('kind', 'نوع النشاط', kinds),
+        a ? null : s('org_id', 'الجهة المنظمة', ch.orgs.map(o => [o.id, o.name]))),
+      a ? null : el('div', {className: 'grid2'}, s('lang', 'لغة النشاط والوثائق', [['ar', 'العربية'], ['fr', 'الفرنسية'], ['en', 'الإنجليزية']]),
+        s('cert_type', 'نوع الشهادة الرئيسي', ch.types.map(t => [t, t]))),
+      el('div', {className: 'grid2'}, f('dates', 'التاريخ / الأيام', {placeholder: 'مثال: 12 و13 مارس 2026'}), f('hours', 'التوقيت أو عدد الساعات')),
+      f('place', 'المكان'),
+      el('div', {className: 'grid2'}, f('sessions', 'عدد الحصص', {type: 'number', min: 1, max: 60}),
+        f('min_sessions', 'الحد الأدنى للحضور (حصص)', {type: 'number', min: 1, max: 60, placeholder: 'كل الحصص'})),
+      el('div', {className: 'grid2'}, f('tickets', 'عدد البطاقات المطبوعة', {type: 'number', min: 0, max: 2000}),
+        f('whatsapp', 'رابط مجموعة واتساب', {dir: 'ltr', type: 'url'})),
+      a || !ch.templates.length ? null : s('template', 'أسئلة إضافية من نموذج', [['', 'بلا أسئلة إضافية'], ...ch.templates.map(t => [t.id, t.name])]),
+      el('p', {className: 'muted', textContent: a ? 'ما يُترك فارغاً يبقى كما هو. العنوان والتاريخ والمكان تتبعها الاستمارة في Google Forms.'
+        : 'تُنشأ على الحاسوب الاستمارة وجدول التسجيلات، ثم يظهر النشاط هنا برابط استمارته. التصميم يُضاف على الحاسوب.'}),
+      el('div', {className: 'bar'}, save, btn('إلغاء', close, true)), err);
+    form.onsubmit = async e => {
+      e.preventDefault();
+      const data = {};
+      Object.entries(inputs).forEach(([k, x]) => { const t = x.value.trim(); if (t !== '' && (!a || t !== String(v[k] == null ? '' : v[k]))) data[k] = t; });
+      if (a && !Object.keys(data).length) return close();
+      save.disabled = true;
+      try {
+        const r = await call('request', a ? {id: a.id, kind: 'update', data} : {kind: 'activity', data});
+        if (r.status === 'ok') { toast('أُرسل الطلب، ويُنفَّذ على الحاسوب'); return close(); }
+        err.textContent = {notitle: 'اكتب العنوان', exists: 'تعديل سابق ما زال ينتظر الحاسوب'}[r.status] || 'تعذر إرسال الطلب';
+      } catch (x) { /* toast shown */ }
+      save.disabled = false;
+    };
+    return form;
   }
 
   async function showActivity(id) {
-    document.getElementById('back').hidden = false; document.getElementById('out').hidden = false;
-    app.replaceChildren(el('p', {className: 'muted', textContent: 'جارٍ التحميل...'}));
+    nav(true); loading();
     const j = await call('activity', {id});
     if (j.status !== 'ok') return showList();
     const a = j.activity, people = j.people;
     // present now: recorded by the app (its sessions, or "present" for a one-session activity) or by a phone since
     const here = p => sessionsOf(p).includes(a.session) || (a.sessions === 1 && Number(p.present) === 1);
     const q = el('input', {type: 'search', placeholder: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...'});
-    const f = el('select', null, ...[['all', 'الكل'], ['here', `حاضرون${a.sessions > 1 ? ' في الحصة ' + a.session : ''}`], ['away', 'غير مؤكدين'],
-      ['issued', 'لهم شهادة'], ['mail', 'مشكلة في البريد']].map(([v, t]) => el('option', {value: v, textContent: t})));
+    const f = select([['all', 'الكل'], ['here', `حاضرون${a.sessions > 1 ? ' في الحصة ' + a.session : ''}`], ['away', 'غير مؤكدين'],
+      ['issued', 'لهم شهادة'], ...(can('organizer') ? [['mail', 'مشكلة في البريد']] : [])], 'all');
     const listBox = el('div');
     const head = el('div', {className: 'card'}, el('h1', {textContent: a.title}),
-      el('div', {className: 'muted', textContent: [a.org, a.dates].filter(Boolean).join(' · ')}),
+      el('div', {className: 'muted', textContent: [a.kind, a.org, a.dates].filter(Boolean).join(' · ')}),
       el('div', {className: 'nums'}, ...[['مسجل', people.length], ['حاضر الآن', people.filter(here).length],
         ['شهادة', people.filter(p => p.serial).length], ['بريد', people.filter(p => Number(p.emailed) === 1).length]]
         .map(([k, v]) => el('div', null, el('b', {textContent: v}), k))));
-    if (a.sessions > 1) {
-      const s = el('select', {style: 'width:auto'}, ...Array.from({length: a.sessions}, (_, i) => el('option', {value: i + 1, textContent: 'الحصة ' + (i + 1), selected: i + 1 === a.session})));
+    if (a.sessions > 1 && !can('organizer')) head.append(el('p', {className: 'muted', style: 'margin:8px 0 0', textContent: 'المسح الآن للحصة ' + a.session}));
+    if (a.sessions > 1 && can('organizer')) {
+      const s = select(Array.from({length: a.sessions}, (_, i) => [i + 1, 'الحصة ' + (i + 1)]), a.session);
+      s.style.width = 'auto';
       s.onchange = async () => { const r = await call('setsession', {id, s: Number(s.value)}); if (r.status === 'ok') { toast('المسح الآن للحصة ' + r.session + ' في كل الهواتف'); showActivity(id); } };
       head.append(el('div', {className: 'bar', style: 'margin-top:10px'}, el('span', {className: 'muted', textContent: 'الحصة الجارية (للمسح والتأكيد):'}), s));
     }
-    const addBtn = el('button', {className: 'act sec', textContent: '+ إضافة مشارك', style: 'margin-top:10px'});
-    addBtn.onclick = () => addBtn.replaceWith(personForm(a, null, () => head.querySelector('form').replaceWith(addBtn)));
-    head.append(addBtn);
+    const blocks = [head];
+    if (can('organizer')) {
+      if (/^https:\/\//.test(a.form)) head.append(el('div', {style: 'margin-top:8px'}, el('span', {className: 'muted', textContent: 'رابط استمارة التسجيل:'}), linkBox(a.form, a.title)));
+      const addBtn = btn('+ إضافة مشارك', () => addBtn.replaceWith(personForm(a, null, () => showActivity(a.id))), true);
+      addBtn.style.marginTop = '10px';
+      head.append(addBtn);
+      blocks.push(scanCard(a, j.link), requestsCard(a, j));
+    }
     const draw = () => {
       const s = q.value.trim().toLowerCase();
       const keep = {all: () => true, here, away: p => !here(p), issued: p => p.serial, mail: p => p.mail && p.mail.status === 'error'}[f.value];
@@ -144,11 +271,42 @@
       listBox.replaceChildren(el('p', {className: 'muted', textContent: `${shown.length} من ${people.length}`}), ...shown.map(p => personCard(a, p, here)));
     };
     q.oninput = draw; f.onchange = draw;
-    app.replaceChildren(head,
+    app.replaceChildren(...blocks,
       el('div', {className: 'note', textContent: `البيانات كما في آخر مزامنة للمنصة (${fmtDate(a.updated) || '—'}). ما تؤكده أو تعدّله هنا يظهر فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`}),
       el('div', {className: 'bar', style: 'margin-bottom:10px'}, el('div', {style: 'flex:2;min-width:200px'}, q), el('div', {style: 'flex:1;min-width:140px'}, f)),
       listBox);
     draw();
+  }
+
+  function scanCard(a, token) {  // the phones' scanning link: made here, it works at once and the previous one stops
+    const url = token ? new URL('scan.html#' + token, location.href).href : '';
+    const make = btn(token ? '↻ رابط جديد' : 'إنشاء رابط المسح', async () => {
+      if (token && !confirm('إنشاء رابط جديد؟ الرابط الحالي يتوقف فوراً في كل الهواتف.')) return;
+      make.disabled = true;
+      const r = await call('link', {id: a.id}).catch(() => ({}));
+      if (r.status === 'ok') { toast('أُنشئ رابط المسح: أرسله إلى المنظمين'); showActivity(a.id); } else { toast('تعذر إنشاء الرابط'); make.disabled = false; }
+    }, !!token);
+    return el('div', {className: 'card'}, el('h2', {textContent: 'رابط المسح للمنظمين'}),
+      url ? linkBox(url, 'مسح الحضور · ' + a.title)
+          : el('p', {className: 'muted', style: 'margin:0 0 6px', textContent: 'يفتح صفحة مسح البطاقات بكاميرا الهاتف، دون حساب ودون الحاجة للحاسوب.'}),
+      make);
+  }
+
+  function requestsCard(a, j) {
+    const ask = (kind, text, sure) => btn(text, async e => {
+      if (sure && !confirm(sure)) return;
+      e.target.disabled = true;
+      const r = await call('request', {id: a.id, kind}).catch(() => ({}));
+      if (r.status === 'ok') { toast('أُرسل الطلب، ويُنفَّذ على الحاسوب'); return showActivity(a.id); }
+      toast(r.status === 'exists' ? 'طلب من النوع نفسه ما زال ينتظر الحاسوب' : 'تعذر إرسال الطلب');
+      e.target.disabled = false;
+    }, kind !== 'issue');
+    const box = el('div');
+    const edit = btn('✎ تعديل النشاط', () => box.replaceChildren(activityForm(j.choices, a, () => showActivity(a.id))), true);
+    return el('div', {className: 'card'}, el('h2', {textContent: 'طلبات للحاسوب'}), pcLine(j.pc),
+      el('div', {className: 'bar'}, ask('issue', 'إصدار الشواهد', 'إصدار شواهد كل الحاضرين المؤكدين (بعد مزامنة الحضور)؟'),
+        ask('email', '✉ إرسال الشواهد بالبريد', 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟'), ask('sync', '↻ مزامنة الآن'), edit),
+      box, jobList(j.jobs));
   }
 
   const sessionsOf = p => [...new Set(String(p.attended || '').split(',').filter(Boolean).map(Number).concat(p.phone_scans))].sort();
@@ -178,37 +336,35 @@
       p.mail.error ? el('span', {className: 'muted', textContent: ' ' + p.mail.error}) : null));
     const acts = el('div', {className: 'bar'});
     if (!here(p) && (p.ticket || p.uid)) {
-      const b = el('button', {className: 'act', textContent: a.sessions > 1 ? `✓ حاضر في الحصة ${a.session}` : '✓ تأكيد الحضور'});
-      b.onclick = async () => {
+      const b = btn(a.sessions > 1 ? `✓ حاضر في الحصة ${a.session}` : '✓ تأكيد الحضور', async () => {
         b.disabled = true;
-        const r = await call('mark', p.ticket ? {id: a.id, ticket: p.ticket} : {id: a.id, uid: p.uid});
+        const r = await call('mark', p.ticket ? {id: a.id, ticket: p.ticket} : {id: a.id, uid: p.uid}).catch(() => ({}));
         if (r.status === 'ok') { p.phone_scans.push(r.session); toast('سُجّل الحضور، ويصل إلى المنصة عند المزامنة'); card.replaceWith(personCard(a, p, here)); }
         else b.disabled = false;
-      };
+      });
       acts.append(b);
     }
-    if (p.serial && !p.revoked && p.mail && p.mail.resendable) {
-      const b = el('button', {className: 'act sec', textContent: '↻ إعادة إرسال البريد'});
-      b.onclick = async () => {
-        if (!confirm('إعادة إرسال رسالة الشهادة نفسها إلى ' + p.email + '؟')) return;
-        b.disabled = true;
-        const r = await call('resend', {id: a.id, pid: p.pid});
-        toast(r.status === 'ok' ? 'وُضعت الرسالة في طابور الإرسال' : 'نص الرسالة لم يعد محفوظاً (أقدم من 30 يوماً): أعد الإرسال من المنصة');
-      };
-      acts.append(b);
-    }
-    const edit = el('button', {className: 'act sec', textContent: '✎ تعديل'});
-    edit.onclick = () => card.replaceWith(personForm(a, p, () => showActivity(a.id)));
-    if (p.uid) acts.append(edit);
-    if (!p.serial) {  // a certificate's holder stays: its number is public
-      const del = el('button', {className: 'act sec', textContent: 'حذف', style: 'color:var(--err)'});
-      del.onclick = async () => {
-        if (!confirm('حذف ' + (p.name || p.name_ar || p.name_lat) + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)')) return;
-        del.disabled = true;
-        const r = await call('edit', {id: a.id, op: 'delete', uid: p.uid});
-        if (r.status === 'ok') { toast('حُذف، ويصل الحذف إلى المنصة عند المزامنة'); showActivity(a.id); } else del.disabled = false;
-      };
-      if (p.uid) acts.append(del);
+    if (can('organizer')) {
+      if (p.serial && !p.revoked && p.mail && p.mail.resendable) {
+        const b = btn('↻ إعادة إرسال البريد', async () => {
+          if (!confirm('إعادة إرسال رسالة الشهادة نفسها إلى ' + p.email + '؟')) return;
+          b.disabled = true;
+          const r = await call('resend', {id: a.id, pid: p.pid}).catch(() => ({}));
+          toast(r.status === 'ok' ? 'وُضعت الرسالة في طابور الإرسال' : 'نص الرسالة لم يعد محفوظاً (أقدم من 30 يوماً): أعد الإرسال من المنصة');
+        }, true);
+        acts.append(b);
+      }
+      if (p.uid) acts.append(btn('✎ تعديل', () => card.replaceWith(personForm(a, p, () => showActivity(a.id))), true));
+      if (p.uid && !p.serial) {  // a certificate's holder stays: its number is public
+        const del = btn('حذف', async () => {
+          if (!confirm('حذف ' + (p.name || p.name_ar || p.name_lat) + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)')) return;
+          del.disabled = true;
+          const r = await call('edit', {id: a.id, op: 'delete', uid: p.uid}).catch(() => ({}));
+          if (r.status === 'ok') { toast('حُذف، ويصل الحذف إلى المنصة عند المزامنة'); showActivity(a.id); } else del.disabled = false;
+        }, true);
+        del.style.color = 'var(--err)';
+        acts.append(del);
+      }
     }
     card.append(acts);
     return card;
@@ -217,22 +373,21 @@
   // add (p null) or correct a person; the app applies it at its next sync, like the same action on the computer
   function personForm(a, p, close) {
     const v = p || {}, inputs = {};
-    const field = (k, label, props) => el('label', null, label, inputs[k] = el('input', Object.assign({value: v[k] || ''}, props)));
-    const gender = inputs.gender = el('select', null, ...[['', '—'], ['m', 'ذكر'], ['f', 'أنثى']]
-      .map(([x, t]) => el('option', {value: x, textContent: t, selected: (v.gender || '') === x})));
+    const fld = (k, label, props) => { const [l, i] = field(label, Object.assign({value: v[k] || ''}, props)); inputs[k] = i; return l; };
+    inputs.gender = select([['', '—'], ['m', 'ذكر'], ['f', 'أنثى']], v.gender || '');
     const types = a.types && a.types.length ? a.types : [v.type].filter(Boolean);
-    const type = inputs.type = el('select', {disabled: !!v.serial}, ...types.map(t => el('option', {value: t, textContent: t, selected: v.type === t})));
+    inputs.type = select(types.map(t => [t, t]), v.type);
+    inputs.type.disabled = !!v.serial;
     const err = el('p', {className: 'muted', style: 'color:var(--err)'});
     const save = el('button', {className: 'act', type: 'submit', textContent: p ? 'حفظ التصحيح' : 'إضافة'});
-    const cancel = el('button', {className: 'act sec', type: 'button', textContent: 'إلغاء', onclick: close});
     const form = el('form', {className: 'card person'}, el('h2', {textContent: p ? 'تصحيح: ' + (v.name || v.name_ar || v.name_lat) : 'مشارك جديد (دون بطاقة)'}),
-      el('div', {className: 'grid2'}, field('first_ar', 'الاسم الشخصي بالعربية'), field('last_ar', 'الاسم العائلي بالعربية'),
-        field('first_lat', 'Prénom', {dir: 'ltr'}), field('last_lat', 'Nom', {dir: 'ltr'})),
-      el('div', {className: 'grid2'}, el('label', null, 'الجنس', gender), el('label', null, 'نوع الشهادة', type)),
-      el('div', {className: 'grid2'}, field('email', 'البريد', {type: 'email', dir: 'ltr'}), field('phone', 'الهاتف', {type: 'tel', dir: 'ltr'})),
-      field('mention', 'الميزة/النتيجة'),
+      el('div', {className: 'grid2'}, fld('first_ar', 'الاسم الشخصي بالعربية'), fld('last_ar', 'الاسم العائلي بالعربية'),
+        fld('first_lat', 'Prénom', {dir: 'ltr'}), fld('last_lat', 'Nom', {dir: 'ltr'})),
+      el('div', {className: 'grid2'}, el('label', null, 'الجنس', inputs.gender), el('label', null, 'نوع الشهادة', inputs.type)),
+      el('div', {className: 'grid2'}, fld('email', 'البريد', {type: 'email', dir: 'ltr'}), fld('phone', 'الهاتف', {type: 'tel', dir: 'ltr'})),
+      fld('mention', 'الميزة/النتيجة'),
       v.serial ? el('p', {className: 'muted', textContent: 'له شهادة: تُعاد بالرقم والرابط نفسيهما عند المزامنة.'}) : null,
-      el('div', {className: 'bar'}, save, cancel), err);
+      el('div', {className: 'bar'}, save, btn('إلغاء', close, true)), err);
     form.onsubmit = async e => {
       e.preventDefault();
       const data = {};
@@ -242,7 +397,7 @@
       save.disabled = true;
       try {
         const r = await call('edit', p ? {id: a.id, op: 'edit', uid: p.uid, data} : {id: a.id, op: 'add', data});
-        if (r.status === 'ok') { toast(p ? 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة' : 'أُضيف، ويصل إلى المنصة عند المزامنة'); return showActivity(a.id); }
+        if (r.status === 'ok') { toast(p ? 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة' : 'أُضيف، ويصل إلى المنصة عند المزامنة'); return close(); }
         err.textContent = {noname: 'اكتب الاسم على الأقل', email: 'البريد غير صحيح'}[r.status] || 'تعذر الحفظ';
       } catch (x) { /* toast shown */ }
       save.disabled = false;
@@ -250,12 +405,75 @@
     return form;
   }
 
+  // ---------- accounts (admin) and one's own password ----------
+
+  async function showUsers() {
+    nav(true); loading();
+    const j = await call('users');
+    if (j.status !== 'ok') return showList();
+    const roleOpts = [['organizer', 'منظم: كل شيء ما عدا الحسابات'], ['scanner', 'ماسح: الحضور فقط، دون بيانات التواصل'], ['admin', 'مسؤول: كل شيء والحسابات']];
+    const [lf, login] = field('اسم الدخول (أحرف لاتينية صغيرة وأرقام)', {dir: 'ltr', autocomplete: 'off', required: true, pattern: '[a-z0-9._\\-]{3,30}'});
+    const [nf, name] = field('الاسم', {required: true, maxLength: 60});
+    const [pf, pw] = field('كلمة السر (8 أحرف على الأقل)', {type: 'password', autocomplete: 'new-password', required: true, minLength: 8});
+    const role = select(roleOpts, 'organizer');
+    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
+    const add = el('form', {className: 'card person'}, el('h2', {textContent: 'حساب جديد'}),
+      el('div', {className: 'grid2'}, lf, nf), el('div', {className: 'grid2'}, pf, el('label', null, 'الدور', role)),
+      el('div', {className: 'bar'}, el('button', {className: 'act', type: 'submit', textContent: 'إنشاء الحساب'})), err,
+      el('p', {className: 'muted', style: 'margin:0', textContent: 'أعطِ صاحب الحساب اسم الدخول وكلمة السر بنفسك، ويغيّرها هو من «كلمة السر» بعد دخوله.'}));
+    add.onsubmit = async e => {
+      e.preventDefault();
+      const r = await call('user', {op: 'add', login: login.value, name: name.value, role: role.value, password: pw.value}).catch(() => ({}));
+      if (r.status === 'ok') { toast('أُنشئ الحساب'); return showUsers(); }
+      err.textContent = {badlogin: 'اسم الدخول: من 3 إلى 30 حرفاً لاتينياً صغيراً أو رقماً (وليس admin)', taken: 'اسم الدخول مستعمل',
+                         short: 'كلمة السر قصيرة', bad: 'اكتب الاسم'}[r.status] || 'تعذر الإنشاء';
+    };
+    const set = async (u, change, done) => {
+      const r = await call('user', Object.assign({op: 'set', login: u.login}, change)).catch(() => ({}));
+      toast(r.status === 'ok' ? done : {short: 'كلمة السر قصيرة', self: 'لا تعدّل حسابك من هنا'}[r.status] || 'تعذر الحفظ');
+      if (r.status === 'ok') showUsers();
+    };
+    const cards = j.users.map(u => {
+      const r = select(roleOpts, u.role);
+      r.onchange = () => set(u, {role: r.value}, 'تغيّر الدور');
+      const mine = me && u.login === me.login;
+      r.disabled = mine;
+      return el('div', {className: 'card person'},
+        el('div', {className: 'top'}, el('b', {textContent: u.name}), el('span', {className: 'muted ltr', textContent: u.login}),
+          el('span', {className: 'badge ' + (u.active ? 'ok' : 'err'), textContent: u.active ? 'مفعّل' : 'موقوف'})),
+        r, mine ? el('p', {className: 'muted', style: 'margin:0', textContent: 'حسابك: يعدّله مسؤول آخر.'}) : el('div', {className: 'bar'},
+          btn(u.active ? 'إيقاف الحساب' : 'تفعيل الحساب', () => set(u, {active: !u.active}, u.active ? 'أُوقف الحساب، ويخرج من اللوحة فوراً' : 'فُعّل الحساب'), true),
+          btn('كلمة سر جديدة', () => { const p = prompt('كلمة السر الجديدة لـ ' + u.name + ' (8 أحرف على الأقل):'); if (p) set(u, {password: p}, 'تغيّرت كلمة السر'); }, true)));
+    });
+    app.replaceChildren(el('h1', {textContent: 'الحسابات'}),
+      el('p', {className: 'muted', textContent: 'حساب المسؤول admin تُضبط كلمة سره في المنصة على الحاسوب، ويبقى دائماً طريقاً للدخول.'}),
+      add, ...cards);
+  }
+
+  function showPassword() {
+    nav(true);
+    const [of, old] = field('كلمة السر الحالية', {type: 'password', autocomplete: 'current-password', required: true});
+    const [nf, pw] = field('كلمة السر الجديدة (8 أحرف على الأقل)', {type: 'password', autocomplete: 'new-password', required: true, minLength: 8});
+    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
+    const form = el('form', {className: 'card person', style: 'max-width:420px'}, el('h2', {textContent: 'تغيير كلمة السر'}), of, nf,
+      el('div', {className: 'bar'}, el('button', {className: 'act', type: 'submit', textContent: 'حفظ'})), err);
+    form.onsubmit = async e => {
+      e.preventDefault();
+      const r = await call('password', {old: old.value, password: pw.value}).catch(() => ({}));
+      if (r.status === 'ok') { toast('تغيّرت كلمة السر'); location.hash = ''; return; }
+      err.textContent = {wrong: 'كلمة السر الحالية غير صحيحة', short: 'كلمة السر الجديدة قصيرة', owner: 'كلمة سر المسؤول تُغيَّر في المنصة على الحاسوب'}[r.status] || 'تعذر الحفظ';
+    };
+    app.replaceChildren(form);
+  }
+
   function route() {
     if (!session) return showLogin();
     const m = location.hash.match(/^#a(\d+)$/);
-    (m ? showActivity(m[1]) : showList()).catch(() => {});
+    (m ? showActivity(m[1]) : location.hash === '#users' ? showUsers() : location.hash === '#pw' ? Promise.resolve(showPassword()) : showList()).catch(() => {});
   }
   document.getElementById('back').onclick = () => { location.hash = ''; };
+  document.getElementById('users').onclick = () => { location.hash = '#users'; };
+  document.getElementById('pw').onclick = () => { location.hash = '#pw'; };
   document.getElementById('out').onclick = async () => { try { await call('logout'); } catch (e) {} remember(''); location.hash = ''; showLogin(); };
   addEventListener('hashchange', route);
   route();
