@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline';
+  connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; form-action 'none'">
+<title>شواهدي · منصة الشواهد</title>
+<style>
+  :root { --bg:#f3f5f8; --surface:#fff; --ink:#13202e; --muted:#5d6b7a; --line:#e2e7ee; --ok:#12804a; --ok-soft:#e8f6ee;
+          --err:#b42318; --err-soft:#fdecea; --pri:#1d4ed8; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg:#0d141c; --surface:#141e29; --ink:#e8eef4; --muted:#9aa8b6; --line:#24323f; --ok:#4cc48a; --ok-soft:#12291f;
+    --err:#f2867c; --err-soft:#2e1716; --pri:#8cc4ec; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 "Segoe UI", Tahoma, sans-serif; }
+  header { background:#0b1f3a; color:#fff; padding:10px 16px; display:flex; align-items:center; gap:8px; }
+  header b { font-size:17px; flex:1; }
+  header button { background:transparent; color:#cbd5e1; border:1px solid #3b4b63; border-radius:8px; padding:4px 10px; font:inherit; font-size:13px; cursor:pointer; }
+  main { max-width:760px; margin:0 auto; padding:14px 16px 40px; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:12px; }
+  h1 { font-size:20px; margin:0 0 4px; } h2 { font-size:17px; margin:0 0 4px; }
+  .muted { color:var(--muted); font-size:13px; }
+  .badge { display:inline-block; padding:1px 8px; border-radius:20px; font-size:12px; font-weight:600; background:var(--bg); color:var(--muted); }
+  .badge.err { background:var(--err-soft); color:var(--err); }
+  input { width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:10px; font:inherit; background:var(--surface); color:var(--ink); }
+  button.act, a.act { background:var(--pri); color:#fff; border:0; border-radius:9px; padding:8px 12px; font:inherit; font-size:14px; font-weight:600;
+                      cursor:pointer; text-decoration:none; display:inline-block; }
+  button.sec, a.sec { background:var(--bg); color:var(--ink); border:1px solid var(--line); }
+  button:disabled { opacity:.5; }
+  .bar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .ltr { direction:ltr; unicode-bidi:embed; }
+  .code { font-family:ui-monospace, Consolas, monospace; letter-spacing:2px; font-weight:700; }
+  #box { max-width:400px; margin:50px auto; display:grid; gap:10px; }
+  #toast { position:fixed; bottom:16px; inset-inline:16px; background:#0b1f3a; color:#fff; border-radius:12px; padding:12px 14px; display:none; }
+</style>
+</head>
+<body>
+<header><b>شواهدي · منصة الشواهد</b><button id="out" hidden>خروج</button></header>
+<main id="app"></main>
+<div id="toast"></div>
+<script>
+  // A participant's own certificates: their email (or participant number) gets a 6-digit code, then a token signed by
+  // the Apps Script stays in this browser for 30 days. Every value shown comes from the sheets: text nodes only.
+  const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec', KEY = 'shawahid-me', app = document.getElementById('app');
+  let token = (() => { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } })();
+  const keep = t => { token = t; try { t ? localStorage.setItem(KEY, t) : localStorage.removeItem(KEY); } catch (e) {} };
+  function el(tag, props, ...kids) {
+    const n = Object.assign(document.createElement(tag), props || {});
+    kids.flat().forEach(k => k != null && k !== false && n.append(k instanceof Node ? k : String(k)));
+    return n;
+  }
+  function toast(msg) {
+    const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block';
+    clearTimeout(t.h); t.h = setTimeout(() => t.style.display = 'none', 4500);
+  }
+  async function call(action, extra) {
+    try {
+      const r = await fetch(EXEC, {method: 'POST', credentials: 'omit', body: JSON.stringify(Object.assign({action}, extra))});
+      return await r.json();
+    } catch (e) { toast('تعذر الاتصال بالإنترنت أو بـ Google — أعد المحاولة'); throw e; }
+  }
+  const btn = (text, onclick, sec) => el('button', {className: 'act' + (sec ? ' sec' : ''), type: 'button', textContent: text, onclick});
+  const verifyUrl = c => new URL('index.html?s=' + encodeURIComponent(c.serial) + (c.code ? '&k=' + encodeURIComponent(c.code) : ''), location.href).href;
+
+  function signIn(msg) {
+    document.getElementById('out').hidden = true;
+    const id = el('input', {dir: 'ltr', autocomplete: 'email', placeholder: 'name@example.com أو P00012'});
+    const say = el('p', {className: 'muted', textContent: msg || ''});
+    const go = el('button', {className: 'act', textContent: 'أرسل رمز الدخول', style: 'padding:11px'});
+    const send = async () => {
+      if (!id.value.trim()) return id.focus();
+      go.disabled = true;
+      try {
+        const r = await call('mecode', {id: id.value.trim()});
+        if (r.status === 'sent') return askCode(id.value.trim());
+        say.textContent = {wait: 'طلبتَ رموزاً كثيرة: أعد المحاولة بعد ساعة.', busy: 'الخدمة مشغولة الآن: أعد المحاولة بعد قليل.'}[r.status] || 'تعذر إرسال الرمز';
+      } catch (e) { /* toast shown */ }
+      go.disabled = false;
+    };
+    go.onclick = send; id.onkeydown = e => { if (e.key === 'Enter') send(); };
+    app.replaceChildren(el('div', {className: 'card', id: 'box'}, el('h1', {textContent: 'شواهدي'}),
+      el('p', {className: 'muted', style: 'margin:0', textContent: 'كل الشواهد التي حصلتَ عليها في مكان واحد. اكتب بريدك الإلكتروني الذي سجلت به، أو رقم المشارك المكتوب في رسالة شهادتك.'}),
+      el('label', {className: 'muted', textContent: 'البريد الإلكتروني أو رقم المشارك'}), id, go, say,
+      el('p', {className: 'muted', style: 'margin:0'}, el('a', {href: 'index.html', textContent: 'التحقق من شهادة'}))));
+    id.focus();
+  }
+
+  function askCode(id) {
+    const code = el('input', {dir: 'ltr', inputMode: 'numeric', autocomplete: 'one-time-code', maxLength: 6, placeholder: '------', className: 'code',
+                              style: 'text-align:center;font-size:22px'});
+    const say = el('p', {className: 'muted', textContent: ''});
+    const go = el('button', {className: 'act', textContent: 'دخول', style: 'padding:11px'});
+    const enter = async () => {
+      go.disabled = true;
+      try {
+        const r = await call('melogin', {id, code: code.value});
+        if (r.status === 'ok') { keep(r.token); return show(); }
+        say.textContent = r.status === 'wrong' ? 'الرمز غير صحيح.' : 'انتهت صلاحية الرمز أو استُعمل: اطلب رمزاً جديداً.';
+      } catch (e) { /* toast shown */ }
+      go.disabled = false;
+    };
+    go.onclick = enter; code.oninput = () => { if (code.value.replace(/\D/g, '').length === 6) enter(); };
+    app.replaceChildren(el('div', {className: 'card', id: 'box'}, el('h1', {textContent: 'رمز الدخول'}),
+      el('p', {className: 'muted', style: 'margin:0', textContent: 'إن كان لهذا البريد أو الرقم شواهد فقد أرسلنا إليه رمزاً من 6 أرقام، صالحاً 10 دقائق. '
+        + 'إن لم يصل فتفقد البريد غير المرغوب فيه.'}), code, go, say, btn('رجوع', () => signIn(), true)));
+    code.focus();
+  }
+
+  async function show() {
+    app.replaceChildren(el('p', {className: 'muted', textContent: 'جارٍ التحميل...'}));
+    let j;
+    try { j = await call('me', {token}); } catch (e) { return; }
+    if (j.status !== 'ok') { keep(''); return signIn('انتهت مدة الدخول: اطلب رمزاً جديداً.'); }
+    document.getElementById('out').hidden = false;
+    const live = j.certs.filter(c => !c.revoked && c.link);
+    const text = ['شواهد ' + j.name + ':', ...live.map(c => `«${c.activity}» (${c.serial}): ${c.link}`)].join('\n');
+    const zip = btn('⬇ تحميل الكل (ZIP)', async () => {
+      zip.disabled = true; zip.textContent = 'جارٍ التجهيز...';
+      try {
+        const r = await call('mezip', {token});
+        if (r.status === 'ok') {
+          const bytes = Uint8Array.from(atob(r.data), ch => ch.charCodeAt(0));
+          const a = el('a', {href: URL.createObjectURL(new Blob([bytes], {type: 'application/zip'})), download: 'شواهدي-' + j.number + '.zip'});
+          document.body.append(a); a.click(); a.remove();
+          if (r.files < live.length) toast(`في الملف أحدث ${r.files} شواهد؛ الباقي من روابطها.`);
+        } else toast('تعذر تجهيز الملف');
+      } catch (e) { /* toast shown */ }
+      zip.disabled = false; zip.textContent = '⬇ تحميل الكل (ZIP)';
+    });
+    const copy = btn('📋 نسخ كل الروابط', async () => {
+      try { await navigator.clipboard.writeText(text); toast('نُسخت الروابط'); } catch (e) { prompt('انسخ:', text); }
+    }, true);
+    app.replaceChildren(
+      el('div', {className: 'card'}, el('h1', {textContent: j.name}),
+        el('div', {className: 'muted'}, 'رقم المشارك: ', el('b', {className: 'ltr', textContent: j.number}), ' · ', el('span', {className: 'ltr', textContent: j.email})),
+        el('div', {className: 'muted', style: 'margin:4px 0 10px', textContent: j.certs.length ? `${live.length} شهادة` : 'لا شواهد بعد.'}),
+        live.length ? el('div', {className: 'bar'}, zip, copy,
+          navigator.share ? btn('مشاركة', () => navigator.share({text}).catch(() => {}), true) : null) : null),
+      ...j.certs.map(c => el('div', {className: 'card'},
+        el('div', {className: 'bar'}, el('h2', {style: 'flex:1', textContent: c.activity}), el('span', {className: 'badge' + (c.revoked ? ' err' : ''), textContent: c.revoked ? 'ملغاة' : 'شهادة ' + c.type})),
+        el('div', {className: 'muted', textContent: [c.dates, c.org].filter(Boolean).join(' · ')}),
+        el('div', {className: 'muted'}, 'رقم الشهادة: ', el('span', {className: 'ltr', textContent: c.serial}),
+          c.code ? [' · رمز التحقق: ', el('span', {className: 'ltr code', textContent: c.code})] : null),
+        c.revoked ? null : el('div', {className: 'bar', style: 'margin-top:8px'},
+          /^https:\/\//.test(c.link) ? el('a', {className: 'act', href: c.link, target: '_blank', rel: 'noopener', textContent: 'تحميل'}) : null,
+          el('a', {className: 'act sec', href: verifyUrl(c), target: '_blank', rel: 'noopener', textContent: 'صفحة التحقق'})))));
+  }
+
+  document.getElementById('out').onclick = () => { keep(''); signIn(); };
+  token ? show() : signIn();
+</script>
+</body>
+</html>

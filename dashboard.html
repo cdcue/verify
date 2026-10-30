@@ -60,7 +60,7 @@
 </head>
 <body>
 <header><b>لوحة المنظمين · منصة الشواهد</b><span class="who" id="who"></span>
-  <button id="back" hidden>→ الأنشطة</button><button id="users" hidden>الحسابات</button><button id="pw" hidden>كلمة السر</button><button id="out" hidden>خروج</button></header>
+  <button id="back" hidden>→ الأنشطة</button><button id="parts" hidden>المشاركون</button><button id="users" hidden>الحسابات</button><button id="pw" hidden>كلمة السر</button><button id="out" hidden>خروج</button></header>
 <main id="app"></main>
 <div id="toast"></div>
 <script>
@@ -99,6 +99,7 @@
     me = u;
     document.getElementById('who').textContent = u.name + ' · ' + (ROLE_NAME[u.role] || u.role);
     document.getElementById('users').hidden = !can('admin');
+    document.getElementById('parts').hidden = !can('organizer');
     document.getElementById('pw').hidden = u.login === 'admin';  // the admin's password is set in the app
     document.getElementById('out').hidden = false;
   }
@@ -148,7 +149,7 @@
 
   function showLogin(msg) {
     me = null;
-    ['out', 'back', 'users', 'pw'].forEach(id => { document.getElementById(id).hidden = true; });
+    ['out', 'back', 'users', 'pw', 'parts'].forEach(id => { document.getElementById(id).hidden = true; });
     document.getElementById('who').textContent = '';
     const [lf, login] = field('اسم الدخول', {autocomplete: 'username', dir: 'ltr', placeholder: 'admin للمسؤول'});
     const [pf, pw] = field('كلمة السر', {type: 'password', autocomplete: 'current-password'});
@@ -490,6 +491,33 @@
     return form;
   }
 
+  // ---------- participants: everyone with certificates, as they sign in to «شواهدي» (me.html) ----------
+
+  async function showParticipants() {
+    nav(true); loading();
+    const j = await call('participants');
+    if (j.status !== 'ok') return showList();
+    const q = el('input', {type: 'search', placeholder: 'بحث بالاسم أو البريد أو الرقم أو رقم الشهادة...'});
+    const box = el('div');
+    const draw = () => {
+      const s = q.value.trim().toLowerCase();
+      const shown = j.participants.filter(p => !s || [p.name, p.email, p.number, ...p.serials].join(' ').toLowerCase().includes(s));
+      box.replaceChildren(el('p', {className: 'muted', textContent: `${shown.length} من ${j.participants.length}`}),
+        ...shown.slice(0, 200).map(p => el('div', {className: 'card person'},
+          el('div', {className: 'top'}, el('b', {textContent: p.name}), el('span', {className: 'muted ltr', textContent: p.number})),
+          el('div', {className: 'muted ltr', style: 'text-align:right', textContent: p.email}),
+          el('div', {className: 'muted'}, `${p.serials.length} شهادة: `, el('span', {className: 'ltr', textContent: p.serials.join('، ')})))));
+    };
+    q.oninput = draw;
+    const page = new URL('me.html', location.href).href;
+    app.replaceChildren(el('h1', {textContent: 'المشاركون'}),
+      el('div', {className: 'card'}, el('p', {className: 'muted', style: 'margin:0 0 6px',
+        textContent: 'كل من له شهادة صالحة ببريد صحيح له رقم مشارك دائم، ويدخل صفحة «شواهدي» برقمه أو ببريده ورمز يصله على بريده، دون كلمة سر. القائمة تُحدَّث من المنصة على الحاسوب.'}),
+        linkBox(page, 'شواهدي')),
+      el('div', {style: 'margin-bottom:10px'}, q), box);
+    draw();
+  }
+
   // ---------- accounts (admin) and one's own password ----------
 
   async function showUsers() {
@@ -554,10 +582,11 @@
   function route() {
     if (!session) return showLogin();
     const m = location.hash.match(/^#a(\d+)$/);
-    (m ? showActivity(m[1]) : location.hash === '#users' ? showUsers() : location.hash === '#pw' ? Promise.resolve(showPassword()) : showList()).catch(() => {});
+    (m ? showActivity(m[1]) : location.hash === '#users' ? showUsers() : location.hash === '#parts' ? showParticipants() : location.hash === '#pw' ? Promise.resolve(showPassword()) : showList()).catch(() => {});
   }
   document.getElementById('back').onclick = () => { location.hash = ''; };
   document.getElementById('users').onclick = () => { location.hash = '#users'; };
+  document.getElementById('parts').onclick = () => { location.hash = '#parts'; };
   document.getElementById('pw').onclick = () => { location.hash = '#pw'; };
   document.getElementById('out').onclick = async () => { try { await call('logout'); } catch (e) {} remember(''); location.hash = ''; showLogin(); };
   addEventListener('hashchange', route);
