@@ -122,7 +122,7 @@ const T = {
        online: 'متصل بالإنترنت', offline: 'دون إنترنت: المسح يُحفظ في الهاتف ويُرسل عند عودة الاتصال',
        pending: n => `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال`, session: (s, n) => `الحصة ${s} من ${n}`, noNet: 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف',
        noCam: 'تعذر تشغيل الكاميرا. اسمح للمتصفح باستعمالها، أو اكتب أرقام البطاقات.', torch: 'الإضاءة',
-       stop: 'إيقاف الكاميرا', flip: 'تبديل الكاميرا', checking: 'جارٍ التأكيد…',
+       stop: 'إيقاف الكاميرا', flip: 'تبديل الكاميرا', checking: 'جارٍ التأكيد…', noTicket: 'بلا بطاقة',
        ok: 'تم تأكيد حضور', already: 'مؤكد سابقاً في هذه الحصة', unregistered: x => `البطاقة ${x} غير مسجلة في الاستمارة`,
        unregisteredSub: 'احتُفظ بها، وتُؤكَّد عند تسجيل صاحبها', duplicate: x => `البطاقة ${x} مسجلة باسمين`, duplicateSub: 'يُحسم الأمر من لوحة التحكم',
        invalid: x => `الرقم ${x} غير موجود ضمن البطاقات المطبوعة`, saved: x => `حُفظت البطاقة ${x} في الهاتف`, savedSub: 'تُرسل تلقائياً عند عودة الاتصال'},
@@ -134,7 +134,7 @@ const T = {
        pending: n => `${n} carte(s) gardée(s) sur le téléphone en attente de connexion`, session: (s, n) => `séance ${s} sur ${n}`,
        noNet: 'Pas de connexion pour l’instant — les scans sont gardés sur le téléphone',
        noCam: 'Impossible d’activer la caméra. Autorisez-la dans le navigateur, ou saisissez les numéros de carte.', torch: 'Lampe',
-       stop: 'Arrêter la caméra', flip: 'Changer de caméra', checking: 'Vérification…',
+       stop: 'Arrêter la caméra', flip: 'Changer de caméra', checking: 'Vérification…', noTicket: 'Sans carte',
        ok: 'Présence confirmée', already: 'Déjà confirmé pour cette séance', unregistered: x => `La carte ${x} n’est pas inscrite au formulaire`,
        unregisteredSub: 'Elle est gardée et sera confirmée à l’inscription de son titulaire', duplicate: x => `La carte ${x} est inscrite sous deux noms`,
        duplicateSub: 'À régler depuis l’espace organisateurs', invalid: x => `Le numéro ${x} ne fait pas partie des cartes imprimées`,
@@ -147,7 +147,7 @@ const T = {
        pending: n => `${n} ticket(s) kept on the phone, waiting for the connection`, session: (s, n) => `session ${s} of ${n}`,
        noNet: 'No connection right now — scans are kept on the phone',
        noCam: 'Could not start the camera. Allow it in the browser, or type the ticket numbers.', torch: 'Light',
-       stop: 'Stop the camera', flip: 'Switch camera', checking: 'Checking…',
+       stop: 'Stop the camera', flip: 'Switch camera', checking: 'Checking…', noTicket: 'No ticket',
        ok: 'Attendance confirmed', already: 'Already confirmed for this session', unregistered: x => `Ticket ${x} is not registered in the form`,
        unregisteredSub: 'Kept, and confirmed once its holder registers', duplicate: x => `Ticket ${x} is registered under two names`,
        duplicateSub: 'To be settled from the organizers’ dashboard', invalid: x => `Number ${x} is not among the printed tickets`,
@@ -156,6 +156,7 @@ const T = {
 const {t} = UI, $ = id => document.getElementById(id);
 const video = document.querySelector('video'), flash = $('flash'), canvas = document.createElement('canvas');
 let audio = null, mine = 0, about = null, stream = null, running = false, det, facing = 'environment', ctx = null;
+const CODE = /T\d+-\d+|U\d+-\d+/i;  // a ticket (T4-012), or a signing sheet's row of someone without one (U4-57)
 const seen = new Map();  // ticket -> when the camera last saw it: it sees the same ticket many times a second
 const said = new Map();  // ticket -> [text, kind] of its answer, shown again while it stays in front of the camera
 const LOOK = {  // icon, color, main line, second line
@@ -215,37 +216,40 @@ function row(ticket) {  // a line in the list, filled when the answer comes
   $('log').prepend(li);
   return li;
 }
-function answer(j, li, ticket) {
+let shown = '';  // the code whose answer the strip shows now
+function answer(j, li, key, label) {
   const [icon, color, text] = LOOK[j.status], [line1] = text(j), good = j.status === 'ok' || j.status === 'already';
   li.querySelector('.s').style.background = color;
   li.querySelector('.s').textContent = icon;
   li.querySelector('.n').textContent = j.name || line1;
-  said.set(ticket, [j.name || line1, good ? 'ok' : 'warn']);
-  if ($('hit').querySelector('b').textContent === ticket) strip(ticket, j.name || line1, good ? 'ok' : 'warn');
+  said.set(key, [j.name || line1, good ? 'ok' : 'warn']);
+  if (shown === key) strip(label, j.name || line1, good ? 'ok' : 'warn');
   if (!good) { beep(false); if (navigator.vibrate) navigator.vibrate([80, 60, 80]); show(j); }
   if (j.status === 'ok') $('mine').textContent = ++mine;
   counts(j);
 }
 function scan(raw) {  // the read is confirmed at once and the camera goes on; the answer fills its line when it comes
-  const s = String(raw).trim(), ticket = (s.toUpperCase().match(/T\d+-\d+/) || [s])[0];
-  const before = seen.get(ticket) || 0;
-  seen.set(ticket, Date.now());  // a ticket still in front of the camera is not sent again; 6 s away from it, it can be
+  const s = String(raw).trim(), key = (s.toUpperCase().match(CODE) || [s])[0];
+  const label = key.startsWith('U') ? t('noTicket') : key;  // a row code says nothing to a person: the name comes with the answer
+  const before = seen.get(key) || 0;
+  seen.set(key, Date.now());  // a code still in front of the camera is not sent again; 6 s away from it, it can be
   if (!s) return;
   if (Date.now() - before < 6000) {  // ...but the organizer sees it was read
-    const [text, kind] = said.get(ticket) || [t('checking'), ''];
-    if ($('hit').hidden || $('hit').querySelector('b').textContent !== ticket) strip(ticket, text, kind);
+    const [text, kind] = said.get(key) || [t('checking'), ''];
+    if ($('hit').hidden || shown !== key) { shown = key; strip(label, text, kind); }
     return;
   }
   beep(true);
   if (navigator.vibrate) navigator.vibrate(40);
-  strip(ticket, t('checking'));
-  const li = row(ticket);
+  shown = key;
+  strip(label, t('checking'));
+  const li = row(label);
   call({action: 'scan', ticket: s}).then(j => {
     if (j.status === 'denied') return denied();
-    if (LOOK[j.status]) answer(j, li, ticket);
+    if (LOOK[j.status]) answer(j, li, key, label);
   }).catch(() => {
     setPending(pending().concat([s]));
-    answer({status: 'saved', ticket}, li, ticket);
+    answer({status: 'saved', ticket: label}, li, key, label);
   });
 }
 async function retry() {  // scans kept during a network cut leave as soon as it is back, oldest first
@@ -341,17 +345,17 @@ $('start').onclick = camOn;
 $('stop').onclick = camOff;
 $('flip').onclick = async () => { facing = facing === 'environment' ? 'user' : 'environment'; camOff(); await camOn(); };
 document.addEventListener('visibilitychange', () => { if (document.hidden && running) camOff(); });  // in a pocket: no battery spent
-async function read() {  // a ticket's QR code in the picture now, or null
+async function read() {  // the codes in the picture now: all of them with the phone's reader (a sheet's rows, cards on a table)
   if (det) {
-    try { return (await det.detect(video)).map(c => c.rawValue).find(v => /T\d+-\d+/i.test(v)) || null; }
+    try { return (await det.detect(video)).map(c => c.rawValue).filter(v => CODE.test(v)); }  // every code in view
     catch (e) { det = null; }  // this phone's reader failed: jsQR from now on
   }
-  if (!window.jsQR) return null;
+  if (!window.jsQR) return [];
   // first the square in the middle at full size (a ticket's dense code stays readable), then the whole picture
   // made smaller (a code bigger than the square: held close, or shown on a screen)
   const vw = video.videoWidth, vh = video.videoHeight, side = Math.round(Math.min(vw, vh) * 0.8), k = Math.min(1, 960 / Math.max(vw, vh));
-  return decode((vw - side) / 2, (vh - side) / 2, side, side, Math.min(1, 900 / side))
-      || decode(0, 0, vw, vh, k);
+  const one = decode((vw - side) / 2, (vh - side) / 2, side, side, Math.min(1, 900 / side)) || decode(0, 0, vw, vh, k);
+  return one ? [one] : [];
 }
 function decode(x, y, w, h, k) {  // jsQR on part of the picture (x, y, w, h), scaled by k
   const cw = Math.round(w * k), ch = Math.round(h * k);
@@ -359,21 +363,21 @@ function decode(x, y, w, h, k) {  // jsQR on part of the picture (x, y, w, h), s
   ctx = ctx || canvas.getContext('2d', {willReadFrequently: true});
   ctx.drawImage(video, x, y, w, h, 0, 0, cw, ch);
   const code = jsQR(ctx.getImageData(0, 0, cw, ch).data, cw, ch, {inversionAttempts: 'dontInvert'});
-  return code && /T\d+-\d+/i.test(code.data) ? code.data : null;
+  return code && CODE.test(code.data) ? code.data : null;
 }
 async function loop() {
   if (!running) return;
   if (video.readyState >= 2 && !flash.classList.contains('on')) {
-    try { const hit = await read(); if (hit) scan(hit); } catch (e) { /* the next picture tries again */ }
+    try { (await read()).forEach(scan); } catch (e) { /* the next picture tries again */ }
   }
-  setTimeout(loop, 120);
+  setTimeout(loop, 70);
 }
 $('manualForm').onsubmit = e => {
   e.preventDefault();
   const v = $('manual').value.trim();
   if (!v) return;
   audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-  seen.delete((v.toUpperCase().match(/T\d+-\d+/) || [v])[0]);  // typed on purpose: always sent
+  seen.delete((v.toUpperCase().match(CODE) || [v])[0]);  // typed on purpose: always sent
   scan(v);
   $('manual').value = '';
 };
