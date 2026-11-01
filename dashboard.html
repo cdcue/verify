@@ -19,8 +19,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="ui.css?v=3">
-<script src="ui.js?v=3"></script>
+<link rel="stylesheet" href="ui.css?v=4">
+<script src="ui.js?v=4"></script>
 <style>
   /* the dashboard's frame: a sidebar on wide screens, a top bar and a bottom tab bar on phones */
   body.app { display: block; }
@@ -82,7 +82,7 @@
   .badge.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
   .app select, .app input:not([type="checkbox"]) { height: 46px; font-size: 15px; font-weight: 400; letter-spacing: 0; }
   select { width: 100%; border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--ink); font: inherit; padding: 0 12px; }
-  select:focus { outline: none; border-color: var(--brand-2); }
+  select:focus { outline: none; border-color: var(--brand-2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-2) 18%, transparent); }
   .fld { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); margin: 0; }
   .fld .star { color: var(--err); }
   .grid2 { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
@@ -94,6 +94,7 @@
   [dir="rtl"] .linkbox { padding: 6px 12px 6px 6px; }
   .linkbox span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
   .pc { margin: 0 0 12px; }
+  .pc .badge { white-space: normal; line-height: 1.5; padding-block: 4px; }
   .job { display: grid; gap: 4px; border-top: 1px solid var(--line); padding: 10px 0 2px; font-size: 14px; }
   .job:first-child { border-top: 0; }
   .note { background: var(--warn-soft); color: var(--warn); border-radius: 12px; padding: 10px 14px; font-size: 13.5px; margin: 0 0 14px; }
@@ -503,9 +504,9 @@ async function showList() {
   const acts = j.activities.sort((x, y) => Number(y.id) - Number(x.id));
   const sum = k => acts.reduce((n, a) => n + (Number(a[k]) || 0), 0);
   const cards = acts.map(a => el('a', {className: 'card act-card rise', href: '#a' + a.id},
-    el('div', {className: 'row'}, el('span', {className: 'badge', textContent: a.kind || t('activity')}), el('span', {className: 'hint', dir: 'auto', textContent: a.org})),
+    el('div', {className: 'row'}, el('span', {className: 'badge', dir: 'auto', textContent: a.kind || t('activity')}), el('span', {className: 'hint', dir: 'auto', textContent: a.org})),
     el('h3', {dir: 'auto', textContent: a.title}),
-    el('div', {className: 'hint', textContent: [a.dates, a.sessions > 1 ? t('sessionsLine')(a.sessions, a.session) : ''].filter(Boolean).join(' · ')}),
+    el('div', {className: 'hint'}, el('span', {dir: 'auto', textContent: a.dates || ''}), a.dates && a.sessions > 1 ? ' · ' : '', a.sessions > 1 ? t('sessionsLine')(a.sessions, a.session) : ''),
     stats([[t('sReg'), a.registered], [t('sHere'), a.present], [t('sCert'), a.issued], [t('sMail'), a.emailed]])));
   const blocks = [el('section', {className: 'card rise'}, el('h2', {textContent: t('totals')}),
     stats([[t('sActs'), acts.length], [t('sReg'), sum('registered')], [t('sHere'), sum('present')], [t('sCert'), sum('issued')], [t('sMail'), sum('emailed')]]))];
@@ -676,6 +677,8 @@ async function showActivity(id, tab) {
     const q = el('input', {type: 'search', placeholder: t('search')});
     const f = select([['all', t('fAll')], ['here', a.sessions > 1 ? t('fHereIn')(a.session) : t('fHere')], ['away', t('fAway')], ['issued', t('fIssued')],
       ...(can('organizer') ? [['mail', t('fMail')]] : [])], 'all');
+    f.setAttribute('aria-label', t('tPeople'));
+    q.setAttribute('aria-label', t('search'));
     const box = el('div');
     const draw = () => {
       const s = q.value.trim().toLowerCase();
@@ -866,6 +869,7 @@ async function showUsers() {
   };
   const cards = j.users.map(u => {
     const r = select(roleOpts, u.role);
+    r.setAttribute('aria-label', t('uRole') + ' · ' + u.name);
     r.onchange = () => set(u, {role: r.value}, 'roleChanged');
     const mine = me && u.login === me.login;
     r.disabled = mine;

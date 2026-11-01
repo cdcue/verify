@@ -51,7 +51,7 @@ a { color: var(--brand-2); }
 .tools { display: flex; align-items: center; gap: 8px; flex: none; }
 .langs { display: flex; background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .22); border-radius: 999px; padding: 3px; }
 .langs button, .iconbtn { border: 0; background: none; color: #fff; font: inherit; font-weight: 600; font-size: 13px; line-height: 1; cursor: pointer; }
-.langs button { padding: 8px 11px; border-radius: 999px; min-width: 40px; }
+.langs button { padding: 0 11px; min-height: 34px; border-radius: 999px; min-width: 40px; }
 .langs button[aria-pressed="true"] { background: #fff; color: #0b3b5c; }
 .iconbtn { width: 40px; height: 40px; border-radius: 999px; display: grid; place-items: center;
            background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .22); }
@@ -67,7 +67,7 @@ a { color: var(--brand-2); }
   .brand b { font-size: 13.5px; }
   .brand small { display: none; }
   .seal, .brand img { width: 40px; height: 40px; }
-  .langs button { padding: 7px 9px; min-width: 34px; }
+  .langs button { padding: 0 9px; min-width: 36px; }
   .iconbtn { width: 36px; height: 36px; }
 }
 
