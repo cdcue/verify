@@ -19,48 +19,77 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="ui.css?v=4">
+<link rel="stylesheet" href="app.css?v=1">
 <script src="ui.js?v=4"></script>
 <style>
-  /* the dashboard's frame: a sidebar on wide screens, a top bar and a bottom tab bar on phones */
-  body.app { display: block; }
-  .shell { min-height: 100vh; display: grid; grid-template-columns: 1fr; }
-  .side { display: none; }
-  .appbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 10px; min-height: 60px;
-            padding: env(safe-area-inset-top) 16px 0; background: var(--hero); color: #fff; }
-  .appbar h1 { margin: 0; font-size: 18px; font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .appbar .brand { flex: 1; }
-  [dir="ltr"] .appbar h1 { text-align: left; } [dir="rtl"] .appbar h1 { text-align: right; }  /* an Arabic title in an English page still starts the bar */
-  .appbar .tools { padding: 8px 0; }
-  .back svg { transform: scaleX(-1); }  /* the arrow points to the start of the line */
-  [dir="ltr"] .back svg { transform: none; }
-  .app main { margin: 0; max-width: 1180px; padding: 18px 16px calc(96px + env(safe-area-inset-bottom)); }
-  .tabbar { position: fixed; inset-inline: 0; bottom: 0; z-index: 6; display: flex; background: var(--surface); border-top: 1px solid var(--line);
-            padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 20px rgba(0, 0, 0, .06); }
-  .tabbar a { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px 9px; color: var(--muted);
-              text-decoration: none; font-size: 12px; font-weight: 600; }
-  .tabbar a[aria-current="page"] { color: var(--brand-2); }
-  .tabbar a[aria-current="page"] svg { background: color-mix(in srgb, var(--brand-2) 14%, transparent); border-radius: 999px; }
-  .tabbar svg { width: 46px; height: 28px; padding: 3px 12px; }
-  @media (min-width: 900px) {
-    .shell.in { grid-template-columns: 252px 1fr; }
-    .shell.in .side { display: flex; flex-direction: column; gap: 6px; position: sticky; top: 0; height: 100vh; overflow: auto;
-                      background: var(--hero); color: #fff; padding: 16px 12px; }
-    .side .brand { padding: 4px 6px 14px; flex: none; }
-    .side nav { display: grid; gap: 4px; }
-    .side nav a { display: flex; align-items: center; gap: 12px; color: #fff; opacity: .82; text-decoration: none; padding: 10px 12px;
-                  border-radius: 12px; font-weight: 600; font-size: 15px; }
-    .side nav a:hover { opacity: 1; background: rgba(255, 255, 255, .08); }
-    .side nav a[aria-current="page"] { opacity: 1; background: rgba(255, 255, 255, .16); }
-    .side .who { margin-top: auto; padding: 12px; border-radius: 14px; background: rgba(255, 255, 255, .08); font-size: 13px; }
-    .side .who b { display: block; font-size: 14px; }
-    .shell.in .appbar { background: var(--bg); color: var(--ink); border-bottom: 1px solid var(--line); padding-inline: 28px; }
-    .shell.in .appbar .iconbtn, .shell.in .appbar .langs { color: var(--ink); background: var(--surface); border-color: var(--line); }
-    .shell.in .appbar .langs button { color: var(--ink); }
-    .shell.in .appbar .langs button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
-    .shell.in .appbar .brand { display: none; }
-    .app main { padding: 24px 28px 48px; }
-    .tabbar { display: none; }
+  /* the platform's look (app.css, the same file as on the computer), plus what the public pages' ui.css gave this page */
+  :root { --surface: var(--card); --surface-2: var(--soft); --brand: var(--pri); --brand-2: var(--pri); --on-brand: var(--on-pri);
+          --hero: var(--side); --radius: var(--r); }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+  .hint { font-size: 13px; color: var(--muted); margin: 0; background: none; border: 0; padding: 0; border-radius: 0; }  /* a quiet line, not the app's banner */
+  .say { font-size: 14px; margin: 0; min-height: 1.4em; color: var(--err); }
+  .linkbtn { background: none; border: 0; padding: 0; font: inherit; color: var(--pri); text-decoration: underline; cursor: pointer; }
+  .serial { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; background: var(--gold-soft); border-radius: 8px; padding: 2px 8px; }
+  .btn.block { width: 100%; }
+  .skeleton { padding: 22px; display: grid; gap: 12px; }
+  .skeleton i { display: block; height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--line), var(--soft), var(--line));
+                background-size: 200% 100%; animation: shimmer 1.2s infinite linear; }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  .toast { position: fixed; z-index: 60; bottom: calc(20px + env(safe-area-inset-bottom)); inset-inline: 0; margin: auto; width: max-content; max-width: 90vw;
+           background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px; box-shadow: var(--shadow); animation: rise .2s ease-out; }
+  .rise { animation: rise .25s ease-out; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+  .langs { display: inline-flex; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+  .langs button { background: none; border: 0; color: var(--ink); min-width: 36px; min-height: 30px; padding: 0 9px; border-radius: 999px; font-size: 13px; }
+  .langs button[aria-pressed="true"] { background: var(--pri); color: var(--on-pri); }
+  .iconbtn svg { width: 19px; height: 19px; }
+  .appbar h1 { font-size: 18px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .appbar .back svg { transform: scaleX(-1); } [dir="ltr"] .appbar .back svg { transform: none; }
+  .side nav a { cursor: pointer; }
+  .side nav a.locked { opacity: .5; cursor: not-allowed; }
+  .side nav a.locked:hover { background: none; }
+  .side nav a .lockb { margin-inline-start: auto; font-size: 10.5px; font-weight: 600; border: 1px solid rgba(255, 255, 255, .3); border-radius: 20px; padding: 0 7px; }
+  .side .who { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: #fff; }
+  .side .who span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .side .who button { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .25); color: #fff; }
+  .pclock { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; color: var(--muted); border: 1px dashed var(--field);
+            border-radius: 20px; padding: 1px 8px; white-space: nowrap; }
+  .pclist { display: grid; gap: 6px; margin: 4px 0 0; padding: 0; list-style: none; }
+  .pclist li { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--muted); }
+  .pclist .ic { color: var(--muted); width: 15px; height: 15px; }
+
+  /* sign-in: the platform's colours on one side, the form on the other (stacked on phones) */
+  .signin { min-height: 100vh; display: grid; place-items: center; padding: 20px 16px; position: relative; }
+  .signin .tools { position: absolute; top: 14px; inset-inline-end: 16px; display: flex; gap: 8px; }
+  .si-card { width: min(940px, 100%); display: grid; grid-template-columns: 1.05fr 1fr; background: var(--card); border: 1px solid var(--line);
+             border-radius: 22px; overflow: hidden; box-shadow: 0 2px 4px rgba(16, 32, 48, .05), 0 24px 60px rgba(16, 32, 48, .14); }
+  .si-brand { position: relative; padding: 38px 36px; color: #fff; background: var(--side); overflow: hidden; display: flex; flex-direction: column; gap: 18px; }
+  .si-brand::before { content: ""; position: absolute; width: 340px; height: 340px; border-radius: 50%; inset-inline-end: -120px; bottom: -150px;
+                      background: radial-gradient(circle, rgba(226, 182, 90, .35), transparent 65%); }
+  .si-brand::after { content: ""; position: absolute; inset: 0; opacity: .07;
+                     background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 18px 18px; }
+  .si-brand > * { position: relative; z-index: 1; }
+  .si-brand .seal { width: 58px; height: 58px; border-radius: 16px; }
+  .si-brand .seal .ic { width: 30px; height: 30px; }
+  .si-brand h1 { font-size: 28px; margin: 0; }
+  .si-brand .sub { margin: -10px 0 0; opacity: .8; font-size: 15px; }
+  .si-brand ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 12px; }
+  .si-brand li { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.55; }
+  .si-brand li .ic { flex: none; width: 22px; height: 22px; padding: 3px; border-radius: 50%; background: rgba(226, 182, 90, .22); color: #f2c14e; }
+  .si-form { padding: 38px 36px; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+  .si-form h2 { font-size: 22px; margin: 0; }
+  .si-form .hint { margin: 4px 0 10px; }
+  .si-form .field { position: relative; }
+  .si-form .field > .ic { position: absolute; inset-inline-start: 12px; top: 50%; translate: 0 -50%; color: var(--muted); pointer-events: none; }
+  .si-form .field input { height: 46px; padding-inline-start: 40px; border-radius: 11px; font-size: 15.5px; }
+  .si-form .eye { position: absolute; inset-inline-end: 6px; top: 50%; translate: 0 -50%; background: none; border: 0; color: var(--pri); font-size: 13px; padding: 6px 8px; }
+  .si-form button.go { height: 48px; margin-top: 16px; font-size: 16px; border-radius: 11px; }
+  .si-form .links { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13.5px; }
+  @media (max-width: 760px) {
+    .si-card { grid-template-columns: 1fr; }
+    .si-brand { padding: 26px 22px; gap: 12px; }
+    .si-brand ul { display: none; }
+    .si-form { padding: 26px 22px; }
   }
 
   /* building blocks */
@@ -80,7 +109,7 @@
   .act-card h3 { margin: 6px 0 2px; font-size: 16.5px; line-height: 1.45; }
   .act-card .stats { margin-top: 12px; }
   .badge.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
-  .app select, .app input:not([type="checkbox"]) { height: 46px; font-size: 15px; font-weight: 400; letter-spacing: 0; }
+  .app main select, .app main input:not([type="checkbox"]):not([type="radio"]) { height: 42px; font-size: 15px; font-weight: 400; letter-spacing: 0; }
   select { width: 100%; border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--ink); font: inherit; padding: 0 12px; }
   select:focus { outline: none; border-color: var(--brand-2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-2) 18%, transparent); }
   .fld { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); margin: 0; }
@@ -137,14 +166,54 @@
 </style>
 </head>
 <body class="app">
-<div class="shell" id="shell">
-  <aside class="side" id="side"></aside>
-  <div style="min-width:0">
-    <header class="appbar" id="appbar"></header>
-    <main id="app" aria-live="polite"></main>
-  </div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-seal" viewBox="0 0 24 24"><path d="M12 2l7 3v6c0 5-3.4 8.6-7 10-3.6-1.4-7-5-7-10V5l7-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14.3c2 .8 3.5 2.8 3.5 5.7"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1.1-1.6 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.6-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></symbol>
+  <symbol id="i-verify" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11l2 2 4-4"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></symbol>
+  <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></symbol>
+  <symbol id="i-sheet" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 011-1h10"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 010 16z" fill="currentColor"/></symbol>
+  <symbol id="i-light" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-dark" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8z"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9M10 13h4"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0119 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v4M12 17.5v.5"/></symbol>
+  <symbol id="i-cert" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M7 9h10M7 12.5h6"/><path d="M15 17v4l2-1.2 2 1.2v-4"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+  <symbol id="i-text" viewBox="0 0 24 24"><path d="M5 6h14M12 6v13M9 19h6"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 11a8 8 0 00-14.3-4.9L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0014.3 4.9L20 16"/><path d="M20 21v-5h-5"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5"/><path d="M4 19h16"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+</svg>
+<div class="signin" id="signin" hidden></div>
+<aside class="side" id="side" aria-label="Menu" hidden></aside>
+<div class="scrim" onclick="nav(false)"></div>
+<div class="page" id="page" hidden>
+  <header class="appbar" id="appbar"></header>
+  <main id="app" tabindex="-1" aria-live="polite"></main>
 </div>
-<nav class="tabbar" id="tabbar" hidden></nav>
 
 <script>
 const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec', KEY = 'shawahid-dashboard';
@@ -222,6 +291,24 @@ const T = {
     signedAs: 'دخلتَ باسم', language: 'اللغة', theme: 'المظهر', thAuto: 'حسب الجهاز', thLight: 'فاتح', thDark: 'داكن', pwT: 'تغيير كلمة السر',
     pwOld: 'كلمة السر الحالية', pwNew: 'كلمة السر الجديدة (8 أحرف على الأقل)', wrongPw: 'كلمة السر الحالية غير صحيحة', shortNew: 'كلمة السر الجديدة قصيرة',
     ownerPw: 'كلمة سر المسؤول تُغيَّر في المنصة على الحاسوب', logout: 'خروج',
+    rSuper: 'المدير العام', rAdmin: 'مسؤول الجهة', rOrganizer: 'منظم', rScanner: 'مساعد',
+    nHome: 'الرئيسية والأنشطة', nBundle: 'شواهد شخص في عدة أنشطة', nSearch: 'البحث عن مشارك', nStats: 'الإحصائيات', nSettings: 'الإعدادات',
+    nOrg: 'الجهة', nParts: '«شواهدي» والمشاركون', nUsers: 'الحسابات', nMe: 'حسابي', nPlat: 'المنصات المنشورة', nVerify: 'التحقق من الشواهد',
+    nMeSite: 'شواهدي', menu: 'القائمة', online: 'نسخة الإنترنت', onPc: 'الحاسوب', onPcT: 'يُستعمل من المنصة على الحاسوب', logout: 'خروج',
+    siSub: 'لوحة المنظمين · نسخة الإنترنت', siF1: 'الأنشطة والمشاركون والحضور، من أي هاتف أو حاسوب',
+    siF2: 'المسح بالهاتف، وروابطه ورموزه', siF3: 'إصدار الشواهد وإرسالها، طلباً تنفّذه المنصة على الحاسوب',
+    siH: 'تسجيل الدخول', siD: 'بحسابك في منصة الشواهد: اسم الدخول وكلمة السر نفسهما.', show: 'إظهار', hide: 'إخفاء',
+    siForgot: 'نسيت كلمة السر؟ يعطيك مسؤول جهتك كلمة سر جديدة من المنصة على الحاسوب.',
+    homeT: 'منصة الشواهد', homeD: 'من استمارة التسجيل إلى الشهادة في بريد المشارك: تابع أنشطتك من أي مكان.',
+    kActs: 'نشاط جارٍ', kReg: 'مسجل', kHere: 'حاضر مؤكد', kCert: 'شهادة صادرة', kMail: 'بريد مرسل',
+    actsT: 'الأنشطة', fSearch: 'بحث بالعنوان أو التاريخ أو الرقم...', fKinds: 'كل الأنواع', fOrgs: 'كل الجهات', noMatch: 'لا نشاط يطابق البحث.',
+    st: ['استمارة التسجيل', 'تأكيد الحضور', 'إصدار الشواهد', 'الإرسال بالبريد'], nextStep: 'الخطوة التالية: ', allDone: 'اكتملت كل المراحل',
+    nReg: 'مسجل', nHere: 'حاضر', nCert: 'شهادة', copyLink: 'نسخ الرابط', noDate: 'بدون تاريخ',
+    platVerify: 'أي شخص يتحقق من صحة شهادة برقمها أو برمز QR فيها.', platMe: 'المشاركون يجدون كل شواهدهم بحسابهم.',
+    platPrivacy: 'ما تحفظه المنصة من بيانات وكيف تُستعمل.', nPrivacy: 'سياسة الخصوصية',
+    usersRO: 'الحسابات تُدار من المنصة على الحاسوب («الحسابات»): إضافة حساب، وتغيير دوره وجهته وكلمة سره، وإغلاقه. تظهر هنا كما هي هناك خلال دقيقة.',
+    accOpen: 'مفتوح', accClosedB: 'مغلق', allOrgs: 'كل الجهات',
+    pwPc: 'تُغيَّر كلمة السر من المنصة على الحاسوب («حسابي»)، وتصل إلى هنا خلال دقيقة.', pwT: 'كلمة السر',
   },
   fr: {
     dash: 'Espace organisateurs', loading: 'Chargement...', noRole: 'Votre compte n’a pas cette autorisation', cancel: 'Annuler', save: 'Enregistrer', back: 'Retour',
@@ -300,6 +387,24 @@ const T = {
     signedAs: 'Connecté en tant que', language: 'Langue', theme: 'Thème', thAuto: 'Appareil', thLight: 'Clair', thDark: 'Sombre', pwT: 'Changer le mot de passe',
     pwOld: 'Mot de passe actuel', pwNew: 'Nouveau mot de passe (8 caractères minimum)', wrongPw: 'Mot de passe actuel incorrect', shortNew: 'Nouveau mot de passe trop court',
     ownerPw: 'Le mot de passe administrateur se change dans la plateforme sur l’ordinateur', logout: 'Se déconnecter',
+    rSuper: 'Administrateur général', rAdmin: 'Responsable de l’organisme', rOrganizer: 'Organisateur', rScanner: 'Assistant',
+    nHome: 'Accueil et activités', nBundle: 'Attestations d’une personne', nSearch: 'Rechercher un participant', nStats: 'Statistiques', nSettings: 'Paramètres',
+    nOrg: 'Organisme', nParts: '« Mes attestations » et participants', nUsers: 'Comptes', nMe: 'Mon compte', nPlat: 'Pages publiées', nVerify: 'Vérifier une attestation',
+    nMeSite: 'Mes attestations', menu: 'Menu', online: 'version en ligne', onPc: 'Ordinateur', onPcT: 'S’utilise depuis la plateforme sur l’ordinateur', logout: 'Déconnexion',
+    siSub: 'Espace organisateurs · version en ligne', siF1: 'Activités, participants et présences, depuis tout téléphone ou ordinateur',
+    siF2: 'Le scan au téléphone, ses liens et ses codes', siF3: 'L’émission et l’envoi des attestations, demandés ici et faits par l’ordinateur',
+    siH: 'Connexion', siD: 'Avec votre compte de la plateforme : le même identifiant et le même mot de passe.', show: 'Afficher', hide: 'Masquer',
+    siForgot: 'Mot de passe oublié ? Le responsable de votre organisme vous en donne un nouveau depuis la plateforme sur l’ordinateur.',
+    homeT: 'Plateforme des attestations', homeD: 'Du formulaire d’inscription à l’attestation dans la boîte du participant : suivez vos activités de partout.',
+    kActs: 'activités en cours', kReg: 'inscrits', kHere: 'présents confirmés', kCert: 'attestations émises', kMail: 'e-mails envoyés',
+    actsT: 'Activités', fSearch: 'Rechercher par titre, date ou numéro...', fKinds: 'Tous les types', fOrgs: 'Tous les organismes', noMatch: 'Aucune activité ne correspond.',
+    st: ['Formulaire d’inscription', 'Présences', 'Émission', 'Envoi par e-mail'], nextStep: 'Étape suivante : ', allDone: 'Toutes les étapes sont faites',
+    nReg: 'inscrits', nHere: 'présents', nCert: 'attestations', copyLink: 'Copier le lien', noDate: 'Sans date',
+    platVerify: 'Chacun vérifie une attestation par son numéro ou son code QR.', platMe: 'Les participants retrouvent toutes leurs attestations.',
+    platPrivacy: 'Les données conservées et leur usage.', nPrivacy: 'Confidentialité',
+    usersRO: 'Les comptes se gèrent dans la plateforme sur l’ordinateur (« Comptes ») : ajout, rôle, organisme, mot de passe, fermeture. Ils apparaissent ici tels quels dans la minute.',
+    accOpen: 'Ouvert', accClosedB: 'Fermé', allOrgs: 'Tous les organismes',
+    pwPc: 'Le mot de passe se change dans la plateforme sur l’ordinateur (« Mon compte ») et arrive ici dans la minute.', pwT: 'Mot de passe',
   },
   en: {
     dash: 'Organizers', loading: 'Loading...', noRole: 'Your account is not allowed to do this', cancel: 'Cancel', save: 'Save', back: 'Back',
@@ -377,6 +482,24 @@ const T = {
     signedAs: 'Signed in as', language: 'Language', theme: 'Theme', thAuto: 'Device', thLight: 'Light', thDark: 'Dark', pwT: 'Change password',
     pwOld: 'Current password', pwNew: 'New password (at least 8 characters)', wrongPw: 'Current password is wrong', shortNew: 'The new password is too short',
     ownerPw: 'The administrator password is changed in the platform on the computer', logout: 'Sign out',
+    rSuper: 'General administrator', rAdmin: 'Organizer’s administrator', rOrganizer: 'Organizer', rScanner: 'Helper',
+    nHome: 'Home and activities', nBundle: 'One person’s certificates', nSearch: 'Find a participant', nStats: 'Statistics', nSettings: 'Settings',
+    nOrg: 'Organizer', nParts: '“My certificates” and participants', nUsers: 'Accounts', nMe: 'My account', nPlat: 'Published pages', nVerify: 'Verify a certificate',
+    nMeSite: 'My certificates', menu: 'Menu', online: 'online version', onPc: 'Computer', onPcT: 'Used from the platform on the computer', logout: 'Sign out',
+    siSub: 'Organizers · online version', siF1: 'Activities, participants and attendance, from any phone or computer',
+    siF2: 'Phone scanning, its links and codes', siF3: 'Issuing and emailing certificates, requested here and done by the computer',
+    siH: 'Sign in', siD: 'With your platform account: the same username and password.', show: 'Show', hide: 'Hide',
+    siForgot: 'Forgot your password? Your organizer’s administrator gives you a new one from the platform on the computer.',
+    homeT: 'Certificates platform', homeD: 'From the registration form to the certificate in the participant’s inbox: follow your activities from anywhere.',
+    kActs: 'current activities', kReg: 'registered', kHere: 'confirmed present', kCert: 'certificates issued', kMail: 'emails sent',
+    actsT: 'Activities', fSearch: 'Search by title, date or number...', fKinds: 'All kinds', fOrgs: 'All organizers', noMatch: 'No activity matches.',
+    st: ['Registration form', 'Attendance', 'Issuing', 'Emailing'], nextStep: 'Next step: ', allDone: 'Every step is done',
+    nReg: 'registered', nHere: 'present', nCert: 'certificates', copyLink: 'Copy link', noDate: 'No date',
+    platVerify: 'Anyone checks a certificate by its number or QR code.', platMe: 'Participants find all their certificates.',
+    platPrivacy: 'What the platform keeps and how it is used.', nPrivacy: 'Privacy',
+    usersRO: 'Accounts are managed in the platform on the computer (“Accounts”): adding one, its role, organizer and password, closing it. They show here as they are there within a minute.',
+    accOpen: 'Open', accClosedB: 'Closed', allOrgs: 'All organizers',
+    pwPc: 'The password is changed in the platform on the computer (“My account”) and reaches this page within a minute.', pwT: 'Password',
   },
 };
 const ICON = {
@@ -387,12 +510,20 @@ const ICON = {
   back: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
   plus: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
 };
-const ROLE = {scanner: 1, organizer: 2, admin: 3};
+const ROLE = {scanner: 1, organizer: 2, admin: 3, super: 4};
 const {el, svg, t} = UI, app = document.getElementById('app');
 let session = UI.store.get(KEY) || '', me = null;  // me: the signed-in account, as the Apps Script sees it on each answer
 const remember = s => { session = s; UI.store.set(KEY, s || null); };
 const can = role => me && ROLE[me.role] >= ROLE[role];
-const roleName = r => t({scanner: 'rScanner', organizer: 'rOrganizer', admin: 'rAdmin'}[r]) || r;
+const roleName = r => t({scanner: 'rScanner', organizer: 'rOrganizer', admin: 'rAdmin', super: 'rSuper'}[r]) || r;
+const ic = (name, cls) => {  // an icon of the platform's set (the sprite at the top of <body>)
+  const n = document.createElementNS('http://www.w3.org/2000/svg', 'svg'), u = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  n.setAttribute('class', 'ic' + (cls ? ' ' + cls : ''));
+  n.setAttribute('aria-hidden', 'true');
+  u.setAttribute('href', '#i-' + name);
+  n.append(u);
+  return n;
+};
 const toast = msg => UI.toast(msg, 4000);
 const when = s => { const d = new Date(s); return !s || isNaN(d) ? '' : UI.fmtDate(d, {dateStyle: 'medium', timeStyle: 'short'}); };
 
@@ -405,17 +536,18 @@ async function call(action, extra) {
   if (j.status === 'login') { remember(''); showLogin(); throw new Error('login'); }
   if (j.status === 'role') { toast(t('noRole')); throw new Error('role'); }
   if (j.user) setMe(j.user);
-  // an Apps Script from before the accounts (not redeployed yet) names no user: its only sign-in is the admin's
-  else if (!me && j.status === 'ok' && action !== 'login') setMe({login: 'admin', name: t('adminName'), role: 'admin'});
   return j;
 }
 
-// ---------- frame: sidebar (wide screens), top bar, bottom tab bar (phones) ----------
+// ---------- frame: the platform's side menu (a drawer on narrow screens) and top bar ----------
 
-let current = 'acts';  // the section shown, marked in both menus
-function navItems() {
-  return [['acts', '#', 'nActs', true], ['parts', '#parts', 'nParts', can('organizer')], ['users', '#users', 'nUsers', can('admin')], ['me', '#me', 'nMe', true]]
-    .filter(x => x[3]);
+let current = 'acts';  // the section shown, marked in the menu
+function navItems() {  // [id, address, text, icon]; a part only the computer has is shown locked
+  const pc = null;
+  return [['acts', '#', 'nHome', 'home'], can('organizer') && ['bundle', '#bundle', 'nBundle', 'person'],
+    can('organizer') && ['search', pc, 'nSearch', 'search'], can('admin') && ['stats', pc, 'nStats', 'chart'],
+    can('admin') && ['settings', pc, can('super') ? 'nSettings' : 'nOrg', 'gear'], can('super') && ['parts', '#parts', 'nParts', 'award'],
+    can('admin') ? ['users', '#users', 'nUsers', 'lock'] : ['me', '#me', 'nMe', 'lock']].filter(Boolean);
 }
 function setMe(u) {
   const first = !me;
@@ -423,28 +555,51 @@ function setMe(u) {
   if (first) frame();
 }
 function frame() {  // drawn once signed in (and again when the language changes)
-  const links = () => navItems().map(([id, href, key]) =>
-    el('a', {href, ariaCurrent: id === current ? 'page' : null, dataset: {nav: id}}, svg(ICON[id]), el('span', {textContent: t(key)})));
-  document.getElementById('side').replaceChildren(UI.brand('#', 'dash'), el('nav', {}, ...links()),
-    el('div', {className: 'who'}, el('b', {dir: 'auto', textContent: me.name}), roleName(me.role)));
-  const bar = document.getElementById('tabbar');
-  bar.replaceChildren(...links());
-  bar.hidden = false;
-  document.getElementById('shell').classList.add('in');
-  UI.paint(document.getElementById('side'));  // the brand's name and tagline
+  const si = document.getElementById('signin');
+  si.hidden = true;
+  si.replaceChildren();  // its theme button too: one #themeBtn on the page
+  const side = document.getElementById('side');
+  side.replaceChildren(
+    el('a', {className: 'brand', href: '#'}, el('span', {className: 'seal'}, ic('seal')), el('span', {}, el('b', {dataset: {name: ''}}), el('small', {textContent: t('dash') + ' · ' + t('online')}))),
+    el('nav', {}, ...navItems().map(([id, href, key, icon]) => href
+      ? el('a', {href, dataset: {nav: id}, onclick: () => nav(false)}, ic(icon), t(key))
+      : el('a', {className: 'locked', ariaDisabled: 'true', title: t('onPcT'), dataset: {nav: id}}, ic(icon), t(key), el('span', {className: 'lockb', textContent: t('onPc')})))),
+    el('h6', {textContent: t('nPlat')}),
+    el('nav', {}, ...[['index.html', 'nVerify', 'verify'], ['me.html', 'nMeSite', 'award']].map(([href, key, icon]) =>
+      el('a', {href, target: '_blank', rel: 'noopener'}, ic(icon), t(key), ic('ext', 'ext')))),
+    el('div', {className: 'foot'},
+      el('div', {className: 'who'}, ic('person'), el('span', {}, el('b', {dir: 'auto', textContent: me.name}), ' · ', roleName(me.role)),
+        el('button', {type: 'button', className: 'sm', textContent: t('logout'), onclick: signOut})),
+      el('a', {href: '#me', textContent: t('nMe')})));
+  side.hidden = false;
+  document.getElementById('page').hidden = false;
+  UI.paint(side);
+  mark(current);
 }
+function nav(open) {  // the side menu as a drawer on narrow screens
+  const b = document.querySelector('.menu-btn');
+  document.body.classList.toggle('nav-open', open);
+  if (b) b.setAttribute('aria-expanded', open);
+  if (open) setTimeout(() => { const a = document.querySelector('#side nav a'); if (a) a.focus(); }, 50); else if (b && document.activeElement && document.activeElement.closest('#side')) b.focus();
+}
+addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('nav-open')) nav(false); });
 function mark(id) {
   current = id;
-  document.querySelectorAll('[data-nav]').forEach(a => a.dataset.nav === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+  document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('on', a.dataset.nav === id));
 }
-function bar(title, back) {  // the top bar: back arrow inside an activity, the page title, language and theme
+function bar(title, back) {  // the top bar: the menu button (phones), back arrow inside an activity, the page title, language and theme
   const b = document.getElementById('appbar');
   b.replaceChildren(...[
-    back ? el('button', {type: 'button', className: 'iconbtn back', title: t('back'), ariaLabel: t('back'), onclick: () => { location.hash = back; }}, svg(ICON.back))
-         : session ? null : UI.brand('#', 'dash'),  // signed out: the brand; signed in: where you are
-    session || back ? el('h1', {dir: 'auto', textContent: title}) : null,
-    el('div', {className: 'tools'}, UI.langSwitch(), UI.themeButton())].filter(Boolean));
+    el('button', {type: 'button', className: 'iconbtn menu-btn', ariaLabel: t('menu'), ariaExpanded: 'false', onclick: () => nav(!document.body.classList.contains('nav-open'))}, ic('menu')),
+    back ? el('button', {type: 'button', className: 'iconbtn back', title: t('back'), ariaLabel: t('back'), onclick: () => { location.hash = back; }}, ic('arrow')) : null,
+    el('h1', {dir: 'auto', textContent: title}),
+    can('organizer') && !back ? el('button', {type: 'button', className: 'sm acc-chip', onclick: () => newActivity()}, ic('plus'), t('newAct')) : null,
+    UI.langSwitch(), UI.themeButton()].filter(Boolean));
   UI.paint(b);
+}
+async function signOut() {
+  try { await call('logout'); } catch (e) { /* signed out here anyway */ }
+  remember(''); location.hash = ''; showLogin();
 }
 const loading = () => app.replaceChildren(el('div', {className: 'card', ariaBusy: 'true'},
   el('div', {className: 'skeleton'}, el('i', {style: 'width:40%'}), el('i', {style: 'width:80%'}), el('span', {className: 'hint', textContent: t('loading')}))));
@@ -498,55 +653,132 @@ function linkBox(url, label) {  // copy, open or share a link from the phone
 
 function showLogin(msg) {
   me = null;
-  document.getElementById('shell').classList.remove('in');
-  document.getElementById('tabbar').hidden = true;
-  document.getElementById('side').replaceChildren();
-  bar('');
-  const [lf, login] = field(t('login'), {autocomplete: 'username', dir: 'ltr', placeholder: t('loginPh')});
-  const [pf, pw] = field(t('password'), {type: 'password', autocomplete: 'current-password'});
-  const err = el('p', {className: 'err', role: 'alert', textContent: msg || ''});
-  const go = el('button', {className: 'btn block', type: 'submit', textContent: t('enter')});
-  const form = el('form', {className: 'card form login rise', noValidate: true}, el('div', {}, el('h2', {textContent: t('loginT')}),
-    el('p', {className: 'hint', textContent: t('loginD')})), lf, pf, go, err);
+  document.getElementById('side').hidden = true;
+  document.getElementById('page').hidden = true;
+  document.getElementById('appbar').replaceChildren();
+  document.body.classList.remove('nav-open');
+  const pw = el('input', {id: 'pw', type: 'password', autocomplete: 'current-password', dir: 'ltr', required: true});
+  const login = el('input', {id: 'login', autocomplete: 'username', dir: 'ltr', required: true, autocapitalize: 'none', spellcheck: false});
+  const eye = el('button', {type: 'button', className: 'eye', textContent: t('show'), onclick: () => {
+    const shown = pw.type === 'password';
+    pw.type = shown ? 'text' : 'password';
+    eye.textContent = t(shown ? 'hide' : 'show');
+  }});
+  const err = el('p', {className: 'say', role: 'alert', textContent: msg || ''});
+  const go = el('button', {className: 'go block', type: 'submit'}, ic('lock'), t('enter'));
+  const form = el('form', {className: 'si-form', noValidate: true},
+    el('h2', {textContent: t('siH')}), el('p', {className: 'hint', textContent: t('siD')}),
+    el('label', {htmlFor: 'login', textContent: t('login')}), el('div', {className: 'field'}, ic('person'), login),
+    el('label', {htmlFor: 'pw', textContent: t('password')}), el('div', {className: 'field'}, ic('lock'), pw, eye),
+    go, err, el('p', {className: 'hint', textContent: t('siForgot')}),
+    el('div', {className: 'links'}, ...[['index.html', 'nVerify'], ['me.html', 'nMeSite'], ['privacy.html', 'nPrivacy']].map(([href, key]) =>
+      el('a', {href, textContent: t(key)}))));
   form.onsubmit = async e => {
     e.preventDefault();
+    if (!login.value.trim()) return login.focus();
+    if (!pw.value) return pw.focus();
     go.disabled = true;
     try {
       const j = await call('login', {login: login.value, password: pw.value});
       if (j.status === 'ok') { remember(j.session); return route(); }
-      err.textContent = t({wrong: 'wrongLogin', locked: 'locked', nopassword: 'nopassword'}[j.status] || 'loginFail');
+      err.textContent = t({wrong: 'wrongLogin', locked: 'locked'}[j.status] || 'loginFail');
     } catch (x) { /* toast shown */ } finally { go.disabled = false; }
   };
-  app.replaceChildren(form);
+  const box = document.getElementById('signin');
+  box.replaceChildren(el('div', {className: 'tools'}, UI.langSwitch(), UI.themeButton()),
+    el('section', {className: 'si-card rise'},
+      el('div', {className: 'si-brand'}, el('span', {className: 'seal'}, ic('seal')),
+        el('h1', {dataset: {name: ''}}), el('p', {className: 'sub', textContent: t('siSub')}),
+        el('ul', {}, ...['siF1', 'siF2', 'siF3'].map(k => el('li', {}, ic('check'), t(k))))),
+      form));
+  box.hidden = false;
+  UI.paint(box);
   login.focus();
 }
 
 // ---------- activities ----------
 
-async function showList() {
-  mark('acts'); bar(t('nActs')); loading();
+let home = null;  // the last answer of the home page: the forms opened from the menu and the top bar use it
+function newActivity() {
+  if (!home) { location.hash = '#'; return; }
+  const close = sheet(activityForm(home.choices, null, () => { close(); showList(); }, () => close()));
+}
+function newBundle() {
+  if (!can('organizer')) return;
+  const close = sheet(bundleForm(home.choices, home.activities, () => { close(); showList(); }, () => close()));
+}
+const kpi = (icon, n, key, tone) => el('div', {className: 'kpi'}, el('span', {className: 'ico' + (tone ? ' ' + tone : '')}, ic(icon)),
+  el('div', {}, el('b', {textContent: n || 0}), el('span', {textContent: t(key)})));
+function tile(icon, title, desc, url) {  // a published page: open it, or copy its address
+  return el('div', {className: 'tile'}, el('span', {className: 'ico'}, ic(icon)), el('div', {className: 'txt'}, el('b', {textContent: title}),
+    el('p', {textContent: desc}), el('div', {className: 'acts-row'},
+      el('a', {className: 'btn sm', href: url, target: '_blank', rel: 'noopener'}, ic('ext'), t('open')),
+      el('button', {type: 'button', className: 'sec sm', onclick: async () => {
+        try { await navigator.clipboard.writeText(url); toast(t('linkCopied')); } catch (e) { prompt('', url); }
+      }}, ic('copy'), t('copyLink')))));
+}
+
+async function showList(then) {
+  mark('acts'); bar(t('nHome')); loading();
   const j = await call('activities');
+  home = j;
   const acts = j.activities.sort((x, y) => Number(y.id) - Number(x.id));
   const sum = k => acts.reduce((n, a) => n + (Number(a[k]) || 0), 0);
-  const cards = acts.map(a => el('a', {className: 'card act-card rise', href: '#a' + a.id},
-    el('div', {className: 'row'}, el('span', {className: 'badge', dir: 'auto', textContent: a.kind || t('activity')}), el('span', {className: 'hint', dir: 'auto', textContent: a.org})),
-    el('h3', {dir: 'auto', textContent: a.title}),
-    el('div', {className: 'hint'}, el('span', {dir: 'auto', textContent: a.dates || ''}), a.dates && a.sessions > 1 ? ' · ' : '', a.sessions > 1 ? t('sessionsLine')(a.sessions, a.session) : ''),
-    stats([[t('sReg'), a.registered], [t('sHere'), a.present], [t('sCert'), a.issued], [t('sMail'), a.emailed]])));
-  const blocks = [el('section', {className: 'card rise'}, el('h2', {textContent: t('totals')}),
-    stats([[t('sActs'), acts.length], [t('sReg'), sum('registered')], [t('sHere'), sum('present')], [t('sCert'), sum('issued')], [t('sMail'), sum('emailed')]]))];
-  if (can('organizer')) {
-    const add = el('button', {className: 'btn sm', type: 'button', onclick: () => { const close = sheet(activityForm(j.choices, null, () => { close(); showList(); }, () => close())); }},
-      svg(ICON.plus), t('newAct'));
-    const many = el('button', {className: 'btn sm ghost', type: 'button', onclick: () => { const close = sheet(bundleForm(j.choices, acts, () => { close(); showList(); }, () => close())); }},
-      svg(ICON.plus), t('bundle'));
-    blocks.push(el('section', {className: 'card section rise'}, el('h2', {textContent: t('reqT')}), el('div', {className: 'row', style: 'margin-bottom:12px'}, add, many),
-      pcLine(j.pc), jobList(j.jobs) || el('p', {className: 'hint', textContent: t('reqHint')})));
-  }
-  blocks.push(el('section', {className: 'section'}, cards.length ? el('div', {className: 'grid'}, ...cards) : el('div', {className: 'card empty', textContent: t('noActs')})));
-  if (can('organizer')) blocks.push(el('section', {className: 'card section'}, el('h2', {textContent: t('pcOnlyT')}),
-    el('ul', {className: 'plain'}, ...t('pcOnlyItems').map(x => el('li', {textContent: x}))), el('p', {className: 'hint', style: 'margin-top:8px', textContent: t('pcOnlyNote')})));
-  app.replaceChildren(...blocks);
+  const welcome = el('section', {className: 'welcome rise'},
+    el('div', {className: 'txt'}, el('small', {textContent: UI.fmtDate(new Date(), {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})}),
+      el('h1', {textContent: t('homeT')}), el('p', {textContent: t('homeD')})),
+    can('organizer') ? el('div', {className: 'bar'},
+      el('button', {type: 'button', className: 'gold lg', onclick: newActivity}, ic('plus'), t('newAct')),
+      el('button', {type: 'button', className: 'sec lg', onclick: newBundle}, ic('person'), t('bundle'))) : null);
+  const kpis = el('div', {className: 'kpis'}, kpi('calendar', acts.length, 'kActs'), kpi('people', sum('registered'), 'kReg'),
+    kpi('check', sum('present'), 'kHere', 'ok'), kpi('cert', sum('issued'), 'kCert', 'gold'), kpi('mail', sum('emailed'), 'kMail'));
+  // the activities: filters, then one card each with its steps (form, attendance, issuing, emailing) as on the computer
+  const opts = (key, all) => [...new Set(acts.map(a => a[key]).filter(Boolean))].sort();
+  const pick = (vals, all) => vals.length > 1 ? el('select', {ariaLabel: t(all)}, el('option', {value: '', textContent: t(all)}), ...vals.map(v => el('option', {value: v, textContent: v}))) : null;
+  const q = el('input', {type: 'search', placeholder: t('fSearch'), ariaLabel: t('fSearch')});
+  const fk = pick(opts('kind'), 'fKinds'), fo = pick(opts('org'), 'fOrgs');
+  const cards = acts.map(a => {
+    const done = [/^https:/.test(a.form || ''), Number(a.present) > 0, Number(a.issued) > 0, Number(a.issued) > 0 && Number(a.emailed) >= Number(a.issued)];
+    const now = done.indexOf(false);
+    const card = el('a', {className: 'act rise', href: '#a' + a.id},
+      el('div', {className: 'bar', style: 'gap:6px'}, el('span', {className: 'badge gold', dir: 'auto', textContent: a.kind || t('activity')}),
+        a.org ? el('span', {className: 'badge', dir: 'auto', textContent: a.org}) : null, el('span', {className: 'sp'}),
+        el('span', {className: 'muted ltr', textContent: '#' + a.id})),
+      el('h3', {dir: 'auto', textContent: a.title}),
+      el('div', {className: 'meta'}, el('span', {}, ic('calendar'), a.dates || t('noDate')),
+        a.sessions > 1 ? el('span', {}, ic('clock'), t('sessionsLine')(a.sessions, a.session)) : null),
+      el('ol', {className: 'steps', ariaLabel: t('st').join(' · ')}, ...done.map((d, i) => el('li', {className: d ? 'done' : i === now ? 'now' : '', title: t('st')[i] + (d ? ' ✓' : '')}))),
+      el('div', {className: 'now-step'}, now < 0 ? el('b', {style: 'color:var(--ok)', textContent: t('allDone')}) : [t('nextStep'), el('b', {textContent: t('st')[now]})]),
+      el('div', {className: 'nums'}, ...[['registered', 'nReg'], ['present', 'nHere'], ['issued', 'nCert']].map(([k, key]) =>
+        el('div', {}, el('b', {textContent: a[k] || 0}), el('span', {textContent: t(key)})))));
+    card.dataset.s = [a.title, a.dates, '#' + a.id].join(' ').toLowerCase();
+    card.dataset.k = a.kind || ''; card.dataset.o = a.org || '';
+    return card;
+  });
+  const none = el('div', {className: 'card empty', hidden: true, textContent: t('noMatch')});
+  const filter = () => {
+    const s = q.value.trim().toLowerCase();
+    let shown = 0;
+    cards.forEach(c => { c.hidden = !((!s || c.dataset.s.includes(s)) && (!fk || !fk.value || c.dataset.k === fk.value) && (!fo || !fo.value || c.dataset.o === fo.value)); shown += !c.hidden; });
+    none.hidden = shown > 0;
+  };
+  [q, fk, fo].forEach(x => x && x.addEventListener('input', filter));
+  const actsBlock = el('section', {id: 'acts'},
+    el('div', {className: 'sec-h'}, el('h2', {}, ic('calendar'), t('actsT') + ' (' + acts.length + ')')),
+    acts.length ? [el('div', {className: 'filters'}, q, fk, fo), el('div', {className: 'acts'}, ...cards), none]
+      : el('div', {className: 'card empty'}, el('div', {style: 'color:var(--gold)'}, ic('cert')), el('p', {textContent: t('noActs')})));
+  const vu = new URL('.', location.href).href;
+  const aside = [
+    can('organizer') ? el('section', {className: 'card'}, el('h2', {style: 'display:flex;align-items:center;gap:8px'}, ic('sync'), t('reqT')), pcLine(j.pc),
+      jobList(j.jobs) || el('p', {className: 'hint', textContent: t('reqHint')})) : null,
+    el('section', {className: 'card'}, el('h2', {style: 'display:flex;align-items:center;gap:8px'}, ic('globe'), t('nPlat')),
+      el('div', {className: 'plat'}, tile('verify', t('nVerify'), t('platVerify'), vu), tile('award', t('nMeSite'), t('platMe'), vu + 'me.html'),
+        tile('lock', t('nPrivacy'), t('platPrivacy'), vu + 'privacy.html'))),
+    can('organizer') ? el('section', {className: 'card'}, el('h2', {style: 'display:flex;align-items:center;gap:8px'}, ic('lock'), t('pcOnlyT')),
+      el('ul', {className: 'pclist'}, ...t('pcOnlyItems').map(x => el('li', {}, ic('lock'), x))),
+      el('p', {className: 'hint', style: 'margin-top:10px', textContent: t('pcOnlyNote')})) : null];
+  app.replaceChildren(welcome, kpis, el('div', {className: 'home'}, el('div', {}, actsBlock), el('aside', {}, ...aside.filter(Boolean))));
+  if (then) then();
 }
 
 // new activity (a null) or its details: a request the app carries out like its own form
@@ -924,41 +1156,16 @@ async function showUsers() {
   mark('users'); bar(t('nUsers')); loading();
   const j = await call('users');
   if (j.status !== 'ok') return showList();
-  const roleOpts = [['organizer', t('roOrganizer')], ['scanner', t('roScanner')], ['admin', t('roAdmin')]];
-  const [lf, login] = field(t('uLogin'), {dir: 'ltr', autocomplete: 'off', required: true, pattern: '[a-z0-9._\\-]{3,30}'});
-  const [nf, name] = field(t('uName'), {required: true, maxLength: 60});
-  const [pf, pw] = field(t('uPw'), {type: 'password', autocomplete: 'new-password', required: true, minLength: 8});
-  const role = select(roleOpts, 'organizer');
-  const err = el('p', {className: 'err', role: 'alert'});
-  const add = el('form', {className: 'card form rise'}, el('h2', {textContent: t('newUser')}),
-    el('div', {className: 'grid2'}, lf, nf), el('div', {className: 'grid2'}, pf, labelled(t('uRole'), role)),
-    el('div', {className: 'row'}, el('button', {className: 'btn', type: 'submit', textContent: t('create')})), err,
-    el('p', {className: 'hint', textContent: t('createHint')}));
-  add.onsubmit = async e => {
-    e.preventDefault();
-    const r = await call('user', {op: 'add', login: login.value, name: name.value, role: role.value, password: pw.value}).catch(() => ({}));
-    if (r.status === 'ok') { toast(t('created')); return showUsers(); }
-    err.textContent = t({badlogin: 'badlogin', taken: 'taken', short: 'short', bad: 'badName'}[r.status] || 'createFail');
-  };
-  const set = async (u, change, done) => {
-    const r = await call('user', Object.assign({op: 'set', login: u.login}, change)).catch(() => ({}));
-    toast(r.status === 'ok' ? t(done) : t({short: 'short', self: 'self'}[r.status] || 'saveFail'));
-    if (r.status === 'ok') showUsers();
-  };
-  const cards = j.users.map(u => {
-    const r = select(roleOpts, u.role);
-    r.setAttribute('aria-label', t('uRole') + ' · ' + u.name);
-    r.onchange = () => set(u, {role: r.value}, 'roleChanged');
-    const mine = me && u.login === me.login;
-    r.disabled = mine;
-    return el('article', {className: 'card person'},
-      el('div', {className: 'row'}, el('span', {className: 'name grow', dir: 'auto', textContent: u.name}), el('span', {className: 'hint ltr', textContent: u.login}),
-        el('span', {className: 'badge ' + (u.active ? 'ok' : 'err'), textContent: t(u.active ? 'active' : 'stopped')})),
-      r, mine ? el('p', {className: 'hint', textContent: t('mine')}) : el('div', {className: 'actions'},
-        btn(t(u.active ? 'stop' : 'start'), () => set(u, {active: !u.active}, u.active ? 'stoppedMsg' : 'startedMsg'), 'ghost'),
-        btn(t('newPw'), () => { const p = prompt(t('newPwAsk')(u.name)); if (p) set(u, {password: p}, 'pwChanged'); }, 'ghost')));
-  });
-  app.replaceChildren(el('p', {className: 'note', textContent: t('usersD')}), add, el('div', {className: 'grid section'}, ...cards));
+  const rows = j.users.map(u => el('tr', {style: u.active ? '' : 'opacity:.6'},
+    el('td', {dir: 'auto'}, el('b', {style: 'font-weight:600', textContent: u.name})), el('td', {className: 'ltr', textContent: u.login}),
+    el('td', {textContent: roleName(u.role)}), el('td', {dir: 'auto', textContent: u.orgName || (u.role === 'super' ? t('allOrgs') : '—')}),
+    el('td', {}, el('span', {className: 'badge ' + (u.active ? 'ok' : ''), textContent: t(u.active ? 'accOpen' : 'accClosedB')}))));
+  app.replaceChildren(el('section', {className: 'card rise'},
+    el('div', {className: 'bar', style: 'margin-bottom:10px'}, el('h2', {style: 'margin:0', textContent: t('nUsers') + ' (' + j.users.length + ')'}),
+      el('span', {className: 'sp'}), el('span', {className: 'pclock', title: t('onPcT')}, ic('lock'), t('onPc'))),
+    el('p', {className: 'hint', style: 'margin-bottom:12px', textContent: t('usersRO')}),
+    el('div', {className: 'tablewrap'}, el('table', {}, el('thead', {}, el('tr', {}, ...['uName', 'login', 'uRole', 'nOrg', ''].map(k =>
+      el('th', {textContent: k ? t(k) : ''})))), el('tbody', {}, ...rows)))));
 }
 
 // ---------- my account: language, theme, password, sign out ----------
@@ -974,24 +1181,10 @@ async function showMe() {
     el('div', {className: 'grid2', style: 'margin-top:16px'},
       labelled(t('language'), choice([['ar', 'langAr'], ['fr', 'langFr'], ['en', 'langEn']], UI.lang, l => UI.setLang(l))),
       labelled(t('theme'), choice([['auto', 'thAuto'], ['light', 'thLight'], ['dark', 'thDark']], UI.theme, v => UI.setTheme(v)))))];
-  if (me.login !== 'admin') {  // the admin's password is set in the app
-    const [of, old] = field(t('pwOld'), {type: 'password', autocomplete: 'current-password', required: true});
-    const [nf, pw] = field(t('pwNew'), {type: 'password', autocomplete: 'new-password', required: true, minLength: 8});
-    const err = el('p', {className: 'err', role: 'alert'});
-    const form = el('form', {className: 'card form section'}, el('h2', {textContent: t('pwT')}), el('div', {className: 'grid2'}, of, nf),
-      el('div', {className: 'row'}, el('button', {className: 'btn', type: 'submit', textContent: t('save')})), err);
-    form.onsubmit = async e => {
-      e.preventDefault();
-      const r = await call('password', {old: old.value, password: pw.value}).catch(() => ({}));
-      if (r.status === 'ok') { toast(t('pwChanged')); old.value = pw.value = ''; err.textContent = ''; return; }
-      err.textContent = t({wrong: 'wrongPw', short: 'shortNew', owner: 'ownerPw'}[r.status] || 'saveFail');
-    };
-    blocks.push(form);
-  }
-  blocks.push(el('div', {className: 'section'}, el('button', {className: 'btn ghost danger', type: 'button', textContent: t('logout'), onclick: async () => {
-    try { await call('logout'); } catch (e) { /* signed out here anyway */ }
-    remember(''); location.hash = ''; showLogin();
-  }})));
+  blocks.push(el('section', {className: 'card section'}, el('div', {className: 'bar'}, el('h2', {style: 'margin:0', textContent: t('pwT')}),
+    el('span', {className: 'sp'}), el('span', {className: 'pclock', title: t('onPcT')}, ic('lock'), t('onPc'))),
+    el('p', {className: 'hint', style: 'margin-top:8px', textContent: t('pwPc')})));
+  blocks.push(el('div', {className: 'section'}, el('button', {className: 'btn danger', type: 'button', textContent: t('logout'), onclick: signOut})));
   app.replaceChildren(...blocks);
 }
 
@@ -999,7 +1192,8 @@ function route() {
   if (!session) return showLogin();
   const h = location.hash, m = h.match(/^#a(\d+)(?:\/(\w+))?$/);
   if (h === '#pw') { location.hash = '#me'; return; }  // the old address of the password page
-  const go = m ? () => showActivity(m[1], m[2]) : {'#users': showUsers, '#parts': showParticipants, '#me': showMe}[h] || showList;
+  const go = m ? () => showActivity(m[1], m[2])
+    : {'#users': showUsers, '#parts': showParticipants, '#me': showMe, '#bundle': () => showList(newBundle)}[h] || (() => showList());
   scrollTo(0, 0);
   go().catch(() => {});
 }
