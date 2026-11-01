@@ -2,188 +2,266 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline';
-  connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; media-src 'self' blob: mediastream:">
-<title>مسح بطاقات الخروج · منصة الشواهد</title>
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0b3b5c">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src https://fonts.gstatic.com; connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; media-src 'self' blob: mediastream:">
+<title>مسح الحضور · منصة الشواهد</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b3b5c'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' fill='none' stroke='%23d9a441' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui.css?v=2">
+<script src="ui.js?v=2"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" crossorigin="anonymous"></script>
 <style>
-  :root { --bg:#0b1f3a; --card:#13294b; --ink:#fff; --muted:#aab6c8; --ok:#12a38a; --warn:#e8a317; --bad:#e5484d; --gold:#c9a227; }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:"Segoe UI", Tahoma, sans-serif; background:var(--bg); color:var(--ink); }
-  header { padding:14px 16px 6px; }
-  h1 { font-size:18px; margin:0; }
-  .muted { color:var(--muted); font-size:13px; }
-  .count { display:flex; gap:10px; padding:8px 16px; }
-  .count div { flex:1; background:var(--card); border-radius:10px; padding:8px 10px; text-align:center; font-size:13px; }
-  .count b { display:block; font-size:26px; color:var(--gold); }
-  #cam { position:relative; margin:8px 16px; border-radius:14px; overflow:hidden; background:#000; aspect-ratio:3/4; display:none; }
-  #cam video { width:100%; height:100%; object-fit:cover; display:block; }
-  #cam .frame { position:absolute; inset:18%; border:3px solid rgba(255,255,255,.75); border-radius:16px; }
-  #flash { position:fixed; inset:0; display:none; align-items:center; justify-content:center; flex-direction:column;
-           text-align:center; padding:24px; font-size:22px; font-weight:700; z-index:5; }
-  #flash .icon { font-size:96px; line-height:1; margin-bottom:10px; }
-  button { display:block; width:calc(100% - 32px); margin:10px 16px; padding:14px; font-size:17px; font-weight:600;
-           border:0; border-radius:12px; background:var(--gold); color:#0b1f3a; text-align:center; font-family:inherit; }
-  button.sec { background:var(--card); color:var(--ink); }
-  .manual { display:flex; gap:8px; margin:6px 16px; }
-  .manual input { flex:1; padding:12px; font-size:17px; border-radius:10px; border:0; direction:ltr; }
-  .manual button { width:auto; margin:0; padding:12px 18px; }
-  #net { margin:6px 16px; padding:8px 12px; border-radius:10px; background:#5a3d06; font-size:14px; display:none; }
-  #denied { margin:30px 16px; padding:16px; border-radius:12px; background:var(--card); line-height:1.8; display:none; }
-  ul { list-style:none; margin:8px 16px 24px; padding:0; }
-  li { background:var(--card); border-radius:10px; padding:10px 12px; margin-bottom:6px; display:flex; gap:10px; align-items:center; }
-  li .s { font-size:20px; }
-  li .t { direction:ltr; color:var(--muted); font-size:13px; margin-inline-start:auto; }
+  /* the scanning page: a compact bar, the counts, the camera as large as the screen allows, then what was scanned */
+  .top { padding-bottom: 14px; }
+  .top .bar { padding-bottom: 6px; }
+  .top h1 { margin: 0; font-size: 20px; }
+  .top .what { opacity: .85; font-size: 14px; margin-top: 2px; }
+  .app main { margin: 0 auto; max-width: 620px; padding: 14px 16px calc(28px + env(safe-area-inset-bottom)); display: grid; gap: 12px; align-content: start; }
+  .netline { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; padding: 8px 12px; border-radius: 12px; }
+  .netline.on { background: var(--ok-soft); color: var(--ok); }
+  .netline.off { background: var(--warn-soft); color: var(--warn); }
+  .netline i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; flex: none; }
+  .counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .counts div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 6px; text-align: center; font-size: 12.5px; color: var(--muted); }
+  .counts b { display: block; font-size: 28px; line-height: 1.15; color: var(--gold); }
+  .btn.big { min-height: 58px; font-size: 17px; width: 100%; }
+  #cam { position: relative; border-radius: 18px; overflow: hidden; background: #000; aspect-ratio: 3 / 4; max-height: 62vh; width: 100%; margin: 0 auto; }
+  #cam video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #cam .frame { position: absolute; inset: 16%; border-radius: 18px; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .28); }
+  #cam .frame::before, #cam .frame::after { content: ""; position: absolute; inset: 0; border-radius: 18px; border: 3px solid rgba(255, 255, 255, .85);
+    -webkit-mask: linear-gradient(#000 0 0) top / 34% 100% no-repeat, linear-gradient(#000 0 0) bottom / 34% 100% no-repeat; }
+  #cam .frame::after { -webkit-mask: linear-gradient(#000 0 0) left / 100% 34% no-repeat, linear-gradient(#000 0 0) right / 100% 34% no-repeat; }
+  #cam .line { position: absolute; inset-inline: 18%; height: 2px; top: 20%; background: var(--gold); box-shadow: 0 0 12px var(--gold); animation: sweep 2.2s ease-in-out infinite alternate; }
+  @keyframes sweep { to { top: 80%; } }
+  #cam .over { position: absolute; top: 10px; inset-inline-end: 10px; display: flex; gap: 8px; }
+  #cam .over .iconbtn { background: rgba(0, 0, 0, .45); border-color: rgba(255, 255, 255, .3); }
+  #cam .over .iconbtn[aria-pressed="true"] { background: var(--gold); color: #0b1f3a; }
+  .manual { display: flex; gap: 8px; align-items: center; }
+  .manual input { flex: 1; direction: ltr; text-align: center; letter-spacing: 1px; }
+  .manual .btn { min-height: 52px; }
+  #log { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  #log li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: rise .2s ease-out; }
+  #log .s { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700; flex: none; }
+  #log .n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #log .t { direction: ltr; color: var(--muted); font-size: 13px; }
+  #flash { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 24px;
+           font-size: 23px; font-weight: 700; color: #fff; z-index: 20; }
+  #flash.on { display: flex; animation: pop .18s ease-out; }
+  #flash .icon { width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; font-size: 72px; line-height: 1; margin-bottom: 18px;
+                 background: rgba(255, 255, 255, .18); }
+  #flash .sub { display: block; font-size: 17px; font-weight: 500; opacity: .92; margin-top: 6px; }
+  @keyframes pop { from { opacity: 0; transform: scale(.96); } }
+  .denied { text-align: center; padding: 32px 20px; line-height: 1.9; }
 </style>
 </head>
-<body>
-<header>
-  <h1>مسح بطاقات الخروج</h1>
-  <div class="muted" id="what">جارٍ التحميل...</div>
+<body class="app">
+<header class="top">
+  <div class="bar" id="bar"></div>
+  <div class="hero" style="margin-top:4px">
+    <h1 data-t="title"></h1>
+    <div class="what" id="what" data-t="loading"></div>
+  </div>
 </header>
-<div id="denied">هذا الرابط غير صالح أو استُبدل برابط جديد.<br>اطلب من المنظم الرابط الحالي (رمز QR في لوحة النشاط).</div>
-<div id="main">
-  <div class="count"><div><b id="present">–</b>حضور مؤكد</div><div><b id="total">–</b>مسجل</div><div><b id="mine">0</b>مسحتَ الآن</div></div>
-  <div id="net"></div>
-  <button id="start">تشغيل الكاميرا وبدء المسح</button>
-  <div id="cam"><video playsinline muted></video><div class="frame"></div></div>
-  <div class="manual"><input id="manual" inputmode="numeric" placeholder="أو اكتب رقم البطاقة: 12"><button class="sec" id="send">تأكيد</button></div>
-  <ul id="log"></ul>
-</div>
-<div id="flash"><div class="icon"></div><div class="msg"></div></div>
+<main>
+  <div id="denied" class="card denied" hidden data-t="denied"></div>
+  <div id="main" style="display:grid;gap:12px;align-content:start">
+    <div class="netline on" id="net"><i></i><span></span></div>
+    <div class="counts"><div><b id="present">–</b><span data-t="present"></span></div><div><b id="total">–</b><span data-t="total"></span></div>
+      <div><b id="mine">0</b><span data-t="mine"></span></div></div>
+    <button class="btn big" id="start" type="button" data-t="start"></button>
+    <div id="cam" hidden><video playsinline muted></video><div class="frame"></div><div class="line"></div>
+      <div class="over"><button type="button" class="iconbtn" id="torch" hidden aria-pressed="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 6h-4z"/><path d="M10 8h4v12a2 2 0 01-4 0z"/></svg></button></div></div>
+    <form class="manual" id="manualForm"><input id="manual" inputmode="numeric" autocomplete="off" data-tp="manualPh"><button class="btn ghost" data-t="confirm"></button></form>
+    <ul id="log" aria-live="polite"></ul>
+  </div>
+</main>
+<div id="flash" role="alert"><div class="icon"></div><div class="msg"></div></div>
 
 <script>
-  // the Apps Script web app (same /exec address as the verification page); the activity's secret is after "#"
-  const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
-  const TOKEN = decodeURIComponent(location.hash.slice(1));
-  const KEY = 'shawahid-pending-' + TOKEN.slice(0, 8);  // scans kept on this phone while the network is down
-  const $ = id => document.getElementById(id);
-  const video = document.querySelector('video'), flash = $('flash'), canvas = document.createElement('canvas');
-  let busy = false, audio = null, mine = 0, last = {t: '', at: 0};
-  const LOOK = {
-    ok: ['✓', '#12a38a', j => ['تم تأكيد حضور', j.name]],
-    already: ['✓', '#2e6be6', j => ['مؤكد سابقاً في هذه الحصة', j.name]],
-    unregistered: ['!', '#e8a317', j => [`البطاقة ${j.ticket} غير مسجلة في الاستمارة`, 'احتُفظ بها، وتُؤكَّد عند تسجيل صاحبها']],
-    duplicate: ['!', '#e8a317', j => [`البطاقة ${j.ticket} مسجلة باسمين`, 'يُحسم الأمر من لوحة التحكم']],
-    invalid: ['✕', '#e5484d', j => [`الرقم ${j.ticket} غير موجود ضمن البطاقات المطبوعة`, '']],
-    saved: ['⏳', '#5a3d06', j => [`حُفظت البطاقة ${j.ticket} في الهاتف`, 'تُرسل تلقائياً عند عودة الاتصال']],
-  };
+// the Apps Script web app (same /exec address as the verification page); the activity's secret is after "#"
+const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
+const TOKEN = decodeURIComponent(location.hash.slice(1));
+const KEY = 'shawahid-pending-' + TOKEN.slice(0, 8);  // scans kept on this phone while the network is down
+const T = {
+  ar: {title: 'مسح الحضور', loading: 'جارٍ التحميل...', denied: 'هذا الرابط غير صالح أو استُبدل برابط جديد. اطلب من المنظم الرابط الحالي (رمز QR في لوحة النشاط).',
+       present: 'حضور مؤكد', total: 'مسجل', mine: 'مسحتَ الآن', start: 'تشغيل الكاميرا وبدء المسح', manualPh: 'أو اكتب رقم البطاقة: 12', confirm: 'تأكيد',
+       online: 'متصل بالإنترنت', offline: 'دون إنترنت: المسح يُحفظ في الهاتف ويُرسل عند عودة الاتصال',
+       pending: n => `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال`, session: (s, n) => `الحصة ${s} من ${n}`, noNet: 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف',
+       noCam: 'تعذر تشغيل الكاميرا. اسمح للمتصفح باستعمالها، أو اكتب أرقام البطاقات.', torch: 'الإضاءة',
+       ok: 'تم تأكيد حضور', already: 'مؤكد سابقاً في هذه الحصة', unregistered: x => `البطاقة ${x} غير مسجلة في الاستمارة`,
+       unregisteredSub: 'احتُفظ بها، وتُؤكَّد عند تسجيل صاحبها', duplicate: x => `البطاقة ${x} مسجلة باسمين`, duplicateSub: 'يُحسم الأمر من لوحة التحكم',
+       invalid: x => `الرقم ${x} غير موجود ضمن البطاقات المطبوعة`, saved: x => `حُفظت البطاقة ${x} في الهاتف`, savedSub: 'تُرسل تلقائياً عند عودة الاتصال'},
+  fr: {title: 'Scan des présences', loading: 'Chargement...', denied: 'Ce lien n’est pas valide ou a été remplacé. Demandez le lien actuel à l’organisateur (code QR dans l’espace de l’activité).',
+       present: 'présences confirmées', total: 'inscrits', mine: 'scannés ici', start: 'Activer la caméra et scanner', manualPh: 'ou saisissez le n° de carte : 12', confirm: 'Valider',
+       online: 'Connecté à Internet', offline: 'Hors ligne : les scans sont gardés sur le téléphone et envoyés au retour de la connexion',
+       pending: n => `${n} carte(s) gardée(s) sur le téléphone en attente de connexion`, session: (s, n) => `séance ${s} sur ${n}`,
+       noNet: 'Pas de connexion pour l’instant — les scans sont gardés sur le téléphone',
+       noCam: 'Impossible d’activer la caméra. Autorisez-la dans le navigateur, ou saisissez les numéros de carte.', torch: 'Lampe',
+       ok: 'Présence confirmée', already: 'Déjà confirmé pour cette séance', unregistered: x => `La carte ${x} n’est pas inscrite au formulaire`,
+       unregisteredSub: 'Elle est gardée et sera confirmée à l’inscription de son titulaire', duplicate: x => `La carte ${x} est inscrite sous deux noms`,
+       duplicateSub: 'À régler depuis l’espace organisateurs', invalid: x => `Le numéro ${x} ne fait pas partie des cartes imprimées`,
+       saved: x => `Carte ${x} gardée sur le téléphone`, savedSub: 'Envoyée automatiquement au retour de la connexion'},
+  en: {title: 'Attendance scan', loading: 'Loading...', denied: 'This link is not valid or was replaced by a new one. Ask the organizer for the current link (QR code in the activity’s dashboard).',
+       present: 'confirmed', total: 'registered', mine: 'scanned here', start: 'Start the camera and scan', manualPh: 'or type the ticket number: 12', confirm: 'Confirm',
+       online: 'Online', offline: 'Offline: scans are kept on the phone and sent when the connection is back',
+       pending: n => `${n} ticket(s) kept on the phone, waiting for the connection`, session: (s, n) => `session ${s} of ${n}`,
+       noNet: 'No connection right now — scans are kept on the phone',
+       noCam: 'Could not start the camera. Allow it in the browser, or type the ticket numbers.', torch: 'Light',
+       ok: 'Attendance confirmed', already: 'Already confirmed for this session', unregistered: x => `Ticket ${x} is not registered in the form`,
+       unregisteredSub: 'Kept, and confirmed once its holder registers', duplicate: x => `Ticket ${x} is registered under two names`,
+       duplicateSub: 'To be settled from the organizers’ dashboard', invalid: x => `Number ${x} is not among the printed tickets`,
+       saved: x => `Ticket ${x} kept on the phone`, savedSub: 'Sent automatically when the connection is back'},
+};
+const {t} = UI, $ = id => document.getElementById(id);
+const video = document.querySelector('video'), flash = $('flash'), canvas = document.createElement('canvas');
+let busy = false, audio = null, mine = 0, last = {t: '', at: 0}, about = null;
+const LOOK = {  // icon, color, main line, second line
+  ok: ['✓', '#12a38a', j => [t('ok'), j.name]],
+  already: ['✓', '#2e6be6', j => [t('already'), j.name]],
+  unregistered: ['!', '#c98a0c', j => [t('unregistered')(j.ticket), t('unregisteredSub')]],
+  duplicate: ['!', '#c98a0c', j => [t('duplicate')(j.ticket), t('duplicateSub')]],
+  invalid: ['✕', '#e5484d', j => [t('invalid')(j.ticket), '']],
+  saved: ['⏳', '#7a560f', j => [t('saved')(j.ticket), t('savedSub')]],
+};
 
-  const pending = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } };
-  const setPending = p => { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) {} showNet(); };
-  function showNet() {
-    const n = pending().length;
-    $('net').style.display = n ? 'block' : 'none';
-    $('net').textContent = `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال بالإنترنت`;
-  }
+const pending = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } };
+const setPending = p => { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) { /* not kept */ } showNet(); };
+function showNet() {
+  const n = pending().length, on = navigator.onLine;
+  $('net').className = 'netline ' + (on && !n ? 'on' : 'off');
+  $('net').querySelector('span').textContent = n ? t('pending')(n) : t(on ? 'online' : 'offline');
+}
+addEventListener('online', () => { showNet(); retry(); });
+addEventListener('offline', showNet);
 
-  async function call(body) {  // text/plain keeps the request simple: no preflight, no Google account needed
-    const r = await fetch(EXEC, {method: 'POST', body: JSON.stringify(Object.assign({token: TOKEN}, body)), credentials: 'omit'});
-    return r.json();
+async function call(body) {  // text/plain keeps the request simple: no preflight, no Google account needed
+  const r = await fetch(EXEC, {method: 'POST', body: JSON.stringify(Object.assign({token: TOKEN}, body)), credentials: 'omit'});
+  return r.json();
+}
+function beep(ok) {
+  if (!audio) return;
+  const o = audio.createOscillator(), g = audio.createGain();
+  o.frequency.value = ok ? 880 : 300; g.gain.value = 0.15;
+  o.connect(g); g.connect(audio.destination); o.start(); o.stop(audio.currentTime + (ok ? 0.12 : 0.35));
+}
+function counts(j) {
+  if (j.present !== undefined) { $('present').textContent = j.present; $('total').textContent = j.total; }
+}
+function show(j) {
+  const [icon, color, text] = LOOK[j.status], [line1, line2] = text(j);
+  flash.style.background = color;
+  flash.querySelector('.icon').textContent = icon;
+  // names come from the public form: text only, never HTML
+  flash.querySelector('.msg').replaceChildren(line1, line2 ? UI.el('span', {className: 'sub', dir: 'auto', textContent: line2}) : '');
+  flash.classList.add('on');
+  const good = j.status === 'ok' || j.status === 'already';
+  beep(good);
+  if (navigator.vibrate) navigator.vibrate(good ? 120 : [80, 60, 80]);
+  setTimeout(() => flash.classList.remove('on'), good ? 1100 : 2200);
+  $('log').prepend(UI.el('li', {}, UI.el('span', {className: 's', style: 'background:' + color, textContent: icon}),
+    UI.el('span', {className: 'n', dir: 'auto', textContent: j.name || line1}), UI.el('span', {className: 't', textContent: j.ticket || ''})));
+  if (j.status === 'ok') $('mine').textContent = ++mine;
+  counts(j);
+}
+
+async function scan(raw) {
+  const s = String(raw).trim();
+  if (!s || (s === last.t && Date.now() - last.at < 5000)) return;  // the camera sees the same ticket many times
+  last = {t: s, at: Date.now()};
+  const ticket = (s.toUpperCase().match(/T\d+-\d+/) || [s])[0];
+  try {
+    const j = await call({action: 'scan', ticket: s});
+    if (j.status === 'denied') return denied();
+    if (LOOK[j.status]) show(j);
+  } catch (e) {
+    setPending(pending().concat([s]));
+    show({status: 'saved', ticket});
   }
-  function beep(ok) {
-    if (!audio) return;
-    const o = audio.createOscillator(), g = audio.createGain();
-    o.frequency.value = ok ? 880 : 300; g.gain.value = 0.15;
-    o.connect(g); g.connect(audio.destination); o.start(); o.stop(audio.currentTime + (ok ? 0.12 : 0.35));
-  }
-  function counts(j) {
-    if (j.present !== undefined) { $('present').textContent = j.present; $('total').textContent = j.total; }
-  }
-  function show(j) {
-    const [icon, color, text] = LOOK[j.status], [line1, line2] = text(j);
-    flash.style.background = color; flash.querySelector('.icon').textContent = icon;
-    const msg = flash.querySelector('.msg');
-    msg.textContent = line1;  // names come from the public form: text only, never HTML
-    if (line2) { msg.append(document.createElement('br')); msg.append(line2); }
-    flash.style.display = 'flex';
-    const good = j.status === 'ok' || j.status === 'already';
-    beep(good); if (navigator.vibrate) navigator.vibrate(good ? 120 : [80, 60, 80]);
-    setTimeout(() => flash.style.display = 'none', good ? 1100 : 2200);
-    const li = document.createElement('li'), s = document.createElement('span'), n = document.createElement('span'), t = document.createElement('span');
-    s.className = 's'; s.textContent = icon; s.style.color = color;
-    n.textContent = j.name || line1; t.className = 't'; t.textContent = j.ticket;
-    li.append(s, n, t); $('log').prepend(li);
-    if (j.status === 'ok') $('mine').textContent = ++mine;
+}
+async function retry() {  // scans kept during a network cut leave as soon as it is back, oldest first
+  const p = pending();
+  if (!p.length || busy) return;
+  try {
+    const j = await call({action: 'scan', ticket: p[0]});
+    setPending(pending().slice(1));
     counts(j);
-  }
+  } catch (e) { /* still offline */ }
+}
+setInterval(retry, 8000);
 
-  async function scan(raw) {
-    const t = String(raw).trim();
-    if (!t || (t === last.t && Date.now() - last.at < 5000)) return;  // the camera sees the same ticket many times
-    last = {t, at: Date.now()};
-    const ticket = (t.toUpperCase().match(/T\d+-\d+/) || [t])[0];
-    try {
-      const j = await call({action: 'scan', ticket: t});
-      if (j.status === 'denied') return denied();
-      if (LOOK[j.status]) show(j);
-    } catch (e) {
-      setPending(pending().concat([t]));
-      show({status: 'saved', ticket});
-    }
-  }
-  async function retry() {  // scans kept during a network cut leave as soon as it is back, oldest first
-    const p = pending();
-    if (!p.length || busy) return;
-    try {
-      const j = await call({action: 'scan', ticket: p[0]});
-      setPending(pending().slice(1));
-      counts(j);
-    } catch (e) { /* still offline */ }
-  }
-  setInterval(retry, 8000);
+function denied() { $('main').hidden = true; $('main').style.display = 'none'; $('denied').hidden = false; about = null; $('what').removeAttribute('data-t'); $('what').textContent = ''; }
+function describe() {
+  if (about) $('what').removeAttribute('data-t');  // from now on its text is the activity's, not "loading"
+  if (about === 'off') $('what').textContent = t('noNet');
+  else if (about) $('what').textContent = [about.title, about.dates, about.sessions > 1 ? t('session')(about.session, about.sessions) : ''].filter(Boolean).join(' · ');
+}
+async function info() {
+  try {
+    const j = await call({action: 'info'});
+    if (j.status === 'denied') return denied();
+    about = j;
+    counts(j);
+  } catch (e) { about = 'off'; }
+  describe();
+}
 
-  function denied() { $('main').style.display = 'none'; $('denied').style.display = 'block'; $('what').textContent = ''; }
-  async function info() {
-    try {
-      const j = await call({action: 'info'});
-      if (j.status === 'denied') return denied();
-      $('what').textContent = `${j.title} · ${j.dates || ''}` + (j.sessions > 1 ? ` · الحصة ${j.session} من ${j.sessions}` : '');
-      counts(j);
-    } catch (e) { $('what').textContent = 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف'; }
+$('start').onclick = async () => {
+  audio = new (window.AudioContext || window.webkitAudioContext)();
+  try {
+    video.srcObject = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment', width: {ideal: 1280}}, audio: false});
+  } catch (e) { return alert(t('noCam')); }
+  await video.play();
+  $('cam').hidden = false; $('start').hidden = true;
+  const track = video.srcObject.getVideoTracks()[0];
+  if (track.getCapabilities && (track.getCapabilities() || {}).torch) {  // a dark hall: the phone's light (Android)
+    const b = $('torch');
+    b.hidden = false; b.title = t('torch');
+    b.onclick = () => { const on = b.getAttribute('aria-pressed') !== 'true'; track.applyConstraints({advanced: [{torch: on}]}).then(() => b.setAttribute('aria-pressed', String(on)), () => {}); };
   }
-  if (TOKEN.length < 20) denied(); else { info(); setInterval(info, 20000); showNet(); }
+  const det = 'BarcodeDetector' in window ? new BarcodeDetector({formats: ['qr_code']}) : null;
+  loop(det);
+};
+async function loop(det) {  // Android reads QR codes itself; iPhone through the jsQR library
+  if (!busy && video.readyState >= 2 && !flash.classList.contains('on')) {
+    busy = true;
+    try {
+      let hit = null;
+      if (det) {
+        hit = (await det.detect(video)).map(c => c.rawValue).find(v => /T\d+-\d+/i.test(v));
+      } else if (window.jsQR) {
+        const w = 640, h = Math.round(video.videoHeight * w / video.videoWidth);
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d', {willReadFrequently: true});
+        ctx.drawImage(video, 0, 0, w, h);
+        const code = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, {inversionAttempts: 'dontInvert'});
+        hit = code && /T\d+-\d+/i.test(code.data) ? code.data : null;
+      }
+      if (hit) await scan(hit);
+    } catch (e) { /* the next frame tries again */ } finally { busy = false; }
+  }
+  setTimeout(() => loop(det), 200);
+}
+$('manualForm').onsubmit = async e => {
+  e.preventDefault();
+  const v = $('manual').value.trim();
+  if (!v) return;
+  audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+  last = {t: '', at: 0};
+  await scan(v);
+  $('manual').value = '';
+};
 
-  $('start').onclick = async () => {
-    audio = new (window.AudioContext || window.webkitAudioContext)();
-    try {
-      video.srcObject = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment', width: {ideal: 1280}}, audio: false});
-    } catch (e) { return alert('تعذر تشغيل الكاميرا. اسمح للمتصفح باستعمالها، أو اكتب أرقام البطاقات.'); }
-    await video.play();
-    $('cam').style.display = 'block'; $('start').style.display = 'none';
-    const det = 'BarcodeDetector' in window ? new BarcodeDetector({formats: ['qr_code']}) : null;
-    loop(det);
-  };
-  async function loop(det) {  // Android reads QR codes itself; iPhone through the jsQR library
-    if (!busy && video.readyState >= 2 && flash.style.display !== 'flex') {
-      busy = true;
-      try {
-        let hit = null;
-        if (det) {
-          hit = (await det.detect(video)).map(c => c.rawValue).find(v => /T\d+-\d+/i.test(v));
-        } else if (window.jsQR) {
-          const w = 640, h = Math.round(video.videoHeight * w / video.videoWidth);
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext('2d', {willReadFrequently: true});
-          ctx.drawImage(video, 0, 0, w, h);
-          const code = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, {inversionAttempts: 'dontInvert'});
-          hit = code && /T\d+-\d+/i.test(code.data) ? code.data : null;
-        }
-        if (hit) await scan(hit);
-      } catch (e) {} finally { busy = false; }
-    }
-    setTimeout(() => loop(det), 200);
-  }
-  $('send').onclick = async () => {
-    const v = $('manual').value.trim(); if (!v) return;
-    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-    last = {t: '', at: 0};
-    await scan(v);
-    $('manual').value = '';
-  };
+$('bar').append(UI.brand('index.html', 'title'), UI.el('div', {className: 'tools'}, UI.langSwitch(), UI.themeButton()));
+UI.init({page: 'scan', name: 'title', shell: false, T, onLang: () => { describe(); showNet(); }});
+if (TOKEN.length < 20) denied(); else { info(); setInterval(info, 20000); showNet(); }
 </script>
 </body>
 </html>
