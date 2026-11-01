@@ -157,6 +157,7 @@ const {t} = UI, $ = id => document.getElementById(id);
 const video = document.querySelector('video'), flash = $('flash'), canvas = document.createElement('canvas');
 let audio = null, mine = 0, about = null, stream = null, running = false, det, facing = 'environment', ctx = null;
 const seen = new Map();  // ticket -> when the camera last saw it: it sees the same ticket many times a second
+const said = new Map();  // ticket -> [text, kind] of its answer, shown again while it stays in front of the camera
 const LOOK = {  // icon, color, main line, second line
   ok: ['✓', '#12a38a', j => [t('ok'), j.name]],
   already: ['✓', '#2e6be6', j => [t('already'), j.name]],
@@ -219,6 +220,7 @@ function answer(j, li, ticket) {
   li.querySelector('.s').style.background = color;
   li.querySelector('.s').textContent = icon;
   li.querySelector('.n').textContent = j.name || line1;
+  said.set(ticket, [j.name || line1, good ? 'ok' : 'warn']);
   if ($('hit').querySelector('b').textContent === ticket) strip(ticket, j.name || line1, good ? 'ok' : 'warn');
   if (!good) { beep(false); if (navigator.vibrate) navigator.vibrate([80, 60, 80]); show(j); }
   if (j.status === 'ok') $('mine').textContent = ++mine;
@@ -227,8 +229,13 @@ function answer(j, li, ticket) {
 function scan(raw) {  // the read is confirmed at once and the camera goes on; the answer fills its line when it comes
   const s = String(raw).trim(), ticket = (s.toUpperCase().match(/T\d+-\d+/) || [s])[0];
   const before = seen.get(ticket) || 0;
-  seen.set(ticket, Date.now());  // a ticket still in front of the camera stays ignored; 6 s away from it, it can be read again
-  if (!s || Date.now() - before < 6000) return;
+  seen.set(ticket, Date.now());  // a ticket still in front of the camera is not sent again; 6 s away from it, it can be
+  if (!s) return;
+  if (Date.now() - before < 6000) {  // ...but the organizer sees it was read
+    const [text, kind] = said.get(ticket) || [t('checking'), ''];
+    if ($('hit').hidden || $('hit').querySelector('b').textContent !== ticket) strip(ticket, text, kind);
+    return;
+  }
   beep(true);
   if (navigator.vibrate) navigator.vibrate(40);
   strip(ticket, t('checking'));
@@ -340,12 +347,18 @@ async function read() {  // a ticket's QR code in the picture now, or null
     catch (e) { det = null; }  // this phone's reader failed: jsQR from now on
   }
   if (!window.jsQR) return null;
-  // the middle of the picture at full size, not the whole picture made smaller: the code's squares stay readable
-  const vw = video.videoWidth, vh = video.videoHeight, side = Math.round(Math.min(vw, vh) * 0.8), size = Math.min(side, 900);
-  if (canvas.width !== size) { canvas.width = canvas.height = size; ctx = null; }
+  // first the square in the middle at full size (a ticket's dense code stays readable), then the whole picture
+  // made smaller (a code bigger than the square: held close, or shown on a screen)
+  const vw = video.videoWidth, vh = video.videoHeight, side = Math.round(Math.min(vw, vh) * 0.8), k = Math.min(1, 960 / Math.max(vw, vh));
+  return decode((vw - side) / 2, (vh - side) / 2, side, side, Math.min(1, 900 / side))
+      || decode(0, 0, vw, vh, k);
+}
+function decode(x, y, w, h, k) {  // jsQR on part of the picture (x, y, w, h), scaled by k
+  const cw = Math.round(w * k), ch = Math.round(h * k);
+  if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; ctx = null; }
   ctx = ctx || canvas.getContext('2d', {willReadFrequently: true});
-  ctx.drawImage(video, (vw - side) / 2, (vh - side) / 2, side, side, 0, 0, size, size);
-  const code = jsQR(ctx.getImageData(0, 0, size, size).data, size, size, {inversionAttempts: 'dontInvert'});
+  ctx.drawImage(video, x, y, w, h, 0, 0, cw, ch);
+  const code = jsQR(ctx.getImageData(0, 0, cw, ch).data, cw, ch, {inversionAttempts: 'dontInvert'});
   return code && /T\d+-\d+/i.test(code.data) ? code.data : null;
 }
 async function loop() {
