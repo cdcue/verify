@@ -38,6 +38,13 @@
   .cert .btns { margin-top: auto; padding-top: 6px; }
   .codev { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; letter-spacing: 2px; font-weight: 700; color: var(--ink); }
   .empty { text-align: center; padding: 32px 20px; color: var(--muted); }
+  .seg { display: flex; gap: 4px; padding: 4px; margin-bottom: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+  .seg button { flex: 1; min-height: 44px; border: 0; border-radius: 10px; background: none; color: var(--muted); font: inherit; font-weight: 600; cursor: pointer; }
+  .seg button[aria-selected="true"] { background: var(--brand); color: var(--on-brand); }
+  .eye { display: block; margin-top: 6px; font-size: 13px; }
+  details > summary { cursor: pointer; font-weight: 700; font-size: 17px; }
+  h3 { font-size: 16px; margin: 0; }
+  .btn.danger { color: var(--err); }
 </style>
 </head>
 <body>
@@ -51,43 +58,92 @@
 <noscript><p style="text-align:center">JavaScript is required · يلزم تفعيل JavaScript</p></noscript>
 
 <script>
-// A participant's own certificates: their email (or participant number) gets a 6-digit code, then a token signed by
-// the Apps Script stays in this browser for 30 days. Every value shown comes from the sheets: text nodes only.
+// A participant's own certificates. An account per phone number: opened once with a code sent to the email, then the
+// phone and a password of one's own; a token signed by the Apps Script stays in this browser for 30 days.
+// Every value shown comes from the sheets: text nodes only.
 const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec', KEY = 'shawahid-me';
 const T = {
   ar: {title: 'شواهدي', lead: 'كل الشواهد التي حصلتَ عليها في مكان واحد: تحميلها، ومشاركتها، ورموز التحقق منها.',
-       idLabel: 'البريد الإلكتروني أو رقم المشارك', idPh: 'name@example.com أو P00012',
-       idHelp: 'البريد الذي سجلتَ به، أو رقم المشارك المكتوب في رسالة شهادتك.', send: 'أرسل رمز الدخول',
+       tIn: 'الدخول', tNew: 'حساب جديد', phone: 'رقم الهاتف', phoneHelp: 'بأي صيغة: ⁦0612345678⁩ أو ⁦+212 6 12 34 56 78⁩',  // numbers kept left to right in the Arabic line
+       password: 'كلمة السر', show: 'إظهار', hide: 'إخفاء', signIn: 'دخول', forgot: 'نسيت كلمة السر؟', noAcc: 'أول مرة هنا؟ افتح حسابك',
+       wrongIn: 'رقم الهاتف أو كلمة السر غير صحيح.', locked: 'محاولات كثيرة: أعد المحاولة بعد 15 دقيقة.',
+       newT: 'افتح حسابك مرة واحدة', newD: 'اكتب هاتفك والبريد الذي سجلتَ به في الأنشطة: يصلك عليه رمز التفعيل، ثم تختار كلمة سرك وتدخل بعدها برقم هاتفك دون أي بريد.',
+       email: 'البريد الإلكتروني', emailHelp: 'البريد الذي وصلتك عليه شواهدك: تظهر في حسابك تلقائياً.', name: 'الاسم الكامل كما في شهاداتك',
+       nameHelp: 'به تضيف إلى حسابك شواهد صدرت دون بريد، برقمها.', sendCode: 'أرسل رمز التفعيل',
+       badphone: 'اكتب رقم هاتف صحيحاً.', bademail: 'اكتب بريداً صحيحاً.', badname: 'اكتب اسمك الكامل.',
+       taken: 'لهذا الرقم حساب مفعّل: ادخل بكلمة السر، أو اختر «نسيت كلمة السر».',
        wait: 'طلبتَ رموزاً كثيرة: أعد المحاولة بعد ساعة.', busy: 'الخدمة مشغولة الآن: أعد المحاولة بعد قليل.', sendFail: 'تعذر إرسال الرمز.',
-       codeT: 'رمز الدخول', codeD: 'إن كان لهذا البريد أو الرقم شواهد فقد أرسلنا إليه رمزاً من 6 أرقام، صالحاً 10 دقائق. إن لم يصل فتفقد البريد غير المرغوب فيه.',
-       enter: 'دخول', back: 'رجوع', wrong: 'الرمز غير صحيح.', expired: 'انتهت صلاحية الرمز أو استُعمل: اطلب رمزاً جديداً.',
-       loading: 'جارٍ التحميل...', ended: 'انتهت مدة الدخول: اطلب رمزاً جديداً.', out: 'خروج',
-       number: 'رقم المشارك', count: n => n === 1 ? 'شهادة واحدة' : n === 2 ? 'شهادتان' : n + ' شواهد', none: 'لا شواهد بعد.',
+       codeT: 'رمز التفعيل', codeD: 'أرسلنا رمزاً من 6 أرقام إلى بريدك، صالحاً 10 دقائق. إن لم يصل فتفقد البريد غير المرغوب فيه.',
+       code: 'الرمز', newPw: 'كلمة سر جديدة (8 أحرف على الأقل)', newPw2: 'أعد كتابتها', mismatch: 'كلمتا السر غير متطابقتين.',
+       short: 'كلمة السر قصيرة: 8 أحرف على الأقل.', activate: 'تفعيل الحساب', wrong: 'الرمز غير صحيح.', expired: 'انتهت صلاحية الرمز: اطلب رمزاً جديداً.',
+       forgotT: 'كلمة سر جديدة', forgotD: 'اكتب رقم هاتفك: إن كان له حساب يصل رمز إلى بريده.', resetD: 'إن كان للرقم حساب فقد أرسلنا رمزاً إلى بريده، صالحاً 10 دقائق.',
+       save: 'حفظ والدخول', back: 'رجوع',
+       loading: 'جارٍ التحميل...', ended: 'انتهت مدة الدخول: ادخل من جديد.', out: 'خروج',
+       count: n => n === 1 ? 'شهادة واحدة' : n === 2 ? 'شهادتان' : n + ' شواهد', none: 'لا شواهد في حسابك بعد.',
        zip: 'تحميل الكل (ZIP)', zipping: 'جارٍ التجهيز...', zipFail: 'تعذر تجهيز الملف', zipPart: n => `في الملف أحدث ${n} شواهد؛ الباقي من روابطها.`,
        copyAll: 'نسخ كل الروابط', copied: 'نُسخت الروابط', share: 'مشاركة', listHead: n => 'شواهد ' + n + ':',
-       revoked: 'ملغاة', cert: 'شهادة', serial: 'رقم الشهادة', code: 'رمز التحقق', download: 'تحميل', verify: 'صفحة التحقق'},
+       revoked: 'ملغاة', cert: 'شهادة', serial: 'رقم الشهادة', vcode: 'رمز التحقق', download: 'تحميل', verify: 'صفحة التحقق', addedB: 'أضفتَها برقمها',
+       addT: 'أضف شهادة باسمك', addD: 'شهادة صدرت دون بريد أو بغير بريدك؟ اكتب رقمها كما هو عليها: تُضاف إن كان الاسم عليها اسمك.',
+       addPh: 'CDCUE-2026-P0012', add: 'إضافة', added: 'أُضيفت الشهادة إلى حسابك',
+       notfound: 'لا شهادة بهذا الرقم: تأكد منه كما هو مكتوب عليها.', have: 'هذه الشهادة في حسابك أصلاً.', revokedC: 'هذه الشهادة ملغاة.',
+       nameC: 'الاسم على هذه الشهادة ليس اسمك في الحساب.', waitC: 'محاولات كثيرة اليوم: أعد المحاولة غداً.',
+       accT: 'حسابي', chPw: 'تغيير كلمة السر', oldPw: 'كلمة السر الحالية', wrongPw: 'كلمة السر غير صحيحة.', pwChanged: 'تغيّرت كلمة السر',
+       del: 'حذف الحساب', delD: 'يُحذف الحساب وبياناته (الهاتف والبريد والاسم)، وتبقى الشواهد نفسها كما هي، ويمكنك فتح حساب جديد متى شئت.',
+       delAsk: 'اكتب كلمة السر لتأكيد حذف الحساب', deleted: 'حُذف الحساب'},
   fr: {title: 'Mes attestations', lead: 'Toutes vos attestations au même endroit : téléchargement, partage et codes de vérification.',
-       idLabel: 'E-mail ou numéro de participant', idPh: 'nom@exemple.com ou P00012',
-       idHelp: 'L’e-mail utilisé à l’inscription, ou le numéro de participant indiqué dans l’e-mail de votre attestation.', send: 'Recevoir un code de connexion',
+       tIn: 'Connexion', tNew: 'Nouveau compte', phone: 'Numéro de téléphone', phoneHelp: 'Sous toute forme : 0612345678 ou +212 6 12 34 56 78',
+       password: 'Mot de passe', show: 'Afficher', hide: 'Masquer', signIn: 'Se connecter', forgot: 'Mot de passe oublié ?', noAcc: 'Première fois ? Ouvrez votre compte',
+       wrongIn: 'Téléphone ou mot de passe incorrect.', locked: 'Trop d’essais : réessayez dans 15 minutes.',
+       newT: 'Ouvrez votre compte une fois', newD: 'Indiquez votre téléphone et l’e-mail utilisé pour les activités : vous y recevrez un code d’activation, puis vous choisirez votre mot de passe et vous connecterez ensuite avec votre téléphone, sans e-mail.',
+       email: 'E-mail', emailHelp: 'L’e-mail où vous avez reçu vos attestations : elles apparaissent automatiquement.', name: 'Nom complet, comme sur vos attestations',
+       nameHelp: 'Il permet d’ajouter, par leur numéro, des attestations émises sans e-mail.', sendCode: 'Recevoir le code d’activation',
+       badphone: 'Saisissez un numéro de téléphone valide.', bademail: 'Saisissez un e-mail valide.', badname: 'Saisissez votre nom complet.',
+       taken: 'Ce numéro a déjà un compte : connectez-vous, ou choisissez « Mot de passe oublié ».',
        wait: 'Trop de codes demandés : réessayez dans une heure.', busy: 'Service occupé : réessayez dans un instant.', sendFail: 'Envoi du code impossible.',
-       codeT: 'Code de connexion', codeD: 'Si cet e-mail ou ce numéro a des attestations, un code à 6 chiffres valable 10 minutes vient d’y être envoyé. Pensez à vérifier les indésirables.',
-       enter: 'Se connecter', back: 'Retour', wrong: 'Code incorrect.', expired: 'Code expiré ou déjà utilisé : demandez-en un nouveau.',
-       loading: 'Chargement...', ended: 'Session expirée : demandez un nouveau code.', out: 'Se déconnecter',
-       number: 'N° de participant', count: n => n + (n > 1 ? ' attestations' : ' attestation'), none: 'Aucune attestation pour l’instant.',
+       codeT: 'Code d’activation', codeD: 'Un code à 6 chiffres, valable 10 minutes, vient d’être envoyé à votre e-mail. Pensez aux indésirables.',
+       code: 'Code', newPw: 'Nouveau mot de passe (8 caractères au moins)', newPw2: 'Confirmez-le', mismatch: 'Les mots de passe ne correspondent pas.',
+       short: 'Mot de passe trop court : 8 caractères au moins.', activate: 'Activer le compte', wrong: 'Code incorrect.', expired: 'Code expiré : demandez-en un nouveau.',
+       forgotT: 'Nouveau mot de passe', forgotD: 'Saisissez votre numéro : s’il a un compte, un code est envoyé à son e-mail.', resetD: 'Si ce numéro a un compte, un code valable 10 minutes a été envoyé à son e-mail.',
+       save: 'Enregistrer et se connecter', back: 'Retour',
+       loading: 'Chargement...', ended: 'Session expirée : connectez-vous de nouveau.', out: 'Se déconnecter',
+       count: n => n + (n > 1 ? ' attestations' : ' attestation'), none: 'Aucune attestation dans votre compte pour l’instant.',
        zip: 'Tout télécharger (ZIP)', zipping: 'Préparation...', zipFail: 'Préparation du fichier impossible', zipPart: n => `Le fichier contient les ${n} plus récentes ; les autres via leur lien.`,
        copyAll: 'Copier tous les liens', copied: 'Liens copiés', share: 'Partager', listHead: n => 'Attestations de ' + n + ' :',
-       revoked: 'Annulée', cert: 'Attestation', serial: 'Numéro', code: 'Code de vérification', download: 'Télécharger', verify: 'Page de vérification'},
+       revoked: 'Annulée', cert: 'Attestation', serial: 'Numéro', vcode: 'Code de vérification', download: 'Télécharger', verify: 'Page de vérification', addedB: 'Ajoutée par numéro',
+       addT: 'Ajouter une attestation à votre nom', addD: 'Une attestation émise sans e-mail, ou avec un autre ? Saisissez son numéro tel qu’il y figure : elle est ajoutée si le nom est le vôtre.',
+       addPh: 'CDCUE-2026-P0012', add: 'Ajouter', added: 'Attestation ajoutée à votre compte',
+       notfound: 'Aucune attestation avec ce numéro : vérifiez-le.', have: 'Cette attestation est déjà dans votre compte.', revokedC: 'Cette attestation est annulée.',
+       nameC: 'Le nom sur cette attestation n’est pas celui de votre compte.', waitC: 'Trop d’essais aujourd’hui : réessayez demain.',
+       accT: 'Mon compte', chPw: 'Changer le mot de passe', oldPw: 'Mot de passe actuel', wrongPw: 'Mot de passe incorrect.', pwChanged: 'Mot de passe changé',
+       del: 'Supprimer le compte', delD: 'Le compte et ses données (téléphone, e-mail, nom) sont supprimés ; les attestations restent telles quelles, et vous pouvez rouvrir un compte quand vous voulez.',
+       delAsk: 'Saisissez votre mot de passe pour confirmer la suppression', deleted: 'Compte supprimé'},
   en: {title: 'My certificates', lead: 'All your certificates in one place: download them, share them, and find their verification codes.',
-       idLabel: 'Email or participant number', idPh: 'name@example.com or P00012',
-       idHelp: 'The email you registered with, or the participant number in your certificate email.', send: 'Send me a sign-in code',
+       tIn: 'Sign in', tNew: 'New account', phone: 'Phone number', phoneHelp: 'Any way you write it: 0612345678 or +212 6 12 34 56 78',
+       password: 'Password', show: 'Show', hide: 'Hide', signIn: 'Sign in', forgot: 'Forgot your password?', noAcc: 'First time here? Open your account',
+       wrongIn: 'Wrong phone number or password.', locked: 'Too many tries: try again in 15 minutes.',
+       newT: 'Open your account once', newD: 'Enter your phone and the email you registered with: an activation code goes there, then you choose your password and sign in with your phone from then on, no email.',
+       email: 'Email', emailHelp: 'The email your certificates were sent to: they show up in your account by themselves.', name: 'Full name, as on your certificates',
+       nameHelp: 'It lets you add, by their number, certificates issued without an email.', sendCode: 'Send the activation code',
+       badphone: 'Enter a valid phone number.', bademail: 'Enter a valid email.', badname: 'Enter your full name.',
+       taken: 'This number already has an account: sign in, or choose “Forgot your password?”.',
        wait: 'Too many codes requested: try again in an hour.', busy: 'The service is busy: try again shortly.', sendFail: 'Could not send the code.',
-       codeT: 'Sign-in code', codeD: 'If this email or number has certificates, we just sent it a 6-digit code, valid for 10 minutes. Check your spam folder if it does not arrive.',
-       enter: 'Sign in', back: 'Back', wrong: 'Wrong code.', expired: 'The code expired or was already used: ask for a new one.',
-       loading: 'Loading...', ended: 'Your session ended: ask for a new code.', out: 'Sign out',
-       number: 'Participant no.', count: n => n + (n === 1 ? ' certificate' : ' certificates'), none: 'No certificates yet.',
+       codeT: 'Activation code', codeD: 'We sent a 6-digit code to your email, valid for 10 minutes. Check your spam folder if it does not arrive.',
+       code: 'Code', newPw: 'New password (at least 8 characters)', newPw2: 'Type it again', mismatch: 'The passwords do not match.',
+       short: 'Password too short: at least 8 characters.', activate: 'Activate the account', wrong: 'Wrong code.', expired: 'The code expired: ask for a new one.',
+       forgotT: 'New password', forgotD: 'Enter your phone number: if it has an account, a code goes to its email.', resetD: 'If this number has an account, a code valid for 10 minutes was sent to its email.',
+       save: 'Save and sign in', back: 'Back',
+       loading: 'Loading...', ended: 'Your session ended: sign in again.', out: 'Sign out',
+       count: n => n + (n === 1 ? ' certificate' : ' certificates'), none: 'No certificates in your account yet.',
        zip: 'Download all (ZIP)', zipping: 'Preparing...', zipFail: 'Could not prepare the file', zipPart: n => `The file holds the ${n} most recent; the others are in their links.`,
        copyAll: 'Copy all links', copied: 'Links copied', share: 'Share', listHead: n => 'Certificates of ' + n + ':',
-       revoked: 'Revoked', cert: 'Certificate', serial: 'Number', code: 'Verification code', download: 'Download', verify: 'Verification page'},
+       revoked: 'Revoked', cert: 'Certificate', serial: 'Number', vcode: 'Verification code', download: 'Download', verify: 'Verification page', addedB: 'Added by number',
+       addT: 'Add a certificate in your name', addD: 'A certificate issued without an email, or to another one? Type its number as printed on it: it is added if the name on it is yours.',
+       addPh: 'CDCUE-2026-P0012', add: 'Add', added: 'Certificate added to your account',
+       notfound: 'No certificate with this number: check it as printed.', have: 'This certificate is already in your account.', revokedC: 'This certificate was revoked.',
+       nameC: 'The name on this certificate is not your account’s name.', waitC: 'Too many tries today: try again tomorrow.',
+       accT: 'My account', chPw: 'Change the password', oldPw: 'Current password', wrongPw: 'Wrong password.', pwChanged: 'Password changed',
+       del: 'Delete the account', delD: 'The account and its data (phone, email, name) are deleted; the certificates stay as they are, and you can open a new account whenever you like.',
+       delAsk: 'Type your password to confirm deleting the account', deleted: 'Account deleted'},
 };
 
 const {el, t} = UI, app = document.getElementById('app');
@@ -103,52 +159,117 @@ const btn = (key, onclick, ghost) => el('button', {className: 'btn' + (ghost ? '
 const verifyUrl = c => new URL('index.html?s=' + encodeURIComponent(c.serial) + (c.code ? '&k=' + encodeURIComponent(c.code) : ''), location.href).href;
 const show = (...kids) => app.replaceChildren(...kids);
 const busy = b => { b.disabled = true; return () => { b.disabled = false; }; };
+let uid = 0;
+function input(key, props, help) {  // [wrapper, input]: a labelled field, with its help line under it
+  const id = 'f' + (++uid), i = el('input', Object.assign({id}, props));
+  return [el('div', {}, el('label', {htmlFor: id, textContent: t(key)}), i, help ? el('p', {className: 'hint', style: 'margin-top:6px', textContent: t(help)}) : null), i];
+}
+function password(key, auto) {  // a password field with a show/hide button
+  const [box, i] = input(key, {type: 'password', dir: 'ltr', autocomplete: auto, minLength: 8, required: true});
+  const b = el('button', {type: 'button', className: 'linkbtn eye', textContent: t('show')});
+  b.onclick = () => { const s = i.type === 'password'; i.type = s ? 'text' : 'password'; b.textContent = t(s ? 'hide' : 'show'); };
+  i.after(b);
+  return [box, i];
+}
+const phoneField = () => input('phone', {type: 'tel', dir: 'ltr', inputMode: 'tel', autocomplete: 'tel', required: true, placeholder: '06 12 34 56 78'}, 'phoneHelp');
+const form = (...kids) => el('form', {className: 'card pad stack narrow rise', noValidate: true}, ...kids);
+const switcher = on => el('div', {className: 'seg narrow', role: 'tablist'},
+  ...[['tIn', signIn], ['tNew', openAccount]].map(([k, go]) => el('button', {type: 'button', role: 'tab', textContent: t(k),
+    ariaSelected: String(k === on), onclick: () => go()})));
 
 function signIn(msg) {
   view = () => signIn(msg);
-  const id = el('input', {id: 'id', dir: 'ltr', type: 'text', inputMode: 'email', autocomplete: 'email', placeholder: t('idPh'), spellcheck: false});
+  const [pb, ph] = phoneField(), [wb, pw] = password('password', 'current-password');
   const say = el('p', {className: 'say', role: 'alert', textContent: msg || ''});
-  const go = el('button', {className: 'btn block', type: 'submit', textContent: t('send')});
-  const form = el('form', {className: 'card pad stack narrow rise', noValidate: true},
-    el('div', {}, el('label', {htmlFor: 'id', textContent: t('idLabel')}), id, el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('idHelp')})),
-    go, say);
-  form.onsubmit = async e => {
+  const go = el('button', {className: 'btn block', type: 'submit', textContent: t('signIn')});
+  const f = form(pb, wb, go, say, el('div', {className: 'btns', style: 'justify-content:space-between'},
+    el('button', {type: 'button', className: 'linkbtn', textContent: t('forgot'), onclick: () => forgot(ph.value)}),
+    el('button', {type: 'button', className: 'linkbtn', textContent: t('noAcc'), onclick: () => openAccount()})));
+  f.onsubmit = async e => {
     e.preventDefault();
-    if (!id.value.trim()) return id.focus();
+    if (!ph.value.trim()) return ph.focus();
+    if (!pw.value) return pw.focus();
     const done = busy(go);
     try {
-      const r = await call('mecode', {id: id.value.trim()});
-      if (r.status === 'sent') return askCode(id.value.trim());
+      const r = await call('melogin', {phone: ph.value, password: pw.value});
+      if (r.status === 'ok') { keep(r.token); return mine(); }
+      say.textContent = t(r.status === 'locked' ? 'locked' : 'wrongIn');
+    } catch (e2) { /* toast shown */ }
+    done();
+  };
+  show(switcher('tIn'), f);
+  ph.focus();
+}
+
+function openAccount() {
+  view = () => openAccount();
+  const [pb, ph] = phoneField();
+  const [eb, em] = input('email', {type: 'email', dir: 'ltr', inputMode: 'email', autocomplete: 'email', required: true, placeholder: 'name@example.com'}, 'emailHelp');
+  const [nb, nm] = input('name', {type: 'text', dir: 'auto', autocomplete: 'name', required: true, maxLength: 80}, 'nameHelp');
+  const say = el('p', {className: 'say', role: 'alert'});
+  const go = el('button', {className: 'btn block', type: 'submit', textContent: t('sendCode')});
+  const f = form(el('div', {}, el('h2', {textContent: t('newT')}), el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('newD')})),
+    pb, eb, nb, go, say);
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const done = busy(go);
+    try {
+      const r = await call('meopen', {phone: ph.value, email: em.value, name: nm.value});
+      if (r.status === 'sent') return setPassword('meconfirm', ph.value, t('codeD'), 'activate');
+      say.textContent = t({badphone: 'badphone', bademail: 'bademail', badname: 'badname', taken: 'taken', wait: 'wait', busy: 'busy'}[r.status] || 'sendFail');
+      if (r.status === 'taken') say.append(' ', el('button', {type: 'button', className: 'linkbtn', textContent: t('forgot'), onclick: () => forgot(ph.value)}));
+    } catch (e2) { /* toast shown */ }
+    done();
+  };
+  show(switcher('tNew'), f);
+  ph.focus();
+}
+
+function forgot(phone) {
+  view = () => forgot(phone);
+  const [pb, ph] = phoneField();
+  ph.value = phone || '';
+  const say = el('p', {className: 'say', role: 'alert'});
+  const go = el('button', {className: 'btn block', type: 'submit', textContent: t('sendCode')});
+  const f = form(el('div', {}, el('h2', {textContent: t('forgotT')}), el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('forgotD')})),
+    pb, go, say, el('div', {}, el('button', {type: 'button', className: 'linkbtn', textContent: t('back'), onclick: () => signIn()})));
+  f.onsubmit = async e => {
+    e.preventDefault();
+    if (!ph.value.trim()) return ph.focus();
+    const done = busy(go);
+    try {
+      const r = await call('meforgot', {phone: ph.value});
+      if (r.status === 'sent') return setPassword('mereset', ph.value, t('resetD'), 'save');
       say.textContent = t(r.status === 'wait' || r.status === 'busy' ? r.status : 'sendFail');
     } catch (e2) { /* toast shown */ }
     done();
   };
-  show(form);
-  id.focus();
+  show(f);
+  ph.focus();
 }
 
-function askCode(id) {
-  view = () => askCode(id);
-  const code = el('input', {id: 'code', dir: 'ltr', inputMode: 'numeric', autocomplete: 'one-time-code', maxLength: 6, placeholder: '••••••', className: 'code'});
+function setPassword(action, phone, note, label) {  // the code received by email, and the password of one's choice
+  view = () => setPassword(action, phone, note, label);
+  const [cb, code] = input('code', {dir: 'ltr', inputMode: 'numeric', autocomplete: 'one-time-code', maxLength: 6, placeholder: '••••••', className: 'code'});
+  const [p1b, p1] = password('newPw', 'new-password'), [p2b, p2] = password('newPw2', 'new-password');
   const say = el('p', {className: 'say', role: 'alert'});
-  const go = el('button', {className: 'btn block', type: 'submit', textContent: t('enter')});
-  const form = el('form', {className: 'card pad stack narrow rise', noValidate: true},
-    el('div', {}, el('h2', {textContent: t('codeT')}), el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('codeD')})),
-    el('div', {}, el('label', {htmlFor: 'code', textContent: t('codeT')}), code), go, say,
-    el('div', {}, el('button', {type: 'button', className: 'linkbtn', textContent: t('back'), onclick: () => signIn()})));
-  const enter = async () => {
-    if (go.disabled) return;
+  const go = el('button', {className: 'btn block', type: 'submit', textContent: t(label)});
+  const f = form(el('div', {}, el('h2', {textContent: t('codeT')}), el('p', {className: 'hint', style: 'margin-top:6px', textContent: note})),
+    cb, p1b, p2b, go, say, el('div', {}, el('button', {type: 'button', className: 'linkbtn', textContent: t('back'), onclick: () => signIn()})));
+  f.onsubmit = async e => {
+    e.preventDefault();
+    if (code.value.replace(/\D/g, '').length !== 6) return code.focus();
+    if (p1.value.length < 8) { say.textContent = t('short'); return p1.focus(); }
+    if (p1.value !== p2.value) { say.textContent = t('mismatch'); return p2.focus(); }
     const done = busy(go);
     try {
-      const r = await call('melogin', {id, code: code.value});
+      const r = await call(action, {phone, code: code.value, password: p1.value});
       if (r.status === 'ok') { keep(r.token); return mine(); }
-      say.textContent = t(r.status === 'wrong' ? 'wrong' : 'expired');
-    } catch (e) { /* toast shown */ }
+      say.textContent = t({wrong: 'wrong', short: 'short', taken: 'taken'}[r.status] || 'expired');
+    } catch (e2) { /* toast shown */ }
     done();
   };
-  form.onsubmit = e => { e.preventDefault(); enter(); };
-  code.oninput = () => { if (code.value.replace(/\D/g, '').length === 6) enter(); };
-  show(form);
+  show(f);
   code.focus();
 }
 
@@ -163,6 +284,60 @@ async function mine() {
   data = j;
   draw(j);
 }
+const signOut = () => { keep(''); data = null; signIn(); };
+
+function addBox() {  // a certificate added by its number, when the name on it is the account's
+  const [sb, serial] = input('serial', {dir: 'ltr', autocomplete: 'off', spellcheck: false, placeholder: t('addPh'), style: 'text-transform:uppercase'});
+  const say = el('p', {className: 'say', role: 'alert'});
+  const go = el('button', {className: 'btn', type: 'submit', textContent: t('add')});
+  const f = el('form', {className: 'card pad stack rise', noValidate: true},
+    el('div', {}, el('h2', {textContent: t('addT')}), el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('addD')})), sb, go, say);
+  f.onsubmit = async e => {
+    e.preventDefault();
+    if (!serial.value.trim()) return serial.focus();
+    const done = busy(go);
+    try {
+      const r = await call('meclaim', {token, serial: serial.value});
+      if (r.status === 'ok') { UI.toast(t('added')); data = null; return mine(); }
+      if (r.status === 'login') return signOut();
+      say.textContent = t({notfound: 'notfound', have: 'have', revoked: 'revokedC', name: 'nameC', wait: 'waitC'}[r.status] || 'sendFail');
+    } catch (e2) { /* toast shown */ }
+    done();
+  };
+  return f;
+}
+
+function accountBox() {  // the account's own settings: its password, and deleting it
+  const [ob, old] = password('oldPw', 'current-password'), [nb, pw] = password('newPw', 'new-password');
+  const say = el('p', {className: 'say', role: 'alert'});
+  const go = el('button', {className: 'btn sm', type: 'submit', textContent: t('chPw')});
+  const f = el('form', {className: 'stack', noValidate: true}, el('h3', {textContent: t('chPw')}), ob, nb, go, say);
+  f.onsubmit = async e => {
+    e.preventDefault();
+    if (pw.value.length < 8) { say.textContent = t('short'); return pw.focus(); }
+    const done = busy(go);
+    try {
+      const r = await call('mepassword', {token, old: old.value, password: pw.value});
+      if (r.status === 'ok') { UI.toast(t('pwChanged')); old.value = pw.value = ''; say.textContent = ''; }
+      else if (r.status === 'login') return signOut();
+      else say.textContent = t(r.status === 'short' ? 'short' : 'wrongPw');
+    } catch (e2) { /* toast shown */ }
+    done();
+  };
+  const del = btn('del', async () => {
+    const p = prompt(t('delAsk'));
+    if (!p) return;
+    try {
+      const r = await call('medelete', {token, password: p});
+      if (r.status === 'ok') { UI.toast(t('deleted')); return signOut(); }
+      UI.toast(t(r.status === 'login' ? 'ended' : 'wrongPw'));
+    } catch (e2) { /* toast shown */ }
+  }, true);
+  del.classList.add('sm', 'danger');
+  return el('details', {className: 'card pad rise'}, el('summary', {textContent: t('accT')}),
+    el('div', {className: 'stack', style: 'margin-top:16px'}, f, el('div', {className: 'stack'},
+      el('h3', {textContent: t('del')}), el('p', {className: 'hint', textContent: t('delD')}), el('div', {}, del))));
+}
 
 function draw(j) {
   const live = j.certs.filter(c => !c.revoked && c.link);
@@ -174,7 +349,7 @@ function draw(j) {
       const r = await call('mezip', {token});
       if (r.status === 'ok') {
         const bytes = Uint8Array.from(atob(r.data), ch => ch.charCodeAt(0));
-        const a = el('a', {href: URL.createObjectURL(new Blob([bytes], {type: 'application/zip'})), download: 'certificates-' + j.number + '.zip'});
+        const a = el('a', {href: URL.createObjectURL(new Blob([bytes], {type: 'application/zip'})), download: 'certificates.zip'});
         document.body.append(a); a.click(); a.remove();
         if (r.files < live.length) UI.toast(t('zipPart')(r.files), 5000);
       } else UI.toast(t('zipFail'));
@@ -185,13 +360,12 @@ function draw(j) {
   const copy = btn('copyAll', async () => {
     try { await navigator.clipboard.writeText(text); UI.toast(t('copied')); } catch (e) { prompt('', text); }
   }, true);
-  const out = btn('out', () => { keep(''); data = null; signIn(); }, true);
+  const out = btn('out', signOut, true);
   out.classList.add('sm');
   const summary = el('section', {className: 'card pad rise'},
     el('div', {className: 'who'}, el('h2', {dir: 'auto', textContent: j.name}), out),
     el('div', {className: 'meta', style: 'margin-top:6px'},
-      el('span', {}, t('number') + ': ', el('b', {className: 'ltr', textContent: j.number})),
-      el('span', {className: 'ltr', textContent: j.email}),
+      el('span', {className: 'ltr', textContent: j.phone}), el('span', {className: 'ltr', textContent: j.email}),
       el('span', {textContent: j.certs.length ? t('count')(live.length) : t('none')})),
     live.length ? el('div', {className: 'btns', style: 'margin-top:14px'}, zip, copy,
       navigator.share ? btn('share', () => navigator.share({text}).catch(() => {}), true) : null) : null);
@@ -201,11 +375,13 @@ function draw(j) {
     el('div', {className: 'facts'},
       [c.dates, c.org].some(Boolean) ? el('span', {dir: 'auto', textContent: [c.dates, c.org].filter(Boolean).join(' · ')}) : null,
       el('span', {}, t('serial') + ': ', el('span', {className: 'serial ltr', textContent: c.serial})),
-      c.code ? el('span', {}, t('code') + ': ', el('span', {className: 'codev ltr', textContent: c.code})) : null),
+      c.code ? el('span', {}, t('vcode') + ': ', el('span', {className: 'codev ltr', textContent: c.code})) : null,
+      c.added ? el('span', {className: 'hint', textContent: t('addedB')}) : null),
     c.revoked ? null : el('div', {className: 'btns'},
       /^https:\/\//.test(c.link) ? el('a', {className: 'btn sm', href: c.link, target: '_blank', rel: 'noopener', textContent: t('download')}) : null,
       el('a', {className: 'btn sm ghost', href: verifyUrl(c), target: '_blank', rel: 'noopener', textContent: t('verify')}))));
-  show(summary, cards.length ? el('div', {className: 'list'}, ...cards) : el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('none')}));
+  show(summary, cards.length ? el('div', {className: 'list'}, ...cards) : el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('none')}),
+    el('div', {className: 'list'}, addBox(), accountBox()));
 }
 
 UI.init({page: 'me', name: 'title', T, onLang: () => view()});

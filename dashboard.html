@@ -198,8 +198,11 @@ const T = {
     delSure: n => 'حذف ' + n + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)', deleted: 'حُذف، ويصل الحذف إلى المنصة عند المزامنة',
     fixT: n => 'تصحيح: ' + n, newPersonT: 'مشارك جديد (دون بطاقة)', hasCert: 'له شهادة: تُعاد بالرقم والرابط نفسيهما عند المزامنة.',
     saveFix: 'حفظ التصحيح', add: 'إضافة', fixed: 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة', added: 'أُضيف، ويصل إلى المنصة عند المزامنة',
-    partsD: 'كل من له شهادة صالحة ببريد صحيح له رقم مشارك دائم، ويدخل صفحة «شواهدي» برقمه أو ببريده ورمز يصله على بريده، دون كلمة سر. القائمة تُحدَّث من المنصة على الحاسوب.',
+    partsD: 'كل من له شهادة صالحة ببريد صحيح يظهر هنا. في صفحة «شواهدي» يفتح حسابه مرة واحدة برقم هاتفه وبريده (يصله رمز تفعيل)، ثم يدخل برقم هاتفه وكلمة سره دون أي بريد، ويستطيع أن يضيف شهادة باسمه برقمها. القائمة تُحدَّث من المنصة على الحاسوب.',
     partsSearch: 'بحث بالاسم أو البريد أو الرقم أو رقم الشهادة...', certsN: n => n + ' شهادة: ', meLink: 'شواهدي',
+    accT: n => `حسابات «شواهدي» (${n})`, accD: 'الحسابات المفعّلة برقم الهاتف. أغلق حساباً فُتح برقم هاتف شخص آخر، أو بطلب صاحبه: يتحرر الرقم ليُفتح به حساب جديد، والشواهد لا تتغير.',
+    accSearch: 'بحث بالاسم أو الهاتف أو البريد...', accAdded: n => n + ' مضافة برقمها', accSince: 'منذ', accSeen: 'آخر دخول',
+    accClose: 'إغلاق الحساب', accCloseAsk: n => `إغلاق حساب «${n}»؟ يتحرر رقم هاتفه، وتبقى الشواهد كما هي.`, accClosed: 'أُغلق الحساب', accNone: 'لا حسابات مفعّلة بعد.',
     usersD: 'حساب المسؤول admin تُضبط كلمة سره في المنصة على الحاسوب، ويبقى دائماً طريقاً للدخول.', newUser: 'حساب جديد',
     uLogin: 'اسم الدخول (أحرف لاتينية صغيرة وأرقام)', uName: 'الاسم', uPw: 'كلمة السر (8 أحرف على الأقل)', uRole: 'الدور',
     roOrganizer: 'منظم: كل شيء ما عدا الحسابات', roScanner: 'ماسح: الحضور فقط، دون بيانات التواصل', roAdmin: 'مسؤول: كل شيء والحسابات',
@@ -269,8 +272,11 @@ const T = {
     delSure: n => 'Supprimer ' + n + ' de cette activité ? (corbeille de la plateforme)', deleted: 'Supprimé ; la suppression rejoint la plateforme à la synchronisation',
     fixT: n => 'Correction : ' + n, newPersonT: 'Nouveau participant (sans carte)', hasCert: 'A une attestation : elle sera refaite avec le même numéro et le même lien.',
     saveFix: 'Enregistrer la correction', add: 'Ajouter', fixed: 'Correction enregistrée ; elle rejoint la plateforme à la synchronisation', added: 'Ajouté ; il rejoint la plateforme à la synchronisation',
-    partsD: 'Chaque titulaire d’une attestation valide avec un e-mail correct a un numéro de participant permanent et se connecte à « Mes attestations » avec ce numéro ou son e-mail et un code reçu par e-mail, sans mot de passe. Liste mise à jour par la plateforme de l’ordinateur.',
+    partsD: 'Chaque titulaire d’une attestation valide avec un e-mail correct figure ici. Sur « Mes attestations », il ouvre une fois son compte avec son téléphone et son e-mail (code d’activation reçu par e-mail), puis se connecte avec son téléphone et son mot de passe, sans e-mail, et peut ajouter une attestation à son nom par son numéro. Liste mise à jour par la plateforme de l’ordinateur.',
     partsSearch: 'Rechercher par nom, e-mail, numéro ou attestation...', certsN: n => n + ' attestation(s) : ', meLink: 'Mes attestations',
+    accT: n => `Comptes « Mes attestations » (${n})`, accD: 'Comptes activés par numéro de téléphone. Fermez un compte ouvert avec le téléphone d’une autre personne, ou à la demande de son titulaire : le numéro est libéré, les attestations ne changent pas.',
+    accSearch: 'Rechercher par nom, téléphone ou e-mail...', accAdded: n => n + ' ajoutée(s) par numéro', accSince: 'Depuis', accSeen: 'Dernière connexion',
+    accClose: 'Fermer le compte', accCloseAsk: n => `Fermer le compte « ${n} » ? Son numéro est libéré, les attestations restent.`, accClosed: 'Compte fermé', accNone: 'Aucun compte activé pour l’instant.',
     usersD: 'Le mot de passe du compte admin se règle dans la plateforme sur l’ordinateur ; ce compte reste toujours un accès.', newUser: 'Nouveau compte',
     uLogin: 'Identifiant (lettres latines minuscules et chiffres)', uName: 'Nom', uPw: 'Mot de passe (8 caractères minimum)', uRole: 'Rôle',
     roOrganizer: 'Organisateur : tout sauf les comptes', roScanner: 'Scanneur : présences seulement, sans coordonnées', roAdmin: 'Administrateur : tout, comptes compris',
@@ -339,8 +345,11 @@ const T = {
     delSure: n => 'Remove ' + n + ' from this activity? (goes to the platform’s trash)', deleted: 'Deleted; it reaches the platform at the next sync',
     fixT: n => 'Correct: ' + n, newPersonT: 'New participant (no ticket)', hasCert: 'Has a certificate: it is redrawn with the same number and link at the next sync.',
     saveFix: 'Save correction', add: 'Add', fixed: 'Correction saved; it reaches the platform at the next sync', added: 'Added; it reaches the platform at the next sync',
-    partsD: 'Everyone with a valid certificate and a correct email has a permanent participant number, and signs in to “My certificates” with it or their email plus a code sent by email, no password. The platform on the computer keeps this list up to date.',
+    partsD: 'Everyone with a valid certificate and a correct email is listed here. On “My certificates” they open their account once with their phone and email (an activation code by email), then sign in with their phone and password, no email, and can add a certificate in their name by its number. The platform on the computer keeps this list up to date.',
     partsSearch: 'Search by name, email, number or certificate...', certsN: n => n + ' certificate(s): ', meLink: 'My certificates',
+    accT: n => `“My certificates” accounts (${n})`, accD: 'Accounts opened with a phone number. Close one opened with someone else’s phone, or at its holder’s request: the number is free again, the certificates do not change.',
+    accSearch: 'Search by name, phone or email...', accAdded: n => n + ' added by number', accSince: 'Since', accSeen: 'Last sign-in',
+    accClose: 'Close the account', accCloseAsk: n => `Close the account “${n}”? Its phone number is freed; the certificates stay.`, accClosed: 'Account closed', accNone: 'No accounts opened yet.',
     usersD: 'The admin account’s password is set in the platform on the computer, and it always remains a way in.', newUser: 'New account',
     uLogin: 'Username (lowercase Latin letters and digits)', uName: 'Name', uPw: 'Password (at least 8 characters)', uRole: 'Role',
     roOrganizer: 'Organizer: everything except accounts', roScanner: 'Scanner: attendance only, no contact details', roAdmin: 'Administrator: everything, accounts included',
@@ -836,8 +845,36 @@ async function showParticipants() {
   q.oninput = draw;
   app.replaceChildren(el('section', {className: 'card rise'}, el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('partsD')}),
     linkBox(new URL('me.html', location.href).href, t('meLink'))),
+    can('admin') ? await accountsBox() : null,
     el('div', {className: 'tools-bar section'}, el('div', {className: 'q'}, q)), box);
   draw();
+}
+
+async function accountsBox() {  // «شواهدي» accounts, for the administrator: who opened one, and closing one
+  const j = await call('accounts').catch(() => ({}));
+  if (j.status !== 'ok') return null;
+  const q = el('input', {type: 'search', placeholder: t('accSearch'), ariaLabel: t('accSearch')});
+  const box = el('div');
+  const draw = () => {
+    const s = q.value.trim().toLowerCase();
+    const shown = j.accounts.filter(a => !s || [a.name, a.phone, '0' + a.phone, a.email].join(' ').toLowerCase().includes(s));
+    box.replaceChildren(j.accounts.length ? el('div', {className: 'grid'}, ...shown.slice(0, 200).map(a => el('article', {className: 'card person'},
+      el('div', {className: 'row'}, el('span', {className: 'name grow', dir: 'auto', textContent: a.name}), el('span', {className: 'badge ltr', textContent: '0' + a.phone})),
+      el('div', {className: 'contact ltr', textContent: a.email}),
+      el('div', {className: 'hint'}, [t('accSince') + ' ' + when(a.created), a.seen ? t('accSeen') + ' ' + when(a.seen) : '',
+        a.claims.length ? t('accAdded')(a.claims.length) : ''].filter(Boolean).join(' · ')),
+      el('div', {className: 'actions'}, btn(t('accClose'), async () => {
+        if (!confirm(t('accCloseAsk')(a.name))) return;
+        const r = await call('account', {op: 'close', id: a.id}).catch(() => ({}));
+        toast(r.status === 'ok' ? t('accClosed') : t('saveFail'));
+        if (r.status === 'ok') showParticipants();
+      }, 'ghost'))))) : el('p', {className: 'hint', textContent: t('accNone')}));
+  };
+  q.oninput = draw;
+  draw();
+  return el('section', {className: 'card rise section'}, el('h2', {textContent: t('accT')(j.accounts.length)}),
+    el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('accD')}),
+    j.accounts.length > 6 ? el('div', {className: 'q', style: 'margin-bottom:10px'}, q) : null, box);
 }
 
 // ---------- accounts (admin) ----------
