@@ -128,6 +128,7 @@
       document.body.append(footer());
     }
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});  // pages open again without a connection
     setLang(lang);
   }
 

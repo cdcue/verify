@@ -3,8 +3,8 @@
 :root {
   color-scheme: light dark;
   --bg: #f3f5f8; --surface: #ffffff; --surface-2: #f7f9fb; --ink: #13202e; --muted: #5d6b7a; --line: #e2e7ee;
-  --brand: #0b3b5c; --brand-2: #135a86; --on-brand: #ffffff; --gold: #c8962f; --gold-soft: #fbf3e2;
-  --ok: #12804a; --ok-soft: #e8f6ee; --warn: #a05a00; --warn-soft: #fff4e2; --err: #b42318; --err-soft: #fdecea;
+  --brand: #0b3b5c; --brand-2: #135a86; --on-brand: #ffffff; --gold: #9a6f14; --gold-soft: #fbf3e2;
+  --ok: #0f7a43; --ok-soft: #e8f6ee; --warn: #a05a00; --warn-soft: #fff4e2; --err: #b42318; --err-soft: #fdecea;
   --hero: linear-gradient(135deg, #0b3b5c, #135a86 70%, #1b6e9f);
   --shadow: 0 1px 2px rgba(16, 32, 48, .06), 0 8px 28px rgba(16, 32, 48, .08);
   --radius: 16px; --wide: 980px;
@@ -37,6 +37,7 @@ a { color: var(--brand-2); }
 .ltr { direction: ltr; unicode-bidi: isolate; }
 .muted { color: var(--muted); }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.top :focus-visible, .appbar :focus-visible, .side :focus-visible { outline-color: #f2c14e; }  /* light gold shows on the blue bars */
 
 /* header: brand, language, theme, then the page's own title (.hero) */
 .top { background: var(--hero); color: #fff; padding: env(safe-area-inset-top) 16px 72px; }

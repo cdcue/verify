@@ -1,0 +1,31 @@
+{
+  "id": "me.html",
+  "start_url": "me.html",
+  "name": "شواهدي · منصة الشواهد",
+  "short_name": "شواهدي",
+  "description": "شواهدك كلها في مكان واحد: تحميلها ومشاركتها ورموز التحقق منها.",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d141c",
+  "theme_color": "#0b3b5c",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
