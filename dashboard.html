@@ -130,6 +130,10 @@
     dialog.sheet { width: 100vw; max-width: 100vw; max-height: 92vh; margin: auto 0 0; border-radius: 18px 18px 0 0; }
     dialog.sheet > * { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
   }
+  .scancode { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 12px; padding: 12px 14px; border-radius: 12px;
+              background: var(--gold-soft); border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent); }
+  .scancode > div { flex: 1 1 220px; }
+  .scancode .code { font: 700 22px/1 ui-monospace, "Cascadia Mono", Consolas, monospace; letter-spacing: 3px; color: var(--ink); }
 </style>
 </head>
 <body class="app">
@@ -187,6 +191,7 @@ const T = {
     syncNote: d => `البيانات كما في آخر مزامنة للمنصة (${d}). ما تؤكده أو تعدّله هنا يظهر فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`,
     scanT: 'رابط المسح للمنظمين', scanD: 'يفتح صفحة مسح البطاقات بكاميرا الهاتف، دون حساب ودون الحاجة للحاسوب.', scanMake: 'إنشاء رابط المسح', scanNew: 'رابط جديد',
     scanSure: 'إنشاء رابط جديد؟ الرابط الحالي يتوقف فوراً في كل الهواتف.', scanMade: 'أُنشئ رابط المسح: أرسله إلى المنظمين', scanFail: 'تعذر إنشاء الرابط', scanTitle: 'مسح الحضور',
+    scanCodeT: 'أو برمز المسح', scanCodeD: page => `يفتح المساعد ${page} ويكتب هذا الرمز، دون رابط ولا رمز QR. يتغير مع كل رابط جديد، ويتوقف بأرشفة النشاط.`, copyCode: 'نسخ الرمز', codeCopied: 'نُسخ الرمز',
     issue: 'إصدار الشواهد', issueSure: 'إصدار شواهد كل الحاضرين المؤكدين (بعد مزامنة الحضور)؟', emailAll: 'إرسال الشواهد بالبريد',
     emailSure: 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟', sync: 'مزامنة الآن', editAct: 'تعديل النشاط',
     noTicket: 'دون بطاقة', pending: 'تعديل ينتظر المزامنة', hereIn: s => 'حاضر في الحصة ' + s, here: 'حاضر', away: 'غير مؤكد', sessions: 'الحصص: ',
@@ -261,6 +266,7 @@ const T = {
     scanT: 'Lien de scan des organisateurs', scanD: 'Ouvre la page de scan des cartes avec l’appareil photo du téléphone, sans compte ni ordinateur.', scanMake: 'Créer le lien de scan',
     scanNew: 'Nouveau lien', scanSure: 'Créer un nouveau lien ? L’actuel cesse aussitôt de fonctionner sur tous les téléphones.', scanMade: 'Lien de scan créé : envoyez-le aux organisateurs',
     scanFail: 'Création du lien impossible', scanTitle: 'Scan des présences',
+    scanCodeT: 'Ou avec le code de scan', scanCodeD: page => `L’assistant ouvre ${page} et saisit ce code, sans lien ni code QR. Il change à chaque nouveau lien et s’arrête quand l’activité est archivée.`, copyCode: 'Copier le code', codeCopied: 'Code copié',
     issue: 'Émettre les attestations', issueSure: 'Émettre les attestations de tous les présents confirmés (après synchronisation des présences) ?', emailAll: 'Envoyer les attestations',
     emailSure: 'Mettre en file d’envoi les e-mails de ceux qui n’ont pas encore reçu leur attestation ?', sync: 'Synchroniser', editAct: 'Modifier l’activité',
     noTicket: 'Sans carte', pending: 'Modification en attente de synchronisation', hereIn: s => 'Présent séance ' + s, here: 'Présent', away: 'Non confirmé', sessions: 'Séances : ',
@@ -334,6 +340,7 @@ const T = {
     scanT: 'Organizers’ scanning link', scanD: 'Opens the ticket-scanning page with the phone camera, no account and no computer needed.', scanMake: 'Create scanning link', scanNew: 'New link',
     scanSure: 'Create a new link? The current one stops at once on every phone.', scanMade: 'Scanning link created: send it to the organizers', scanFail: 'Could not create the link',
     scanTitle: 'Attendance scan',
+    scanCodeT: 'Or with the scanning code', scanCodeD: page => `The assistant opens ${page} and types this code, no link or QR code needed. It changes with every new link and stops when the activity is archived.`, copyCode: 'Copy the code', codeCopied: 'Code copied',
     issue: 'Issue certificates', issueSure: 'Issue certificates to every confirmed attendee (after syncing attendance)?', emailAll: 'Email certificates',
     emailSure: 'Queue the emails of everyone who has not received their certificate yet?', sync: 'Sync now', editAct: 'Edit activity',
     noTicket: 'No ticket', pending: 'Change waiting for sync', hereIn: s => 'Present in session ' + s, here: 'Present', away: 'Not confirmed', sessions: 'Sessions: ',
@@ -678,7 +685,7 @@ async function showActivity(id, tab) {
     const out = [head];
     if (can('organizer')) {
       if (/^https:\/\//.test(a.form)) out.push(el('section', {className: 'card section'}, el('h2', {textContent: t('formLink')}), linkBox(a.form, a.title)));
-      out.push(scanCard(a, j.link, reload));
+      out.push(scanCard(a, j.link, j.code, reload));
     }
     return out;
   }
@@ -721,8 +728,10 @@ async function showActivity(id, tab) {
   open(tab);
 }
 
-function scanCard(a, token, reload) {  // the phones' scanning link: made here, it works at once and the previous one stops
+function scanCard(a, token, code, reload) {  // the phones' scanning link and its code: made here, they work at once and the previous ones stop
   const url = token ? new URL('scan.html#' + token, location.href).href : '';
+  const page = new URL('scan.html', location.href).href.replace(/^https?:\/\//, '');
+  const shown = code ? code.slice(0, 4) + '-' + code.slice(4) : '';
   const make = btn(t(token ? 'scanNew' : 'scanMake'), async () => {
     if (token && !confirm(t('scanSure'))) return;
     make.disabled = true;
@@ -731,6 +740,9 @@ function scanCard(a, token, reload) {  // the phones' scanning link: made here, 
   }, token ? 'ghost' : '');
   return el('section', {className: 'card section'}, el('h2', {textContent: t('scanT')}),
     url ? linkBox(url, t('scanTitle') + ' · ' + a.title) : el('p', {className: 'hint', textContent: t('scanD')}),
+    shown ? el('div', {className: 'scancode'}, el('div', {}, el('b', {textContent: t('scanCodeT')}), el('p', {className: 'hint', textContent: t('scanCodeD')(page)})),
+      el('span', {className: 'code ltr', textContent: shown}),
+      btn(t('copyCode'), () => navigator.clipboard.writeText(shown).then(() => toast(t('codeCopied')), () => prompt('', shown)), 'ghost')) : null,
     el('div', {style: 'margin-top:10px'}, make));
 }
 
