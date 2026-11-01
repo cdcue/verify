@@ -46,6 +46,13 @@
   #cam .over { position: absolute; top: 10px; inset-inline-end: 10px; display: flex; gap: 8px; }
   #cam .over .iconbtn { background: rgba(0, 0, 0, .45); border-color: rgba(255, 255, 255, .3); }
   #cam .over .iconbtn[aria-pressed="true"] { background: var(--gold); color: #0b1f3a; }
+  #cam .over .iconbtn { width: 46px; height: 46px; }  /* fingers in a hurry, in a hall */
+  #cam .hit { position: absolute; inset-inline: 10px; bottom: 10px; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px;
+              color: #fff; font-size: 16px; font-weight: 600; background: rgba(0, 0, 0, .62); animation: pop .15s ease-out; }
+  #cam .hit b { direction: ltr; font-variant-numeric: tabular-nums; }
+  #cam .hit span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #cam .hit.ok { background: rgba(18, 163, 138, .92); }
+  #cam .hit.warn { background: rgba(201, 138, 12, .92); }
   .manual { display: flex; gap: 8px; align-items: center; }
   .manual input { flex: 1; direction: ltr; text-align: center; letter-spacing: 1px; }
   .manual .btn { min-height: 52px; }
@@ -88,8 +95,11 @@
       <div><b id="mine">0</b><span data-t="mine"></span></div></div>
     <button class="btn big" id="start" type="button" data-t="start"></button>
     <div id="cam" hidden><video playsinline muted></video><div class="frame"></div><div class="line"></div>
-      <div class="over"><button type="button" class="iconbtn" id="torch" hidden aria-pressed="false">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 6h-4z"/><path d="M10 8h4v12a2 2 0 01-4 0z"/></svg></button></div></div>
+      <div class="over">
+        <button type="button" class="iconbtn" id="stop"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button type="button" class="iconbtn" id="flip" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 00-14.3-4.9L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0014.3 4.9L20 16"/><path d="M20 21v-5h-5"/></svg></button>
+        <button type="button" class="iconbtn" id="torch" hidden aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 6h-4z"/><path d="M10 8h4v12a2 2 0 01-4 0z"/></svg></button></div>
+      <div class="hit" id="hit" hidden><b></b><span dir="auto"></span></div></div>
     <form class="manual" id="manualForm"><input id="manual" inputmode="numeric" autocomplete="off" data-tp="manualPh"><button class="btn ghost" data-t="confirm"></button></form>
     <ul id="log" aria-live="polite"></ul>
   </div>
@@ -109,6 +119,7 @@ const T = {
        online: 'متصل بالإنترنت', offline: 'دون إنترنت: المسح يُحفظ في الهاتف ويُرسل عند عودة الاتصال',
        pending: n => `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال`, session: (s, n) => `الحصة ${s} من ${n}`, noNet: 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف',
        noCam: 'تعذر تشغيل الكاميرا. اسمح للمتصفح باستعمالها، أو اكتب أرقام البطاقات.', torch: 'الإضاءة',
+       stop: 'إيقاف الكاميرا', flip: 'تبديل الكاميرا', checking: 'جارٍ التأكيد…',
        ok: 'تم تأكيد حضور', already: 'مؤكد سابقاً في هذه الحصة', unregistered: x => `البطاقة ${x} غير مسجلة في الاستمارة`,
        unregisteredSub: 'احتُفظ بها، وتُؤكَّد عند تسجيل صاحبها', duplicate: x => `البطاقة ${x} مسجلة باسمين`, duplicateSub: 'يُحسم الأمر من لوحة التحكم',
        invalid: x => `الرقم ${x} غير موجود ضمن البطاقات المطبوعة`, saved: x => `حُفظت البطاقة ${x} في الهاتف`, savedSub: 'تُرسل تلقائياً عند عودة الاتصال'},
@@ -120,6 +131,7 @@ const T = {
        pending: n => `${n} carte(s) gardée(s) sur le téléphone en attente de connexion`, session: (s, n) => `séance ${s} sur ${n}`,
        noNet: 'Pas de connexion pour l’instant — les scans sont gardés sur le téléphone',
        noCam: 'Impossible d’activer la caméra. Autorisez-la dans le navigateur, ou saisissez les numéros de carte.', torch: 'Lampe',
+       stop: 'Arrêter la caméra', flip: 'Changer de caméra', checking: 'Vérification…',
        ok: 'Présence confirmée', already: 'Déjà confirmé pour cette séance', unregistered: x => `La carte ${x} n’est pas inscrite au formulaire`,
        unregisteredSub: 'Elle est gardée et sera confirmée à l’inscription de son titulaire', duplicate: x => `La carte ${x} est inscrite sous deux noms`,
        duplicateSub: 'À régler depuis l’espace organisateurs', invalid: x => `Le numéro ${x} ne fait pas partie des cartes imprimées`,
@@ -132,6 +144,7 @@ const T = {
        pending: n => `${n} ticket(s) kept on the phone, waiting for the connection`, session: (s, n) => `session ${s} of ${n}`,
        noNet: 'No connection right now — scans are kept on the phone',
        noCam: 'Could not start the camera. Allow it in the browser, or type the ticket numbers.', torch: 'Light',
+       stop: 'Stop the camera', flip: 'Switch camera', checking: 'Checking…',
        ok: 'Attendance confirmed', already: 'Already confirmed for this session', unregistered: x => `Ticket ${x} is not registered in the form`,
        unregisteredSub: 'Kept, and confirmed once its holder registers', duplicate: x => `Ticket ${x} is registered under two names`,
        duplicateSub: 'To be settled from the organizers’ dashboard', invalid: x => `Number ${x} is not among the printed tickets`,
@@ -139,7 +152,8 @@ const T = {
 };
 const {t} = UI, $ = id => document.getElementById(id);
 const video = document.querySelector('video'), flash = $('flash'), canvas = document.createElement('canvas');
-let busy = false, audio = null, mine = 0, last = {t: '', at: 0}, about = null;
+let audio = null, mine = 0, about = null, stream = null, running = false, det, facing = 'environment', ctx = null;
+const seen = new Map();  // ticket -> when the camera last saw it: it sees the same ticket many times a second
 const LOOK = {  // icon, color, main line, second line
   ok: ['✓', '#12a38a', j => [t('ok'), j.name]],
   already: ['✓', '#2e6be6', j => [t('already'), j.name]],
@@ -172,40 +186,61 @@ function beep(ok) {
 function counts(j) {
   if (j.present !== undefined) { $('present').textContent = j.present; $('total').textContent = j.total; }
 }
-function show(j) {
+function show(j) {  // a problem: the whole screen, so the organizer stops this person
   const [icon, color, text] = LOOK[j.status], [line1, line2] = text(j);
   flash.style.background = color;
   flash.querySelector('.icon').textContent = icon;
   // names come from the public form: text only, never HTML
   flash.querySelector('.msg').replaceChildren(line1, line2 ? UI.el('span', {className: 'sub', dir: 'auto', textContent: line2}) : '');
   flash.classList.add('on');
-  const good = j.status === 'ok' || j.status === 'already';
-  beep(good);
-  if (navigator.vibrate) navigator.vibrate(good ? 120 : [80, 60, 80]);
-  setTimeout(() => flash.classList.remove('on'), good ? 1100 : 2200);
-  $('log').prepend(UI.el('li', {}, UI.el('span', {className: 's', style: 'background:' + color, textContent: icon}),
-    UI.el('span', {className: 'n', dir: 'auto', textContent: j.name || line1}), UI.el('span', {className: 't', textContent: j.ticket || ''})));
+  setTimeout(() => flash.classList.remove('on'), 2200);
+}
+let hitT = 0;
+function strip(ticket, text, kind) {  // the line on the camera: what was just read, then its answer
+  const h = $('hit');
+  h.className = 'hit ' + (kind || '');
+  h.querySelector('b').textContent = ticket;
+  h.querySelector('span').textContent = text;
+  h.hidden = false;
+  clearTimeout(hitT);
+  hitT = setTimeout(() => { h.hidden = true; }, kind ? 2500 : 8000);
+}
+function row(ticket) {  // a line in the list, filled when the answer comes
+  const li = UI.el('li', {}, UI.el('span', {className: 's', style: 'background:#7a8899', textContent: '…'}),
+    UI.el('span', {className: 'n', dir: 'auto', textContent: t('checking')}), UI.el('span', {className: 't', textContent: ticket}));
+  $('log').prepend(li);
+  return li;
+}
+function answer(j, li, ticket) {
+  const [icon, color, text] = LOOK[j.status], [line1] = text(j), good = j.status === 'ok' || j.status === 'already';
+  li.querySelector('.s').style.background = color;
+  li.querySelector('.s').textContent = icon;
+  li.querySelector('.n').textContent = j.name || line1;
+  if ($('hit').querySelector('b').textContent === ticket) strip(ticket, j.name || line1, good ? 'ok' : 'warn');
+  if (!good) { beep(false); if (navigator.vibrate) navigator.vibrate([80, 60, 80]); show(j); }
   if (j.status === 'ok') $('mine').textContent = ++mine;
   counts(j);
 }
-
-async function scan(raw) {
-  const s = String(raw).trim();
-  if (!s || (s === last.t && Date.now() - last.at < 5000)) return;  // the camera sees the same ticket many times
-  last = {t: s, at: Date.now()};
-  const ticket = (s.toUpperCase().match(/T\d+-\d+/) || [s])[0];
-  try {
-    const j = await call({action: 'scan', ticket: s});
+function scan(raw) {  // the read is confirmed at once and the camera goes on; the answer fills its line when it comes
+  const s = String(raw).trim(), ticket = (s.toUpperCase().match(/T\d+-\d+/) || [s])[0];
+  const before = seen.get(ticket) || 0;
+  seen.set(ticket, Date.now());  // a ticket still in front of the camera stays ignored; 6 s away from it, it can be read again
+  if (!s || Date.now() - before < 6000) return;
+  beep(true);
+  if (navigator.vibrate) navigator.vibrate(40);
+  strip(ticket, t('checking'));
+  const li = row(ticket);
+  call({action: 'scan', ticket: s}).then(j => {
     if (j.status === 'denied') return denied();
-    if (LOOK[j.status]) show(j);
-  } catch (e) {
+    if (LOOK[j.status]) answer(j, li, ticket);
+  }).catch(() => {
     setPending(pending().concat([s]));
-    show({status: 'saved', ticket});
-  }
+    answer({status: 'saved', ticket}, li, ticket);
+  });
 }
 async function retry() {  // scans kept during a network cut leave as soon as it is back, oldest first
   const p = pending();
-  if (!p.length || busy) return;
+  if (!p.length) return;
   try {
     const j = await call({action: 'scan', ticket: p[0]});
     setPending(pending().slice(1));
@@ -254,54 +289,79 @@ async function info() {
   describe();
 }
 
-$('start').onclick = async () => {
-  audio = new (window.AudioContext || window.webkitAudioContext)();
+async function detector() {  // the phone's own QR reader (most Android phones), else jsQR (iPhone)
   try {
-    video.srcObject = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment', width: {ideal: 1280}}, audio: false});
+    if ('BarcodeDetector' in window && (await BarcodeDetector.getSupportedFormats()).includes('qr_code')) return new BarcodeDetector({formats: ['qr_code']});
+  } catch (e) { /* not on this phone */ }
+  return null;
+}
+async function camOn() {
+  audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({audio: false,
+      video: {facingMode: {ideal: facing}, width: {ideal: 1920}, height: {ideal: 1080}}});  // more pixels: the ticket's dense code stays sharp
   } catch (e) { return alert(t('noCam')); }
+  video.srcObject = stream;
   await video.play();
   $('cam').hidden = false; $('start').hidden = true;
-  const track = video.srcObject.getVideoTracks()[0];
-  if (track.getCapabilities && (track.getCapabilities() || {}).torch) {  // a dark hall: the phone's light (Android)
-    const b = $('torch');
-    b.hidden = false; b.title = t('torch');
-    b.onclick = () => { const on = b.getAttribute('aria-pressed') !== 'true'; track.applyConstraints({advanced: [{torch: on}]}).then(() => b.setAttribute('aria-pressed', String(on)), () => {}); };
-  }
-  const det = 'BarcodeDetector' in window ? new BarcodeDetector({formats: ['qr_code']}) : null;
-  loop(det);
-};
-async function loop(det) {  // Android reads QR codes itself; iPhone through the jsQR library
-  if (!busy && video.readyState >= 2 && !flash.classList.contains('on')) {
-    busy = true;
-    try {
-      let hit = null;
-      if (det) {
-        hit = (await det.detect(video)).map(c => c.rawValue).find(v => /T\d+-\d+/i.test(v));
-      } else if (window.jsQR) {
-        const w = 640, h = Math.round(video.videoHeight * w / video.videoWidth);
-        canvas.width = w; canvas.height = h;
-        const ctx = canvas.getContext('2d', {willReadFrequently: true});
-        ctx.drawImage(video, 0, 0, w, h);
-        const code = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, {inversionAttempts: 'dontInvert'});
-        hit = code && /T\d+-\d+/i.test(code.data) ? code.data : null;
-      }
-      if (hit) await scan(hit);
-    } catch (e) { /* the next frame tries again */ } finally { busy = false; }
-  }
-  setTimeout(() => loop(det), 200);
+  const track = stream.getVideoTracks()[0], caps = (track.getCapabilities && track.getCapabilities()) || {};
+  if ((caps.focusMode || []).includes('continuous')) track.applyConstraints({advanced: [{focusMode: 'continuous'}]}).catch(() => {});
+  const b = $('torch');
+  b.hidden = !caps.torch; b.setAttribute('aria-pressed', 'false');  // a dark hall: the phone's light (Android)
+  b.onclick = () => { const on = b.getAttribute('aria-pressed') !== 'true'; track.applyConstraints({advanced: [{torch: on}]}).then(() => b.setAttribute('aria-pressed', String(on)), () => {}); };
+  const cams = (await navigator.mediaDevices.enumerateDevices().catch(() => [])).filter(d => d.kind === 'videoinput');
+  $('flip').hidden = cams.length < 2;
+  if (det === undefined) det = await detector();
+  running = true;
+  loop();
 }
-$('manualForm').onsubmit = async e => {
+function camOff() {
+  running = false;
+  if (stream) stream.getTracks().forEach(tr => tr.stop());
+  stream = null; video.srcObject = null;
+  $('cam').hidden = true; $('start').hidden = false;
+}
+function labels() {  // the camera buttons' names, in the page's language
+  for (const [id, key] of [['stop', 'stop'], ['flip', 'flip'], ['torch', 'torch']]) { $(id).title = t(key); $(id).setAttribute('aria-label', t(key)); }
+}
+$('start').onclick = camOn;
+$('stop').onclick = camOff;
+$('flip').onclick = async () => { facing = facing === 'environment' ? 'user' : 'environment'; camOff(); await camOn(); };
+document.addEventListener('visibilitychange', () => { if (document.hidden && running) camOff(); });  // in a pocket: no battery spent
+async function read() {  // a ticket's QR code in the picture now, or null
+  if (det) {
+    try { return (await det.detect(video)).map(c => c.rawValue).find(v => /T\d+-\d+/i.test(v)) || null; }
+    catch (e) { det = null; }  // this phone's reader failed: jsQR from now on
+  }
+  if (!window.jsQR) return null;
+  // the middle of the picture at full size, not the whole picture made smaller: the code's squares stay readable
+  const vw = video.videoWidth, vh = video.videoHeight, side = Math.round(Math.min(vw, vh) * 0.8), size = Math.min(side, 900);
+  if (canvas.width !== size) { canvas.width = canvas.height = size; ctx = null; }
+  ctx = ctx || canvas.getContext('2d', {willReadFrequently: true});
+  ctx.drawImage(video, (vw - side) / 2, (vh - side) / 2, side, side, 0, 0, size, size);
+  const code = jsQR(ctx.getImageData(0, 0, size, size).data, size, size, {inversionAttempts: 'dontInvert'});
+  return code && /T\d+-\d+/i.test(code.data) ? code.data : null;
+}
+async function loop() {
+  if (!running) return;
+  if (video.readyState >= 2 && !flash.classList.contains('on')) {
+    try { const hit = await read(); if (hit) scan(hit); } catch (e) { /* the next picture tries again */ }
+  }
+  setTimeout(loop, 120);
+}
+$('manualForm').onsubmit = e => {
   e.preventDefault();
   const v = $('manual').value.trim();
   if (!v) return;
   audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-  last = {t: '', at: 0};
-  await scan(v);
+  seen.delete((v.toUpperCase().match(/T\d+-\d+/) || [v])[0]);  // typed on purpose: always sent
+  scan(v);
   $('manual').value = '';
 };
 
 $('bar').append(UI.brand('index.html', 'title'), UI.el('div', {className: 'tools'}, UI.langSwitch(), UI.themeButton()));
-UI.init({page: 'scan', name: 'title', shell: false, T, onLang: () => { describe(); showNet(); }});
+UI.init({page: 'scan', name: 'title', shell: false, T, onLang: () => { describe(); showNet(); labels(); }});
+labels();
 if (TOKEN.length < 20) denied(true); else start(TOKEN);
 </script>
 </body>
