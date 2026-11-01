@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com;
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src https://script.google.com https://script.googleusercontent.com;
   base-uri 'none'; form-action 'self'">
 <meta name="theme-color" content="#0b3b5c">
@@ -17,85 +17,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui.css">
+<script src="ui.js"></script>
 <style>
-  :root {
-    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #f7f9fb; --ink: #13202e; --muted: #5d6b7a; --line: #e2e7ee;
-    --brand: #0b3b5c; --brand-2: #135a86; --gold: #c8962f; --gold-soft: #fbf3e2;
-    --ok: #12804a; --ok-soft: #e8f6ee; --warn: #a05a00; --warn-soft: #fff4e2; --err: #b42318; --err-soft: #fdecea;
-    --shadow: 0 1px 2px rgba(16, 32, 48, .06), 0 8px 28px rgba(16, 32, 48, .08);
-    --radius: 16px;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0d141c; --surface: #141e29; --surface-2: #18242f; --ink: #e8eef4; --muted: #9aa8b6; --line: #24323f;
-      --brand: #6fb3e4; --brand-2: #8cc4ec; --gold: #e2b65a; --gold-soft: #2b2416;
-      --ok: #4cc48a; --ok-soft: #12291f; --warn: #f0b35a; --warn-soft: #2d2313; --err: #f2867c; --err-soft: #2e1716;
-      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 28px rgba(0, 0, 0, .35);
-    }
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); color: var(--ink);
-         font: 16px/1.6 "IBM Plex Sans Arabic", "Segoe UI", Tahoma, system-ui, sans-serif; }
-  [hidden] { display: none !important; }
-  a { color: var(--brand-2); }
-  .ltr { direction: ltr; unicode-bidi: isolate; }
-
-  /* header */
-  .top { background: linear-gradient(135deg, #0b3b5c, #135a86 70%, #1b6e9f); color: #fff; padding: 0 16px 72px;
-         padding-top: env(safe-area-inset-top); }
-  .bar { max-width: 980px; margin: 0 auto; display: flex; align-items: center; gap: 12px; padding: 16px 0; }
-  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
-  .brand img, .seal { width: 44px; height: 44px; border-radius: 12px; flex: none; }
-  .brand img { background: #fff; object-fit: contain; padding: 4px; }
-  .seal { display: grid; place-items: center; background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .25); }
-  .brand b { display: block; font-size: 15px; font-weight: 600; line-height: 1.35; overflow: hidden; text-overflow: ellipsis; }
-  .brand span { display: block; font-size: 12.5px; opacity: .8; }
-  @media (max-width: 480px) {  /* phones: the long French name stays within two lines */
-    .brand b { font-size: 13.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-    .brand span { display: none; }
-  }
-  .langs { display: flex; background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .22); border-radius: 999px; padding: 3px; flex: none; }
-  .langs button { border: 0; background: none; color: #fff; font: inherit; font-weight: 600; font-size: 13px; line-height: 1; padding: 8px 11px; border-radius: 999px; cursor: pointer; min-width: 40px; }
-  .langs button[aria-pressed="true"] { background: #fff; color: #0b3b5c; }
-  .langs button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-  .hero { max-width: 980px; margin: 10px auto 0; }
-  .hero h1 { margin: 0; font-size: clamp(22px, 4.2vw, 32px); font-weight: 700; line-height: 1.3; }
-  .hero p { margin: 6px 0 0; opacity: .85; font-size: clamp(14px, 2.2vw, 16px); max-width: 640px; }
-
-  /* main card */
-  main { flex: 1; width: 100%; max-width: 980px; margin: -52px auto 0; padding: 0 16px 32px; }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+  /* this page only: the search, the result and the three steps */
   .search { padding: 20px; display: grid; gap: 12px; grid-template-columns: 1fr; }
-  .search label { font-size: 13px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 6px; }
-  .field { position: relative; }
-  .field svg { position: absolute; inset-inline-start: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
-  input { width: 100%; height: 52px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--ink);
-          font: 500 17px/1 "IBM Plex Sans Arabic", system-ui, sans-serif; letter-spacing: .5px; padding: 0 44px;  /* room for the icon on either side: the text is LTR inside RTL pages */
-          direction: ltr; text-align: start; text-transform: uppercase; transition: border-color .15s, box-shadow .15s; }
-  [dir="rtl"] input { text-align: right; }
-  input::placeholder { color: var(--muted); opacity: .7; text-transform: none; letter-spacing: 0; }
-  input:focus { outline: none; border-color: var(--brand-2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-2) 18%, transparent); background: var(--surface); }
+  .search input { direction: ltr; text-align: start; text-transform: uppercase; letter-spacing: .5px; }  /* the text is LTR inside RTL pages */
+  [dir="rtl"] .search input { text-align: right; }
+  .search input::placeholder { text-transform: none; letter-spacing: 0; }
   .codefield input { letter-spacing: 4px; }
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 52px; padding: 0 22px; border-radius: 12px; border: 0;
-         background: var(--brand); color: #fff; font: inherit; font-weight: 600; font-size: 16px; line-height: 1; cursor: pointer; text-decoration: none; transition: filter .15s, transform .05s; white-space: nowrap; }
-  @media (prefers-color-scheme: dark) { .btn { color: #0d141c; } }
-  .btn:hover { filter: brightness(1.08); }
-  .btn:active { transform: translateY(1px); }
-  .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
-  .btn.ghost { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); }
-  .hint { font-size: 13px; color: var(--muted); margin: 0; }
+  .search .btn { height: 52px; }
   @media (min-width: 720px) {
     .search { grid-template-columns: 1fr auto; align-items: end; padding: 24px; }
     .search.withcode { grid-template-columns: 1.4fr 1fr auto; }
     .search .hint { grid-column: 1 / -1; }
   }
-
-  /* result */
   .result { margin-top: 18px; overflow: hidden; }
   .status { display: flex; align-items: center; gap: 14px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
   .status .icon { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; flex: none; }
-  .status h2 { margin: 0; font-size: 19px; line-height: 1.35; }
   .status p { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
   .ok .icon { background: var(--ok-soft); color: var(--ok); } .ok h2 { color: var(--ok); }
   .lock .icon { background: var(--warn-soft); color: var(--warn); } .lock h2 { color: var(--ok); }
@@ -108,52 +47,21 @@
   dd { margin: 2px 0 0; font-weight: 600; font-size: 16px; overflow-wrap: anywhere; }
   [dir="ltr"] dd { text-align: left; } [dir="rtl"] dd { text-align: right; }  /* values keep their own direction, aligned with the page */
   dl .wide { grid-column: 1 / -1; }
-  .serial { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 15px; background: var(--gold-soft); color: var(--ink);
-            border-radius: 8px; padding: 3px 9px; display: inline-block; }
   .side { display: flex; flex-direction: column; gap: 10px; }
   .side .btn { width: 100%; }
   .stamp { border: 1.5px dashed var(--gold); border-radius: 14px; padding: 14px; text-align: center; color: var(--muted); font-size: 13px; background: var(--gold-soft); }
   .stamp b { display: block; color: var(--ink); font-size: 14px; }
   .note { margin: 0; padding: 14px 20px; background: var(--surface-2); border-top: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
-  .skeleton { padding: 22px; display: grid; gap: 12px; }
-  .skeleton i { display: block; height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--line), var(--surface-2), var(--line));
-                background-size: 200% 100%; animation: shimmer 1.2s infinite linear; }
-  @keyframes shimmer { to { background-position: -200% 0; } }
-  @media (prefers-reduced-motion: reduce) { .skeleton i { animation: none; } * { transition: none !important; } }
-
-  /* how it works */
   .steps { margin-top: 18px; display: grid; gap: 12px; grid-template-columns: 1fr; }
   @media (min-width: 640px) { .steps { grid-template-columns: repeat(3, 1fr); } }
   .step { padding: 16px; display: flex; gap: 12px; align-items: flex-start; }
   .step .n { width: 32px; height: 32px; border-radius: 10px; background: var(--gold-soft); color: var(--gold); font-weight: 700; display: grid; place-items: center; flex: none; }
   .step b { display: block; font-size: 15px; } .step span { font-size: 13.5px; color: var(--muted); }
-
-  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 18px 16px calc(22px + env(safe-area-inset-bottom)); }
-  footer b { color: var(--ink); font-weight: 600; }
-  .toast { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); inset-inline: 0; margin: auto; width: max-content; max-width: 90vw;
-           background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px; box-shadow: var(--shadow); }
-  @media print {
-    .top, .search, .steps, .side .btn, footer, .toast { display: none !important; }
-    main { margin: 0; } .card { box-shadow: none; }
-  }
+  @media print { .search, .steps, .side .btn { display: none !important; } }
 </style>
 </head>
 <body>
 <header class="top">
-  <div class="bar">
-    <div class="brand">
-      <div class="seal" id="seal" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e2b65a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 3v6c0 5-3.4 8.6-7 10-3.6-1.4-7-5-7-10V5l7-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
-      </div>
-      <img id="logo" alt="" hidden>
-      <div style="min-width:0"><b id="org"></b><span data-t="platform"></span></div>
-    </div>
-    <nav class="langs" aria-label="Language">
-      <button type="button" data-lang="ar" lang="ar">ع</button>
-      <button type="button" data-lang="fr" lang="fr">FR</button>
-      <button type="button" data-lang="en" lang="en">EN</button>
-    </nav>
-  </div>
   <div class="hero">
     <h1 data-t="title"></h1>
     <p data-t="lead"></p>
@@ -190,20 +98,14 @@
   </section>
 </main>
 
-<footer><b id="orgFoot"></b> · <span data-t="footer"></span> · <span id="year" class="ltr"></span> · <a href="me.html">شواهدي</a></footer>
 <noscript><p style="text-align:center">JavaScript is required · يلزم تفعيل JavaScript</p></noscript>
 
 <script>
-// ---------- settings: the only lines to edit ----------
 // the Apps Script web app (its /exec address): only the data comes from Google, read without any Google account
 const API = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
-// the platform's name in each language (it serves every organizer: each certificate shows its own),
-// and optionally its logo (a logo.png uploaded next to this file)
-const NAME = {ar: 'منصة الشواهد', fr: 'Plateforme des attestations', en: 'Certificates platform'};
-const LOGO = '';  // for example 'logo.png'
 
 const T = {
-  ar: {platform: 'التحقق من صحة الشواهد وتحميلها', title: 'التحقق من صحة شهادة', lead: 'أدخل رقم الشهادة المطبوع عليها، أو امسح رمز QR الموجود فيها، للتأكد من أنها صادرة فعلاً عن الجهة المذكورة فيها.',
+  ar: {title: 'التحقق من صحة شهادة', lead: 'أدخل رقم الشهادة المطبوع عليها، أو امسح رمز QR الموجود فيها، للتأكد من أنها صادرة فعلاً عن الجهة المذكورة فيها.',
        serial: 'رقم الشهادة', code: 'رمز التحقق', verify: 'تحقق', hint: 'الرقم مطبوع على الشهادة، مثل ABC-2026-P0001.',
        loading: 'جارٍ التحقق...', okT: 'شهادة صحيحة', okD: 'صادرة عن الجهة المنظمة المذكورة أدناه ومسجلة في سجل الشواهد الرسمي.',
        lockD: 'هذه الشهادة صحيحة وصادرة عن الجهة المذكورة أدناه. لعرض تفاصيلها كاملة وتحميلها: أدخل رمز التحقق الذي وصل إلى صاحبها في بريده الإلكتروني.',
@@ -214,8 +116,8 @@ const T = {
        download: 'تحميل الشهادة (PDF)', share: 'مشاركة الرابط', print: 'طباعة نتيجة التحقق', copied: 'نُسخ الرابط',
        stampT: 'وثيقة موثقة', stampD: 'تحقق منها في', masked: 'الاسم مخفي جزئياً لحماية صاحب الشهادة.',
        s1: 'امسح رمز QR', s1d: 'بكاميرا الهاتف، يفتح هذه الصفحة مباشرة.', s2: 'أو أدخل الرقم', s2d: 'الرقم المطبوع على الشهادة.',
-       s3: 'تأكد من النتيجة', s3d: 'البيانات تُقرأ مباشرة من السجل الرسمي.', footer: 'البيانات تُقرأ مباشرة من سجل الجهة المصدرة'},
-  fr: {platform: 'Vérification et téléchargement des attestations', title: "Vérifier l'authenticité d'une attestation",
+       s3: 'تأكد من النتيجة', s3d: 'البيانات تُقرأ مباشرة من السجل الرسمي.'},
+  fr: {title: "Vérifier l'authenticité d'une attestation",
        lead: "Saisissez le numéro imprimé sur l'attestation ou scannez son code QR pour confirmer qu'elle a bien été délivrée par l'organisme qui y figure.",
        serial: "Numéro de l'attestation", code: 'Code de vérification', verify: 'Vérifier', hint: "Le numéro figure sur l'attestation, par ex. ABC-2026-P0001.",
        loading: 'Vérification en cours...', okT: 'Attestation authentique', okD: "Délivrée par l'organisateur indiqué ci-dessous et inscrite au registre officiel des attestations.",
@@ -227,9 +129,8 @@ const T = {
        download: "Télécharger l'attestation (PDF)", share: 'Partager le lien', print: 'Imprimer le résultat', copied: 'Lien copié',
        stampT: 'Document vérifié', stampD: 'Vérifié le', masked: 'Nom partiellement masqué pour protéger le titulaire.',
        s1: 'Scannez le code QR', s1d: "Avec l'appareil photo du téléphone : cette page s'ouvre directement.", s2: 'Ou saisissez le numéro',
-       s2d: "Le numéro imprimé sur l'attestation.", s3: 'Consultez le résultat', s3d: 'Les données sont lues directement dans le registre officiel.',
-       footer: "Données lues directement dans le registre de l'organisme émetteur"},
-  en: {platform: 'Verify and download certificates', title: 'Verify a certificate', lead: 'Enter the number printed on the certificate or scan its QR code to confirm it was really issued by the organization named on it.',
+       s2d: "Le numéro imprimé sur l'attestation.", s3: 'Consultez le résultat', s3d: 'Les données sont lues directement dans le registre officiel.'},
+  en: {title: 'Verify a certificate', lead: 'Enter the number printed on the certificate or scan its QR code to confirm it was really issued by the organization named on it.',
        serial: 'Certificate number', code: 'Verification code', verify: 'Verify', hint: 'The number is printed on the certificate, e.g. ABC-2026-P0001.',
        loading: 'Verifying...', okT: 'Authentic certificate', okD: 'Issued by the organizer shown below and recorded in the official certificate register.',
        lockD: 'This certificate is authentic and was issued by the organizer shown below. To see it in full and download it: enter the verification code its holder received by email.',
@@ -240,119 +141,75 @@ const T = {
        download: 'Download certificate (PDF)', share: 'Share link', print: 'Print the result', copied: 'Link copied',
        stampT: 'Verified document', stampD: 'Verified on', masked: "Name partly hidden to protect the holder's privacy.",
        s1: 'Scan the QR code', s1d: 'With the phone camera: it opens this page directly.', s2: 'Or type the number', s2d: 'The number printed on the certificate.',
-       s3: 'Check the result', s3d: 'Data is read directly from the official register.', footer: "Data read directly from the issuer's register"},
+       s3: 'Check the result', s3d: 'Data is read directly from the official register.'},
 };
-const LOCALE = {ar: 'ar-MA-u-nu-latn', fr: 'fr-FR', en: 'en-GB'};
 const ICON = {
   ok: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 3v6c0 5-3.4 8.6-7 10-3.6-1.4-7-5-7-10V5l7-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>',
   lock: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>',
   bad: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>',
 };
 
-const $ = id => document.getElementById(id);
+const {el, svg, t} = UI, $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 const serial = (params.get('s') || '').trim().toUpperCase(), code = (params.get('k') || '').trim().toUpperCase();
-let lang = pickLang(), last = null;  // last: the latest answer, redrawn when the language changes
-
-function pickLang() {
-  const ok = l => l in T ? l : null;
-  let saved = null;
-  try { saved = localStorage.getItem('lang'); } catch (e) { /* private browsing */ }
-  return ok(params.get('lang')) || ok(saved) || ok((navigator.language || '').slice(0, 2)) || 'ar';
-}
-function el(tag, attrs, ...kids) {  // builds elements from text only: registry values are never read as HTML
-  const e = Object.assign(document.createElement(tag), attrs || {});
-  kids.forEach(k => k != null && e.append(k));
-  return e;
-}
-function svg(html) { const s = el('span'); s.innerHTML = html; return s.firstChild; }  // our own constant icons only
-function fmtDate(v) {
-  const d = new Date(v);
-  return isNaN(d) ? v : new Intl.DateTimeFormat(LOCALE[lang], {day: 'numeric', month: 'long', year: 'numeric'}).format(d);
-}
-function toast(msg) {
-  const t = el('div', {className: 'toast', role: 'status', textContent: msg});
-  document.body.append(t);
-  setTimeout(() => t.remove(), 2200);
-}
-
-function setLang(l) {
-  lang = l;
-  try { localStorage.setItem('lang', l); } catch (e) { /* private browsing */ }
-  const t = T[l];
-  document.documentElement.lang = l;
-  document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
-  document.querySelectorAll('[data-t]').forEach(n => { n.textContent = t[n.dataset.t]; });
-  document.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
-  $('org').textContent = $('orgFoot').textContent = NAME[l];
-  $('langField').value = l;
-  document.title = NAME[l] + ' · ' + t.platform;
-  if (last) render(last);
-}
+let last = null;  // the latest answer, drawn again when the language changes
 
 function head(kind, title, text) {
-  return el('div', {className: 'status ' + kind}, el('div', {className: 'icon'}, svg(ICON[kind === 'lock' ? 'lock' : kind])),
+  return el('div', {className: 'status ' + kind}, el('div', {className: 'icon'}, svg(ICON[kind])),
             el('div', {}, el('h2', {textContent: title}), text ? el('p', {textContent: text}) : null));
-}
-function details(row, full) {
-  const t = T[lang], dl = el('dl');
-  const add = (label, value, wide, cls) => value && dl.append(pair(label, cls ? el('span', {className: cls, textContent: value}) : value, wide));
-  add(t.fSerial, row.serial, false, 'serial ltr');
-  add(t.fName, row.name);
-  add(t.fActivity, row.activity, true);
-  add(t.fDates, row.dates);
-  add(t.fOrg, row.org);
-  if (full) { add(t.fType, row.type); add(t.fIssued, fmtDate(row.issued)); }
-  return dl;
 }
 function pair(label, value, wide) {  // one label over its value; pairs flow in one or two columns
   return el('div', {className: wide ? 'wide' : ''}, el('dt', {textContent: label}), el('dd', {dir: 'auto'}, value));
 }
+function details(row, full) {
+  const dl = el('dl');
+  const add = (label, value, wide, cls) => value && dl.append(pair(label, cls ? el('span', {className: cls, textContent: value}) : value, wide));
+  add(t('fSerial'), row.serial, false, 'serial ltr');
+  add(t('fName'), row.name);
+  add(t('fActivity'), row.activity, true);
+  add(t('fDates'), row.dates);
+  add(t('fOrg'), row.org);
+  if (full) { add(t('fType'), row.type); add(t('fIssued'), UI.fmtDate(row.issued)); }
+  return dl;
+}
 function shareLink() {
   const url = location.origin + location.pathname + '?s=' + encodeURIComponent(serial) + (code ? '&k=' + encodeURIComponent(code) : '');
-  if (navigator.share) return navigator.share({title: T[lang].okT, url}).catch(() => {});
-  navigator.clipboard.writeText(url).then(() => toast(T[lang].copied), () => prompt('', url));
+  if (navigator.share) return navigator.share({title: t('okT'), url}).catch(() => {});
+  navigator.clipboard.writeText(url).then(() => UI.toast(t('copied')), () => prompt('', url));
 }
+const card = (...kids) => el('div', {className: 'card result rise'}, ...kids);
+const one = (...kids) => el('div', {className: 'body', style: 'grid-template-columns:1fr'}, ...kids);
 
 function render(r) {
-  const t = T[lang], box = $('result'), row = r && r.row;
+  const box = $('result'), row = r && r.row;
   box.replaceChildren();
   $('steps').hidden = !!r;
-  if (r === 'error') {
-    const card = el('div', {className: 'card result'}, head('bad', t.errT, t.errD));
-    card.append(el('div', {className: 'body', style: 'grid-template-columns:1fr'},
-      el('button', {className: 'btn ghost', type: 'button', textContent: t.retry, onclick: lookup})));
-    return box.append(card);
-  }
-  if (!row) return box.append(el('div', {className: 'card result'}, head('bad', t.noT, t.noD)));
+  if (r === 'error') return box.append(card(head('bad', t('errT'), t('errD')), one(el('button', {className: 'btn ghost', type: 'button', textContent: t('retry'), onclick: lookup}))));
+  if (!row) return box.append(card(head('bad', t('noT'), t('noD'))));
   if (row.revoked) {
-    const card = el('div', {className: 'card result'}, head('bad', t.revT, t.revD));
-    const dl = el('dl', {}, pair(t.fSerial, el('span', {className: 'serial ltr', textContent: row.serial})), pair(t.reason, row.revoked));
-    card.append(el('div', {className: 'body', style: 'grid-template-columns:1fr'}, dl));
-    return box.append(card);
+    return box.append(card(head('bad', t('revT'), t('revD')),
+      one(el('dl', {}, pair(t('fSerial'), el('span', {className: 'serial ltr', textContent: row.serial})), pair(t('reason'), row.revoked)))));
   }
   if (r.locked) {
     $('codebox').hidden = false;
     $('form').classList.add('withcode');
-    const card = el('div', {className: 'card result'}, head('lock', t.okT, t.lockD));
-    card.append(el('div', {className: 'body', style: 'grid-template-columns:1fr'}, details(row, false)), el('p', {className: 'note', textContent: t.masked}));
-    return box.append(card);
+    return box.append(card(head('lock', t('okT'), t('lockD')), one(details(row, false)), el('p', {className: 'note', textContent: t('masked')})));
   }
   const side = el('div', {className: 'side'});
-  if (/^https:\/\//.test(row.link)) side.append(el('a', {className: 'btn', href: row.link, target: '_blank', rel: 'noopener', textContent: t.download}));
-  side.append(el('button', {className: 'btn ghost', type: 'button', textContent: t.share, onclick: shareLink}),
-              el('button', {className: 'btn ghost', type: 'button', textContent: t.print, onclick: () => print()}),
-              el('div', {className: 'stamp'}, el('b', {textContent: t.stampT}),
-                 t.stampD + ' ' + new Intl.DateTimeFormat(LOCALE[lang], {dateStyle: 'medium', timeStyle: 'short'}).format(new Date())));
-  box.append(el('div', {className: 'card result'}, head('ok', t.okT, t.okD), el('div', {className: 'body'}, details(row, true), side)));
+  if (/^https:\/\//.test(row.link)) side.append(el('a', {className: 'btn', href: row.link, target: '_blank', rel: 'noopener', textContent: t('download')}));
+  side.append(el('button', {className: 'btn ghost', type: 'button', textContent: t('share'), onclick: shareLink}),
+              el('button', {className: 'btn ghost', type: 'button', textContent: t('print'), onclick: () => print()}),
+              el('div', {className: 'stamp'}, el('b', {textContent: t('stampT')}),
+                 t('stampD') + ' ' + UI.fmtDate(new Date(), {dateStyle: 'medium', timeStyle: 'short'})));
+  box.append(card(head('ok', t('okT'), t('okD')), el('div', {className: 'body'}, details(row, true), side)));
 }
 
 function lookup() {
   last = null;
   $('steps').hidden = true;
-  $('result').replaceChildren(el('div', {className: 'card result', 'aria-busy': 'true'},
+  $('result').replaceChildren(el('div', {className: 'card result', ariaBusy: 'true'},
     el('div', {className: 'skeleton'}, el('i', {style: 'width:40%'}), el('i', {style: 'width:85%'}), el('i', {style: 'width:65%'}),
-       el('span', {className: 'hint', textContent: T[lang].loading}))));
+       el('span', {className: 'hint', textContent: t('loading')}))));
   // credentials 'omit': no Google cookies are sent, so Google treats every visitor alike, whatever accounts they use
   fetch(API + '?api=1&s=' + encodeURIComponent(serial) + '&k=' + encodeURIComponent(code), {credentials: 'omit'})
     .then(res => res.json())
@@ -360,16 +217,13 @@ function lookup() {
     .catch(() => { last = 'error'; render('error'); });
 }
 
-document.querySelector('.langs').addEventListener('click', e => { if (e.target.dataset.lang) setLang(e.target.dataset.lang); });
 $('form').addEventListener('submit', e => {
   if (!$('s').value.trim()) { e.preventDefault(); $('s').focus(); }
   if (!$('k').value.trim()) $('k').disabled = true;  // no empty "&k=" in the address
 });
-if (LOGO) { $('logo').src = LOGO; $('logo').hidden = false; $('seal').hidden = true; }
-$('year').textContent = new Date().getFullYear();
 $('s').value = serial;
 $('k').value = code;
-setLang(lang);
+UI.init({page: 'verify', name: 'title', T, onLang: l => { $('langField').value = l; if (last) render(last); }});
 if (serial) lookup();
 </script>
 </body>

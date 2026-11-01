@@ -2,31 +2,35 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<title>سياسة الخصوصية · Politique de confidentialité</title>
+<meta name="theme-color" content="#0b3b5c">
+<title>سياسة الخصوصية · Politique de confidentialité · Privacy policy</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b3b5c'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' fill='none' stroke='%23d9a441' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui.css">
+<script src="ui.js"></script>
 <style>
-  :root { --bg:#f3f5f8; --surface:#fff; --ink:#13202e; --muted:#5d6b7a; --line:#e2e7ee; --brand:#0b3b5c; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --bg:#0d141c; --surface:#141e29; --ink:#e8eef4; --muted:#9aa8b6; --line:#24323f; --brand:#6fb3e4; }
-  }
-  :root[data-theme="dark"] { --bg:#0d141c; --surface:#141e29; --ink:#e8eef4; --muted:#9aa8b6; --line:#24323f; --brand:#6fb3e4; }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.75 "Segoe UI", Tahoma, sans-serif; }
-  main { max-width:760px; margin:0 auto; padding:24px 16px 48px; }
-  section { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:20px 22px; margin-bottom:16px; }
-  h1 { font-size:22px; color:var(--brand); margin:0 0 4px; }
-  h2 { font-size:17px; margin:18px 0 6px; }
-  p, li { margin:6px 0; }
-  ul { padding-inline-start:20px; }
-  .muted { color:var(--muted); font-size:14px; }
-  a { color:var(--brand); }
+  /* the policy in the page's language only (all three stay in the page for readers without JavaScript) */
+  html[lang="ar"] .policy:not([lang="ar"]), html[lang="fr"] .policy:not([lang="fr"]), html[lang="en"] .policy:not([lang="en"]) { display: none; }
+  .policy { max-width: 780px; line-height: 1.8; }
+  .policy h2 { font-size: 17px; margin: 22px 0 6px; color: var(--brand); }
+  .policy h2:first-of-type { margin-top: 4px; }
+  .policy p, .policy li { margin: 6px 0; }
+  .policy ul { padding-inline-start: 22px; }
 </style>
 </head>
 <body>
+<header class="top">
+  <div class="hero">
+    <h1 data-t="title"></h1>
+    <p data-t="lead"></p>
+  </div>
+</header>
 <main>
-<section lang="ar" dir="rtl">
-  <h1>سياسة الخصوصية</h1>
+<section class="card pad policy" lang="ar" dir="rtl">
   <p class="muted">منصة الشواهد (Shawahid) · آخر تحديث: 27 أكتوبر 2026</p>
   <p>منصة الشواهد أداة يستعملها منظمو الأنشطة العلمية والتكوينية لتسجيل المشاركين وتأكيد حضورهم وإصدار شواهدهم والتحقق منها.</p>
   <h2>البيانات التي نجمعها</h2>
@@ -50,8 +54,7 @@
   <p><a href="mailto:cdcue25@gmail.com">cdcue25@gmail.com</a></p>
 </section>
 
-<section lang="fr" dir="ltr">
-  <h1>Politique de confidentialité</h1>
+<section class="card pad policy" lang="fr" dir="ltr">
   <p class="muted">Plateforme des attestations (Shawahid) · Dernière mise à jour : 27 octobre 2026</p>
   <p>Shawahid est un outil utilisé par les organisateurs d'activités scientifiques et de formation pour inscrire les participants, confirmer leur présence, émettre leurs attestations et permettre leur vérification.</p>
   <h2>Données collectées</h2>
@@ -74,6 +77,38 @@
   <h2>Contact</h2>
   <p><a href="mailto:cdcue25@gmail.com">cdcue25@gmail.com</a></p>
 </section>
+
+<section class="card pad policy" lang="en" dir="ltr">
+  <p class="muted">Certificates platform (Shawahid) · Last updated: 27 October 2026</p>
+  <p>Shawahid is a tool used by organizers of scientific and training activities to register participants, confirm their attendance, issue their certificates and let anyone verify them.</p>
+  <h2>Data we collect</h2>
+  <ul>
+    <li>What participants enter in the registration form: name in Arabic and Latin script, title, email, phone, and answers to the activity's own questions.</li>
+    <li>Attendance, the certificate number and its verification code.</li>
+  </ul>
+  <h2>How we use it</h2>
+  <ul>
+    <li>To issue the certificate in the participant's name, email it to them, and let its authenticity be verified.</li>
+    <li>The data is never sold, never shared with third parties, and never used for advertising.</li>
+  </ul>
+  <h2>Where it is stored</h2>
+  <p>In the organizer's Google account (Google Forms, Sheets, Drive) and on the organizer's computer. The platform uses Google services only to create forms, store certificates in Drive and send email from the organizer's account.
+    Its use of Google data complies with the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+  <h2>Public verification page</h2>
+  <p>It shows the holder, type and date of a certificate to anyone who has its number. The full name and the download link stay hidden without the verification code emailed to the holder.</p>
+  <h2>Retention and your rights</h2>
+  <p>Emails are deleted from the sending queue after 30 days. Participants can ask for their data to be corrected, or their contact details deleted, by writing to the address below; the certificate record itself is kept so it can still be verified.</p>
+  <h2>Contact</h2>
+  <p><a href="mailto:cdcue25@gmail.com">cdcue25@gmail.com</a></p>
+</section>
 </main>
+
+<script>
+UI.init({page: 'privacy', name: 'title', T: {
+  ar: {title: 'سياسة الخصوصية', lead: 'ما نجمعه من بيانات، وكيف نستعمله، وأين يُحفظ، وحقوقك.'},
+  fr: {title: 'Politique de confidentialité', lead: 'Les données collectées, leur utilisation, leur stockage et vos droits.'},
+  en: {title: 'Privacy policy', lead: 'What data we collect, how we use it, where it is stored, and your rights.'},
+}});
+</script>
 </body>
 </html>

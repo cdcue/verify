@@ -2,155 +2,209 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline';
-  connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; form-action 'none'">
+<meta name="theme-color" content="#0b3b5c">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src https://fonts.gstatic.com; connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <title>شواهدي · منصة الشواهد</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b3b5c'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' fill='none' stroke='%23d9a441' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui.css">
+<script src="ui.js"></script>
 <style>
-  :root { --bg:#f3f5f8; --surface:#fff; --ink:#13202e; --muted:#5d6b7a; --line:#e2e7ee; --ok:#12804a; --ok-soft:#e8f6ee;
-          --err:#b42318; --err-soft:#fdecea; --pri:#1d4ed8; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-    --bg:#0d141c; --surface:#141e29; --ink:#e8eef4; --muted:#9aa8b6; --line:#24323f; --ok:#4cc48a; --ok-soft:#12291f;
-    --err:#f2867c; --err-soft:#2e1716; --pri:#8cc4ec; } }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 "Segoe UI", Tahoma, sans-serif; }
-  header { background:#0b1f3a; color:#fff; padding:10px 16px; display:flex; align-items:center; gap:8px; }
-  header b { font-size:17px; flex:1; }
-  header button { background:transparent; color:#cbd5e1; border:1px solid #3b4b63; border-radius:8px; padding:4px 10px; font:inherit; font-size:13px; cursor:pointer; }
-  main { max-width:760px; margin:0 auto; padding:14px 16px 40px; }
-  .card { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:12px; }
-  h1 { font-size:20px; margin:0 0 4px; } h2 { font-size:17px; margin:0 0 4px; }
-  .muted { color:var(--muted); font-size:13px; }
-  .badge { display:inline-block; padding:1px 8px; border-radius:20px; font-size:12px; font-weight:600; background:var(--bg); color:var(--muted); }
-  .badge.err { background:var(--err-soft); color:var(--err); }
-  input { width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:10px; font:inherit; background:var(--surface); color:var(--ink); }
-  button.act, a.act { background:var(--pri); color:#fff; border:0; border-radius:9px; padding:8px 12px; font:inherit; font-size:14px; font-weight:600;
-                      cursor:pointer; text-decoration:none; display:inline-block; }
-  button.sec, a.sec { background:var(--bg); color:var(--ink); border:1px solid var(--line); }
-  button:disabled { opacity:.5; }
-  .bar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .ltr { direction:ltr; unicode-bidi:embed; }
-  .code { font-family:ui-monospace, Consolas, monospace; letter-spacing:2px; font-weight:700; }
-  #box { max-width:400px; margin:50px auto; display:grid; gap:10px; }
-  #toast { position:fixed; bottom:16px; inset-inline:16px; background:#0b1f3a; color:#fff; border-radius:12px; padding:12px 14px; display:none; }
+  /* this page only: the sign-in card, the person's summary and the list of certificates */
+  .narrow { max-width: 460px; margin: 0 auto; }
+  .who { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+  .who h2 { font-size: 22px; flex: 1 1 220px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; color: var(--muted); }
+  .meta b { color: var(--ink); font-weight: 600; }
+  .list { display: grid; gap: 12px; margin-top: 16px; }
+  @media (min-width: 760px) { .list { grid-template-columns: 1fr 1fr; } }
+  .cert { padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .cert.off { opacity: .75; }
+  .cert h3 { margin: 0; font-size: 16.5px; line-height: 1.45; flex: 1; }
+  .cert .row { display: flex; align-items: flex-start; gap: 10px; }
+  .cert .facts { font-size: 13.5px; color: var(--muted); display: grid; gap: 2px; }
+  .cert .btns { margin-top: auto; padding-top: 6px; }
+  .codev { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; letter-spacing: 2px; font-weight: 700; color: var(--ink); }
+  .empty { text-align: center; padding: 32px 20px; color: var(--muted); }
 </style>
 </head>
 <body>
-<header><b>شواهدي · منصة الشواهد</b><button id="out" hidden>خروج</button></header>
-<main id="app"></main>
-<div id="toast"></div>
+<header class="top">
+  <div class="hero">
+    <h1 data-t="title"></h1>
+    <p data-t="lead"></p>
+  </div>
+</header>
+<main id="app" aria-live="polite"></main>
+<noscript><p style="text-align:center">JavaScript is required · يلزم تفعيل JavaScript</p></noscript>
+
 <script>
-  // A participant's own certificates: their email (or participant number) gets a 6-digit code, then a token signed by
-  // the Apps Script stays in this browser for 30 days. Every value shown comes from the sheets: text nodes only.
-  const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec', KEY = 'shawahid-me', app = document.getElementById('app');
-  let token = (() => { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } })();
-  const keep = t => { token = t; try { t ? localStorage.setItem(KEY, t) : localStorage.removeItem(KEY); } catch (e) {} };
-  function el(tag, props, ...kids) {
-    const n = Object.assign(document.createElement(tag), props || {});
-    kids.flat().forEach(k => k != null && k !== false && n.append(k instanceof Node ? k : String(k)));
-    return n;
-  }
-  function toast(msg) {
-    const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block';
-    clearTimeout(t.h); t.h = setTimeout(() => t.style.display = 'none', 4500);
-  }
-  async function call(action, extra) {
+// A participant's own certificates: their email (or participant number) gets a 6-digit code, then a token signed by
+// the Apps Script stays in this browser for 30 days. Every value shown comes from the sheets: text nodes only.
+const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec', KEY = 'shawahid-me';
+const T = {
+  ar: {title: 'شواهدي', lead: 'كل الشواهد التي حصلتَ عليها في مكان واحد: تحميلها، ومشاركتها، ورموز التحقق منها.',
+       idLabel: 'البريد الإلكتروني أو رقم المشارك', idPh: 'name@example.com أو P00012',
+       idHelp: 'البريد الذي سجلتَ به، أو رقم المشارك المكتوب في رسالة شهادتك.', send: 'أرسل رمز الدخول',
+       wait: 'طلبتَ رموزاً كثيرة: أعد المحاولة بعد ساعة.', busy: 'الخدمة مشغولة الآن: أعد المحاولة بعد قليل.', sendFail: 'تعذر إرسال الرمز.',
+       codeT: 'رمز الدخول', codeD: 'إن كان لهذا البريد أو الرقم شواهد فقد أرسلنا إليه رمزاً من 6 أرقام، صالحاً 10 دقائق. إن لم يصل فتفقد البريد غير المرغوب فيه.',
+       enter: 'دخول', back: 'رجوع', wrong: 'الرمز غير صحيح.', expired: 'انتهت صلاحية الرمز أو استُعمل: اطلب رمزاً جديداً.',
+       loading: 'جارٍ التحميل...', ended: 'انتهت مدة الدخول: اطلب رمزاً جديداً.', out: 'خروج',
+       number: 'رقم المشارك', count: n => n === 1 ? 'شهادة واحدة' : n === 2 ? 'شهادتان' : n + ' شواهد', none: 'لا شواهد بعد.',
+       zip: 'تحميل الكل (ZIP)', zipping: 'جارٍ التجهيز...', zipFail: 'تعذر تجهيز الملف', zipPart: n => `في الملف أحدث ${n} شواهد؛ الباقي من روابطها.`,
+       copyAll: 'نسخ كل الروابط', copied: 'نُسخت الروابط', share: 'مشاركة', listHead: n => 'شواهد ' + n + ':',
+       revoked: 'ملغاة', cert: 'شهادة', serial: 'رقم الشهادة', code: 'رمز التحقق', download: 'تحميل', verify: 'صفحة التحقق'},
+  fr: {title: 'Mes attestations', lead: 'Toutes vos attestations au même endroit : téléchargement, partage et codes de vérification.',
+       idLabel: 'E-mail ou numéro de participant', idPh: 'nom@exemple.com ou P00012',
+       idHelp: 'L’e-mail utilisé à l’inscription, ou le numéro de participant indiqué dans l’e-mail de votre attestation.', send: 'Recevoir un code de connexion',
+       wait: 'Trop de codes demandés : réessayez dans une heure.', busy: 'Service occupé : réessayez dans un instant.', sendFail: 'Envoi du code impossible.',
+       codeT: 'Code de connexion', codeD: 'Si cet e-mail ou ce numéro a des attestations, un code à 6 chiffres valable 10 minutes vient d’y être envoyé. Pensez à vérifier les indésirables.',
+       enter: 'Se connecter', back: 'Retour', wrong: 'Code incorrect.', expired: 'Code expiré ou déjà utilisé : demandez-en un nouveau.',
+       loading: 'Chargement...', ended: 'Session expirée : demandez un nouveau code.', out: 'Se déconnecter',
+       number: 'N° de participant', count: n => n + (n > 1 ? ' attestations' : ' attestation'), none: 'Aucune attestation pour l’instant.',
+       zip: 'Tout télécharger (ZIP)', zipping: 'Préparation...', zipFail: 'Préparation du fichier impossible', zipPart: n => `Le fichier contient les ${n} plus récentes ; les autres via leur lien.`,
+       copyAll: 'Copier tous les liens', copied: 'Liens copiés', share: 'Partager', listHead: n => 'Attestations de ' + n + ' :',
+       revoked: 'Annulée', cert: 'Attestation', serial: 'Numéro', code: 'Code de vérification', download: 'Télécharger', verify: 'Page de vérification'},
+  en: {title: 'My certificates', lead: 'All your certificates in one place: download them, share them, and find their verification codes.',
+       idLabel: 'Email or participant number', idPh: 'name@example.com or P00012',
+       idHelp: 'The email you registered with, or the participant number in your certificate email.', send: 'Send me a sign-in code',
+       wait: 'Too many codes requested: try again in an hour.', busy: 'The service is busy: try again shortly.', sendFail: 'Could not send the code.',
+       codeT: 'Sign-in code', codeD: 'If this email or number has certificates, we just sent it a 6-digit code, valid for 10 minutes. Check your spam folder if it does not arrive.',
+       enter: 'Sign in', back: 'Back', wrong: 'Wrong code.', expired: 'The code expired or was already used: ask for a new one.',
+       loading: 'Loading...', ended: 'Your session ended: ask for a new code.', out: 'Sign out',
+       number: 'Participant no.', count: n => n + (n === 1 ? ' certificate' : ' certificates'), none: 'No certificates yet.',
+       zip: 'Download all (ZIP)', zipping: 'Preparing...', zipFail: 'Could not prepare the file', zipPart: n => `The file holds the ${n} most recent; the others are in their links.`,
+       copyAll: 'Copy all links', copied: 'Links copied', share: 'Share', listHead: n => 'Certificates of ' + n + ':',
+       revoked: 'Revoked', cert: 'Certificate', serial: 'Number', code: 'Verification code', download: 'Download', verify: 'Verification page'},
+};
+
+const {el, t} = UI, app = document.getElementById('app');
+let token = UI.store.get(KEY) || '', view = () => {};  // view: the screen shown now, drawn again in another language
+const keep = v => { token = v; UI.store.set(KEY, v || null); };
+async function call(action, extra) {
+  try {
+    const r = await fetch(EXEC, {method: 'POST', credentials: 'omit', body: JSON.stringify(Object.assign({action}, extra))});
+    return await r.json();
+  } catch (e) { UI.toast(t('net'), 4500); throw e; }
+}
+const btn = (key, onclick, ghost) => el('button', {className: 'btn' + (ghost ? ' ghost' : ''), type: 'button', textContent: t(key), onclick});
+const verifyUrl = c => new URL('index.html?s=' + encodeURIComponent(c.serial) + (c.code ? '&k=' + encodeURIComponent(c.code) : ''), location.href).href;
+const show = (...kids) => app.replaceChildren(...kids);
+const busy = b => { b.disabled = true; return () => { b.disabled = false; }; };
+
+function signIn(msg) {
+  view = () => signIn(msg);
+  const id = el('input', {id: 'id', dir: 'ltr', type: 'text', inputMode: 'email', autocomplete: 'email', placeholder: t('idPh'), spellcheck: false});
+  const say = el('p', {className: 'say', role: 'alert', textContent: msg || ''});
+  const go = el('button', {className: 'btn block', type: 'submit', textContent: t('send')});
+  const form = el('form', {className: 'card pad stack narrow rise', noValidate: true},
+    el('div', {}, el('label', {htmlFor: 'id', textContent: t('idLabel')}), id, el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('idHelp')})),
+    go, say);
+  form.onsubmit = async e => {
+    e.preventDefault();
+    if (!id.value.trim()) return id.focus();
+    const done = busy(go);
     try {
-      const r = await fetch(EXEC, {method: 'POST', credentials: 'omit', body: JSON.stringify(Object.assign({action}, extra))});
-      return await r.json();
-    } catch (e) { toast('تعذر الاتصال بالإنترنت أو بـ Google — أعد المحاولة'); throw e; }
-  }
-  const btn = (text, onclick, sec) => el('button', {className: 'act' + (sec ? ' sec' : ''), type: 'button', textContent: text, onclick});
-  const verifyUrl = c => new URL('index.html?s=' + encodeURIComponent(c.serial) + (c.code ? '&k=' + encodeURIComponent(c.code) : ''), location.href).href;
+      const r = await call('mecode', {id: id.value.trim()});
+      if (r.status === 'sent') return askCode(id.value.trim());
+      say.textContent = t(r.status === 'wait' || r.status === 'busy' ? r.status : 'sendFail');
+    } catch (e2) { /* toast shown */ }
+    done();
+  };
+  show(form);
+  id.focus();
+}
 
-  function signIn(msg) {
-    document.getElementById('out').hidden = true;
-    const id = el('input', {dir: 'ltr', autocomplete: 'email', placeholder: 'name@example.com أو P00012'});
-    const say = el('p', {className: 'muted', textContent: msg || ''});
-    const go = el('button', {className: 'act', textContent: 'أرسل رمز الدخول', style: 'padding:11px'});
-    const send = async () => {
-      if (!id.value.trim()) return id.focus();
-      go.disabled = true;
-      try {
-        const r = await call('mecode', {id: id.value.trim()});
-        if (r.status === 'sent') return askCode(id.value.trim());
-        say.textContent = {wait: 'طلبتَ رموزاً كثيرة: أعد المحاولة بعد ساعة.', busy: 'الخدمة مشغولة الآن: أعد المحاولة بعد قليل.'}[r.status] || 'تعذر إرسال الرمز';
-      } catch (e) { /* toast shown */ }
-      go.disabled = false;
-    };
-    go.onclick = send; id.onkeydown = e => { if (e.key === 'Enter') send(); };
-    app.replaceChildren(el('div', {className: 'card', id: 'box'}, el('h1', {textContent: 'شواهدي'}),
-      el('p', {className: 'muted', style: 'margin:0', textContent: 'كل الشواهد التي حصلتَ عليها في مكان واحد. اكتب بريدك الإلكتروني الذي سجلت به، أو رقم المشارك المكتوب في رسالة شهادتك.'}),
-      el('label', {className: 'muted', textContent: 'البريد الإلكتروني أو رقم المشارك'}), id, go, say,
-      el('p', {className: 'muted', style: 'margin:0'}, el('a', {href: 'index.html', textContent: 'التحقق من شهادة'}))));
-    id.focus();
-  }
+function askCode(id) {
+  view = () => askCode(id);
+  const code = el('input', {id: 'code', dir: 'ltr', inputMode: 'numeric', autocomplete: 'one-time-code', maxLength: 6, placeholder: '••••••', className: 'code'});
+  const say = el('p', {className: 'say', role: 'alert'});
+  const go = el('button', {className: 'btn block', type: 'submit', textContent: t('enter')});
+  const form = el('form', {className: 'card pad stack narrow rise', noValidate: true},
+    el('div', {}, el('h2', {textContent: t('codeT')}), el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('codeD')})),
+    el('div', {}, el('label', {htmlFor: 'code', textContent: t('codeT')}), code), go, say,
+    el('div', {}, el('button', {type: 'button', className: 'linkbtn', textContent: t('back'), onclick: () => signIn()})));
+  const enter = async () => {
+    if (go.disabled) return;
+    const done = busy(go);
+    try {
+      const r = await call('melogin', {id, code: code.value});
+      if (r.status === 'ok') { keep(r.token); return mine(); }
+      say.textContent = t(r.status === 'wrong' ? 'wrong' : 'expired');
+    } catch (e) { /* toast shown */ }
+    done();
+  };
+  form.onsubmit = e => { e.preventDefault(); enter(); };
+  code.oninput = () => { if (code.value.replace(/\D/g, '').length === 6) enter(); };
+  show(form);
+  code.focus();
+}
 
-  function askCode(id) {
-    const code = el('input', {dir: 'ltr', inputMode: 'numeric', autocomplete: 'one-time-code', maxLength: 6, placeholder: '------', className: 'code',
-                              style: 'text-align:center;font-size:22px'});
-    const say = el('p', {className: 'muted', textContent: ''});
-    const go = el('button', {className: 'act', textContent: 'دخول', style: 'padding:11px'});
-    const enter = async () => {
-      go.disabled = true;
-      try {
-        const r = await call('melogin', {id, code: code.value});
-        if (r.status === 'ok') { keep(r.token); return show(); }
-        say.textContent = r.status === 'wrong' ? 'الرمز غير صحيح.' : 'انتهت صلاحية الرمز أو استُعمل: اطلب رمزاً جديداً.';
-      } catch (e) { /* toast shown */ }
-      go.disabled = false;
-    };
-    go.onclick = enter; code.oninput = () => { if (code.value.replace(/\D/g, '').length === 6) enter(); };
-    app.replaceChildren(el('div', {className: 'card', id: 'box'}, el('h1', {textContent: 'رمز الدخول'}),
-      el('p', {className: 'muted', style: 'margin:0', textContent: 'إن كان لهذا البريد أو الرقم شواهد فقد أرسلنا إليه رمزاً من 6 أرقام، صالحاً 10 دقائق. '
-        + 'إن لم يصل فتفقد البريد غير المرغوب فيه.'}), code, go, say, btn('رجوع', () => signIn(), true)));
-    code.focus();
-  }
+let data = null;  // the signed-in person's answer, kept to redraw it in another language without asking again
+async function mine() {
+  view = () => data ? draw(data) : mine();
+  show(el('div', {className: 'card', ariaBusy: 'true'}, el('div', {className: 'skeleton'},
+    el('i', {style: 'width:35%'}), el('i', {style: 'width:70%'}), el('span', {className: 'hint', textContent: t('loading')}))));
+  let j;
+  try { j = await call('me', {token}); } catch (e) { return; }
+  if (j.status !== 'ok') { keep(''); return signIn(t('ended')); }
+  data = j;
+  draw(j);
+}
 
-  async function show() {
-    app.replaceChildren(el('p', {className: 'muted', textContent: 'جارٍ التحميل...'}));
-    let j;
-    try { j = await call('me', {token}); } catch (e) { return; }
-    if (j.status !== 'ok') { keep(''); return signIn('انتهت مدة الدخول: اطلب رمزاً جديداً.'); }
-    document.getElementById('out').hidden = false;
-    const live = j.certs.filter(c => !c.revoked && c.link);
-    const text = ['شواهد ' + j.name + ':', ...live.map(c => `«${c.activity}» (${c.serial}): ${c.link}`)].join('\n');
-    const zip = btn('⬇ تحميل الكل (ZIP)', async () => {
-      zip.disabled = true; zip.textContent = 'جارٍ التجهيز...';
-      try {
-        const r = await call('mezip', {token});
-        if (r.status === 'ok') {
-          const bytes = Uint8Array.from(atob(r.data), ch => ch.charCodeAt(0));
-          const a = el('a', {href: URL.createObjectURL(new Blob([bytes], {type: 'application/zip'})), download: 'شواهدي-' + j.number + '.zip'});
-          document.body.append(a); a.click(); a.remove();
-          if (r.files < live.length) toast(`في الملف أحدث ${r.files} شواهد؛ الباقي من روابطها.`);
-        } else toast('تعذر تجهيز الملف');
-      } catch (e) { /* toast shown */ }
-      zip.disabled = false; zip.textContent = '⬇ تحميل الكل (ZIP)';
-    });
-    const copy = btn('📋 نسخ كل الروابط', async () => {
-      try { await navigator.clipboard.writeText(text); toast('نُسخت الروابط'); } catch (e) { prompt('انسخ:', text); }
-    }, true);
-    app.replaceChildren(
-      el('div', {className: 'card'}, el('h1', {textContent: j.name}),
-        el('div', {className: 'muted'}, 'رقم المشارك: ', el('b', {className: 'ltr', textContent: j.number}), ' · ', el('span', {className: 'ltr', textContent: j.email})),
-        el('div', {className: 'muted', style: 'margin:4px 0 10px', textContent: j.certs.length ? `${live.length} شهادة` : 'لا شواهد بعد.'}),
-        live.length ? el('div', {className: 'bar'}, zip, copy,
-          navigator.share ? btn('مشاركة', () => navigator.share({text}).catch(() => {}), true) : null) : null),
-      ...j.certs.map(c => el('div', {className: 'card'},
-        el('div', {className: 'bar'}, el('h2', {style: 'flex:1', textContent: c.activity}), el('span', {className: 'badge' + (c.revoked ? ' err' : ''), textContent: c.revoked ? 'ملغاة' : 'شهادة ' + c.type})),
-        el('div', {className: 'muted', textContent: [c.dates, c.org].filter(Boolean).join(' · ')}),
-        el('div', {className: 'muted'}, 'رقم الشهادة: ', el('span', {className: 'ltr', textContent: c.serial}),
-          c.code ? [' · رمز التحقق: ', el('span', {className: 'ltr code', textContent: c.code})] : null),
-        c.revoked ? null : el('div', {className: 'bar', style: 'margin-top:8px'},
-          /^https:\/\//.test(c.link) ? el('a', {className: 'act', href: c.link, target: '_blank', rel: 'noopener', textContent: 'تحميل'}) : null,
-          el('a', {className: 'act sec', href: verifyUrl(c), target: '_blank', rel: 'noopener', textContent: 'صفحة التحقق'})))));
-  }
+function draw(j) {
+  const live = j.certs.filter(c => !c.revoked && c.link);
+  const text = [t('listHead')(j.name), ...live.map(c => `«${c.activity}» (${c.serial}): ${c.link}`)].join('\n');
+  const zip = btn('zip', async () => {
+    const done = busy(zip);
+    zip.textContent = t('zipping');
+    try {
+      const r = await call('mezip', {token});
+      if (r.status === 'ok') {
+        const bytes = Uint8Array.from(atob(r.data), ch => ch.charCodeAt(0));
+        const a = el('a', {href: URL.createObjectURL(new Blob([bytes], {type: 'application/zip'})), download: 'certificates-' + j.number + '.zip'});
+        document.body.append(a); a.click(); a.remove();
+        if (r.files < live.length) UI.toast(t('zipPart')(r.files), 5000);
+      } else UI.toast(t('zipFail'));
+    } catch (e) { /* toast shown */ }
+    zip.textContent = t('zip');
+    done();
+  });
+  const copy = btn('copyAll', async () => {
+    try { await navigator.clipboard.writeText(text); UI.toast(t('copied')); } catch (e) { prompt('', text); }
+  }, true);
+  const out = btn('out', () => { keep(''); data = null; signIn(); }, true);
+  out.classList.add('sm');
+  const summary = el('section', {className: 'card pad rise'},
+    el('div', {className: 'who'}, el('h2', {dir: 'auto', textContent: j.name}), out),
+    el('div', {className: 'meta', style: 'margin-top:6px'},
+      el('span', {}, t('number') + ': ', el('b', {className: 'ltr', textContent: j.number})),
+      el('span', {className: 'ltr', textContent: j.email}),
+      el('span', {textContent: j.certs.length ? t('count')(live.length) : t('none')})),
+    live.length ? el('div', {className: 'btns', style: 'margin-top:14px'}, zip, copy,
+      navigator.share ? btn('share', () => navigator.share({text}).catch(() => {}), true) : null) : null);
+  const cards = j.certs.map(c => el('article', {className: 'card cert rise' + (c.revoked ? ' off' : '')},
+    el('div', {className: 'row'}, el('h3', {dir: 'auto', textContent: c.activity}),
+      el('span', {className: 'badge' + (c.revoked ? ' err' : ' ok'), dir: 'auto', textContent: c.revoked ? t('revoked') : c.type || t('cert')})),
+    el('div', {className: 'facts'},
+      [c.dates, c.org].some(Boolean) ? el('span', {dir: 'auto', textContent: [c.dates, c.org].filter(Boolean).join(' · ')}) : null,
+      el('span', {}, t('serial') + ': ', el('span', {className: 'serial ltr', textContent: c.serial})),
+      c.code ? el('span', {}, t('code') + ': ', el('span', {className: 'codev ltr', textContent: c.code})) : null),
+    c.revoked ? null : el('div', {className: 'btns'},
+      /^https:\/\//.test(c.link) ? el('a', {className: 'btn sm', href: c.link, target: '_blank', rel: 'noopener', textContent: t('download')}) : null,
+      el('a', {className: 'btn sm ghost', href: verifyUrl(c), target: '_blank', rel: 'noopener', textContent: t('verify')}))));
+  show(summary, cards.length ? el('div', {className: 'list'}, ...cards) : el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('none')}));
+}
 
-  document.getElementById('out').onclick = () => { keep(''); signIn(); };
-  token ? show() : signIn();
+UI.init({page: 'me', name: 'title', T, onLang: () => view()});
+token ? mine() : signIn();
 </script>
 </body>
 </html>
