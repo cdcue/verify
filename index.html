@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src https://script.google.com https://script.googleusercontent.com;
   base-uri 'none'; form-action 'self'">
 <meta name="theme-color" content="#0b3b5c">
@@ -22,6 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="ui.css?v=4">
 <script src="ui.js?v=4"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" crossorigin="anonymous" defer></script>
 <style>
   /* this page only: the search, the result and the three steps */
   .search { padding: 20px; display: grid; gap: 12px; grid-template-columns: 1fr; }
@@ -30,6 +31,15 @@
   .search input::placeholder { text-transform: none; letter-spacing: 0; }
   .codefield input { letter-spacing: 4px; }
   .search .btn { height: 52px; }
+  .readers { display: flex; flex-wrap: wrap; gap: 8px; grid-column: 1 / -1; }
+  .readers .btn { flex: 1 1 200px; height: 48px; cursor: pointer; }
+  .search .say { grid-column: 1 / -1; }
+  .search .say:empty { display: none; }
+  .camdlg { border: 0; border-radius: 18px; padding: 14px; width: min(94vw, 460px); background: var(--surface); color: var(--ink); text-align: center; }
+  .camdlg::backdrop { background: rgba(8, 20, 32, .6); }
+  .camwrap { position: relative; border-radius: 14px; overflow: hidden; background: #000; aspect-ratio: 3 / 4; max-height: 60vh; margin: 0 auto 10px; }
+  .camwrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .camwrap .frame { position: absolute; inset: 18%; border: 3px solid rgba(255, 255, 255, .85); border-radius: 16px; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .3); }
   @media (min-width: 720px) {
     .search { grid-template-columns: 1fr auto; align-items: end; padding: 24px; }
     .search.withcode { grid-template-columns: 1.4fr 1fr auto; }
@@ -90,7 +100,18 @@
     <input type="hidden" name="lang" id="langField">
     <button class="btn" data-t="verify"></button>
     <p class="hint" data-t="hint"></p>
+    <div class="readers">
+      <button type="button" class="btn ghost" id="camBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3"/><path d="M8 12h8"/></svg><span data-t="camBtn"></span></button>
+      <label class="btn ghost" for="file"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M14 3v6h6"/></svg><span data-t="fileBtn"></span></label>
+      <input type="file" id="file" accept="image/*,application/pdf" hidden>
+    </div>
+    <p class="say" id="readSay" role="alert"></p>
   </form>
+  <dialog id="camDlg" class="camdlg">
+    <div class="camwrap"><video playsinline muted></video><div class="frame"></div></div>
+    <p data-t="camHint"></p>
+    <button type="button" class="btn block" id="camClose" data-t="close"></button>
+  </dialog>
 
   <section id="result" aria-live="polite"></section>
 
@@ -110,6 +131,10 @@ const API = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1f
 const T = {
   ar: {title: 'التحقق من صحة شهادة', lead: 'أدخل رقم الشهادة المطبوع عليها، أو امسح رمز QR الموجود فيها، للتأكد من أنها صادرة فعلاً عن الجهة المذكورة فيها.',
        serial: 'رقم الشهادة', code: 'رمز التحقق', verify: 'تحقق', hint: 'الرقم مطبوع على الشهادة، مثل ABC-2026-P0001.',
+       camBtn: 'امسح رمز الشهادة بالكاميرا', fileBtn: 'تحقق من ملف الشهادة', camHint: 'وجّه الكاميرا إلى رمز QR المطبوع على الشهادة.', close: 'إغلاق',
+       noCam: 'تعذر تشغيل الكاميرا: اسمح للمتصفح باستعمالها، أو اكتب رقم الشهادة.', notCert: 'هذا الرمز ليس رمز شهادة من هذه المنصة.',
+       noQr: 'لم يُعثر على رمز الشهادة في هذا الملف. جرّب صورة أوضح للشهادة كاملة، أو اكتب رقمها.',
+       oldPdf: 'هذا الملف لا يحمل رابط التحقق (شهادة صدرت قبل تحديث المنصة): صوّر رمز QR فيها أو اكتب رقمها.',
        loading: 'جارٍ التحقق...', okT: 'شهادة صحيحة', okD: 'صادرة عن الجهة المنظمة المذكورة أدناه ومسجلة في سجل الشواهد الرسمي.',
        lockD: 'هذه الشهادة صحيحة وصادرة عن الجهة المذكورة أدناه. لعرض تفاصيلها كاملة وتحميلها: أدخل رمز التحقق الذي وصل إلى صاحبها في بريده الإلكتروني.',
        revT: 'شهادة ملغاة', revD: 'أُلغيت هذه الشهادة ولم تعد صالحة.', reason: 'سبب الإلغاء',
@@ -123,6 +148,10 @@ const T = {
   fr: {title: "Vérifier l'authenticité d'une attestation",
        lead: "Saisissez le numéro imprimé sur l'attestation ou scannez son code QR pour confirmer qu'elle a bien été délivrée par l'organisme qui y figure.",
        serial: "Numéro de l'attestation", code: 'Code de vérification', verify: 'Vérifier', hint: "Le numéro figure sur l'attestation, par ex. ABC-2026-P0001.",
+       camBtn: "Scanner le code de l'attestation", fileBtn: "Vérifier un fichier d'attestation", camHint: "Pointez la caméra vers le code QR imprimé sur l'attestation.", close: 'Fermer',
+       noCam: "Impossible d'activer la caméra : autorisez-la, ou saisissez le numéro.", notCert: "Ce code n'est pas celui d'une attestation de cette plateforme.",
+       noQr: "Aucun code d'attestation trouvé dans ce fichier. Essayez une image plus nette de l'attestation entière, ou saisissez son numéro.",
+       oldPdf: "Ce fichier ne contient pas le lien de vérification (attestation antérieure à la mise à jour) : photographiez son code QR ou saisissez son numéro.",
        loading: 'Vérification en cours...', okT: 'Attestation authentique', okD: "Délivrée par l'organisateur indiqué ci-dessous et inscrite au registre officiel des attestations.",
        lockD: "Cette attestation est authentique et a été délivrée par l'organisateur indiqué ci-dessous. Pour l'afficher en entier et la télécharger : saisissez le code de vérification reçu par son titulaire dans son e-mail.",
        revT: 'Attestation annulée', revD: "Cette attestation a été annulée et n'est plus valable.", reason: "Motif de l'annulation",
@@ -135,6 +164,10 @@ const T = {
        s2d: "Le numéro imprimé sur l'attestation.", s3: 'Consultez le résultat', s3d: 'Les données sont lues directement dans le registre officiel.'},
   en: {title: 'Verify a certificate', lead: 'Enter the number printed on the certificate or scan its QR code to confirm it was really issued by the organization named on it.',
        serial: 'Certificate number', code: 'Verification code', verify: 'Verify', hint: 'The number is printed on the certificate, e.g. ABC-2026-P0001.',
+       camBtn: "Scan the certificate's code", fileBtn: 'Check a certificate file', camHint: 'Point the camera at the QR code printed on the certificate.', close: 'Close',
+       noCam: 'Could not start the camera: allow it, or type the certificate number.', notCert: "This code is not a certificate of this platform.",
+       noQr: 'No certificate code found in this file. Try a sharper picture of the whole certificate, or type its number.',
+       oldPdf: 'This file does not carry the verification link (issued before the update): photograph its QR code or type its number.',
        loading: 'Verifying...', okT: 'Authentic certificate', okD: 'Issued by the organizer shown below and recorded in the official certificate register.',
        lockD: 'This certificate is authentic and was issued by the organizer shown below. To see it in full and download it: enter the verification code its holder received by email.',
        revT: 'Revoked certificate', revD: 'This certificate has been revoked and is no longer valid.', reason: 'Reason',
@@ -219,6 +252,76 @@ function lookup() {
     .then(r => { last = r; render(r); })
     .catch(() => { last = 'error'; render('error'); });
 }
+
+function open_(text) {  // a certificate's code read somewhere: its number (and code) go to the address, as if typed
+  let s_ = '', k_ = '';
+  try {
+    const u = new URL(String(text).trim());
+    s_ = u.searchParams.get('s') || ''; k_ = u.searchParams.get('k') || '';
+  } catch (e) { if (/^[A-Z]{2,10}-\d{4,6}-[A-Z]?\d{2,6}$/i.test(String(text).trim())) s_ = String(text).trim(); }
+  if (!s_) { $('readSay').textContent = t('notCert'); return false; }
+  const q = new URLSearchParams({s: s_.toUpperCase(), lang: UI.lang});
+  if (k_) q.set('k', k_.toUpperCase());
+  location.search = '?' + q;
+  return true;
+}
+let det, stream = null, ctx = null;
+const canvas = document.createElement('canvas');
+async function decodeIn(src, w, h) {  // a QR code in a video frame or a picture: the phone's own reader, else jsQR
+  if (det === undefined) {
+    det = null;
+    try { if ('BarcodeDetector' in window && (await BarcodeDetector.getSupportedFormats()).includes('qr_code')) det = new BarcodeDetector({formats: ['qr_code']}); } catch (e) { /* none */ }
+  }
+  if (det) { try { const c = await det.detect(src); if (c.length) return c[0].rawValue; } catch (e) { det = null; } }
+  if (!window.jsQR) return null;
+  const k = Math.min(1, 1400 / Math.max(w, h)), cw = Math.round(w * k), ch = Math.round(h * k);
+  canvas.width = cw; canvas.height = ch;
+  ctx = canvas.getContext('2d', {willReadFrequently: true});
+  ctx.drawImage(src, 0, 0, cw, ch);
+  const r = jsQR(ctx.getImageData(0, 0, cw, ch).data, cw, ch, {inversionAttempts: 'attemptBoth'});
+  return r ? r.data : null;
+}
+function camOff() {
+  if (stream) stream.getTracks().forEach(tr => tr.stop());
+  stream = null;
+  $('camDlg').open && $('camDlg').close();
+}
+$('camBtn').onclick = async () => {
+  $('readSay').textContent = '';
+  const video = document.querySelector('#camDlg video');
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({audio: false, video: {facingMode: {ideal: 'environment'}, width: {ideal: 1280}}});
+  } catch (e) { $('readSay').textContent = t('noCam'); return; }
+  video.srcObject = stream;
+  $('camDlg').showModal();
+  await video.play();
+  const tick = async () => {
+    if (!stream) return;
+    const v = video.readyState >= 2 && await decodeIn(video, video.videoWidth, video.videoHeight);
+    if (v) { if (open_(v)) return camOff(); }
+    setTimeout(tick, 120);
+  };
+  tick();
+};
+$('camClose').onclick = camOff;
+$('camDlg').addEventListener('close', camOff);
+$('file').onchange = async () => {
+  const f = $('file').files[0];
+  $('file').value = '';
+  if (!f) return;
+  $('readSay').textContent = '';
+  if (f.type === 'application/pdf' || /\.pdf$/i.test(f.name)) {  // the link the platform puts on the code in the PDF
+    const raw = new TextDecoder('latin1').decode(await f.arrayBuffer());
+    const m = raw.match(/\/URI\s*\((https:[^)]*[?&]s=[^)]*)\)/);
+    if (!(m && open_(m[1]))) $('readSay').textContent = t('oldPdf');
+    return;
+  }
+  try {
+    const img = await createImageBitmap(f);
+    const v = await decodeIn(img, img.width, img.height);
+    if (!(v && open_(v))) $('readSay').textContent = t(v ? 'notCert' : 'noQr');
+  } catch (e) { $('readSay').textContent = t('noQr'); }
+};
 
 $('form').addEventListener('submit', e => {
   if (!$('s').value.trim()) { e.preventDefault(); $('s').focus(); }

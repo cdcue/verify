@@ -208,6 +208,9 @@ const T = {
     accT: n => `حسابات «شواهدي» (${n})`, accD: 'الحسابات المفعّلة برقم الهاتف. أغلق حساباً فُتح برقم هاتف شخص آخر، أو بطلب صاحبه: يتحرر الرقم ليُفتح به حساب جديد، والشواهد لا تتغير.',
     accSearch: 'بحث بالاسم أو الهاتف أو البريد...', accAdded: n => n + ' مضافة برقمها', accSince: 'منذ', accSeen: 'آخر دخول',
     accClose: 'إغلاق الحساب', accCloseAsk: n => `إغلاق حساب «${n}»؟ يتحرر رقم هاتفه، وتبقى الشواهد كما هي.`, accClosed: 'أُغلق الحساب', accNone: 'لا حسابات مفعّلة بعد.',
+    recT: n => `طلبات استرجاع حساب (${n})`, recD: 'صاحب حساب فقد بريده وكلمة سره معاً. تحقق من هويته أولاً (اتصل بالهاتف، قارن الاسم والشهادة)، ثم «اعتماد» يربط البريد الجديد بالحساب ليختار كلمة سر جديدة.',
+    recNewEmail: 'البريد الجديد', recAcc: 'الحساب الحالي', recNoAcc: 'لا حساب مفعّل بهذا الرقم', recApply: 'اعتماد البريد الجديد', recDismiss: 'رفض',
+    recApplyAsk: (n, e) => `هل تحققتَ من هوية «${n}»؟ يصبح ${e} بريد الحساب.`, recDone: 'تم',
     usersD: 'حساب المسؤول admin تُضبط كلمة سره في المنصة على الحاسوب، ويبقى دائماً طريقاً للدخول.', newUser: 'حساب جديد',
     uLogin: 'اسم الدخول (أحرف لاتينية صغيرة وأرقام)', uName: 'الاسم', uPw: 'كلمة السر (8 أحرف على الأقل)', uRole: 'الدور',
     roOrganizer: 'منظم: كل شيء ما عدا الحسابات', roScanner: 'ماسح: الحضور فقط، دون بيانات التواصل', roAdmin: 'مسؤول: كل شيء والحسابات',
@@ -283,6 +286,9 @@ const T = {
     accT: n => `Comptes « Mes attestations » (${n})`, accD: 'Comptes activés par numéro de téléphone. Fermez un compte ouvert avec le téléphone d’une autre personne, ou à la demande de son titulaire : le numéro est libéré, les attestations ne changent pas.',
     accSearch: 'Rechercher par nom, téléphone ou e-mail...', accAdded: n => n + ' ajoutée(s) par numéro', accSince: 'Depuis', accSeen: 'Dernière connexion',
     accClose: 'Fermer le compte', accCloseAsk: n => `Fermer le compte « ${n} » ? Son numéro est libéré, les attestations restent.`, accClosed: 'Compte fermé', accNone: 'Aucun compte activé pour l’instant.',
+    recT: n => `Demandes de récupération (${n})`, recD: 'Un titulaire a perdu son e-mail et son mot de passe. Vérifiez d’abord son identité (appelez le numéro, comparez le nom et l’attestation), puis « Valider » lie le nouvel e-mail au compte pour qu’il choisisse un nouveau mot de passe.',
+    recNewEmail: 'Nouvel e-mail', recAcc: 'Compte actuel', recNoAcc: 'Aucun compte actif avec ce numéro', recApply: 'Valider le nouvel e-mail', recDismiss: 'Refuser',
+    recApplyAsk: (n, e) => `Avez-vous vérifié l’identité de « ${n} » ? ${e} devient l’e-mail du compte.`, recDone: 'Fait',
     usersD: 'Le mot de passe du compte admin se règle dans la plateforme sur l’ordinateur ; ce compte reste toujours un accès.', newUser: 'Nouveau compte',
     uLogin: 'Identifiant (lettres latines minuscules et chiffres)', uName: 'Nom', uPw: 'Mot de passe (8 caractères minimum)', uRole: 'Rôle',
     roOrganizer: 'Organisateur : tout sauf les comptes', roScanner: 'Scanneur : présences seulement, sans coordonnées', roAdmin: 'Administrateur : tout, comptes compris',
@@ -357,6 +363,9 @@ const T = {
     accT: n => `“My certificates” accounts (${n})`, accD: 'Accounts opened with a phone number. Close one opened with someone else’s phone, or at its holder’s request: the number is free again, the certificates do not change.',
     accSearch: 'Search by name, phone or email...', accAdded: n => n + ' added by number', accSince: 'Since', accSeen: 'Last sign-in',
     accClose: 'Close the account', accCloseAsk: n => `Close the account “${n}”? Its phone number is freed; the certificates stay.`, accClosed: 'Account closed', accNone: 'No accounts opened yet.',
+    recT: n => `Account recovery requests (${n})`, recD: 'An account holder lost both their email and password. Check who they are first (call the number, compare the name and certificate), then “Approve” links the new email to the account so they can choose a new password.',
+    recNewEmail: 'New email', recAcc: 'Current account', recNoAcc: 'No open account with this number', recApply: 'Approve the new email', recDismiss: 'Dismiss',
+    recApplyAsk: (n, e) => `Did you check who “${n}” is? ${e} becomes the account’s email.`, recDone: 'Done',
     usersD: 'The admin account’s password is set in the platform on the computer, and it always remains a way in.', newUser: 'New account',
     uLogin: 'Username (lowercase Latin letters and digits)', uName: 'Name', uPw: 'Password (at least 8 characters)', uRole: 'Role',
     roOrganizer: 'Organizer: everything except accounts', roScanner: 'Scanner: attendance only, no contact details', roAdmin: 'Administrator: everything, accounts included',
@@ -857,6 +866,7 @@ async function showParticipants() {
   q.oninput = draw;
   app.replaceChildren(el('section', {className: 'card rise'}, el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('partsD')}),
     linkBox(new URL('me.html', location.href).href, t('meLink'))),
+    can('admin') ? await recoveriesBox() : null,
     can('admin') ? await accountsBox() : null,
     el('div', {className: 'tools-bar section'}, el('div', {className: 'q'}, q)), box);
   draw();
@@ -887,6 +897,25 @@ async function accountsBox() {  // «شواهدي» accounts, for the administra
   return el('section', {className: 'card rise section'}, el('h2', {textContent: t('accT')(j.accounts.length)}),
     el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('accD')}),
     j.accounts.length > 6 ? el('div', {className: 'q', style: 'margin-bottom:10px'}, q) : null, box);
+}
+
+async function recoveriesBox() {  // «شواهدي» holders who lost email and password: the administrator checks, then approves
+  const j = await call('recoveries').catch(() => ({}));
+  if (j.status !== 'ok' || !j.requests.length) return null;
+  const act = (r, op) => async () => {
+    if (op === 'apply' && !confirm(t('recApplyAsk')(r.name, r.email))) return;
+    const a = await call('recovery', {op, id: r.id}).catch(() => ({}));
+    toast(a.status === 'ok' ? t('recDone') : t('saveFail'));
+    if (a.status === 'ok') showParticipants();
+  };
+  return el('section', {className: 'card rise section'}, el('h2', {textContent: t('recT')(j.requests.length)}),
+    el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('recD')}),
+    el('div', {className: 'grid'}, ...j.requests.map(r => el('article', {className: 'card person'},
+      el('div', {className: 'row'}, el('span', {className: 'name grow', dir: 'auto', textContent: r.name}), el('span', {className: 'badge ltr', textContent: '0' + r.phone})),
+      el('div', {className: 'contact'}, t('recNewEmail') + ': ', el('span', {className: 'ltr', textContent: r.email})),
+      el('div', {className: 'hint'}, r.account ? [t('recAcc') + ':', r.account.name, r.account.email].join(' ') : t('recNoAcc')),
+      el('div', {className: 'hint', dir: 'auto'}, [when(r.at), r.serial, r.note].filter(Boolean).join(' · ')),
+      el('div', {className: 'actions'}, r.account ? btn(t('recApply'), act(r, 'apply')) : null, btn(t('recDismiss'), act(r, 'dismiss'), 'ghost'))))));
 }
 
 // ---------- accounts (admin) ----------
