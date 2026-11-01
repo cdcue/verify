@@ -114,10 +114,6 @@
   .stats { display: grid; gap: 6px; grid-template-columns: repeat(auto-fit, minmax(58px, 1fr)); }
   .stat { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 9px 4px; text-align: center; font-size: 12px; color: var(--muted); }
   .stat b { display: block; font-size: 22px; line-height: 1.2; color: var(--ink); }
-  a.act-card { display: block; color: inherit; text-decoration: none; transition: border-color .15s, transform .15s; }
-  a.act-card:hover { border-color: var(--brand-2); transform: translateY(-1px); }
-  .act-card h3 { margin: 6px 0 2px; font-size: 16.5px; line-height: 1.45; }
-  .act-card .stats { margin-top: 12px; }
   .badge.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
   .app main select, .app main input:not([type="checkbox"]):not([type="radio"]) { height: 42px; font-size: 15px; font-weight: 400; letter-spacing: 0; }
   select { width: 100%; border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--ink); font: inherit; padding: 0 12px; }
@@ -142,8 +138,6 @@
   .seg button { flex: 1; border: 0; background: none; color: var(--muted); font: inherit; font-weight: 600; font-size: 14px; padding: 9px 12px; border-radius: 10px;
                 cursor: pointer; white-space: nowrap; }
   .seg button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
-  .tabs-sticky { position: sticky; top: 64px; z-index: 4; margin: 14px 0; }
-  @media (min-width: 900px) { .tabs-sticky { top: 72px; max-width: 520px; } }
   .person { display: grid; gap: 8px; }
   .person .name { font-weight: 700; font-size: 15.5px; }
   .person .actions { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -157,10 +151,6 @@
   .tools-bar .q { flex: 2 1 220px; } .tools-bar .f { flex: 1 1 150px; }
   .count { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
   .empty { text-align: center; color: var(--muted); padding: 28px 16px; }
-  .login { max-width: 420px; margin: 8vh auto 0; }
-  .login h2 { font-size: 22px; }
-  .rowline { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; padding: 10px 0; border-top: 1px solid var(--line); }
-  .rowline:first-of-type { border-top: 0; }
   dialog.sheet { border: 0; padding: 0; background: var(--surface); color: var(--ink); border-radius: 18px; width: min(680px, calc(100vw - 20px));
                  max-height: calc(100vh - 40px); box-shadow: 0 20px 60px rgba(0, 0, 0, .35); animation: rise .2s ease-out; }
   dialog.sheet::backdrop { background: rgba(8, 18, 28, .55); }
@@ -229,395 +219,417 @@
 const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec', KEY = 'shawahid-dashboard';
 const T = {
   ar: {
-    dash: 'لوحة المنظمين', loading: 'جارٍ التحميل...', noRole: 'ليس لحسابك هذا الإذن', cancel: 'إلغاء', save: 'حفظ', back: 'رجوع',
-    copy: 'نسخ', open: 'فتح', share: 'مشاركة', linkCopied: 'نُسخ الرابط', sent: 'أُرسل الطلب، ويُنفَّذ على الحاسوب', reqFail: 'تعذر إرسال الطلب',
-    exists: 'طلب من النوع نفسه ما زال ينتظر الحاسوب', saveFail: 'تعذر الحفظ', adminName: 'المسؤول',
-    rScanner: 'ماسح', rOrganizer: 'منظم', rAdmin: 'مسؤول', nActs: 'الأنشطة', nParts: 'المشاركون', nUsers: 'الحسابات', nMe: 'حسابي',
-    loginT: 'دخول المنظمين', loginD: 'الأنشطة والمشاركون والحضور والشواهد، من أي هاتف أو حاسوب.', login: 'اسم الدخول', loginPh: 'admin للمسؤول',
-    password: 'كلمة السر', enter: 'دخول', wrongLogin: 'اسم الدخول أو كلمة السر غير صحيح', locked: 'محاولات خاطئة كثيرة: أعد المحاولة بعد 15 دقيقة',
-    nopassword: 'لم تُضبط كلمة سر المسؤول بعد (الإعدادات في المنصة على الحاسوب)', loginFail: 'تعذر الدخول',
+    dash: 'لوحة المنظمين', loading: 'جارٍ التحميل...', noRole: 'ليس لحسابك هذا الإذن', cancel: 'إلغاء', back: 'رجوع', copy: 'نسخ', open: 'فتح', share: 'مشاركة',
+    linkCopied: 'نُسخ الرابط', sent: 'أُرسل الطلب، ويُنفَّذ على الحاسوب', reqFail: 'تعذر إرسال الطلب', exists: 'طلب من النوع نفسه ما زال ينتظر الحاسوب',
+    saveFail: 'تعذر الحفظ', rScanner: 'مساعد', rOrganizer: 'منظم', rAdmin: 'مسؤول الجهة', nParts: '«شواهدي» والمشاركون', nUsers: 'الحسابات', nMe: 'حسابي',
+    login: 'اسم الدخول', password: 'كلمة السر', enter: 'دخول', wrongLogin: 'اسم الدخول أو كلمة السر غير صحيح',
+    locked: 'محاولات خاطئة كثيرة: أعد المحاولة بعد 15 دقيقة', loginFail: 'تعذر الدخول',
     pcNever: 'لم تتصل المنصة على الحاسوب بهذه اللوحة بعد: الطلبات تنتظر فتحها.', pcOn: 'الحاسوب متصل: الطلبات تُنفَّذ خلال دقيقة',
-    pcOff: d => 'الحاسوب غير متصل منذ ' + d + ': الطلبات تُنفَّذ عند فتح المنصة عليه',
-    jSync: 'مزامنة', jIssue: 'إصدار الشواهد', jEmail: 'إرسال الشواهد بالبريد', jActivity: 'نشاط جديد', jUpdate: 'تعديل النشاط', jBundle: 'شواهد لشخص في عدة أنشطة',
-    jsWait: 'ينتظر الحاسوب', jsRun: 'قيد التنفيذ', jsDone: 'تم', jsErr: 'تعذّر',
-    copyText: 'نسخ النص والروابط', copiedText: 'نُسخ: الصقه في واتساب أو غيره', onePdf: 'ملف واحد بكل الشواهد',
-    newAct: 'نشاط جديد', bundle: 'شواهد لشخص', reqT: 'طلبات للحاسوب', reqHint: 'أنشئ نشاطاً من هنا: تُنشأ استمارته وجدوله على الحاسوب، ثم يظهر في هذه اللائحة.',
-    totals: 'الإجمالي', sActs: 'نشاط', sReg: 'مسجل', sHere: 'حاضر', sCert: 'شهادة', sMail: 'بريد', hereNow: 'حاضر الآن',
+    pcOff: d => 'الحاسوب غير متصل منذ ' + d + ': الطلبات تُنفَّذ عند فتح المنصة عليه', jSync: 'مزامنة', jIssue: 'إصدار الشواهد',
+    jEmail: 'إرسال الشواهد بالبريد', jActivity: 'نشاط جديد', jUpdate: 'تعديل النشاط', jBundle: 'شواهد لشخص في عدة أنشطة', jsWait: 'ينتظر الحاسوب',
+    jsRun: 'قيد التنفيذ', jsDone: 'تم', jsErr: 'تعذّر', copyText: 'نسخ النص والروابط', copiedText: 'نُسخ: الصقه في واتساب أو غيره',
+    onePdf: 'ملف واحد بكل الشواهد', newAct: 'نشاط جديد', bundle: 'شواهد لشخص', reqT: 'طلبات للحاسوب',
+    reqHint: 'أنشئ نشاطاً من هنا: تُنشأ استمارته وجدوله على الحاسوب، ثم يظهر في هذه اللائحة.', hereNow: 'حاضر الآن',
     noActs: 'لا أنشطة منشورة بعد: زامن نشاطاً في المنصة على الحاسوب، أو أنشئ واحداً من هنا.', activity: 'نشاط',
-    sessionsLine: (n, s) => `${n} حصص، المسح الآن للحصة ${s}`,
-    pcOnlyT: 'على الحاسوب', pcOnlyItems: ['تصميم الشهادات ومعاينتها', 'أسئلة الاستمارة الإضافية', 'الاستيراد من Excel', 'اللوائح والتقارير وملفات الطباعة (PDF وExcel)',
-      'إلغاء شهادة أو إرجاعها', 'الجهات المنظمة والأنواع والإعدادات', 'سلة المحذوفات والنسخ الاحتياطية'],
+    sessionsLine: (n, s) => `${n} حصص، المسح الآن للحصة ${s}`, pcOnlyT: 'على الحاسوب',
+    pcOnlyItems: ['تصميم الشهادات ومعاينتها', 'أسئلة الاستمارة الإضافية', 'الاستيراد من Excel', 'اللوائح والتقارير وملفات الطباعة (PDF وExcel)', 'إلغاء شهادة أو إرجاعها', 'الجهات المنظمة والأنواع والإعدادات', 'سلة المحذوفات والنسخ الاحتياطية'],
     pcOnlyNote: 'إصدار الشواهد وإرسالها يُطلب من هنا، ويُنفَّذ على الحاسوب.',
-    noChoices: 'لم تنشر المنصة على الحاسوب قوائمها بعد (الجهات والأنواع): افتحها مرة واحدة وهي متصلة بالإنترنت.',
-    fTitle: 'العنوان', fKind: 'نوع النشاط', fOrg: 'الجهة المنظمة', fLang: 'لغة النشاط والوثائق', langAr: 'العربية', langFr: 'الفرنسية', langEn: 'الإنجليزية',
-    fType: 'نوع الشهادة الرئيسي', fDates: 'التاريخ / الأيام', datesPh: 'مثال: 12 و13 مارس 2026', fHours: 'التوقيت أو عدد الساعات', fPlace: 'المكان',
-    fSessions: 'عدد الحصص', fMin: 'الحد الأدنى للحضور (حصص)', minPh: 'كل الحصص', fTickets: 'عدد البطاقات المطبوعة', fWa: 'رابط مجموعة واتساب',
-    fTpl: 'أسئلة إضافية من نموذج', noTpl: 'بلا أسئلة إضافية',
-    editHint: 'ما يُترك فارغاً يبقى كما هو. العنوان والتاريخ والمكان تتبعها الاستمارة في Google Forms.',
-    newHint: 'تُنشأ على الحاسوب الاستمارة وجدول التسجيلات، ثم يظهر النشاط هنا برابط استمارته. التصميم يُضاف على الحاسوب.',
-    askEdit: 'طلب التعديل', askNew: 'طلب إنشاء النشاط', editT: 'تعديل النشاط', newT: 'نشاط جديد', notitle: 'اكتب العنوان', editWaiting: 'تعديل سابق ما زال ينتظر الحاسوب',
+    noChoices: 'لم تنشر المنصة على الحاسوب قوائمها بعد (الجهات والأنواع): افتحها مرة واحدة وهي متصلة بالإنترنت.', fTitle: 'العنوان', fKind: 'نوع النشاط',
+    fOrg: 'الجهة المنظمة', fLang: 'لغة النشاط والوثائق', langAr: 'العربية', langFr: 'الفرنسية', langEn: 'الإنجليزية', fType: 'نوع الشهادة الرئيسي',
+    fDates: 'التاريخ / الأيام', datesPh: 'مثال: 12 و13 مارس 2026', fHours: 'التوقيت أو عدد الساعات', fPlace: 'المكان', fSessions: 'عدد الحصص',
+    fMin: 'الحد الأدنى للحضور (حصص)', minPh: 'كل الحصص', fTickets: 'عدد البطاقات المطبوعة', fWa: 'رابط مجموعة واتساب', fTpl: 'أسئلة إضافية من نموذج',
+    noTpl: 'بلا أسئلة إضافية', editHint: 'ما يُترك فارغاً يبقى كما هو. العنوان والتاريخ والمكان تتبعها الاستمارة في Google Forms.',
+    newHint: 'تُنشأ على الحاسوب الاستمارة وجدول التسجيلات، ثم يظهر النشاط هنا برابط استمارته. التصميم يُضاف على الحاسوب.', askEdit: 'طلب التعديل',
+    askNew: 'طلب إنشاء النشاط', editT: 'تعديل النشاط', newT: 'نشاط جديد', notitle: 'اكتب العنوان', editWaiting: 'تعديل سابق ما زال ينتظر الحاسوب',
     bT: 'شواهد لشخص في عدة أنشطة',
     bD: 'يُضاف إلى كل نشاط تختاره حاضراً، وتصدر شهادته برقم ذلك النشاط وتصميمه، ثم تصله رسالة واحدة بكل شواهده، وتجد هنا روابطها وملفاً واحداً بها. إن كان مسجلاً فيه بالبريد نفسه فلا يُكرَّر.',
     firstAr: 'الاسم الشخصي بالعربية', lastAr: 'الاسم العائلي بالعربية', firstLat: 'Prénom (بالحروف اللاتينية)', lastLat: 'Nom (بالحروف اللاتينية)',
-    gender: 'الجنس', male: 'ذكر', female: 'أنثى', certType: 'نوع الشهادة', bEmail: 'البريد (تصله عليه الرسالة)', email: 'البريد', phone: 'الهاتف', mention: 'الميزة/النتيجة',
-    bActs: 'الأنشطة', noDesign: 'لا تصميم لهذا النوع', starNote: '* يطبعه تصميم الشهادة في الأنشطة المختارة: أكمله حتى تخرج كل النسخ كاملة ومتطابقة.',
-    bSave: 'طلب إنشاء الشواهد وإرسالها', pickOne: 'اختر نشاطاً واحداً على الأقل', lack: 'أكمل ما يطبعه التصميم: ', nameAr: 'الاسم بالعربية', nameLat: 'الاسم باللاتينية',
-    noname: 'اكتب الاسم على الأقل', badEmail: 'البريد غير صحيح', sameWaiting: 'الطلب نفسه ما زال ينتظر الحاسوب',
-    tOverview: 'نظرة عامة', tPeople: 'المشاركون', tRequests: 'الطلبات', scanNow: s => 'المسح الآن للحصة ' + s, curSession: 'الحصة الجارية (للمسح والتأكيد)',
-    sessionN: i => 'الحصة ' + i, sessionSet: s => 'المسح الآن للحصة ' + s + ' في كل الهواتف', formLink: 'رابط استمارة التسجيل', addPerson: 'إضافة مشارك',
-    search: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fAll: 'الكل', fHere: 'حاضرون', fHereIn: s => 'حاضرون في الحصة ' + s, fAway: 'غير مؤكدين',
-    fIssued: 'لهم شهادة', fMail: 'مشكلة في البريد', countOf: (n, m) => `${n} من ${m}`,
+    gender: 'الجنس', male: 'ذكر', female: 'أنثى', certType: 'نوع الشهادة', bEmail: 'البريد (تصله عليه الرسالة)', email: 'البريد', phone: 'الهاتف',
+    mention: 'الميزة/النتيجة', bActs: 'الأنشطة', noDesign: 'لا تصميم لهذا النوع',
+    starNote: '* يطبعه تصميم الشهادة في الأنشطة المختارة: أكمله حتى تخرج كل النسخ كاملة ومتطابقة.', bSave: 'طلب إنشاء الشواهد وإرسالها',
+    pickOne: 'اختر نشاطاً واحداً على الأقل', lack: 'أكمل ما يطبعه التصميم: ', nameAr: 'الاسم بالعربية', nameLat: 'الاسم باللاتينية',
+    noname: 'اكتب الاسم على الأقل', badEmail: 'البريد غير صحيح', sameWaiting: 'الطلب نفسه ما زال ينتظر الحاسوب', tPeople: 'المشاركون',
+    curSession: 'الحصة الجارية (للمسح والتأكيد)', sessionN: i => 'الحصة ' + i, sessionSet: s => 'المسح الآن للحصة ' + s + ' في كل الهواتف',
+    addPerson: 'إضافة مشارك', search: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fAll: 'الكل', fHere: 'حاضرون', fHereIn: s => 'حاضرون في الحصة ' + s,
+    fAway: 'غير مؤكدين', fIssued: 'لهم شهادة', fMail: 'مشكلة في البريد', countOf: (n, m) => `${n} من ${m}`,
     syncNote: d => `البيانات كما في آخر مزامنة للمنصة (${d}). ما تؤكده أو تعدّله هنا يظهر فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`,
-    scanT: 'رابط المسح للمنظمين', scanD: 'يفتح صفحة مسح البطاقات بكاميرا الهاتف، دون حساب ودون الحاجة للحاسوب.', scanMake: 'إنشاء رابط المسح', scanNew: 'رابط جديد',
-    scanSure: 'إنشاء رابط جديد؟ الرابط الحالي يتوقف فوراً في كل الهواتف.', scanMade: 'أُنشئ رابط المسح: أرسله إلى المنظمين', scanFail: 'تعذر إنشاء الرابط', scanTitle: 'مسح الحضور',
-    scanCodeT: 'أو برمز المسح', scanCodeD: page => `يفتح المساعد ${page} ويكتب هذا الرمز، دون رابط ولا رمز QR. يتغير مع كل رابط جديد، ويتوقف بأرشفة النشاط.`, copyCode: 'نسخ الرمز', codeCopied: 'نُسخ الرمز',
-    issue: 'إصدار الشواهد', issueSure: 'إصدار شواهد كل الحاضرين المؤكدين (بعد مزامنة الحضور)؟', emailAll: 'إرسال الشواهد بالبريد',
-    emailSure: 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟', sync: 'مزامنة الآن', editAct: 'تعديل النشاط',
-    noTicket: 'دون بطاقة', pending: 'تعديل ينتظر المزامنة', hereIn: s => 'حاضر في الحصة ' + s, here: 'حاضر', away: 'غير مؤكد', sessions: 'الحصص: ',
-    certOf: x => 'شهادة ' + x, revoked: 'ملغاة', code: 'رمز التحقق', download: 'تحميل',
-    mSent: 'أُرسل البريد', mErr: 'تعذر الإرسال', mPending: 'في الطابور', mStopped: 'أُوقف',
-    markIn: s => 'حاضر في الحصة ' + s, mark: 'تأكيد الحضور', marked: 'سُجّل الحضور، ويصل إلى المنصة عند المزامنة',
-    resend: 'إعادة إرسال البريد', resendSure: e => 'إعادة إرسال رسالة الشهادة نفسها إلى ' + e + '؟', resent: 'وُضعت الرسالة في طابور الإرسال',
+    scanT: 'رابط المسح للمنظمين', scanD: 'يفتح صفحة مسح البطاقات بكاميرا الهاتف، دون حساب ودون الحاجة للحاسوب.', scanMake: 'إنشاء رابط المسح',
+    scanNew: 'رابط جديد', scanSure: 'إنشاء رابط جديد؟ الرابط الحالي يتوقف فوراً في كل الهواتف.', scanMade: 'أُنشئ رابط المسح: أرسله إلى المنظمين',
+    scanFail: 'تعذر إنشاء الرابط', scanTitle: 'مسح الحضور', scanCodeT: 'أو برمز المسح',
+    scanCodeD: page => `يفتح المساعد ${page} ويكتب هذا الرمز، دون رابط ولا رمز QR. يتغير مع كل رابط جديد، ويتوقف بأرشفة النشاط.`, copyCode: 'نسخ الرمز',
+    codeCopied: 'نُسخ الرمز', issue: 'إصدار الشواهد', issueSure: 'إصدار شواهد كل الحاضرين المؤكدين (بعد مزامنة الحضور)؟',
+    emailSure: 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟', sync: 'مزامنة الآن', editAct: 'تعديل النشاط', noTicket: 'دون بطاقة',
+    pending: 'تعديل ينتظر المزامنة', hereIn: s => 'حاضر في الحصة ' + s, here: 'حاضر', away: 'غير مؤكد', sessions: 'الحصص: ', certOf: x => 'شهادة ' + x,
+    revoked: 'ملغاة', code: 'رمز التحقق', download: 'تحميل', mSent: 'أُرسل البريد', mErr: 'تعذر الإرسال', mPending: 'في الطابور', mStopped: 'أُوقف',
+    markIn: s => 'حاضر في الحصة ' + s, mark: 'تأكيد الحضور', marked: 'سُجّل الحضور، ويصل إلى المنصة عند المزامنة', resend: 'إعادة إرسال البريد',
+    resendSure: e => 'إعادة إرسال رسالة الشهادة نفسها إلى ' + e + '؟', resent: 'وُضعت الرسالة في طابور الإرسال',
     resendOld: 'نص الرسالة لم يعد محفوظاً (أقدم من 30 يوماً): أعد الإرسال من المنصة', edit: 'تعديل', del: 'حذف',
     delSure: n => 'حذف ' + n + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)', deleted: 'حُذف، ويصل الحذف إلى المنصة عند المزامنة',
-    fixT: n => 'تصحيح: ' + n, newPersonT: 'مشارك جديد (دون بطاقة)', hasCert: 'له شهادة: تُعاد بالرقم والرابط نفسيهما عند المزامنة.',
-    saveFix: 'حفظ التصحيح', add: 'إضافة', fixed: 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة', added: 'أُضيف، ويصل إلى المنصة عند المزامنة',
+    fixT: n => 'تصحيح: ' + n, newPersonT: 'مشارك جديد (دون بطاقة)', hasCert: 'له شهادة: تُعاد بالرقم والرابط نفسيهما عند المزامنة.', saveFix: 'حفظ التصحيح',
+    add: 'إضافة', fixed: 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة', added: 'أُضيف، ويصل إلى المنصة عند المزامنة',
     partsD: 'كل من له شهادة صالحة ببريد صحيح يظهر هنا. في صفحة «شواهدي» يفتح حسابه مرة واحدة برقم هاتفه وبريده (يصله رمز تفعيل)، ثم يدخل برقم هاتفه وكلمة سره دون أي بريد، ويستطيع أن يضيف شهادة باسمه برقمها. القائمة تُحدَّث من المنصة على الحاسوب.',
-    partsSearch: 'بحث بالاسم أو البريد أو الرقم أو رقم الشهادة...', certsN: n => n + ' شهادة: ', meLink: 'شواهدي',
-    accT: n => `حسابات «شواهدي» (${n})`, accD: 'الحسابات المفعّلة برقم الهاتف. أغلق حساباً فُتح برقم هاتف شخص آخر، أو بطلب صاحبه: يتحرر الرقم ليُفتح به حساب جديد، والشواهد لا تتغير.',
-    accSearch: 'بحث بالاسم أو الهاتف أو البريد...', accAdded: n => n + ' مضافة برقمها', accSince: 'منذ', accSeen: 'آخر دخول',
-    accClose: 'إغلاق الحساب', accCloseAsk: n => `إغلاق حساب «${n}»؟ يتحرر رقم هاتفه، وتبقى الشواهد كما هي.`, accClosed: 'أُغلق الحساب', accNone: 'لا حسابات مفعّلة بعد.',
-    recT: n => `طلبات استرجاع حساب (${n})`, recD: 'صاحب حساب فقد بريده وكلمة سره معاً. تحقق من هويته أولاً (اتصل بالهاتف، قارن الاسم والشهادة)، ثم «اعتماد» يربط البريد الجديد بالحساب ليختار كلمة سر جديدة.',
+    partsSearch: 'بحث بالاسم أو البريد أو الرقم أو رقم الشهادة...', certsN: n => n + ' شهادة: ', meLink: 'شواهدي', accT: n => `حسابات «شواهدي» (${n})`,
+    accD: 'الحسابات المفعّلة برقم الهاتف. أغلق حساباً فُتح برقم هاتف شخص آخر، أو بطلب صاحبه: يتحرر الرقم ليُفتح به حساب جديد، والشواهد لا تتغير.',
+    accSearch: 'بحث بالاسم أو الهاتف أو البريد...', accAdded: n => n + ' مضافة برقمها', accSince: 'منذ', accSeen: 'آخر دخول', accClose: 'إغلاق الحساب',
+    accCloseAsk: n => `إغلاق حساب «${n}»؟ يتحرر رقم هاتفه، وتبقى الشواهد كما هي.`, accClosed: 'أُغلق الحساب', accNone: 'لا حسابات مفعّلة بعد.',
+    recT: n => `طلبات استرجاع حساب (${n})`,
+    recD: 'صاحب حساب فقد بريده وكلمة سره معاً. تحقق من هويته أولاً (اتصل بالهاتف، قارن الاسم والشهادة)، ثم «اعتماد» يربط البريد الجديد بالحساب ليختار كلمة سر جديدة.',
     recNewEmail: 'البريد الجديد', recAcc: 'الحساب الحالي', recNoAcc: 'لا حساب مفعّل بهذا الرقم', recApply: 'اعتماد البريد الجديد', recDismiss: 'رفض',
-    recApplyAsk: (n, e) => `هل تحققتَ من هوية «${n}»؟ يصبح ${e} بريد الحساب.`, recDone: 'تم',
-    usersD: 'حساب المسؤول admin تُضبط كلمة سره في المنصة على الحاسوب، ويبقى دائماً طريقاً للدخول.', newUser: 'حساب جديد',
-    uLogin: 'اسم الدخول (أحرف لاتينية صغيرة وأرقام)', uName: 'الاسم', uPw: 'كلمة السر (8 أحرف على الأقل)', uRole: 'الدور',
-    roOrganizer: 'منظم: كل شيء ما عدا الحسابات', roScanner: 'ماسح: الحضور فقط، دون بيانات التواصل', roAdmin: 'مسؤول: كل شيء والحسابات',
-    create: 'إنشاء الحساب', createHint: 'أعطِ صاحب الحساب اسم الدخول وكلمة السر بنفسك، ويغيّرها هو من «حسابي» بعد دخوله.', created: 'أُنشئ الحساب',
-    badlogin: 'اسم الدخول: من 3 إلى 30 حرفاً لاتينياً صغيراً أو رقماً (وليس admin)', taken: 'اسم الدخول مستعمل', short: 'كلمة السر قصيرة', badName: 'اكتب الاسم',
-    createFail: 'تعذر الإنشاء', active: 'مفعّل', stopped: 'موقوف', roleChanged: 'تغيّر الدور', self: 'لا تعدّل حسابك من هنا', mine: 'حسابك: يعدّله مسؤول آخر.',
-    stop: 'إيقاف الحساب', start: 'تفعيل الحساب', stoppedMsg: 'أُوقف الحساب، ويخرج من اللوحة فوراً', startedMsg: 'فُعّل الحساب', newPw: 'كلمة سر جديدة',
-    newPwAsk: n => 'كلمة السر الجديدة لـ ' + n + ' (8 أحرف على الأقل):', pwChanged: 'تغيّرت كلمة السر',
-    signedAs: 'دخلتَ باسم', language: 'اللغة', theme: 'المظهر', thAuto: 'حسب الجهاز', thLight: 'فاتح', thDark: 'داكن', pwT: 'تغيير كلمة السر',
-    pwOld: 'كلمة السر الحالية', pwNew: 'كلمة السر الجديدة (8 أحرف على الأقل)', wrongPw: 'كلمة السر الحالية غير صحيحة', shortNew: 'كلمة السر الجديدة قصيرة',
-    ownerPw: 'كلمة سر المسؤول تُغيَّر في المنصة على الحاسوب', logout: 'خروج',
-    rSuper: 'المدير العام', rAdmin: 'مسؤول الجهة', rOrganizer: 'منظم', rScanner: 'مساعد',
-    nHome: 'الرئيسية والأنشطة', nBundle: 'شواهد شخص في عدة أنشطة', nSearch: 'البحث عن مشارك', nStats: 'الإحصائيات', nSettings: 'الإعدادات',
-    nOrg: 'الجهة', nParts: '«شواهدي» والمشاركون', nUsers: 'الحسابات', nMe: 'حسابي', nPlat: 'المنصات المنشورة', nVerify: 'التحقق من الشواهد',
-    nMeSite: 'شواهدي', menu: 'القائمة', online: 'نسخة الإنترنت', onPc: 'الحاسوب', onPcT: 'يُستعمل من المنصة على الحاسوب', logout: 'خروج',
-    siSub: 'لوحة المنظمين · نسخة الإنترنت', siF1: 'الأنشطة والمشاركون والحضور، من أي هاتف أو حاسوب',
-    siF2: 'المسح بالهاتف، وروابطه ورموزه', siF3: 'إصدار الشواهد وإرسالها، طلباً تنفّذه المنصة على الحاسوب',
-    siH: 'تسجيل الدخول', siD: 'بحسابك في منصة الشواهد: اسم الدخول وكلمة السر نفسهما.', show: 'إظهار', hide: 'إخفاء',
-    siForgot: 'نسيت كلمة السر؟ يعطيك مسؤول جهتك كلمة سر جديدة من المنصة على الحاسوب.',
-    homeT: 'منصة الشواهد', homeD: 'من استمارة التسجيل إلى الشهادة في بريد المشارك: تابع أنشطتك من أي مكان.',
-    kActs: 'نشاط جارٍ', kReg: 'مسجل', kHere: 'حاضر مؤكد', kCert: 'شهادة صادرة', kMail: 'بريد مرسل',
-    actsT: 'الأنشطة', fSearch: 'بحث بالعنوان أو التاريخ أو الرقم...', fKinds: 'كل الأنواع', fOrgs: 'كل الجهات', noMatch: 'لا نشاط يطابق البحث.',
-    st: ['استمارة التسجيل', 'تأكيد الحضور', 'إصدار الشواهد', 'الإرسال بالبريد'], nextStep: 'الخطوة التالية: ', allDone: 'اكتملت كل المراحل',
-    nReg: 'مسجل', nHere: 'حاضر', nCert: 'شهادة', copyLink: 'نسخ الرابط', noDate: 'بدون تاريخ',
+    recApplyAsk: (n, e) => `هل تحققتَ من هوية «${n}»؟ يصبح ${e} بريد الحساب.`, recDone: 'تم', uName: 'الاسم', uRole: 'الدور', taken: 'اسم الدخول مستعمل',
+    short: 'كلمة السر قصيرة', self: 'لا تعدّل حسابك من هنا', newPw: 'كلمة سر جديدة', signedAs: 'دخلتَ باسم', language: 'اللغة', theme: 'المظهر',
+    thAuto: 'حسب الجهاز', thLight: 'فاتح', thDark: 'داكن', wrongPw: 'كلمة السر الحالية غير صحيحة', shortNew: 'كلمة السر الجديدة قصيرة', logout: 'خروج',
+    rSuper: 'المدير العام', nHome: 'الرئيسية والأنشطة', nBundle: 'شواهد شخص في عدة أنشطة', nSearch: 'البحث عن مشارك', nStats: 'الإحصائيات',
+    nSettings: 'الإعدادات', nOrg: 'الجهة', nPlat: 'المنصات المنشورة', nVerify: 'التحقق من الشواهد', nMeSite: 'شواهدي', menu: 'القائمة', online: 'نسخة الإنترنت',
+    onPc: 'الحاسوب', onPcT: 'يُستعمل من المنصة على الحاسوب', siSub: 'لوحة المنظمين · نسخة الإنترنت', siF1: 'الأنشطة والمشاركون والحضور، من أي هاتف أو حاسوب',
+    siF2: 'المسح بالهاتف، وروابطه ورموزه', siF3: 'إصدار الشواهد وإرسالها، طلباً تنفّذه المنصة على الحاسوب', siH: 'تسجيل الدخول',
+    siD: 'بحسابك في منصة الشواهد: اسم الدخول وكلمة السر نفسهما.', show: 'إظهار', hide: 'إخفاء',
+    siForgot: 'نسيت كلمة السر؟ يعطيك مسؤول جهتك كلمة سر جديدة من المنصة على الحاسوب.', homeT: 'منصة الشواهد',
+    homeD: 'من استمارة التسجيل إلى الشهادة في بريد المشارك: تابع أنشطتك من أي مكان.', kActs: 'نشاط جارٍ', kReg: 'مسجل', kHere: 'حاضر مؤكد',
+    kCert: 'شهادة صادرة', kMail: 'بريد مرسل', actsT: 'الأنشطة', fSearch: 'بحث بالعنوان أو التاريخ أو الرقم...', fKinds: 'كل الأنواع', fOrgs: 'كل الجهات',
+    noMatch: 'لا نشاط يطابق البحث.', st: ['استمارة التسجيل', 'تأكيد الحضور', 'إصدار الشواهد', 'الإرسال بالبريد'], nextStep: 'الخطوة التالية: ',
+    allDone: 'اكتملت كل المراحل', nReg: 'مسجل', nHere: 'حاضر', nCert: 'شهادة', copyLink: 'نسخ الرابط', noDate: 'بدون تاريخ',
     platVerify: 'أي شخص يتحقق من صحة شهادة برقمها أو برمز QR فيها.', platMe: 'المشاركون يجدون كل شواهدهم بحسابهم.',
-    platPrivacy: 'ما تحفظه المنصة من بيانات وكيف تُستعمل.', nPrivacy: 'سياسة الخصوصية',
-    usersRO: 'الحسابات تُدار من المنصة على الحاسوب («الحسابات»): إضافة حساب، وتغيير دوره وجهته وكلمة سره، وإغلاقه. تظهر هنا كما هي هناك خلال دقيقة.',
-    accOpen: 'مفتوح', accClosedB: 'مغلق', allOrgs: 'كل الجهات',
-    pwPc: 'تُغيَّر كلمة السر من المنصة على الحاسوب («حسابي»)، وتصل إلى هنا خلال دقيقة.', pwT: 'كلمة السر',
-    more: 'المزيد', close: 'إغلاق', dupAct: 'نسخ كنشاط جديد (مع التصاميم)', archAct: 'أرشفة النشاط', revokeAll: 'إلغاء كل الشواهد', delAct: 'حذف النشاط',
-    s1: 'التسجيل والبطاقات', s2: 'الحضور والمشاركون', s3: 'تصميم الشواهد', s4: 'الإصدار والإرسال', stepsL: 'مراحل النشاط',
-    formReady: 'الاستمارة جاهزة', noForm: 'لم تُنشأ الاستمارة', hereOf: (h, n) => `${h} حاضر من ${n}`, noPeople: 'لا مشاركين بعد',
-    issuedSent: (i, e) => `${i} صادرة · ${e} مرسلة`, noIssued: 'لم تصدر شواهد',
+    platPrivacy: 'ما تحفظه المنصة من بيانات وكيف تُستعمل.', nPrivacy: 'سياسة الخصوصية', allOrgs: 'كل الجهات', more: 'المزيد', close: 'إغلاق',
+    dupAct: 'نسخ كنشاط جديد (مع التصاميم)', archAct: 'أرشفة النشاط', revokeAll: 'إلغاء كل الشواهد', delAct: 'حذف النشاط', s1: 'التسجيل والبطاقات',
+    s2: 'الحضور والمشاركون', s3: 'تصميم الشواهد', s4: 'الإصدار والإرسال', stepsL: 'مراحل النشاط', formReady: 'الاستمارة جاهزة', noForm: 'لم تُنشأ الاستمارة',
+    hereOf: (h, n) => `${h} حاضر من ${n}`, noPeople: 'لا مشاركين بعد', issuedSent: (i, e) => `${i} صادرة · ${e} مرسلة`, noIssued: 'لم تصدر شواهد',
     formT: 'استمارة التسجيل', formD: 'استمارة Google بلغة النشاط، منشورة وتقبل الردود. تعديل عنوان النشاط أو تاريخه يحدّثها تلقائياً.',
     lSheet: 'جدول التسجيلات (Sheets)', lFolder: 'مجلد النشاط (Drive)', lResp: 'الردود في Google Forms',
     noFormD: 'تُنشأ استمارة Google بلغة النشاط مع جدول التسجيلات ومجلد Drive من المنصة على الحاسوب.', makeForm: 'إنشاء الاستمارة وجدول التسجيلات',
-    ticketsT: 'بطاقات الحضور', ticketsN: n => `${n} بطاقة`, ticketsD: s => `، 14 في كل ورقة A4 (${s} ورقة). كل بطاقة برقم فريد ورمز QR يفتح الاستمارة ورقمها معبأ مسبقاً، وتُسلَّم عند الخروج لإثبات الحضور.`,
-    ticketsPdf: 'تحميل البطاقات للطباعة (PDF)', ticketsChange: 'تغيير العدد',
-    attT: 'تأكيد الحضور', sessPick: 'المسح الآن للحصة', mPhones: 'بهواتف المنظمين عند الخروج', mPhonesCode: c => 'الرابط جاهز، أو بالرمز ' + c,
-    mPhonesReady: 'الرابط جاهز: امسحوا رمزه بالهاتف', mPhonesNone: 'أنشئ رابط المسح أولاً', mUpload: 'رفع مسح البطاقات المسلَّمة',
-    mUploadD: 'ملف PDF أو صور، يُقرأ رمز كل بطاقة', mNumbers: 'إدخال أرقام البطاقات', mNumbersD: 'بلوحة المفاتيح أو بقارئ QR يدوي',
-    mSign: 'لائحة التوقيع الموقّعة', mSignD: 'صوّرها بعد النشاط: يُقرأ من وقّع تلقائياً',
-    numbersD: 'اكتب أرقام البطاقات المسلَّمة (7 أو T4-007)، مفصولة بفاصلة أو مسافة أو سطر: يُسجَّل أصحابها حاضرين في الحصة الحالية.',
-    markThese: 'تسجيل الحضور', marking: (d, n) => `${d} من ${n}...`, markedN: n => `سُجّل ${n} حاضراً`, notReg: 'غير مسجلة بعد (تُحفظ وتُطابق عند المزامنة): ',
-    pSearch: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fProblem: 'تحتاج مراجعة', fPending: 'تعديلات تنتظر الحاسوب',
-    sName: 'الترتيب: الاسم', sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً',
-    hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم', cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة',
-    docsMenu: 'Excel والوثائق', dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
-    dSummary: 'التقرير الختامي للنشاط (PDF)', teamT: 'فريق النشاط', teamD: 'يُضاف المنظمون والمساعدون إلى النشاط من المنصة على الحاسوب («الحضور والمشاركون» ← «فريق النشاط»).',
-    designT: 'تصميم الشواهد', designD: 'تصميم الشهادة يتم في المنصة على الحاسوب: رفع التصميم (PDF من Canva أو غيره)، ووضع الاسم ورقم الشهادة ورمز QR عليه بالنقر، ومعاينته وتصغير حجمه.',
+    ticketsT: 'بطاقات الحضور', ticketsN: n => `${n} بطاقة`,
+    ticketsD: s => `، 14 في كل ورقة A4 (${s} ورقة). كل بطاقة برقم فريد ورمز QR يفتح الاستمارة ورقمها معبأ مسبقاً، وتُسلَّم عند الخروج لإثبات الحضور.`,
+    ticketsPdf: 'تحميل البطاقات للطباعة (PDF)', ticketsChange: 'تغيير العدد', attT: 'تأكيد الحضور', sessPick: 'المسح الآن للحصة',
+    mPhones: 'بهواتف المنظمين عند الخروج', mPhonesCode: c => 'الرابط جاهز، أو بالرمز ' + c, mPhonesReady: 'الرابط جاهز: امسحوا رمزه بالهاتف',
+    mPhonesNone: 'أنشئ رابط المسح أولاً', mUpload: 'رفع مسح البطاقات المسلَّمة', mUploadD: 'ملف PDF أو صور، يُقرأ رمز كل بطاقة',
+    mNumbers: 'إدخال أرقام البطاقات', mNumbersD: 'بلوحة المفاتيح أو بقارئ QR يدوي', mSign: 'لائحة التوقيع الموقّعة',
+    mSignD: 'صوّرها بعد النشاط: يُقرأ من وقّع تلقائياً',
+    numbersD: 'اكتب أرقام البطاقات المسلَّمة (7 أو T4-007)، مفصولة بفاصلة أو مسافة أو سطر: يُسجَّل أصحابها حاضرين في الحصة الحالية.', markThese: 'تسجيل الحضور',
+    marking: (d, n) => `${d} من ${n}...`, markedN: n => `سُجّل ${n} حاضراً`, notReg: 'غير مسجلة بعد (تُحفظ وتُطابق عند المزامنة): ',
+    pSearch: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fProblem: 'تحتاج مراجعة', fPending: 'تعديلات تنتظر الحاسوب', sName: 'الترتيب: الاسم',
+    sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
+    cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
+    dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
+    dSummary: 'التقرير الختامي للنشاط (PDF)', teamT: 'فريق النشاط',
+    teamD: 'يُضاف المنظمون والمساعدون إلى النشاط من المنصة على الحاسوب («الحضور والمشاركون» ← «فريق النشاط»).', designT: 'تصميم الشواهد',
+    designD: 'تصميم الشهادة يتم في المنصة على الحاسوب: رفع التصميم (PDF من Canva أو غيره)، ووضع الاسم ورقم الشهادة ورمز QR عليه بالنقر، ومعاينته وتصغير حجمه.',
     designItems: ['رفع التصميم لكل نوع شهادة', 'وضع المتغيرات على الشهادة ومعاينتها', 'نسخ تصميم من نشاط آخر', 'تصغير حجم التصميم'],
     issueT: 'إصدار الشواهد ورفعها', thType: 'النوع', thPresent: 'حاضرون', thTodo: 'بلا شهادة', beforeT: 'قبل الإصدار',
     chkProblems: n => `${n} تسجيل يحتاج مراجعة (اسم ناقص أو بريد غير صالح)`, chkOk: 'التسجيلات مراجَعة: لا أسماء ناقصة ولا بريد غير صالح',
-    chkPending: n => `${n} تعديل ينتظر الحاسوب: يُطبَّق قبل الإصدار`, chkPresent: n => `${n} حاضراً يستحقون الشهادة`,
-    issueAsk: n => `طلب إصدار الشواهد (${n})`, issueNote: 'كل حاضر يأخذ رقماً نهائياً لا يتكرر، وتُنشأ شهادته على الحاسوب وتُرفع إلى Drive وتُسجَّل في منصة التحقق.',
-    refreshT: 'تحديث كل الشواهد بعد خطأ في التصميم',
-    mailT: 'الإرسال بالبريد', mSentN: 'أُرسلت', mQueued: 'في الطابور', mTodo: 'لم تُرسل بعد', mFailed: 'تعذرت',
-    mailErrT: 'لم تصل الشهادة إلى هؤلاء: صحّح البريد بزر «تصحيح» ثم أعد الإرسال.', emailAsk: n => `طلب الإرسال (${n})`, previewT: 'معاينة البريد', testT: 'إرسال تجريبي إلى بريدي',
-    mailNote: 'من استلم لا يُرسل إليه مرة ثانية. الرسائل تخرج من حساب Google المتصل بالمنصة، برابط الشهادة.',
+    chkPending: n => `${n} تعديل ينتظر الحاسوب: يُطبَّق قبل الإصدار`, chkPresent: n => `${n} حاضراً يستحقون الشهادة`, issueAsk: n => `طلب إصدار الشواهد (${n})`,
+    issueNote: 'كل حاضر يأخذ رقماً نهائياً لا يتكرر، وتُنشأ شهادته على الحاسوب وتُرفع إلى Drive وتُسجَّل في منصة التحقق.',
+    refreshT: 'تحديث كل الشواهد بعد خطأ في التصميم', mailT: 'الإرسال بالبريد', mSentN: 'أُرسلت', mQueued: 'في الطابور', mTodo: 'لم تُرسل بعد', mFailed: 'تعذرت',
+    mailErrT: 'لم تصل الشهادة إلى هؤلاء: صحّح البريد بزر «تصحيح» ثم أعد الإرسال.', emailAsk: n => `طلب الإرسال (${n})`, previewT: 'معاينة البريد',
+    testT: 'إرسال تجريبي إلى بريدي', mailNote: 'من استلم لا يُرسل إليه مرة ثانية. الرسائل تخرج من حساب Google المتصل بالمنصة، برابط الشهادة.',
     docsT: 'الوثائق والروابط', gPrint: 'للطباعة', gChat: 'للنشر في واتساب', gArchive: 'للمتابعة والأرشيف', docAll: 'كل الشواهد في ملف واحد (PDF)',
-    docSign: 'لائحة التوقيع (PDF)', docSummary: 'التقرير الختامي للنشاط (PDF)', docReport: 'لائحة المستفيدين (PDF)', docUndelivered: 'من لم تصلهم الشهادة (PDF)',
-    docXlsx: 'لائحة المشاركين (Excel)', docZip: 'كل الشواهد (ZIP)', lVerify: 'منصة التحقق', noJobs: 'لا طلبات لهذا النشاط بعد.', archived: 'مؤرشف',
+    docSign: 'لائحة التوقيع (PDF)', docSummary: 'التقرير الختامي للنشاط (PDF)', docReport: 'لائحة المستفيدين (PDF)',
+    docUndelivered: 'من لم تصلهم الشهادة (PDF)', docXlsx: 'لائحة المشاركين (Excel)', docZip: 'كل الشواهد (ZIP)', lVerify: 'منصة التحقق',
+    noJobs: 'لا طلبات لهذا النشاط بعد.', archived: 'مؤرشف', searchPh: 'الاسم بالعربية أو اللاتينية، البريد، الهاتف، رقم الشهادة أو البطاقة...', searchGo: 'بحث',
+    search2: 'اكتب حرفين على الأقل.', found: (n, more) => `${n}${more ? '+' : ''} نتيجة في أنشطتك${more ? ' (أول 200)' : ''}.`, noFound: 'لا نتيجة.',
+    thAct: 'النشاط', thState: 'الحالة', stRevoked: 'ملغاة', stGot: 'وصلته', stIssued: 'صادرة', stHere: 'حاضر', stReg: 'مسجل', verifyPage: 'صفحة التحقق',
+    fYears: 'كل السنوات', kActsAll: 'نشاط', kHereP: p => `حاضر مؤكد · ${p}%`, kMailed: 'أُرسلت بالبريد', byMonthT: 'الشواهد الصادرة حسب شهر الإصدار',
+    byMonthNone: 'لا شواهد صادرة في هذا الاختيار.', asTable: 'عرض كجدول', thMonth: 'الشهر', thCerts: 'الشواهد الصادرة', byTypeT: 'الشواهد حسب النوع',
+    byYearT: 'الشواهد حسب السنة', byYearD: 'السنة كما في رقم الشهادة: ميلادية، أو جامعية في أرقام الشواهد القديمة.', noCerts: 'لا شواهد بعد.',
+    actsN: n => `الأنشطة (${n})`, thRate: 'نسبة الحضور', recentT: 'آخر العمليات', monthCerts: (m, n) => `${m}: ${n} شهادة`, orgsT: 'الجهات المنظمة',
+    orgEdit: 'الاسم بالعربية والفرنسية والإنجليزية، والرمز، والشعار واللون: تُعدَّل من المنصة على الحاسوب («الجهة»).', orgActs: n => `${n} نشاط`,
+    orgUsers: n => `${n} حساب`, codeOf: c => 'رمز الشواهد: ' + c, setT: 'إعدادات المنصة',
+    setItems: ['حساب Google ومنصة التحقق', 'الأنواع والترقيم', 'نماذج الاستمارات', 'نصوص الوثائق والبريد', 'النسخ الاحتياطي والتحديثات'], myT: 'حسابي',
+    pwOldL: 'كلمة السر الحالية', pwNewL: 'كلمة سر جديدة (8 أحرف على الأقل)', pwNew2: 'أعد كتابتها', pwChange: 'تغيير كلمة السر',
+    pwSent: 'أُرسل الطلب: تتغير كلمة السر خلال دقيقة ما دامت المنصة مفتوحة على الحاسوب.', pwMismatch: 'كلمتا السر غير متطابقتين.', rolesT: 'الأدوار',
+    rolesItems: ['المدير العام: كل الجهات وكل الأنشطة، والإعدادات وكل الحسابات.', 'مسؤول الجهة: كل أنشطة جهته، وإلغاء الشواهد وحذف الأنشطة والإحصائيات، وحسابات منظميها ومساعديها.', 'منظم: الأنشطة التي أنشأها أو أُضيف إلى فريقها: التسجيل والحضور والإصدار والإرسال.', 'مساعد: الحضور في الأنشطة التي أُضيف إليها.'],
+    usersHow: 'كل تغيير هنا طلب تنفّذه المنصة على الحاسوب خلال دقيقة، ثم يظهر هنا. يُضاف المنظم أو المساعد إلى نشاط من المنصة على الحاسوب («فريق النشاط»).',
+    unchanged: 'دون تغيير', stateL: 'الحالة', accOpenO: 'مفتوح', accCloseO: 'مغلق', saveRow: 'حفظ', newAccT: 'حساب جديد', fullName: 'الاسم الكامل',
+    pwMin: 'كلمة السر (8 أحرف على الأقل)', createAcc: 'إنشاء الحساب', staffSent: 'أُرسل الطلب: يُنفَّذ على الحاسوب خلال دقيقة.',
+    badnew: 'اسم الدخول (3 إلى 30 حرفاً لاتينياً صغيراً أو رقماً أو . _ -) والاسم الكامل وكلمة السر إلزامية.', orgNeed: 'اختر الجهة التي يعمل فيها هذا الحساب.',
+    selfNo: 'لا يغيّر أحد دوره ولا يغلق حسابه بنفسه.', jStaff: 'حساب', jMypw: 'كلمة السر', pendingReq: 'طلبات الحسابات',
   },
   fr: {
-    dash: 'Espace organisateurs', loading: 'Chargement...', noRole: 'Votre compte n’a pas cette autorisation', cancel: 'Annuler', save: 'Enregistrer', back: 'Retour',
-    copy: 'Copier', open: 'Ouvrir', share: 'Partager', linkCopied: 'Lien copié', sent: 'Demande envoyée : l’ordinateur l’exécutera', reqFail: 'Envoi de la demande impossible',
-    exists: 'Une demande du même type attend déjà l’ordinateur', saveFail: 'Enregistrement impossible', adminName: 'Administrateur',
-    rScanner: 'Scanneur', rOrganizer: 'Organisateur', rAdmin: 'Administrateur', nActs: 'Activités', nParts: 'Participants', nUsers: 'Comptes', nMe: 'Mon compte',
-    loginT: 'Connexion des organisateurs', loginD: 'Activités, participants, présences et attestations, depuis un téléphone ou un ordinateur.', login: 'Identifiant',
-    loginPh: 'admin pour l’administrateur', password: 'Mot de passe', enter: 'Se connecter', wrongLogin: 'Identifiant ou mot de passe incorrect',
-    locked: 'Trop d’essais : réessayez dans 15 minutes', nopassword: 'Le mot de passe administrateur n’est pas encore défini (réglages de la plateforme sur l’ordinateur)',
-    loginFail: 'Connexion impossible',
-    pcNever: 'La plateforme de l’ordinateur ne s’est pas encore connectée : les demandes attendent son ouverture.', pcOn: 'Ordinateur connecté : demandes exécutées en une minute',
-    pcOff: d => 'Ordinateur hors ligne depuis ' + d + ' : les demandes seront exécutées à son ouverture',
-    jSync: 'Synchronisation', jIssue: 'Émission des attestations', jEmail: 'Envoi des attestations par e-mail', jActivity: 'Nouvelle activité', jUpdate: 'Modification de l’activité',
+    dash: 'Espace organisateurs', loading: 'Chargement...', noRole: 'Votre compte n’a pas cette autorisation', cancel: 'Annuler', back: 'Retour',
+    copy: 'Copier', open: 'Ouvrir', share: 'Partager', linkCopied: 'Lien copié', sent: 'Demande envoyée : l’ordinateur l’exécutera',
+    reqFail: 'Envoi de la demande impossible', exists: 'Une demande du même type attend déjà l’ordinateur', saveFail: 'Enregistrement impossible',
+    rScanner: 'Assistant', rOrganizer: 'Organisateur', rAdmin: 'Responsable de l’organisme', nParts: '« Mes attestations » et participants', nUsers: 'Comptes',
+    nMe: 'Mon compte', login: 'Identifiant', password: 'Mot de passe', enter: 'Se connecter', wrongLogin: 'Identifiant ou mot de passe incorrect',
+    locked: 'Trop d’essais : réessayez dans 15 minutes', loginFail: 'Connexion impossible',
+    pcNever: 'La plateforme de l’ordinateur ne s’est pas encore connectée : les demandes attendent son ouverture.',
+    pcOn: 'Ordinateur connecté : demandes exécutées en une minute',
+    pcOff: d => 'Ordinateur hors ligne depuis ' + d + ' : les demandes seront exécutées à son ouverture', jSync: 'Synchronisation',
+    jIssue: 'Émission des attestations', jEmail: 'Envoi des attestations par e-mail', jActivity: 'Nouvelle activité', jUpdate: 'Modification de l’activité',
     jBundle: 'Attestations d’une personne pour plusieurs activités', jsWait: 'Attend l’ordinateur', jsRun: 'En cours', jsDone: 'Fait', jsErr: 'Échec',
     copyText: 'Copier le texte et les liens', copiedText: 'Copié : collez-le dans WhatsApp ou ailleurs', onePdf: 'Un seul fichier avec toutes les attestations',
     newAct: 'Nouvelle activité', bundle: 'Attestations d’une personne', reqT: 'Demandes à l’ordinateur',
-    reqHint: 'Créez une activité ici : son formulaire et sa feuille sont créés sur l’ordinateur, puis elle apparaît dans cette liste.',
-    totals: 'Total', sActs: 'activités', sReg: 'inscrits', sHere: 'présents', sCert: 'attestations', sMail: 'e-mails', hereNow: 'présents',
+    reqHint: 'Créez une activité ici : son formulaire et sa feuille sont créés sur l’ordinateur, puis elle apparaît dans cette liste.', hereNow: 'présents',
     noActs: 'Aucune activité publiée : synchronisez-en une sur l’ordinateur, ou créez-en une ici.', activity: 'Activité',
-    sessionsLine: (n, s) => `${n} séances, scan en cours : séance ${s}`,
-    pcOnlyT: 'Sur l’ordinateur', pcOnlyItems: ['Conception et aperçu des attestations', 'Questions supplémentaires du formulaire', 'Import depuis Excel',
-      'Listes, rapports et fichiers à imprimer (PDF et Excel)', 'Annuler ou rétablir une attestation', 'Organismes, types et réglages', 'Corbeille et sauvegardes'],
+    sessionsLine: (n, s) => `${n} séances, scan en cours : séance ${s}`, pcOnlyT: 'Sur l’ordinateur',
+    pcOnlyItems: ['Conception et aperçu des attestations', 'Questions supplémentaires du formulaire', 'Import depuis Excel', 'Listes, rapports et fichiers à imprimer (PDF et Excel)', 'Annuler ou rétablir une attestation', 'Organismes, types et réglages', 'Corbeille et sauvegardes'],
     pcOnlyNote: 'L’émission et l’envoi des attestations se demandent ici et s’exécutent sur l’ordinateur.',
     noChoices: 'La plateforme de l’ordinateur n’a pas encore publié ses listes (organismes et types) : ouvrez-la une fois connectée à Internet.',
-    fTitle: 'Titre', fKind: 'Type d’activité', fOrg: 'Organisme', fLang: 'Langue de l’activité et des documents', langAr: 'Arabe', langFr: 'Français', langEn: 'Anglais',
-    fType: 'Type d’attestation principal', fDates: 'Date / jours', datesPh: 'ex. 12 et 13 mars 2026', fHours: 'Horaire ou nombre d’heures', fPlace: 'Lieu',
-    fSessions: 'Nombre de séances', fMin: 'Présence minimale (séances)', minPh: 'Toutes les séances', fTickets: 'Nombre de cartes imprimées', fWa: 'Lien du groupe WhatsApp',
-    fTpl: 'Questions supplémentaires d’un modèle', noTpl: 'Sans questions supplémentaires',
+    fTitle: 'Titre', fKind: 'Type d’activité', fOrg: 'Organisme', fLang: 'Langue de l’activité et des documents', langAr: 'Arabe', langFr: 'Français',
+    langEn: 'Anglais', fType: 'Type d’attestation principal', fDates: 'Date / jours', datesPh: 'ex. 12 et 13 mars 2026', fHours: 'Horaire ou nombre d’heures',
+    fPlace: 'Lieu', fSessions: 'Nombre de séances', fMin: 'Présence minimale (séances)', minPh: 'Toutes les séances', fTickets: 'Nombre de cartes imprimées',
+    fWa: 'Lien du groupe WhatsApp', fTpl: 'Questions supplémentaires d’un modèle', noTpl: 'Sans questions supplémentaires',
     editHint: 'Un champ laissé vide reste inchangé. Le titre, la date et le lieu sont repris dans le formulaire Google Forms.',
     newHint: 'Le formulaire et la feuille des inscriptions sont créés sur l’ordinateur, puis l’activité apparaît ici avec son lien. Le design s’ajoute sur l’ordinateur.',
     askEdit: 'Demander la modification', askNew: 'Demander la création', editT: 'Modifier l’activité', newT: 'Nouvelle activité', notitle: 'Saisissez le titre',
-    editWaiting: 'Une modification précédente attend encore l’ordinateur',
-    bT: 'Attestations d’une personne pour plusieurs activités',
+    editWaiting: 'Une modification précédente attend encore l’ordinateur', bT: 'Attestations d’une personne pour plusieurs activités',
     bD: 'La personne est ajoutée comme présente à chaque activité choisie ; chaque attestation reçoit le numéro et le design de son activité, puis un seul e-mail les regroupe toutes, et leurs liens et un fichier unique apparaissent ici. Déjà inscrite avec le même e-mail : pas de doublon.',
-    firstAr: 'Prénom en arabe', lastAr: 'Nom en arabe', firstLat: 'Prénom (latin)', lastLat: 'Nom (latin)',
-    gender: 'Civilité', male: 'Homme', female: 'Femme', certType: 'Type d’attestation', bEmail: 'E-mail (reçoit le message)', email: 'E-mail', phone: 'Téléphone', mention: 'Mention / résultat',
-    bActs: 'Activités', noDesign: 'pas de design pour ce type', starNote: '* Imprimé par le design des activités choisies : complétez-le pour des copies complètes et identiques.',
-    bSave: 'Demander la création et l’envoi', pickOne: 'Choisissez au moins une activité', lack: 'Complétez ce que le design imprime : ', nameAr: 'nom en arabe', nameLat: 'nom en latin',
-    noname: 'Saisissez au moins le nom', badEmail: 'E-mail incorrect', sameWaiting: 'La même demande attend encore l’ordinateur',
-    tOverview: 'Aperçu', tPeople: 'Participants', tRequests: 'Demandes', scanNow: s => 'Scan en cours : séance ' + s, curSession: 'Séance en cours (scan et confirmation)',
-    sessionN: i => 'Séance ' + i, sessionSet: s => 'Scan en cours : séance ' + s + ' sur tous les téléphones', formLink: 'Lien du formulaire d’inscription', addPerson: 'Ajouter un participant',
-    search: 'Rechercher par nom, carte, numéro d’attestation ou e-mail...', fAll: 'Tous', fHere: 'Présents', fHereIn: s => 'Présents à la séance ' + s, fAway: 'Non confirmés',
-    fIssued: 'Avec attestation', fMail: 'Problème d’e-mail', countOf: (n, m) => `${n} sur ${m}`,
+    firstAr: 'Prénom en arabe', lastAr: 'Nom en arabe', firstLat: 'Prénom (latin)', lastLat: 'Nom (latin)', gender: 'Civilité', male: 'Homme', female: 'Femme',
+    certType: 'Type d’attestation', bEmail: 'E-mail (reçoit le message)', email: 'E-mail', phone: 'Téléphone', mention: 'Mention / résultat',
+    bActs: 'Activités', noDesign: 'pas de design pour ce type',
+    starNote: '* Imprimé par le design des activités choisies : complétez-le pour des copies complètes et identiques.',
+    bSave: 'Demander la création et l’envoi', pickOne: 'Choisissez au moins une activité', lack: 'Complétez ce que le design imprime : ',
+    nameAr: 'nom en arabe', nameLat: 'nom en latin', noname: 'Saisissez au moins le nom', badEmail: 'E-mail incorrect',
+    sameWaiting: 'La même demande attend encore l’ordinateur', tPeople: 'Participants', curSession: 'Séance en cours (scan et confirmation)',
+    sessionN: i => 'Séance ' + i, sessionSet: s => 'Scan en cours : séance ' + s + ' sur tous les téléphones', addPerson: 'Ajouter un participant',
+    search: 'Rechercher par nom, carte, numéro d’attestation ou e-mail...', fAll: 'Tous', fHere: 'Présents', fHereIn: s => 'Présents à la séance ' + s,
+    fAway: 'Non confirmés', fIssued: 'Avec attestation', fMail: 'Problème d’e-mail', countOf: (n, m) => `${n} sur ${m}`,
     syncNote: d => `Données de la dernière synchronisation (${d}). Ce que vous confirmez ou modifiez ici s’affiche aussitôt et rejoint la plateforme à la synchronisation.`,
-    scanT: 'Lien de scan des organisateurs', scanD: 'Ouvre la page de scan des cartes avec l’appareil photo du téléphone, sans compte ni ordinateur.', scanMake: 'Créer le lien de scan',
-    scanNew: 'Nouveau lien', scanSure: 'Créer un nouveau lien ? L’actuel cesse aussitôt de fonctionner sur tous les téléphones.', scanMade: 'Lien de scan créé : envoyez-le aux organisateurs',
-    scanFail: 'Création du lien impossible', scanTitle: 'Scan des présences',
-    scanCodeT: 'Ou avec le code de scan', scanCodeD: page => `L’assistant ouvre ${page} et saisit ce code, sans lien ni code QR. Il change à chaque nouveau lien et s’arrête quand l’activité est archivée.`, copyCode: 'Copier le code', codeCopied: 'Code copié',
-    issue: 'Émettre les attestations', issueSure: 'Émettre les attestations de tous les présents confirmés (après synchronisation des présences) ?', emailAll: 'Envoyer les attestations',
+    scanT: 'Lien de scan des organisateurs', scanD: 'Ouvre la page de scan des cartes avec l’appareil photo du téléphone, sans compte ni ordinateur.',
+    scanMake: 'Créer le lien de scan', scanNew: 'Nouveau lien',
+    scanSure: 'Créer un nouveau lien ? L’actuel cesse aussitôt de fonctionner sur tous les téléphones.',
+    scanMade: 'Lien de scan créé : envoyez-le aux organisateurs', scanFail: 'Création du lien impossible', scanTitle: 'Scan des présences',
+    scanCodeT: 'Ou avec le code de scan',
+    scanCodeD: page => `L’assistant ouvre ${page} et saisit ce code, sans lien ni code QR. Il change à chaque nouveau lien et s’arrête quand l’activité est archivée.`,
+    copyCode: 'Copier le code', codeCopied: 'Code copié', issue: 'Émettre les attestations',
+    issueSure: 'Émettre les attestations de tous les présents confirmés (après synchronisation des présences) ?',
     emailSure: 'Mettre en file d’envoi les e-mails de ceux qui n’ont pas encore reçu leur attestation ?', sync: 'Synchroniser', editAct: 'Modifier l’activité',
-    noTicket: 'Sans carte', pending: 'Modification en attente de synchronisation', hereIn: s => 'Présent séance ' + s, here: 'Présent', away: 'Non confirmé', sessions: 'Séances : ',
-    certOf: x => 'Attestation ' + x, revoked: 'Annulée', code: 'Code de vérification', download: 'Télécharger',
-    mSent: 'E-mail envoyé', mErr: 'Envoi échoué', mPending: 'En file d’attente', mStopped: 'Arrêté',
-    markIn: s => 'Présent séance ' + s, mark: 'Confirmer la présence', marked: 'Présence enregistrée ; elle rejoint la plateforme à la synchronisation',
-    resend: 'Renvoyer l’e-mail', resendSure: e => 'Renvoyer le même e-mail d’attestation à ' + e + ' ?', resent: 'E-mail remis en file d’envoi',
+    noTicket: 'Sans carte', pending: 'Modification en attente de synchronisation', hereIn: s => 'Présent séance ' + s, here: 'Présent', away: 'Non confirmé',
+    sessions: 'Séances : ', certOf: x => 'Attestation ' + x, revoked: 'Annulée', code: 'Code de vérification', download: 'Télécharger', mSent: 'E-mail envoyé',
+    mErr: 'Envoi échoué', mPending: 'En file d’attente', mStopped: 'Arrêté', markIn: s => 'Présent séance ' + s, mark: 'Confirmer la présence',
+    marked: 'Présence enregistrée ; elle rejoint la plateforme à la synchronisation', resend: 'Renvoyer l’e-mail',
+    resendSure: e => 'Renvoyer le même e-mail d’attestation à ' + e + ' ?', resent: 'E-mail remis en file d’envoi',
     resendOld: 'Le texte de l’e-mail n’est plus conservé (plus de 30 jours) : renvoyez-le depuis la plateforme', edit: 'Modifier', del: 'Supprimer',
-    delSure: n => 'Supprimer ' + n + ' de cette activité ? (corbeille de la plateforme)', deleted: 'Supprimé ; la suppression rejoint la plateforme à la synchronisation',
-    fixT: n => 'Correction : ' + n, newPersonT: 'Nouveau participant (sans carte)', hasCert: 'A une attestation : elle sera refaite avec le même numéro et le même lien.',
-    saveFix: 'Enregistrer la correction', add: 'Ajouter', fixed: 'Correction enregistrée ; elle rejoint la plateforme à la synchronisation', added: 'Ajouté ; il rejoint la plateforme à la synchronisation',
+    delSure: n => 'Supprimer ' + n + ' de cette activité ? (corbeille de la plateforme)',
+    deleted: 'Supprimé ; la suppression rejoint la plateforme à la synchronisation', fixT: n => 'Correction : ' + n,
+    newPersonT: 'Nouveau participant (sans carte)', hasCert: 'A une attestation : elle sera refaite avec le même numéro et le même lien.',
+    saveFix: 'Enregistrer la correction', add: 'Ajouter', fixed: 'Correction enregistrée ; elle rejoint la plateforme à la synchronisation',
+    added: 'Ajouté ; il rejoint la plateforme à la synchronisation',
     partsD: 'Chaque titulaire d’une attestation valide avec un e-mail correct figure ici. Sur « Mes attestations », il ouvre une fois son compte avec son téléphone et son e-mail (code d’activation reçu par e-mail), puis se connecte avec son téléphone et son mot de passe, sans e-mail, et peut ajouter une attestation à son nom par son numéro. Liste mise à jour par la plateforme de l’ordinateur.',
     partsSearch: 'Rechercher par nom, e-mail, numéro ou attestation...', certsN: n => n + ' attestation(s) : ', meLink: 'Mes attestations',
-    accT: n => `Comptes « Mes attestations » (${n})`, accD: 'Comptes activés par numéro de téléphone. Fermez un compte ouvert avec le téléphone d’une autre personne, ou à la demande de son titulaire : le numéro est libéré, les attestations ne changent pas.',
+    accT: n => `Comptes « Mes attestations » (${n})`,
+    accD: 'Comptes activés par numéro de téléphone. Fermez un compte ouvert avec le téléphone d’une autre personne, ou à la demande de son titulaire : le numéro est libéré, les attestations ne changent pas.',
     accSearch: 'Rechercher par nom, téléphone ou e-mail...', accAdded: n => n + ' ajoutée(s) par numéro', accSince: 'Depuis', accSeen: 'Dernière connexion',
-    accClose: 'Fermer le compte', accCloseAsk: n => `Fermer le compte « ${n} » ? Son numéro est libéré, les attestations restent.`, accClosed: 'Compte fermé', accNone: 'Aucun compte activé pour l’instant.',
-    recT: n => `Demandes de récupération (${n})`, recD: 'Un titulaire a perdu son e-mail et son mot de passe. Vérifiez d’abord son identité (appelez le numéro, comparez le nom et l’attestation), puis « Valider » lie le nouvel e-mail au compte pour qu’il choisisse un nouveau mot de passe.',
-    recNewEmail: 'Nouvel e-mail', recAcc: 'Compte actuel', recNoAcc: 'Aucun compte actif avec ce numéro', recApply: 'Valider le nouvel e-mail', recDismiss: 'Refuser',
-    recApplyAsk: (n, e) => `Avez-vous vérifié l’identité de « ${n} » ? ${e} devient l’e-mail du compte.`, recDone: 'Fait',
-    usersD: 'Le mot de passe du compte admin se règle dans la plateforme sur l’ordinateur ; ce compte reste toujours un accès.', newUser: 'Nouveau compte',
-    uLogin: 'Identifiant (lettres latines minuscules et chiffres)', uName: 'Nom', uPw: 'Mot de passe (8 caractères minimum)', uRole: 'Rôle',
-    roOrganizer: 'Organisateur : tout sauf les comptes', roScanner: 'Scanneur : présences seulement, sans coordonnées', roAdmin: 'Administrateur : tout, comptes compris',
-    create: 'Créer le compte', createHint: 'Remettez vous-même l’identifiant et le mot de passe ; la personne le change ensuite dans « Mon compte ».', created: 'Compte créé',
-    badlogin: 'Identifiant : 3 à 30 lettres latines minuscules ou chiffres (pas admin)', taken: 'Identifiant déjà utilisé', short: 'Mot de passe trop court', badName: 'Saisissez le nom',
-    createFail: 'Création impossible', active: 'Actif', stopped: 'Suspendu', roleChanged: 'Rôle modifié', self: 'Ne modifiez pas votre propre compte ici',
-    mine: 'Votre compte : un autre administrateur le modifie.', stop: 'Suspendre', start: 'Réactiver', stoppedMsg: 'Compte suspendu : déconnecté aussitôt', startedMsg: 'Compte réactivé',
-    newPw: 'Nouveau mot de passe', newPwAsk: n => 'Nouveau mot de passe pour ' + n + ' (8 caractères minimum) :', pwChanged: 'Mot de passe modifié',
-    signedAs: 'Connecté en tant que', language: 'Langue', theme: 'Thème', thAuto: 'Appareil', thLight: 'Clair', thDark: 'Sombre', pwT: 'Changer le mot de passe',
-    pwOld: 'Mot de passe actuel', pwNew: 'Nouveau mot de passe (8 caractères minimum)', wrongPw: 'Mot de passe actuel incorrect', shortNew: 'Nouveau mot de passe trop court',
-    ownerPw: 'Le mot de passe administrateur se change dans la plateforme sur l’ordinateur', logout: 'Se déconnecter',
-    rSuper: 'Administrateur général', rAdmin: 'Responsable de l’organisme', rOrganizer: 'Organisateur', rScanner: 'Assistant',
-    nHome: 'Accueil et activités', nBundle: 'Attestations d’une personne', nSearch: 'Rechercher un participant', nStats: 'Statistiques', nSettings: 'Paramètres',
-    nOrg: 'Organisme', nParts: '« Mes attestations » et participants', nUsers: 'Comptes', nMe: 'Mon compte', nPlat: 'Pages publiées', nVerify: 'Vérifier une attestation',
-    nMeSite: 'Mes attestations', menu: 'Menu', online: 'version en ligne', onPc: 'Ordinateur', onPcT: 'S’utilise depuis la plateforme sur l’ordinateur', logout: 'Déconnexion',
-    siSub: 'Espace organisateurs · version en ligne', siF1: 'Activités, participants et présences, depuis tout téléphone ou ordinateur',
-    siF2: 'Le scan au téléphone, ses liens et ses codes', siF3: 'L’émission et l’envoi des attestations, demandés ici et faits par l’ordinateur',
-    siH: 'Connexion', siD: 'Avec votre compte de la plateforme : le même identifiant et le même mot de passe.', show: 'Afficher', hide: 'Masquer',
+    accClose: 'Fermer le compte', accCloseAsk: n => `Fermer le compte « ${n} » ? Son numéro est libéré, les attestations restent.`, accClosed: 'Compte fermé',
+    accNone: 'Aucun compte activé pour l’instant.', recT: n => `Demandes de récupération (${n})`,
+    recD: 'Un titulaire a perdu son e-mail et son mot de passe. Vérifiez d’abord son identité (appelez le numéro, comparez le nom et l’attestation), puis « Valider » lie le nouvel e-mail au compte pour qu’il choisisse un nouveau mot de passe.',
+    recNewEmail: 'Nouvel e-mail', recAcc: 'Compte actuel', recNoAcc: 'Aucun compte actif avec ce numéro', recApply: 'Valider le nouvel e-mail',
+    recDismiss: 'Refuser', recApplyAsk: (n, e) => `Avez-vous vérifié l’identité de « ${n} » ? ${e} devient l’e-mail du compte.`, recDone: 'Fait', uName: 'Nom',
+    uRole: 'Rôle', taken: 'Identifiant déjà utilisé', short: 'Mot de passe trop court', self: 'Ne modifiez pas votre propre compte ici',
+    newPw: 'Nouveau mot de passe', signedAs: 'Connecté en tant que', language: 'Langue', theme: 'Thème', thAuto: 'Appareil', thLight: 'Clair', thDark: 'Sombre',
+    wrongPw: 'Mot de passe actuel incorrect', shortNew: 'Nouveau mot de passe trop court', logout: 'Déconnexion', rSuper: 'Administrateur général',
+    nHome: 'Accueil et activités', nBundle: 'Attestations d’une personne', nSearch: 'Rechercher un participant', nStats: 'Statistiques',
+    nSettings: 'Paramètres', nOrg: 'Organisme', nPlat: 'Pages publiées', nVerify: 'Vérifier une attestation', nMeSite: 'Mes attestations', menu: 'Menu',
+    online: 'version en ligne', onPc: 'Ordinateur', onPcT: 'S’utilise depuis la plateforme sur l’ordinateur', siSub: 'Espace organisateurs · version en ligne',
+    siF1: 'Activités, participants et présences, depuis tout téléphone ou ordinateur', siF2: 'Le scan au téléphone, ses liens et ses codes',
+    siF3: 'L’émission et l’envoi des attestations, demandés ici et faits par l’ordinateur', siH: 'Connexion',
+    siD: 'Avec votre compte de la plateforme : le même identifiant et le même mot de passe.', show: 'Afficher', hide: 'Masquer',
     siForgot: 'Mot de passe oublié ? Le responsable de votre organisme vous en donne un nouveau depuis la plateforme sur l’ordinateur.',
     homeT: 'Plateforme des attestations', homeD: 'Du formulaire d’inscription à l’attestation dans la boîte du participant : suivez vos activités de partout.',
-    kActs: 'activités en cours', kReg: 'inscrits', kHere: 'présents confirmés', kCert: 'attestations émises', kMail: 'e-mails envoyés',
-    actsT: 'Activités', fSearch: 'Rechercher par titre, date ou numéro...', fKinds: 'Tous les types', fOrgs: 'Tous les organismes', noMatch: 'Aucune activité ne correspond.',
+    kActs: 'activités en cours', kReg: 'inscrits', kHere: 'présents confirmés', kCert: 'attestations émises', kMail: 'e-mails envoyés', actsT: 'Activités',
+    fSearch: 'Rechercher par titre, date ou numéro...', fKinds: 'Tous les types', fOrgs: 'Tous les organismes', noMatch: 'Aucune activité ne correspond.',
     st: ['Formulaire d’inscription', 'Présences', 'Émission', 'Envoi par e-mail'], nextStep: 'Étape suivante : ', allDone: 'Toutes les étapes sont faites',
     nReg: 'inscrits', nHere: 'présents', nCert: 'attestations', copyLink: 'Copier le lien', noDate: 'Sans date',
     platVerify: 'Chacun vérifie une attestation par son numéro ou son code QR.', platMe: 'Les participants retrouvent toutes leurs attestations.',
-    platPrivacy: 'Les données conservées et leur usage.', nPrivacy: 'Confidentialité',
-    usersRO: 'Les comptes se gèrent dans la plateforme sur l’ordinateur (« Comptes ») : ajout, rôle, organisme, mot de passe, fermeture. Ils apparaissent ici tels quels dans la minute.',
-    accOpen: 'Ouvert', accClosedB: 'Fermé', allOrgs: 'Tous les organismes',
-    pwPc: 'Le mot de passe se change dans la plateforme sur l’ordinateur (« Mon compte ») et arrive ici dans la minute.', pwT: 'Mot de passe',
-    more: 'Plus', close: 'Fermer', dupAct: 'Dupliquer (avec les modèles)', archAct: 'Archiver l’activité', revokeAll: 'Annuler toutes les attestations', delAct: 'Supprimer l’activité',
+    platPrivacy: 'Les données conservées et leur usage.', nPrivacy: 'Confidentialité', allOrgs: 'Tous les organismes', more: 'Plus', close: 'Fermer',
+    dupAct: 'Dupliquer (avec les modèles)', archAct: 'Archiver l’activité', revokeAll: 'Annuler toutes les attestations', delAct: 'Supprimer l’activité',
     s1: 'Inscription et cartes', s2: 'Présences et participants', s3: 'Modèles d’attestation', s4: 'Émission et envoi', stepsL: 'Étapes de l’activité',
     formReady: 'Formulaire prêt', noForm: 'Formulaire non créé', hereOf: (h, n) => `${h} présents sur ${n}`, noPeople: 'Aucun participant',
-    issuedSent: (i, e) => `${i} émises · ${e} envoyées`, noIssued: 'Aucune attestation émise',
-    formT: 'Formulaire d’inscription', formD: 'Formulaire Google dans la langue de l’activité, publié et ouvert. Il suit les changements de titre ou de date.',
+    issuedSent: (i, e) => `${i} émises · ${e} envoyées`, noIssued: 'Aucune attestation émise', formT: 'Formulaire d’inscription',
+    formD: 'Formulaire Google dans la langue de l’activité, publié et ouvert. Il suit les changements de titre ou de date.',
     lSheet: 'Feuille des inscriptions (Sheets)', lFolder: 'Dossier de l’activité (Drive)', lResp: 'Réponses dans Google Forms',
-    noFormD: 'Le formulaire Google, sa feuille et son dossier Drive se créent depuis la plateforme sur l’ordinateur.', makeForm: 'Créer le formulaire et sa feuille',
-    ticketsT: 'Cartes de présence', ticketsN: n => `${n} cartes`, ticketsD: s => `, 14 par feuille A4 (${s} feuilles). Chaque carte a un numéro unique et un code QR qui ouvre le formulaire, numéro prérempli ; elle est remise à la sortie.`,
-    ticketsPdf: 'Télécharger les cartes (PDF)', ticketsChange: 'Changer le nombre',
-    attT: 'Confirmer les présences', sessPick: 'Scan pour la séance', mPhones: 'Avec les téléphones à la sortie', mPhonesCode: c => 'Lien prêt, ou par le code ' + c,
-    mPhonesReady: 'Lien prêt : scannez son code', mPhonesNone: 'Créez d’abord le lien de scan', mUpload: 'Importer le scan des cartes rendues',
-    mUploadD: 'PDF ou photos, chaque code est lu', mNumbers: 'Saisir les numéros de cartes', mNumbersD: 'Au clavier ou avec un lecteur QR',
-    mSign: 'Liste d’émargement signée', mSignD: 'Photographiée après l’activité : les signatures sont lues',
+    noFormD: 'Le formulaire Google, sa feuille et son dossier Drive se créent depuis la plateforme sur l’ordinateur.',
+    makeForm: 'Créer le formulaire et sa feuille', ticketsT: 'Cartes de présence', ticketsN: n => `${n} cartes`,
+    ticketsD: s => `, 14 par feuille A4 (${s} feuilles). Chaque carte a un numéro unique et un code QR qui ouvre le formulaire, numéro prérempli ; elle est remise à la sortie.`,
+    ticketsPdf: 'Télécharger les cartes (PDF)', ticketsChange: 'Changer le nombre', attT: 'Confirmer les présences', sessPick: 'Scan pour la séance',
+    mPhones: 'Avec les téléphones à la sortie', mPhonesCode: c => 'Lien prêt, ou par le code ' + c, mPhonesReady: 'Lien prêt : scannez son code',
+    mPhonesNone: 'Créez d’abord le lien de scan', mUpload: 'Importer le scan des cartes rendues', mUploadD: 'PDF ou photos, chaque code est lu',
+    mNumbers: 'Saisir les numéros de cartes', mNumbersD: 'Au clavier ou avec un lecteur QR', mSign: 'Liste d’émargement signée',
+    mSignD: 'Photographiée après l’activité : les signatures sont lues',
     numbersD: 'Saisissez les numéros des cartes rendues (7 ou T4-007), séparés par virgule, espace ou ligne : leurs titulaires sont marqués présents pour la séance en cours.',
-    markThese: 'Marquer présents', marking: (d, n) => `${d} sur ${n}...`, markedN: n => `${n} marqués présents`, notReg: 'Pas encore inscrits (gardés et rapprochés à la synchronisation) : ',
-    pSearch: 'Rechercher par nom, carte, attestation ou e-mail...', fProblem: 'À revoir', fPending: 'Changements en attente de l’ordinateur',
-    sName: 'Tri : nom', sTicket: 'Tri : numéro de carte', sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord',
-    hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation', contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double',
-    docsMenu: 'Excel et documents', dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
+    markThese: 'Marquer présents', marking: (d, n) => `${d} sur ${n}...`, markedN: n => `${n} marqués présents`,
+    notReg: 'Pas encore inscrits (gardés et rapprochés à la synchronisation) : ', pSearch: 'Rechercher par nom, carte, attestation ou e-mail...',
+    fProblem: 'À revoir', fPending: 'Changements en attente de l’ordinateur', sName: 'Tri : nom', sTicket: 'Tri : numéro de carte',
+    sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
+    contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
+    dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
     dSummary: 'Rapport final (PDF)', teamT: 'Équipe de l’activité', teamD: 'Les organisateurs et assistants s’ajoutent depuis la plateforme sur l’ordinateur.',
-    designT: 'Modèles d’attestation', designD: 'La conception se fait dans la plateforme sur l’ordinateur : importer le modèle (PDF de Canva ou autre), y placer le nom, le numéro et le code QR, l’aperçu et la réduction de taille.',
+    designT: 'Modèles d’attestation',
+    designD: 'La conception se fait dans la plateforme sur l’ordinateur : importer le modèle (PDF de Canva ou autre), y placer le nom, le numéro et le code QR, l’aperçu et la réduction de taille.',
     designItems: ['Importer le modèle de chaque type', 'Placer les champs et prévisualiser', 'Copier le modèle d’une autre activité', 'Réduire la taille du modèle'],
     issueT: 'Émettre et publier les attestations', thType: 'Type', thPresent: 'Présents', thTodo: 'Sans attestation', beforeT: 'Avant l’émission',
     chkProblems: n => `${n} inscriptions à revoir (nom incomplet ou e-mail invalide)`, chkOk: 'Inscriptions revues : ni nom incomplet ni e-mail invalide',
     chkPending: n => `${n} changements en attente de l’ordinateur : appliqués avant l’émission`, chkPresent: n => `${n} présents ont droit à l’attestation`,
-    issueAsk: n => `Demander l’émission (${n})`, issueNote: 'Chaque présent reçoit un numéro définitif ; son attestation est créée sur l’ordinateur, publiée sur Drive et inscrite au registre de vérification.',
-    refreshT: 'Mettre à jour toutes les attestations après une erreur de modèle',
-    mailT: 'Envoi par e-mail', mSentN: 'Envoyés', mQueued: 'En file', mTodo: 'Pas encore envoyés', mFailed: 'Échecs',
-    mailErrT: 'L’attestation n’est pas parvenue à ces personnes : corrigez l’e-mail puis renvoyez.', emailAsk: n => `Demander l’envoi (${n})`, previewT: 'Aperçu de l’e-mail', testT: 'Envoi de test',
+    issueAsk: n => `Demander l’émission (${n})`,
+    issueNote: 'Chaque présent reçoit un numéro définitif ; son attestation est créée sur l’ordinateur, publiée sur Drive et inscrite au registre de vérification.',
+    refreshT: 'Mettre à jour toutes les attestations après une erreur de modèle', mailT: 'Envoi par e-mail', mSentN: 'Envoyés', mQueued: 'En file',
+    mTodo: 'Pas encore envoyés', mFailed: 'Échecs', mailErrT: 'L’attestation n’est pas parvenue à ces personnes : corrigez l’e-mail puis renvoyez.',
+    emailAsk: n => `Demander l’envoi (${n})`, previewT: 'Aperçu de l’e-mail', testT: 'Envoi de test',
     mailNote: 'Personne ne reçoit deux fois. Les e-mails partent du compte Google relié à la plateforme, avec le lien de l’attestation.',
     docsT: 'Documents et liens', gPrint: 'À imprimer', gChat: 'Pour WhatsApp', gArchive: 'Suivi et archives', docAll: 'Toutes les attestations (PDF)',
-    docSign: 'Liste d’émargement (PDF)', docSummary: 'Rapport final (PDF)', docReport: 'Liste des bénéficiaires (PDF)', docUndelivered: 'Attestations non reçues (PDF)',
-    docXlsx: 'Liste des participants (Excel)', docZip: 'Toutes les attestations (ZIP)', lVerify: 'Plateforme de vérification', noJobs: 'Aucune demande pour cette activité.', archived: 'Archivée',
+    docSign: 'Liste d’émargement (PDF)', docSummary: 'Rapport final (PDF)', docReport: 'Liste des bénéficiaires (PDF)',
+    docUndelivered: 'Attestations non reçues (PDF)', docXlsx: 'Liste des participants (Excel)', docZip: 'Toutes les attestations (ZIP)',
+    lVerify: 'Plateforme de vérification', noJobs: 'Aucune demande pour cette activité.', archived: 'Archivée',
+    searchPh: 'Nom en arabe ou en latin, e-mail, téléphone, numéro d’attestation ou de carte...', searchGo: 'Rechercher',
+    search2: 'Saisissez au moins deux caractères.',
+    found: (n, more) => `${n}${more ? '+' : ''} résultats dans vos activités${more ? ' (les 200 premiers)' : ''}.`, noFound: 'Aucun résultat.',
+    thAct: 'Activité', thState: 'État', stRevoked: 'Annulée', stGot: 'Reçue', stIssued: 'Émise', stHere: 'Présent', stReg: 'Inscrit',
+    verifyPage: 'Page de vérification', fYears: 'Toutes les années', kActsAll: 'activités', kHereP: p => `présents confirmés · ${p} %`,
+    kMailed: 'envoyées par e-mail', byMonthT: 'Attestations émises par mois d’émission', byMonthNone: 'Aucune attestation émise dans ce choix.',
+    asTable: 'Voir en tableau', thMonth: 'Mois', thCerts: 'Attestations émises', byTypeT: 'Attestations par type', byYearT: 'Attestations par année',
+    byYearD: 'L’année du numéro d’attestation : civile, ou universitaire pour les anciens numéros.', noCerts: 'Aucune attestation.',
+    actsN: n => `Activités (${n})`, thRate: 'Taux de présence', recentT: 'Dernières opérations', monthCerts: (m, n) => `${m} : ${n} attestations`,
+    orgsT: 'Organismes', orgEdit: 'Les noms en arabe, français et anglais, le code, le logo et la couleur se modifient dans la plateforme sur l’ordinateur.',
+    orgActs: n => `${n} activités`, orgUsers: n => `${n} comptes`, codeOf: c => 'Code des attestations : ' + c, setT: 'Paramètres de la plateforme',
+    setItems: ['Compte Google et site de vérification', 'Types et numérotation', 'Modèles de formulaires', 'Textes des documents et e-mails', 'Sauvegardes et mises à jour'],
+    myT: 'Mon compte', pwOldL: 'Mot de passe actuel', pwNewL: 'Nouveau mot de passe (8 caractères au moins)', pwNew2: 'Confirmez-le',
+    pwChange: 'Changer le mot de passe', pwSent: 'Demande envoyée : le mot de passe change dans la minute tant que la plateforme est ouverte sur l’ordinateur.',
+    pwMismatch: 'Les mots de passe ne correspondent pas.', rolesT: 'Rôles',
+    rolesItems: ['Administrateur général : tous les organismes et activités, les paramètres et tous les comptes.', 'Responsable de l’organisme : toutes ses activités, annulation, suppression, statistiques, et les comptes de ses organisateurs et assistants.', 'Organisateur : les activités créées ou celles de son équipe.', 'Assistant : les présences des activités de son équipe.'],
+    usersHow: 'Chaque changement ici est une demande faite par la plateforme sur l’ordinateur dans la minute, puis visible ici. L’équipe d’une activité se règle sur l’ordinateur.',
+    unchanged: 'inchangé', stateL: 'État', accOpenO: 'Ouvert', accCloseO: 'Fermé', saveRow: 'Enregistrer', newAccT: 'Nouveau compte', fullName: 'Nom complet',
+    pwMin: 'Mot de passe (8 caractères au moins)', createAcc: 'Créer le compte', staffSent: 'Demande envoyée : faite par l’ordinateur dans la minute.',
+    badnew: 'Identifiant (3 à 30 lettres latines minuscules, chiffres, . _ -), nom complet et mot de passe sont obligatoires.',
+    orgNeed: 'Choisissez l’organisme de ce compte.', selfNo: 'Personne ne change son propre rôle ni ne ferme son propre compte.', jStaff: 'Compte',
+    jMypw: 'Mot de passe', pendingReq: 'Demandes de comptes',
   },
   en: {
-    dash: 'Organizers', loading: 'Loading...', noRole: 'Your account is not allowed to do this', cancel: 'Cancel', save: 'Save', back: 'Back',
-    copy: 'Copy', open: 'Open', share: 'Share', linkCopied: 'Link copied', sent: 'Request sent: the computer will carry it out', reqFail: 'Could not send the request',
-    exists: 'A request of the same kind is still waiting for the computer', saveFail: 'Could not save', adminName: 'Administrator',
-    rScanner: 'Scanner', rOrganizer: 'Organizer', rAdmin: 'Administrator', nActs: 'Activities', nParts: 'Participants', nUsers: 'Accounts', nMe: 'My account',
-    loginT: 'Organizers sign-in', loginD: 'Activities, participants, attendance and certificates, from any phone or computer.', login: 'Username', loginPh: 'admin for the administrator',
+    dash: 'Organizers', loading: 'Loading...', noRole: 'Your account is not allowed to do this', cancel: 'Cancel', back: 'Back', copy: 'Copy', open: 'Open',
+    share: 'Share', linkCopied: 'Link copied', sent: 'Request sent: the computer will carry it out', reqFail: 'Could not send the request',
+    exists: 'A request of the same kind is still waiting for the computer', saveFail: 'Could not save', rScanner: 'Helper', rOrganizer: 'Organizer',
+    rAdmin: 'Organizer’s administrator', nParts: '“My certificates” and participants', nUsers: 'Accounts', nMe: 'My account', login: 'Username',
     password: 'Password', enter: 'Sign in', wrongLogin: 'Wrong username or password', locked: 'Too many wrong attempts: try again in 15 minutes',
-    nopassword: 'The administrator password is not set yet (settings of the platform on the computer)', loginFail: 'Could not sign in',
-    pcNever: 'The platform on the computer has not connected yet: requests wait until it is opened.', pcOn: 'Computer online: requests run within a minute',
-    pcOff: d => 'Computer offline since ' + d + ': requests run when the platform is opened',
-    jSync: 'Sync', jIssue: 'Issue certificates', jEmail: 'Email certificates', jActivity: 'New activity', jUpdate: 'Edit activity', jBundle: 'One person’s certificates in several activities',
-    jsWait: 'Waiting for the computer', jsRun: 'Running', jsDone: 'Done', jsErr: 'Failed',
-    copyText: 'Copy text and links', copiedText: 'Copied: paste it in WhatsApp or elsewhere', onePdf: 'One file with all certificates',
-    newAct: 'New activity', bundle: 'Certificates for one person', reqT: 'Requests to the computer',
-    reqHint: 'Create an activity here: its form and sheet are created on the computer, then it shows up in this list.',
-    totals: 'Totals', sActs: 'activities', sReg: 'registered', sHere: 'present', sCert: 'certificates', sMail: 'emailed', hereNow: 'present now',
+    loginFail: 'Could not sign in', pcNever: 'The platform on the computer has not connected yet: requests wait until it is opened.',
+    pcOn: 'Computer online: requests run within a minute', pcOff: d => 'Computer offline since ' + d + ': requests run when the platform is opened',
+    jSync: 'Sync', jIssue: 'Issue certificates', jEmail: 'Email certificates', jActivity: 'New activity', jUpdate: 'Edit activity',
+    jBundle: 'One person’s certificates in several activities', jsWait: 'Waiting for the computer', jsRun: 'Running', jsDone: 'Done', jsErr: 'Failed',
+    copyText: 'Copy text and links', copiedText: 'Copied: paste it in WhatsApp or elsewhere', onePdf: 'One file with all certificates', newAct: 'New activity',
+    bundle: 'Certificates for one person', reqT: 'Requests to the computer',
+    reqHint: 'Create an activity here: its form and sheet are created on the computer, then it shows up in this list.', hereNow: 'present now',
     noActs: 'No published activities yet: sync one on the computer, or create one here.', activity: 'Activity',
-    sessionsLine: (n, s) => `${n} sessions, now scanning session ${s}`,
-    pcOnlyT: 'On the computer', pcOnlyItems: ['Certificate designs and previews', 'Extra form questions', 'Import from Excel', 'Lists, reports and print files (PDF and Excel)',
-      'Revoke or restore a certificate', 'Organizations, types and settings', 'Trash and backups'],
+    sessionsLine: (n, s) => `${n} sessions, now scanning session ${s}`, pcOnlyT: 'On the computer',
+    pcOnlyItems: ['Certificate designs and previews', 'Extra form questions', 'Import from Excel', 'Lists, reports and print files (PDF and Excel)', 'Revoke or restore a certificate', 'Organizations, types and settings', 'Trash and backups'],
     pcOnlyNote: 'Issuing and emailing certificates are requested here and carried out on the computer.',
-    noChoices: 'The platform on the computer has not published its lists yet (organizations and types): open it once while online.',
-    fTitle: 'Title', fKind: 'Activity type', fOrg: 'Organization', fLang: 'Language of the activity and documents', langAr: 'Arabic', langFr: 'French', langEn: 'English',
+    noChoices: 'The platform on the computer has not published its lists yet (organizations and types): open it once while online.', fTitle: 'Title',
+    fKind: 'Activity type', fOrg: 'Organization', fLang: 'Language of the activity and documents', langAr: 'Arabic', langFr: 'French', langEn: 'English',
     fType: 'Main certificate type', fDates: 'Date / days', datesPh: 'e.g. 12 and 13 March 2026', fHours: 'Time or number of hours', fPlace: 'Place',
     fSessions: 'Number of sessions', fMin: 'Minimum attendance (sessions)', minPh: 'All sessions', fTickets: 'Printed tickets', fWa: 'WhatsApp group link',
     fTpl: 'Extra questions from a template', noTpl: 'No extra questions',
     editHint: 'Fields left empty stay as they are. The Google Form follows the title, date and place.',
     newHint: 'The form and registration sheet are created on the computer, then the activity shows here with its form link. The design is added on the computer.',
     askEdit: 'Request the change', askNew: 'Request the activity', editT: 'Edit activity', newT: 'New activity', notitle: 'Enter the title',
-    editWaiting: 'An earlier change is still waiting for the computer',
-    bT: 'One person’s certificates in several activities',
+    editWaiting: 'An earlier change is still waiting for the computer', bT: 'One person’s certificates in several activities',
     bD: 'The person is added as present to each activity you pick; each certificate gets that activity’s number and design, then one email carries them all, and their links and one combined file appear here. Already registered with the same email: no duplicate.',
-    firstAr: 'First name in Arabic', lastAr: 'Last name in Arabic', firstLat: 'First name (Latin)', lastLat: 'Last name (Latin)',
-    gender: 'Gender', male: 'Male', female: 'Female', certType: 'Certificate type', bEmail: 'Email (receives the message)', email: 'Email', phone: 'Phone', mention: 'Grade / result',
-    bActs: 'Activities', noDesign: 'no design for this type', starNote: '* Printed by the chosen activities’ design: fill it in so every copy comes out complete and identical.',
-    bSave: 'Request the certificates and email', pickOne: 'Pick at least one activity', lack: 'Fill in what the design prints: ', nameAr: 'name in Arabic', nameLat: 'name in Latin script',
-    noname: 'Enter at least the name', badEmail: 'Invalid email', sameWaiting: 'The same request is still waiting for the computer',
-    tOverview: 'Overview', tPeople: 'Participants', tRequests: 'Requests', scanNow: s => 'Now scanning session ' + s, curSession: 'Current session (scanning and confirming)',
-    sessionN: i => 'Session ' + i, sessionSet: s => 'All phones now scan session ' + s, formLink: 'Registration form link', addPerson: 'Add participant',
-    search: 'Search by name, ticket, certificate number or email...', fAll: 'All', fHere: 'Present', fHereIn: s => 'Present in session ' + s, fAway: 'Not confirmed',
-    fIssued: 'With certificate', fMail: 'Email problem', countOf: (n, m) => `${n} of ${m}`,
+    firstAr: 'First name in Arabic', lastAr: 'Last name in Arabic', firstLat: 'First name (Latin)', lastLat: 'Last name (Latin)', gender: 'Gender',
+    male: 'Male', female: 'Female', certType: 'Certificate type', bEmail: 'Email (receives the message)', email: 'Email', phone: 'Phone',
+    mention: 'Grade / result', bActs: 'Activities', noDesign: 'no design for this type',
+    starNote: '* Printed by the chosen activities’ design: fill it in so every copy comes out complete and identical.',
+    bSave: 'Request the certificates and email', pickOne: 'Pick at least one activity', lack: 'Fill in what the design prints: ', nameAr: 'name in Arabic',
+    nameLat: 'name in Latin script', noname: 'Enter at least the name', badEmail: 'Invalid email',
+    sameWaiting: 'The same request is still waiting for the computer', tPeople: 'Participants', curSession: 'Current session (scanning and confirming)',
+    sessionN: i => 'Session ' + i, sessionSet: s => 'All phones now scan session ' + s, addPerson: 'Add participant',
+    search: 'Search by name, ticket, certificate number or email...', fAll: 'All', fHere: 'Present', fHereIn: s => 'Present in session ' + s,
+    fAway: 'Not confirmed', fIssued: 'With certificate', fMail: 'Email problem', countOf: (n, m) => `${n} of ${m}`,
     syncNote: d => `Data as of the platform’s last sync (${d}). What you confirm or change here shows at once, and reaches the platform at the next sync.`,
-    scanT: 'Organizers’ scanning link', scanD: 'Opens the ticket-scanning page with the phone camera, no account and no computer needed.', scanMake: 'Create scanning link', scanNew: 'New link',
-    scanSure: 'Create a new link? The current one stops at once on every phone.', scanMade: 'Scanning link created: send it to the organizers', scanFail: 'Could not create the link',
-    scanTitle: 'Attendance scan',
-    scanCodeT: 'Or with the scanning code', scanCodeD: page => `The assistant opens ${page} and types this code, no link or QR code needed. It changes with every new link and stops when the activity is archived.`, copyCode: 'Copy the code', codeCopied: 'Code copied',
-    issue: 'Issue certificates', issueSure: 'Issue certificates to every confirmed attendee (after syncing attendance)?', emailAll: 'Email certificates',
-    emailSure: 'Queue the emails of everyone who has not received their certificate yet?', sync: 'Sync now', editAct: 'Edit activity',
-    noTicket: 'No ticket', pending: 'Change waiting for sync', hereIn: s => 'Present in session ' + s, here: 'Present', away: 'Not confirmed', sessions: 'Sessions: ',
-    certOf: x => 'Certificate: ' + x, revoked: 'Revoked', code: 'Verification code', download: 'Download',
-    mSent: 'Email sent', mErr: 'Email failed', mPending: 'Queued', mStopped: 'Stopped',
-    markIn: s => 'Present in session ' + s, mark: 'Confirm attendance', marked: 'Attendance recorded; it reaches the platform at the next sync',
-    resend: 'Resend email', resendSure: e => 'Send the same certificate email again to ' + e + '?', resent: 'The email is back in the sending queue',
+    scanT: 'Organizers’ scanning link', scanD: 'Opens the ticket-scanning page with the phone camera, no account and no computer needed.',
+    scanMake: 'Create scanning link', scanNew: 'New link', scanSure: 'Create a new link? The current one stops at once on every phone.',
+    scanMade: 'Scanning link created: send it to the organizers', scanFail: 'Could not create the link', scanTitle: 'Attendance scan',
+    scanCodeT: 'Or with the scanning code',
+    scanCodeD: page => `The assistant opens ${page} and types this code, no link or QR code needed. It changes with every new link and stops when the activity is archived.`,
+    copyCode: 'Copy the code', codeCopied: 'Code copied', issue: 'Issue certificates',
+    issueSure: 'Issue certificates to every confirmed attendee (after syncing attendance)?',
+    emailSure: 'Queue the emails of everyone who has not received their certificate yet?', sync: 'Sync now', editAct: 'Edit activity', noTicket: 'No ticket',
+    pending: 'Change waiting for sync', hereIn: s => 'Present in session ' + s, here: 'Present', away: 'Not confirmed', sessions: 'Sessions: ',
+    certOf: x => 'Certificate: ' + x, revoked: 'Revoked', code: 'Verification code', download: 'Download', mSent: 'Email sent', mErr: 'Email failed',
+    mPending: 'Queued', mStopped: 'Stopped', markIn: s => 'Present in session ' + s, mark: 'Confirm attendance',
+    marked: 'Attendance recorded; it reaches the platform at the next sync', resend: 'Resend email',
+    resendSure: e => 'Send the same certificate email again to ' + e + '?', resent: 'The email is back in the sending queue',
     resendOld: 'The email text is no longer kept (older than 30 days): resend it from the platform', edit: 'Edit', del: 'Delete',
     delSure: n => 'Remove ' + n + ' from this activity? (goes to the platform’s trash)', deleted: 'Deleted; it reaches the platform at the next sync',
-    fixT: n => 'Correct: ' + n, newPersonT: 'New participant (no ticket)', hasCert: 'Has a certificate: it is redrawn with the same number and link at the next sync.',
-    saveFix: 'Save correction', add: 'Add', fixed: 'Correction saved; it reaches the platform at the next sync', added: 'Added; it reaches the platform at the next sync',
+    fixT: n => 'Correct: ' + n, newPersonT: 'New participant (no ticket)',
+    hasCert: 'Has a certificate: it is redrawn with the same number and link at the next sync.', saveFix: 'Save correction', add: 'Add',
+    fixed: 'Correction saved; it reaches the platform at the next sync', added: 'Added; it reaches the platform at the next sync',
     partsD: 'Everyone with a valid certificate and a correct email is listed here. On “My certificates” they open their account once with their phone and email (an activation code by email), then sign in with their phone and password, no email, and can add a certificate in their name by its number. The platform on the computer keeps this list up to date.',
     partsSearch: 'Search by name, email, number or certificate...', certsN: n => n + ' certificate(s): ', meLink: 'My certificates',
-    accT: n => `“My certificates” accounts (${n})`, accD: 'Accounts opened with a phone number. Close one opened with someone else’s phone, or at its holder’s request: the number is free again, the certificates do not change.',
+    accT: n => `“My certificates” accounts (${n})`,
+    accD: 'Accounts opened with a phone number. Close one opened with someone else’s phone, or at its holder’s request: the number is free again, the certificates do not change.',
     accSearch: 'Search by name, phone or email...', accAdded: n => n + ' added by number', accSince: 'Since', accSeen: 'Last sign-in',
-    accClose: 'Close the account', accCloseAsk: n => `Close the account “${n}”? Its phone number is freed; the certificates stay.`, accClosed: 'Account closed', accNone: 'No accounts opened yet.',
-    recT: n => `Account recovery requests (${n})`, recD: 'An account holder lost both their email and password. Check who they are first (call the number, compare the name and certificate), then “Approve” links the new email to the account so they can choose a new password.',
+    accClose: 'Close the account', accCloseAsk: n => `Close the account “${n}”? Its phone number is freed; the certificates stay.`, accClosed: 'Account closed',
+    accNone: 'No accounts opened yet.', recT: n => `Account recovery requests (${n})`,
+    recD: 'An account holder lost both their email and password. Check who they are first (call the number, compare the name and certificate), then “Approve” links the new email to the account so they can choose a new password.',
     recNewEmail: 'New email', recAcc: 'Current account', recNoAcc: 'No open account with this number', recApply: 'Approve the new email', recDismiss: 'Dismiss',
-    recApplyAsk: (n, e) => `Did you check who “${n}” is? ${e} becomes the account’s email.`, recDone: 'Done',
-    usersD: 'The admin account’s password is set in the platform on the computer, and it always remains a way in.', newUser: 'New account',
-    uLogin: 'Username (lowercase Latin letters and digits)', uName: 'Name', uPw: 'Password (at least 8 characters)', uRole: 'Role',
-    roOrganizer: 'Organizer: everything except accounts', roScanner: 'Scanner: attendance only, no contact details', roAdmin: 'Administrator: everything, accounts included',
-    create: 'Create account', createHint: 'Hand over the username and password yourself; the person changes it in “My account” after signing in.', created: 'Account created',
-    badlogin: 'Username: 3 to 30 lowercase Latin letters or digits (not admin)', taken: 'Username already used', short: 'Password too short', badName: 'Enter the name',
-    createFail: 'Could not create the account', active: 'Active', stopped: 'Suspended', roleChanged: 'Role changed', self: 'Do not edit your own account here',
-    mine: 'Your account: another administrator edits it.', stop: 'Suspend', start: 'Reactivate', stoppedMsg: 'Account suspended: signed out at once', startedMsg: 'Account reactivated',
-    newPw: 'New password', newPwAsk: n => 'New password for ' + n + ' (at least 8 characters):', pwChanged: 'Password changed',
-    signedAs: 'Signed in as', language: 'Language', theme: 'Theme', thAuto: 'Device', thLight: 'Light', thDark: 'Dark', pwT: 'Change password',
-    pwOld: 'Current password', pwNew: 'New password (at least 8 characters)', wrongPw: 'Current password is wrong', shortNew: 'The new password is too short',
-    ownerPw: 'The administrator password is changed in the platform on the computer', logout: 'Sign out',
-    rSuper: 'General administrator', rAdmin: 'Organizer’s administrator', rOrganizer: 'Organizer', rScanner: 'Helper',
-    nHome: 'Home and activities', nBundle: 'One person’s certificates', nSearch: 'Find a participant', nStats: 'Statistics', nSettings: 'Settings',
-    nOrg: 'Organizer', nParts: '“My certificates” and participants', nUsers: 'Accounts', nMe: 'My account', nPlat: 'Published pages', nVerify: 'Verify a certificate',
-    nMeSite: 'My certificates', menu: 'Menu', online: 'online version', onPc: 'Computer', onPcT: 'Used from the platform on the computer', logout: 'Sign out',
-    siSub: 'Organizers · online version', siF1: 'Activities, participants and attendance, from any phone or computer',
-    siF2: 'Phone scanning, its links and codes', siF3: 'Issuing and emailing certificates, requested here and done by the computer',
-    siH: 'Sign in', siD: 'With your platform account: the same username and password.', show: 'Show', hide: 'Hide',
-    siForgot: 'Forgot your password? Your organizer’s administrator gives you a new one from the platform on the computer.',
-    homeT: 'Certificates platform', homeD: 'From the registration form to the certificate in the participant’s inbox: follow your activities from anywhere.',
-    kActs: 'current activities', kReg: 'registered', kHere: 'confirmed present', kCert: 'certificates issued', kMail: 'emails sent',
-    actsT: 'Activities', fSearch: 'Search by title, date or number...', fKinds: 'All kinds', fOrgs: 'All organizers', noMatch: 'No activity matches.',
-    st: ['Registration form', 'Attendance', 'Issuing', 'Emailing'], nextStep: 'Next step: ', allDone: 'Every step is done',
-    nReg: 'registered', nHere: 'present', nCert: 'certificates', copyLink: 'Copy link', noDate: 'No date',
-    platVerify: 'Anyone checks a certificate by its number or QR code.', platMe: 'Participants find all their certificates.',
-    platPrivacy: 'What the platform keeps and how it is used.', nPrivacy: 'Privacy',
-    usersRO: 'Accounts are managed in the platform on the computer (“Accounts”): adding one, its role, organizer and password, closing it. They show here as they are there within a minute.',
-    accOpen: 'Open', accClosedB: 'Closed', allOrgs: 'All organizers',
-    pwPc: 'The password is changed in the platform on the computer (“My account”) and reaches this page within a minute.', pwT: 'Password',
-    more: 'More', close: 'Close', dupAct: 'Duplicate (with designs)', archAct: 'Archive the activity', revokeAll: 'Revoke every certificate', delAct: 'Delete the activity',
-    s1: 'Registration and cards', s2: 'Attendance and participants', s3: 'Certificate designs', s4: 'Issuing and emailing', stepsL: 'Activity steps',
-    formReady: 'Form ready', noForm: 'No form yet', hereOf: (h, n) => `${h} present of ${n}`, noPeople: 'No participants yet',
-    issuedSent: (i, e) => `${i} issued · ${e} emailed`, noIssued: 'No certificates issued',
-    formT: 'Registration form', formD: 'A Google form in the activity’s language, published and open. It follows changes to the title or date.',
-    lSheet: 'Registrations sheet (Sheets)', lFolder: 'Activity folder (Drive)', lResp: 'Responses in Google Forms',
+    recApplyAsk: (n, e) => `Did you check who “${n}” is? ${e} becomes the account’s email.`, recDone: 'Done', uName: 'Name', uRole: 'Role',
+    taken: 'Username already used', short: 'Password too short', self: 'Do not edit your own account here', newPw: 'New password', signedAs: 'Signed in as',
+    language: 'Language', theme: 'Theme', thAuto: 'Device', thLight: 'Light', thDark: 'Dark', wrongPw: 'Current password is wrong',
+    shortNew: 'The new password is too short', logout: 'Sign out', rSuper: 'General administrator', nHome: 'Home and activities',
+    nBundle: 'One person’s certificates', nSearch: 'Find a participant', nStats: 'Statistics', nSettings: 'Settings', nOrg: 'Organizer',
+    nPlat: 'Published pages', nVerify: 'Verify a certificate', nMeSite: 'My certificates', menu: 'Menu', online: 'online version', onPc: 'Computer',
+    onPcT: 'Used from the platform on the computer', siSub: 'Organizers · online version',
+    siF1: 'Activities, participants and attendance, from any phone or computer', siF2: 'Phone scanning, its links and codes',
+    siF3: 'Issuing and emailing certificates, requested here and done by the computer', siH: 'Sign in',
+    siD: 'With your platform account: the same username and password.', show: 'Show', hide: 'Hide',
+    siForgot: 'Forgot your password? Your organizer’s administrator gives you a new one from the platform on the computer.', homeT: 'Certificates platform',
+    homeD: 'From the registration form to the certificate in the participant’s inbox: follow your activities from anywhere.', kActs: 'current activities',
+    kReg: 'registered', kHere: 'confirmed present', kCert: 'certificates issued', kMail: 'emails sent', actsT: 'Activities',
+    fSearch: 'Search by title, date or number...', fKinds: 'All kinds', fOrgs: 'All organizers', noMatch: 'No activity matches.',
+    st: ['Registration form', 'Attendance', 'Issuing', 'Emailing'], nextStep: 'Next step: ', allDone: 'Every step is done', nReg: 'registered',
+    nHere: 'present', nCert: 'certificates', copyLink: 'Copy link', noDate: 'No date', platVerify: 'Anyone checks a certificate by its number or QR code.',
+    platMe: 'Participants find all their certificates.', platPrivacy: 'What the platform keeps and how it is used.', nPrivacy: 'Privacy',
+    allOrgs: 'All organizers', more: 'More', close: 'Close', dupAct: 'Duplicate (with designs)', archAct: 'Archive the activity',
+    revokeAll: 'Revoke every certificate', delAct: 'Delete the activity', s1: 'Registration and cards', s2: 'Attendance and participants',
+    s3: 'Certificate designs', s4: 'Issuing and emailing', stepsL: 'Activity steps', formReady: 'Form ready', noForm: 'No form yet',
+    hereOf: (h, n) => `${h} present of ${n}`, noPeople: 'No participants yet', issuedSent: (i, e) => `${i} issued · ${e} emailed`,
+    noIssued: 'No certificates issued', formT: 'Registration form',
+    formD: 'A Google form in the activity’s language, published and open. It follows changes to the title or date.', lSheet: 'Registrations sheet (Sheets)',
+    lFolder: 'Activity folder (Drive)', lResp: 'Responses in Google Forms',
     noFormD: 'The Google form, its sheet and its Drive folder are made from the platform on the computer.', makeForm: 'Create the form and its sheet',
-    ticketsT: 'Attendance cards', ticketsN: n => `${n} cards`, ticketsD: s => `, 14 per A4 sheet (${s} sheets). Each card has a unique number and a QR code opening the form with its number filled in; it is handed in on the way out.`,
-    ticketsPdf: 'Download the cards (PDF)', ticketsChange: 'Change the number',
-    attT: 'Confirm attendance', sessPick: 'Scanning for session', mPhones: 'With organizers’ phones at the exit', mPhonesCode: c => 'Link ready, or by the code ' + c,
-    mPhonesReady: 'Link ready: scan its code', mPhonesNone: 'Make the scanning link first', mUpload: 'Upload scans of returned cards',
-    mUploadD: 'A PDF or photos, each code is read', mNumbers: 'Type the card numbers', mNumbersD: 'With the keyboard or a QR reader',
-    mSign: 'Signed attendance sheet', mSignD: 'Photographed after the activity: signatures are read',
+    ticketsT: 'Attendance cards', ticketsN: n => `${n} cards`,
+    ticketsD: s => `, 14 per A4 sheet (${s} sheets). Each card has a unique number and a QR code opening the form with its number filled in; it is handed in on the way out.`,
+    ticketsPdf: 'Download the cards (PDF)', ticketsChange: 'Change the number', attT: 'Confirm attendance', sessPick: 'Scanning for session',
+    mPhones: 'With organizers’ phones at the exit', mPhonesCode: c => 'Link ready, or by the code ' + c, mPhonesReady: 'Link ready: scan its code',
+    mPhonesNone: 'Make the scanning link first', mUpload: 'Upload scans of returned cards', mUploadD: 'A PDF or photos, each code is read',
+    mNumbers: 'Type the card numbers', mNumbersD: 'With the keyboard or a QR reader', mSign: 'Signed attendance sheet',
+    mSignD: 'Photographed after the activity: signatures are read',
     numbersD: 'Type the numbers of the returned cards (7 or T4-007), separated by commas, spaces or lines: their holders are marked present for the current session.',
-    markThese: 'Mark present', marking: (d, n) => `${d} of ${n}...`, markedN: n => `${n} marked present`, notReg: 'Not registered yet (kept and matched at the sync): ',
-    pSearch: 'Search by name, card, certificate number or email...', fProblem: 'To review', fPending: 'Changes waiting for the computer',
-    sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number', sHereFirst: 'Present first',
-    hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing', qEmail: 'Invalid email', dupT: 'Duplicate card',
-    docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel', dSign: 'Attendance sheet (PDF)', dLister: 'List builder',
-    dSummary: 'Final report (PDF)', teamT: 'Activity team', teamD: 'Organizers and helpers are added from the platform on the computer.',
-    designT: 'Certificate designs', designD: 'Designs are made in the platform on the computer: upload the design (a PDF from Canva or elsewhere), place the name, number and QR code on it, preview it and make it smaller.',
+    markThese: 'Mark present', marking: (d, n) => `${d} of ${n}...`, markedN: n => `${n} marked present`,
+    notReg: 'Not registered yet (kept and matched at the sync): ', pSearch: 'Search by name, card, certificate number or email...', fProblem: 'To review',
+    fPending: 'Changes waiting for the computer', sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
+    sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
+    qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
+    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', teamT: 'Activity team',
+    teamD: 'Organizers and helpers are added from the platform on the computer.', designT: 'Certificate designs',
+    designD: 'Designs are made in the platform on the computer: upload the design (a PDF from Canva or elsewhere), place the name, number and QR code on it, preview it and make it smaller.',
     designItems: ['Upload a design for each certificate type', 'Place the fields and preview', 'Copy a design from another activity', 'Make the design smaller'],
     issueT: 'Issue and publish certificates', thType: 'Type', thPresent: 'Present', thTodo: 'Without certificate', beforeT: 'Before issuing',
     chkProblems: n => `${n} registrations to review (name missing or invalid email)`, chkOk: 'Registrations reviewed: no missing name or invalid email',
     chkPending: n => `${n} changes waiting for the computer: applied before issuing`, chkPresent: n => `${n} present are entitled to a certificate`,
-    issueAsk: n => `Ask to issue (${n})`, issueNote: 'Each present person gets a final number; the certificate is made on the computer, uploaded to Drive and recorded for verification.',
-    refreshT: 'Update every certificate after a design mistake',
-    mailT: 'Emailing', mSentN: 'Sent', mQueued: 'Queued', mTodo: 'Not sent yet', mFailed: 'Failed',
-    mailErrT: 'The certificate did not reach these people: correct the email, then send again.', emailAsk: n => `Ask to send (${n})`, previewT: 'Email preview', testT: 'Test email',
-    mailNote: 'Nobody gets it twice. Emails leave from the Google account linked to the platform, with the certificate’s link.',
+    issueAsk: n => `Ask to issue (${n})`,
+    issueNote: 'Each present person gets a final number; the certificate is made on the computer, uploaded to Drive and recorded for verification.',
+    refreshT: 'Update every certificate after a design mistake', mailT: 'Emailing', mSentN: 'Sent', mQueued: 'Queued', mTodo: 'Not sent yet', mFailed: 'Failed',
+    mailErrT: 'The certificate did not reach these people: correct the email, then send again.', emailAsk: n => `Ask to send (${n})`, previewT: 'Email preview',
+    testT: 'Test email', mailNote: 'Nobody gets it twice. Emails leave from the Google account linked to the platform, with the certificate’s link.',
     docsT: 'Documents and links', gPrint: 'To print', gChat: 'For WhatsApp', gArchive: 'Follow-up and archive', docAll: 'Every certificate in one file (PDF)',
-    docSign: 'Attendance sheet (PDF)', docSummary: 'Final report (PDF)', docReport: 'List of recipients (PDF)', docUndelivered: 'Certificates not received (PDF)',
-    docXlsx: 'Participants list (Excel)', docZip: 'Every certificate (ZIP)', lVerify: 'Verification site', noJobs: 'No requests for this activity yet.', archived: 'Archived',
+    docSign: 'Attendance sheet (PDF)', docSummary: 'Final report (PDF)', docReport: 'List of recipients (PDF)',
+    docUndelivered: 'Certificates not received (PDF)', docXlsx: 'Participants list (Excel)', docZip: 'Every certificate (ZIP)', lVerify: 'Verification site',
+    noJobs: 'No requests for this activity yet.', archived: 'Archived',
+    searchPh: 'Name in Arabic or Latin letters, email, phone, certificate or card number...', searchGo: 'Search', search2: 'Type at least two characters.',
+    found: (n, more) => `${n}${more ? '+' : ''} results in your activities${more ? ' (first 200)' : ''}.`, noFound: 'No results.', thAct: 'Activity',
+    thState: 'Status', stRevoked: 'Revoked', stGot: 'Received', stIssued: 'Issued', stHere: 'Present', stReg: 'Registered', verifyPage: 'Verification page',
+    fYears: 'All years', kActsAll: 'activities', kHereP: p => `confirmed present · ${p}%`, kMailed: 'emailed',
+    byMonthT: 'Certificates issued by month of issue', byMonthNone: 'No certificates issued in this choice.', asTable: 'Show as a table', thMonth: 'Month',
+    thCerts: 'Certificates issued', byTypeT: 'Certificates by type', byYearT: 'Certificates by year',
+    byYearD: 'The year in the certificate number: calendar, or academic in older numbers.', noCerts: 'No certificates yet.', actsN: n => `Activities (${n})`,
+    thRate: 'Attendance rate', recentT: 'Latest operations', monthCerts: (m, n) => `${m}: ${n} certificates`, orgsT: 'Organizers',
+    orgEdit: 'Names in Arabic, French and English, the code, logo and colour are changed in the platform on the computer.', orgActs: n => `${n} activities`,
+    orgUsers: n => `${n} accounts`, codeOf: c => 'Certificate code: ' + c, setT: 'Platform settings',
+    setItems: ['Google account and verification site', 'Kinds and numbering', 'Form templates', 'Document and email texts', 'Backups and updates'],
+    myT: 'My account', pwOldL: 'Current password', pwNewL: 'New password (at least 8 characters)', pwNew2: 'Type it again', pwChange: 'Change the password',
+    pwSent: 'Request sent: the password changes within a minute while the platform is open on the computer.', pwMismatch: 'The passwords do not match.',
+    rolesT: 'Roles',
+    rolesItems: ['General administrator: every organizer and activity, the settings and every account.', 'Organizer’s administrator: every activity of their organizer, revoking, deleting, statistics, and their organizers’ and helpers’ accounts.', 'Organizer: the activities they made or whose team they are on.', 'Helper: attendance in the activities whose team they are on.'],
+    usersHow: 'Each change here is a request the platform on the computer carries out within a minute, then shown here. An activity’s team is set on the computer.',
+    unchanged: 'unchanged', stateL: 'Status', accOpenO: 'Open', accCloseO: 'Closed', saveRow: 'Save', newAccT: 'New account', fullName: 'Full name',
+    pwMin: 'Password (at least 8 characters)', createAcc: 'Create the account', staffSent: 'Request sent: carried out by the computer within a minute.',
+    badnew: 'The username (3 to 30 lowercase Latin letters, digits, . _ -), full name and password are required.', orgNeed: 'Choose this account’s organizer.',
+    selfNo: 'Nobody changes their own role or closes their own account.', jStaff: 'Account', jMypw: 'Password', pendingReq: 'Account requests',
   },
-};
-const ICON = {
-  acts: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>',
-  parts: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 010 6.8M18 14.8c2 .8 3.2 2.6 3.5 5.2"/></svg>',
-  users: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7.5 3v6c0 5-3.4 8.7-7.5 10-4.1-1.3-7.5-5-7.5-10v-6z"/><circle cx="12" cy="10" r="2.5"/><path d="M8 16.5c.8-1.8 2.2-2.7 4-2.7s3.2.9 4 2.7"/></svg>',
-  me: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"/></svg>',
-  back: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
-  plus: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
 };
 const ROLE = {scanner: 1, organizer: 2, admin: 3, super: 4};
 const {el, svg, t} = UI, app = document.getElementById('app');
@@ -652,10 +664,9 @@ async function call(action, extra) {
 
 let current = 'acts';  // the section shown, marked in the menu
 function navItems() {  // [id, address, text, icon]; a part only the computer has is shown locked
-  const pc = null;
   return [['acts', '#', 'nHome', 'home'], can('organizer') && ['bundle', '#bundle', 'nBundle', 'person'],
-    can('organizer') && ['search', pc, 'nSearch', 'search'], can('admin') && ['stats', pc, 'nStats', 'chart'],
-    can('admin') && ['settings', pc, can('super') ? 'nSettings' : 'nOrg', 'gear'], can('super') && ['parts', '#parts', 'nParts', 'award'],
+    can('organizer') && ['search', '#search', 'nSearch', 'search'], can('admin') && ['stats', '#stats', 'nStats', 'chart'],
+    can('admin') && ['org', '#org', can('super') ? 'nSettings' : 'nOrg', 'gear'], can('super') && ['parts', '#parts', 'nParts', 'award'],
     can('admin') ? ['users', '#users', 'nUsers', 'lock'] : ['me', '#me', 'nMe', 'lock']].filter(Boolean);
 }
 function setMe(u) {
@@ -734,7 +745,7 @@ function pcLine(pc) {  // requests are carried out by the app on the computer: s
 }
 function jobList(jobs) {
   if (!jobs || !jobs.length) return null;
-  const kind = {sync: 'jSync', issue: 'jIssue', email: 'jEmail', activity: 'jActivity', update: 'jUpdate', bundle: 'jBundle'};
+  const kind = {sync: 'jSync', issue: 'jIssue', email: 'jEmail', activity: 'jActivity', update: 'jUpdate', bundle: 'jBundle', staff: 'jStaff', mypw: 'jMypw'};
   return el('div', {}, ...jobs.map(j => el('div', {className: 'job'},
     el('div', {className: 'row'}, el('b', {textContent: kind[j.kind] ? t(kind[j.kind]) : j.kind}),
       el('span', {className: 'badge ' + ({done: 'ok', error: 'err'}[j.status] || 'warn'),
@@ -1452,20 +1463,199 @@ async function recoveriesBox() {  // «شواهدي» holders who lost email and
 
 // ---------- accounts (admin) ----------
 
-async function showUsers() {
-  mark('users'); bar(t('nUsers')); loading();
-  const j = await call('users');
+async function showSearch(start) {  // one person across one's activities, as on the computer
+  mark('search'); bar(t('nSearch'));
+  const q = el('input', {type: 'search', value: start || '', placeholder: t('searchPh'), ariaLabel: t('nSearch'), style: 'flex:1;max-width:560px'});
+  const go = el('button', {type: 'submit'}, ic('search'), t('searchGo'));
+  const out = el('div');
+  const state = p => p.revoked ? el('span', {className: 'badge err', textContent: t('stRevoked')}) : p.emailed ? el('span', {className: 'badge ok'}, ic('mail'), t('stGot'))
+    : p.serial ? el('span', {className: 'badge pri', textContent: t('stIssued')}) : el('span', {className: 'badge', textContent: t(p.present ? 'stHere' : 'stReg')});
+  const certOfRow = p => p.serial && !p.revoked ? [el('span', {className: 'ltr', style: 'white-space:nowrap', textContent: p.serial}),
+    p.code ? el('div', {className: 'muted', style: 'font-size:12px'}, t('code') + ': ', el('b', {className: 'ltr', textContent: p.code})) : null,
+    el('div', {style: 'font-size:13px'}, /^https:\/\//.test(p.link) ? [el('a', {href: p.link, target: '_blank', rel: 'noopener', textContent: t('download')}), ' · '] : null,
+      el('a', {href: 'index.html?s=' + encodeURIComponent(p.serial) + (p.code ? '&k=' + p.code : ''), target: '_blank', rel: 'noopener', textContent: t('verifyPage')}))]
+    : p.serial ? el('span', {className: 'ltr muted', textContent: p.serial}) : el('span', {className: 'muted', textContent: '—'});
+  async function run() {
+    const v = q.value.trim();
+    if (v.length < 2) return out.replaceChildren(el('p', {className: 'muted', textContent: t('search2')}));
+    go.disabled = true;
+    out.replaceChildren(el('div', {className: 'card skeleton'}, el('i', {style: 'width:60%'}), el('i', {style: 'width:85%'})));
+    const j = await call('search', {q: v}).catch(() => null);
+    go.disabled = false;
+    history.replaceState(null, '', '#search/' + encodeURIComponent(v));
+    if (!j || j.status !== 'ok') return out.replaceChildren();
+    out.replaceChildren(el('p', {className: 'muted', textContent: j.rows.length ? t('found')(j.rows.length, j.more) : t('noFound')}),
+      j.rows.length ? el('div', {className: 'card'}, el('div', {className: 'tablewrap'}, el('table', {className: 'cards'},
+        el('thead', {}, el('tr', {}, ...['name', 'thAct', 'contact', 'thState', 'cert'].map(k => el('th', {textContent: t(k)})))),
+        el('tbody', {}, ...j.rows.map(p => el('tr', {},
+          el('td', {className: 'c-name'}, el('b', {dir: 'auto', style: 'font-weight:600', textContent: p.name}), p.other ? el('div', {className: 'muted', dir: 'auto', textContent: p.other}) : null),
+          el('td', {className: 'c-wide', dataset: {l: t('thAct')}}, el('a', {href: '#a' + p.aid + '/people', dir: 'auto', textContent: p.title}),
+            p.archived ? [' ', el('span', {className: 'badge', textContent: t('archived')})] : null),
+          el('td', {className: 'muted ltr', dataset: {l: t('contact')}, style: 'font-size:12px'}, p.email || '', p.phone ? [el('br'), p.phone] : null),
+          el('td', {dataset: {l: t('thState')}}, state(p)), el('td', {className: 'c-wide', dataset: {l: t('cert')}}, certOfRow(p)))))))) : null);
+  }
+  app.replaceChildren(el('form', {className: 'bar', style: 'margin-bottom:14px', onsubmit: e => { e.preventDefault(); run(); }}, q, go), out);
+  if (start) run(); else q.focus();
+}
+
+async function showStats() {  // the platform's statistics page, over the activities this account sees
+  mark('stats'); bar(t('nStats')); loading();
+  const j = await call('stats');
   if (j.status !== 'ok') return showList();
-  const rows = j.users.map(u => el('tr', {style: u.active ? '' : 'opacity:.6'},
-    el('td', {dir: 'auto'}, el('b', {style: 'font-weight:600', textContent: u.name})), el('td', {className: 'ltr', textContent: u.login}),
-    el('td', {textContent: roleName(u.role)}), el('td', {dir: 'auto', textContent: u.orgName || (u.role === 'super' ? t('allOrgs') : '—')}),
-    el('td', {}, el('span', {className: 'badge ' + (u.active ? 'ok' : ''), textContent: t(u.active ? 'accOpen' : 'accClosedB')}))));
-  app.replaceChildren(el('section', {className: 'card rise'},
-    el('div', {className: 'bar', style: 'margin-bottom:10px'}, el('h2', {style: 'margin:0', textContent: t('nUsers') + ' (' + j.users.length + ')'}),
-      el('span', {className: 'sp'}), el('span', {className: 'pclock', title: t('onPcT')}, ic('lock'), t('onPc'))),
-    el('p', {className: 'hint', style: 'margin-bottom:12px', textContent: t('usersRO')}),
-    el('div', {className: 'tablewrap'}, el('table', {}, el('thead', {}, el('tr', {}, ...['uName', 'login', 'uRole', 'nOrg', ''].map(k =>
-      el('th', {textContent: k ? t(k) : ''})))), el('tbody', {}, ...rows)))));
+  const yearOf = a => (String(a.dates || '').match(/20\d\d/) || [''])[0];
+  const pick = (vals, all) => el('select', {ariaLabel: t(all)}, el('option', {value: '', textContent: t(all)}), ...vals.map(v => el('option', {value: v, textContent: v})));
+  const uniq = xs => [...new Set(xs.filter(Boolean))].sort();
+  const fy = pick(uniq(j.activities.map(yearOf).concat(j.certs.map(c => c[2].slice(0, 4)))).reverse(), 'fYears');
+  const fk = pick(uniq(j.activities.map(a => a.kind)), 'fKinds'), fo = pick(uniq(j.activities.map(a => a.org)), 'fOrgs');
+  const body = el('div');
+  const bars = (pairs, empty) => {
+    const mx = Math.max(1, ...pairs.map(x => x[1]));
+    return pairs.length ? pairs.map(([k, n]) => el('div', {style: 'margin:8px 0'}, el('div', {className: 'bar'}, el('span', {dir: 'auto', textContent: k}), el('span', {className: 'sp'}), el('b', {textContent: n})),
+      el('div', {className: 'progress'}, el('i', {style: 'width:' + Math.round(100 * n / mx) + '%'})))) : el('p', {className: 'muted', textContent: t(empty)});
+  };
+  const count = xs => Object.entries(xs.reduce((m, k) => { m[k] = (m[k] || 0) + 1; return m; }, {}));
+  function draw() {
+    const acts = j.activities.filter(a => (!fy.value || yearOf(a) === fy.value) && (!fk.value || a.kind === fk.value) && (!fo.value || a.org === fo.value));
+    const certs = j.certs.filter(c => !c[4] && (!fy.value || c[2].startsWith(fy.value)) && (!fo.value || c[3] === fo.value));
+    const sum = k => acts.reduce((n, a) => n + a[k], 0), reg = sum('registered'), here = sum('present');
+    // certificates per month of issue: every month from the first to the last (at most the last 24), empty ones included
+    const per = {};
+    certs.forEach(c => { if (/^\d{4}-\d\d$/.test(c[2])) per[c[2]] = (per[c[2]] || 0) + 1; });
+    const months = [];
+    const keys = Object.keys(per).sort();
+    if (keys.length) for (let [y, m] = keys[0].split('-').map(Number); `${y}-${String(m).padStart(2, '0')}` <= keys[keys.length - 1]; m === 12 ? (y++, m = 1) : m++) {
+      const k = `${y}-${String(m).padStart(2, '0')}`;
+      months.push({k, n: per[k] || 0, short: UI.fmtDate(new Date(y, m - 1, 15), {month: 'short'}), label: UI.fmtDate(new Date(y, m - 1, 15), {month: 'long', year: 'numeric'})});
+    }
+    const shown = months.slice(-24), mx = Math.max(0, ...shown.map(m => m.n));
+    const chart = shown.length ? [el('div', {className: 'mchart', role: 'img', ariaLabel: t('byMonthT')}, ...shown.map(m =>
+        el('div', {className: 'mbar' + (m.n === mx && mx ? ' top' : ''), tabIndex: 0, title: t('monthCerts')(m.label, m.n)},
+          el('b', {textContent: m.n}), el('i', {className: m.n ? '' : 'zero', style: 'height:' + (mx ? Math.round(100 * m.n / mx) : 0) + '%'})))),
+      el('div', {className: 'mlabels', ariaHidden: 'true'}, ...shown.map((m, i) => el('span', {}, m.short, i === 0 || m.k.endsWith('-01') ? [el('br'), el('small', {className: 'ltr', textContent: m.k.slice(0, 4)})] : null))),
+      el('details', {style: 'margin-top:10px'}, el('summary', {className: 'muted', style: 'cursor:pointer', textContent: t('asTable')}),
+        el('div', {className: 'tablewrap', style: 'margin-top:8px;max-height:300px'}, el('table', {}, el('tr', {}, el('th', {textContent: t('thMonth')}), el('th', {textContent: t('thCerts')})),
+          ...shown.slice().reverse().map(m => el('tr', {}, el('td', {textContent: m.label}), el('td', {textContent: m.n}))))))]
+      : el('p', {className: 'muted', textContent: t('byMonthNone')});
+    body.replaceChildren(
+      el('div', {className: 'kpis'}, kpi('calendar', acts.length, 'kActsAll'), kpi('people', reg, 'kReg'),
+        el('div', {className: 'kpi'}, el('span', {className: 'ico ok'}, ic('check')), el('div', {}, el('b', {textContent: here}), el('span', {textContent: t('kHereP')(reg ? Math.round(100 * here / reg) : 0)}))),
+        kpi('cert', sum('issued'), 'kCert', 'gold'), kpi('mail', sum('emailed'), 'kMailed')),
+      el('div', {className: 'card'}, el('div', {className: 'sec-h'}, el('h2', {}, ic('calendar'), t('byMonthT'))), chart),
+      el('div', {className: 'grid3'},
+        el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('award'), t('byTypeT')), bars(count(certs.map(c => c[0] || '—')).sort((x, y) => y[1] - x[1]), 'noCerts')),
+        el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('calendar'), t('byYearT')), el('p', {className: 'muted', style: 'margin-top:0', textContent: t('byYearD')}),
+          bars(count(certs.map(c => c[1] || '—')).sort(), 'noCerts'))),
+      el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('calendar'), t('actsN')(acts.length)),
+        el('div', {className: 'tablewrap'}, el('table', {className: 'cards'},
+          el('thead', {}, el('tr', {}, ...['#', 'thAct', 'nOrg', 'fDates', 'kReg', 'stHere', 'thRate', 'nCert', 'kMail'].map(k => el('th', {textContent: k === '#' ? k : t(k)})))),
+          el('tbody', {}, ...acts.sort((x, y) => Number(y.id) - Number(x.id)).map(a => el('tr', {},
+            el('td', {className: 'muted ltr', dataset: {l: '#'}, textContent: a.id}),
+            el('td', {className: 'c-name'}, el('a', {href: '#a' + a.id, dir: 'auto', textContent: a.title}), ' ', el('span', {className: 'muted', dir: 'auto', textContent: a.kind || ''})),
+            el('td', {dataset: {l: t('nOrg')}, dir: 'auto', textContent: a.org || ''}), el('td', {className: 'muted', dataset: {l: t('fDates')}, dir: 'auto', textContent: a.dates || ''}),
+            el('td', {dataset: {l: t('kReg')}, textContent: a.registered}), el('td', {dataset: {l: t('stHere')}, textContent: a.present}),
+            el('td', {className: 'c-wide', dataset: {l: t('thRate')}, style: 'min-width:110px'}, a.registered ? el('div', {className: 'progress', title: Math.round(100 * a.present / a.registered) + '%'},
+              el('i', {style: 'width:' + Math.round(100 * a.present / a.registered) + '%'})) : null),
+            el('td', {dataset: {l: t('nCert')}, textContent: a.issued}), el('td', {dataset: {l: t('kMail')}, textContent: a.emailed}))))))),
+      el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {style: 'margin:0', textContent: t('recentT')}), el('span', {className: 'sp'}), pcTag())));
+  }
+  [fy, fk, fo].forEach(x => x.addEventListener('input', draw));
+  app.replaceChildren(el('div', {className: 'filters', style: 'justify-content:flex-end'}, fy, fk.length > 2 ? fk : null, fo.length > 2 ? fo : null), body);
+  draw();
+}
+
+async function showOrg() {  // «الجهة» (the general administrator: the settings): what is set, edited on the computer
+  mark('org'); bar(t(can('super') ? 'nSettings' : 'nOrg')); loading();
+  const [h, u] = await Promise.all([call('activities'), call('users')]);
+  const orgs = ((h.choices || {}).orgs || []).filter(o => can('super') || String(o.id) === me.org);
+  const blocks = [el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('people'), t('orgsT')), el('span', {className: 'sp'}), pcTag()),
+    el('p', {className: 'muted', textContent: t('orgEdit')}),
+    el('div', {className: 'plat'}, ...orgs.map(o => el('div', {className: 'tile'}, el('span', {className: 'ico'}, ic('people')),
+      el('div', {className: 'txt'}, el('b', {dir: 'auto', textContent: o.name}), el('p', {className: 'ltr', textContent: o.code ? t('codeOf')(o.code) : ''}),
+        el('div', {className: 'bar', style: 'gap:6px'}, el('span', {className: 'badge', textContent: t('orgActs')(h.activities.filter(a => String(a.org_id) === String(o.id)).length)}),
+          u.status === 'ok' ? el('span', {className: 'badge', textContent: t('orgUsers')(u.users.filter(x => String(x.org) === String(o.id)).length)}) : null))))))];
+  if (can('super')) blocks.push(el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('gear'), t('setT')), el('span', {className: 'sp'}), pcTag()),
+    el('ul', {className: 'pclist', style: 'margin-top:12px'}, ...t('setItems').map(x => el('li', {}, ic('lock'), x)))));
+  app.replaceChildren(...blocks);
+}
+
+function myPasswordCard() {  // one's own password: checked here, changed by the computer within a minute (the same on both)
+  const [of, old] = field(t('pwOldL'), {type: 'password', autocomplete: 'current-password', required: true, dir: 'ltr'});
+  const [nf, pw] = field(t('pwNewL'), {type: 'password', autocomplete: 'new-password', required: true, minLength: 8, dir: 'ltr'});
+  const [rf, pw2] = field(t('pwNew2'), {type: 'password', autocomplete: 'new-password', required: true, minLength: 8, dir: 'ltr'});
+  const say = el('p', {className: 'say', role: 'alert'});
+  const go = el('button', {type: 'submit', className: 'sm'}, t('pwChange'));
+  const f = el('form', {className: 'card form', noValidate: true}, el('h2', {className: 'ch'}, ic('person'), t('myT')),
+    el('p', {className: 'muted', style: 'margin:0'}, el('b', {dir: 'auto', textContent: me.name}), ' · ', el('span', {className: 'ltr', textContent: me.login}), ' · ', roleName(me.role)),
+    of, el('div', {className: 'grid2'}, nf, rf), el('div', {className: 'bar'}, go), say);
+  f.onsubmit = async e => {
+    e.preventDefault();
+    if (pw.value.length < 8) { say.textContent = t('shortNew'); return pw.focus(); }
+    if (pw.value !== pw2.value) { say.textContent = t('pwMismatch'); return pw2.focus(); }
+    go.disabled = true;
+    const r = await call('mypassword', {old: old.value, password: pw.value}).catch(() => ({}));
+    go.disabled = false;
+    if (r.status === 'ok') { old.value = pw.value = pw2.value = ''; say.textContent = ''; return toast(t('pwSent')); }
+    say.textContent = t({wrong: 'wrongPw', short: 'shortNew'}[r.status] || 'saveFail');
+  };
+  return f;
+}
+
+async function showUsers() {  // the platform's accounts page: each change a request the computer carries out within a minute
+  mark('users'); bar(t('nUsers')); loading();
+  const [j, h] = await Promise.all([call('users'), call('activities')]);
+  if (j.status !== 'ok') return showList();
+  const orgs = ((h.choices || {}).orgs || []), boss = can('super');
+  const roles = Object.keys(ROLE).filter(r => boss || ROLE[r] < ROLE.admin).reverse();
+  const roleSel = (v, name) => el('select', {name, ariaLabel: t('uRole'), style: 'min-width:130px'}, ...roles.map(r => el('option', {value: r, selected: r === v, textContent: roleName(r)})));
+  const orgSel = (v, name) => el('select', {name, ariaLabel: t('nOrg'), style: 'min-width:110px'}, el('option', {value: '', textContent: '—'}),
+    ...orgs.map(o => el('option', {value: o.id, selected: String(o.id) === String(v), textContent: o.code || o.name})));
+  const said = (r, ok) => { if (r.status === 'ok') { toast(t(ok)); return showUsers(); }
+    toast(t({role: 'noRole', self: 'selfNo', org: 'orgNeed', short: 'shortNew', badnew: 'badnew', taken: 'taken'}[r.status] || 'saveFail')); };
+  const rows = j.users.map(u => {
+    const mine = u.login === me.login, locked = !boss && ROLE[u.role] >= ROLE.admin;
+    const name = el('input', {value: u.name, ariaLabel: t('uName'), disabled: locked}), pw = el('input', {type: 'password', placeholder: t('unchanged'), autocomplete: 'new-password',
+      ariaLabel: t('newPw'), dir: 'ltr', disabled: locked, style: 'min-width:130px'});
+    const role = mine || locked ? null : roleSel(u.role), org = boss && !mine ? orgSel(u.org) : null;
+    const act = mine || locked ? null : el('select', {ariaLabel: t('stateL')}, el('option', {value: '1', selected: u.active, textContent: t('accOpenO')}),
+      el('option', {value: '0', selected: !u.active, textContent: t('accCloseO')}));
+    const save = locked ? null : btn(t('saveRow'), async e => {
+      e.target.disabled = true;
+      const r = await call('staffsave', {id: u.id, name: name.value, role: role ? role.value : u.role, org: org ? org.value : u.org, password: pw.value,
+        active: act ? act.value === '1' : u.active}).catch(() => ({}));
+      e.target.disabled = false;
+      said(r, 'staffSent');
+    }, 'sec');
+    return el('tr', {style: u.active ? '' : 'opacity:.6'},
+      el('td', {className: 'c-name'}, name), el('td', {className: 'ltr', dataset: {l: t('login')}, textContent: u.login}),
+      el('td', {dataset: {l: t('uRole')}}, role || roleName(u.role)),
+      boss ? el('td', {dataset: {l: t('nOrg')}}, org || (u.orgName || t('allOrgs'))) : null,
+      el('td', {dataset: {l: t('newPw')}}, pw),
+      el('td', {dataset: {l: t('stateL')}}, act || el('span', {className: 'badge ' + (u.active ? 'ok' : ''), textContent: t(u.active ? 'accOpenO' : 'accCloseO')})),
+      el('td', {className: 'c-edit'}, save));
+  });
+  const [nf, nName] = field(t('fullName'), {required: true}), [lf, nLogin] = field(t('login'), {required: true, dir: 'ltr', autocapitalize: 'none', spellcheck: false, placeholder: 'ali.b'});
+  const [pf, nPw] = field(t('pwMin'), {type: 'password', required: true, minLength: 8, autocomplete: 'new-password', dir: 'ltr'});
+  const nRole = roleSel('organizer'), nOrg = boss ? orgSel(boss ? '' : me.org) : null;
+  const add = el('form', {className: 'card form', noValidate: true}, el('h2', {className: 'ch'}, ic('plus'), t('newAccT')),
+    el('div', {className: 'grid2'}, nf, lf), el('div', {className: 'grid2'}, pf, labelled(t('uRole'), nRole)), nOrg ? labelled(t('nOrg'), nOrg) : null,
+    el('div', {className: 'bar'}, el('button', {type: 'submit'}, t('createAcc'))));
+  add.onsubmit = async e => {
+    e.preventDefault();
+    const r = await call('staffsave', {login: nLogin.value, name: nName.value, role: nRole.value, org: nOrg ? nOrg.value : me.org, password: nPw.value}).catch(() => ({}));
+    said(r, 'staffSent');
+  };
+  const reqs = (h.jobs || []).filter(x => x.kind === 'staff');
+  app.replaceChildren(
+    el('div', {className: 'grid2'}, myPasswordCard(),
+      el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('people'), t('rolesT')),
+        el('ul', {className: 'muted', style: 'margin:0;padding-inline-start:18px;line-height:1.9'}, ...t('rolesItems').map(x => el('li', {textContent: x}))))),
+    el('section', {className: 'card'}, el('h2', {className: 'ch'}, ic('people'), t('nUsers') + ' (' + j.users.length + ')'),
+      el('p', {className: 'muted', style: 'margin-top:0', textContent: t('usersHow')}), pcLine(h.pc),
+      el('div', {className: 'tablewrap'}, el('table', {className: 'cards', style: 'min-width:820px'},
+        el('thead', {}, el('tr', {}, ...[t('uName'), t('login'), t('uRole'), ...(boss ? [t('nOrg')] : []), t('newPw'), t('stateL'), ''].map(x => el('th', {textContent: x})))),
+        el('tbody', {}, ...rows))),
+      reqs.length ? el('div', {style: 'margin-top:12px'}, el('h3', {textContent: t('pendingReq')}), jobList(reqs)) : null),
+    add);
 }
 
 // ---------- my account: language, theme, password, sign out ----------
@@ -1481,9 +1671,7 @@ async function showMe() {
     el('div', {className: 'grid2', style: 'margin-top:16px'},
       labelled(t('language'), choice([['ar', 'langAr'], ['fr', 'langFr'], ['en', 'langEn']], UI.lang, l => UI.setLang(l))),
       labelled(t('theme'), choice([['auto', 'thAuto'], ['light', 'thLight'], ['dark', 'thDark']], UI.theme, v => UI.setTheme(v)))))];
-  blocks.push(el('section', {className: 'card section'}, el('div', {className: 'bar'}, el('h2', {style: 'margin:0', textContent: t('pwT')}),
-    el('span', {className: 'sp'}), el('span', {className: 'pclock', title: t('onPcT')}, ic('lock'), t('onPc'))),
-    el('p', {className: 'hint', style: 'margin-top:8px', textContent: t('pwPc')})));
+  blocks.push(myPasswordCard());
   blocks.push(el('div', {className: 'section'}, el('button', {className: 'btn danger', type: 'button', textContent: t('logout'), onclick: signOut})));
   app.replaceChildren(...blocks);
 }
@@ -1493,7 +1681,8 @@ function route() {
   const h = location.hash, m = h.match(/^#a(\d+)(?:\/(\w+))?$/);
   if (h === '#pw') { location.hash = '#me'; return; }  // the old address of the password page
   const go = m ? () => showActivity(m[1], m[2])
-    : {'#users': showUsers, '#parts': showParticipants, '#me': showMe, '#bundle': () => showList(newBundle)}[h] || (() => showList());
+    : h.startsWith('#search') ? () => showSearch(decodeURIComponent(h.slice(8)))
+    : {'#users': showUsers, '#parts': showParticipants, '#me': showMe, '#stats': showStats, '#org': showOrg, '#bundle': () => showList(newBundle)}[h] || (() => showList());
   scrollTo(0, 0);
   go().catch(() => {});
 }
