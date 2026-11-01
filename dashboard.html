@@ -2,607 +2,923 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline';
-  connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; form-action 'none'">
+<meta name="theme-color" content="#0b3b5c">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src https://fonts.gstatic.com; connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <title>لوحة المنظمين · منصة الشواهد</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b3b5c'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' fill='none' stroke='%23d9a441' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui.css?v=2">
+<script src="ui.js?v=2"></script>
 <style>
-  :root { --bg:#f3f5f8; --surface:#fff; --ink:#13202e; --muted:#5d6b7a; --line:#e2e7ee; --brand:#0b3b5c; --gold:#c8962f;
-          --ok:#12804a; --ok-soft:#e8f6ee; --warn:#a05a00; --warn-soft:#fff4e2; --err:#b42318; --err-soft:#fdecea; --pri:#1d4ed8; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-    --bg:#0d141c; --surface:#141e29; --ink:#e8eef4; --muted:#9aa8b6; --line:#24323f; --brand:#6fb3e4; --gold:#e2b65a;
-    --ok:#4cc48a; --ok-soft:#12291f; --warn:#f0b35a; --warn-soft:#2d2313; --err:#f2867c; --err-soft:#2e1716; --pri:#8cc4ec; } }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 "Segoe UI", Tahoma, sans-serif; }
-  header { background:#0b1f3a; color:#fff; padding:10px 16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; position:sticky; top:0; z-index:3; }
-  header b { font-size:17px; flex:1; min-width:160px; }
-  header button { background:transparent; color:#cbd5e1; border:1px solid #3b4b63; border-radius:8px; padding:4px 10px; font:inherit; font-size:13px; cursor:pointer; }
-  header .who { font-size:12px; color:#cbd5e1; }
-  header details { position:relative; }
-  header summary { list-style:none; cursor:pointer; color:#cbd5e1; border:1px solid #3b4b63; border-radius:8px; padding:4px 10px; font-size:13px; }
-  header summary::-webkit-details-marker { display:none; }
-  header .menu { position:absolute; inset-inline-end:0; top:calc(100% + 6px); background:#0b1f3a; border:1px solid #3b4b63; border-radius:10px;
-                 padding:6px; display:grid; gap:4px; min-width:150px; z-index:4; }
-  header .menu button { text-align:start; }
-  main { max-width:900px; margin:0 auto; padding:14px 16px 40px; }
-  .card { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:12px; }
-  a.card { display:block; color:inherit; text-decoration:none; }
-  h1 { font-size:20px; margin:0 0 4px; } h2 { font-size:17px; margin:0 0 6px; }
-  .muted { color:var(--muted); font-size:13px; }
-  .nums { display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-top:10px; }
-  .nums.five { grid-template-columns:repeat(5, 1fr); }
-  .nums div { background:var(--bg); border-radius:10px; padding:6px; text-align:center; font-size:12px; color:var(--muted); }
-  .nums b { display:block; font-size:19px; color:var(--ink); }
-  .badge { display:inline-block; padding:1px 8px; border-radius:20px; font-size:12px; font-weight:600; background:var(--bg); color:var(--muted); margin:2px 0; }
-  .badge.ok { background:var(--ok-soft); color:var(--ok); } .badge.warn { background:var(--warn-soft); color:var(--warn); }
-  .badge.err { background:var(--err-soft); color:var(--err); }
-  input, select { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font:inherit; background:var(--surface); color:var(--ink); }
-  button.act { background:var(--pri); color:#fff; border:0; border-radius:9px; padding:7px 12px; font:inherit; font-size:14px; font-weight:600; cursor:pointer; }
-  button.act.sec { background:var(--bg); color:var(--ink); border:1px solid var(--line); }
-  button:disabled { opacity:.5; }
-  .bar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .person { display:grid; gap:4px; }
-  .person .top { display:flex; gap:8px; align-items:baseline; }
-  .person .top b { flex:1; }
-  .ltr { direction:ltr; unicode-bidi:embed; }
-  .code { font-family:ui-monospace, Consolas, monospace; letter-spacing:2px; font-weight:700; }
-  #login { max-width:380px; margin:60px auto; display:grid; gap:10px; }
-  .note { background:var(--warn-soft); color:var(--warn); border-radius:10px; padding:8px 12px; font-size:13px; margin-bottom:12px; }
-  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  label { display:grid; gap:2px; font-size:13px; color:var(--muted); }
-  .link { display:flex; gap:6px; align-items:center; background:var(--bg); border-radius:10px; padding:6px 10px; margin:6px 0; }
-  .link span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; }
-  label.pick { display:flex; gap:8px; align-items:center; color:var(--ink); font-size:14px; border-top:1px solid var(--line); padding:7px 0; }
-  label.pick input { width:auto; }
-  .job { display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; border-top:1px solid var(--line); padding-top:6px; margin-top:6px; font-size:14px; }
-  .pc { font-size:13px; margin-bottom:12px; }
-  ul.pconly { margin:6px 0 0; padding-inline-start:18px; color:var(--muted); font-size:14px; }
-  #toast { position:fixed; bottom:16px; inset-inline:16px; background:#0b1f3a; color:#fff; border-radius:12px; padding:12px 14px; display:none; z-index:5; }
-  @media (max-width:520px) { .nums.five { grid-template-columns:repeat(3, 1fr); } .grid2 { grid-template-columns:1fr; }
-    header b { min-width:0; } header .full { display:none; } }  /* one line on a phone: more room to scan */
+  /* the dashboard's frame: a sidebar on wide screens, a top bar and a bottom tab bar on phones */
+  body.app { display: block; }
+  .shell { min-height: 100vh; display: grid; grid-template-columns: 1fr; }
+  .side { display: none; }
+  .appbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 10px; min-height: 60px;
+            padding: env(safe-area-inset-top) 16px 0; background: var(--hero); color: #fff; }
+  .appbar h1 { margin: 0; font-size: 18px; font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .appbar .brand { flex: 1; }
+  [dir="ltr"] .appbar h1 { text-align: left; } [dir="rtl"] .appbar h1 { text-align: right; }  /* an Arabic title in an English page still starts the bar */
+  .appbar .tools { padding: 8px 0; }
+  .back svg { transform: scaleX(-1); }  /* the arrow points to the start of the line */
+  [dir="ltr"] .back svg { transform: none; }
+  .app main { margin: 0; max-width: 1180px; padding: 18px 16px calc(96px + env(safe-area-inset-bottom)); }
+  .tabbar { position: fixed; inset-inline: 0; bottom: 0; z-index: 6; display: flex; background: var(--surface); border-top: 1px solid var(--line);
+            padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 20px rgba(0, 0, 0, .06); }
+  .tabbar a { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px 9px; color: var(--muted);
+              text-decoration: none; font-size: 12px; font-weight: 600; }
+  .tabbar a[aria-current="page"] { color: var(--brand-2); }
+  .tabbar a[aria-current="page"] svg { background: color-mix(in srgb, var(--brand-2) 14%, transparent); border-radius: 999px; }
+  .tabbar svg { width: 46px; height: 28px; padding: 3px 12px; }
+  @media (min-width: 900px) {
+    .shell.in { grid-template-columns: 252px 1fr; }
+    .shell.in .side { display: flex; flex-direction: column; gap: 6px; position: sticky; top: 0; height: 100vh; overflow: auto;
+                      background: var(--hero); color: #fff; padding: 16px 12px; }
+    .side .brand { padding: 4px 6px 14px; flex: none; }
+    .side nav { display: grid; gap: 4px; }
+    .side nav a { display: flex; align-items: center; gap: 12px; color: #fff; opacity: .82; text-decoration: none; padding: 10px 12px;
+                  border-radius: 12px; font-weight: 600; font-size: 15px; }
+    .side nav a:hover { opacity: 1; background: rgba(255, 255, 255, .08); }
+    .side nav a[aria-current="page"] { opacity: 1; background: rgba(255, 255, 255, .16); }
+    .side .who { margin-top: auto; padding: 12px; border-radius: 14px; background: rgba(255, 255, 255, .08); font-size: 13px; }
+    .side .who b { display: block; font-size: 14px; }
+    .shell.in .appbar { background: var(--bg); color: var(--ink); border-bottom: 1px solid var(--line); padding-inline: 28px; }
+    .shell.in .appbar .iconbtn, .shell.in .appbar .langs { color: var(--ink); background: var(--surface); border-color: var(--line); }
+    .shell.in .appbar .langs button { color: var(--ink); }
+    .shell.in .appbar .langs button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
+    .shell.in .appbar .brand { display: none; }
+    .app main { padding: 24px 28px 48px; }
+    .tabbar { display: none; }
+  }
+
+  /* building blocks */
+  .app .card { padding: 16px 18px; }
+  .app h2 { font-size: 17px; margin: 0 0 8px; }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); align-items: start; }
+  .section { margin-top: 22px; }
+  .section > h2 { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .row.end { justify-content: flex-end; }
+  .grow { flex: 1; min-width: 0; }
+  .stats { display: grid; gap: 6px; grid-template-columns: repeat(auto-fit, minmax(58px, 1fr)); }
+  .stat { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 9px 4px; text-align: center; font-size: 12px; color: var(--muted); }
+  .stat b { display: block; font-size: 22px; line-height: 1.2; color: var(--ink); }
+  a.act-card { display: block; color: inherit; text-decoration: none; transition: border-color .15s, transform .15s; }
+  a.act-card:hover { border-color: var(--brand-2); transform: translateY(-1px); }
+  .act-card h3 { margin: 6px 0 2px; font-size: 16.5px; line-height: 1.45; }
+  .act-card .stats { margin-top: 12px; }
+  .badge.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+  .app select, .app input:not([type="checkbox"]) { height: 46px; font-size: 15px; font-weight: 400; letter-spacing: 0; }
+  select { width: 100%; border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--ink); font: inherit; padding: 0 12px; }
+  select:focus { outline: none; border-color: var(--brand-2); }
+  .fld { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); margin: 0; }
+  .fld .star { color: var(--err); }
+  .grid2 { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+  .form { display: grid; gap: 14px; }
+  .form .hint { font-weight: 400; }
+  .err { color: var(--err); font-size: 14px; margin: 0; min-height: 1.2em; }
+  .linkbox { display: flex; gap: 6px; align-items: center; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 6px 6px 6px 12px; }
+  [dir="rtl"] .linkbox { padding: 6px 12px 6px 6px; }
+  .linkbox span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+  .pc { margin: 0 0 12px; }
+  .job { display: grid; gap: 4px; border-top: 1px solid var(--line); padding: 10px 0 2px; font-size: 14px; }
+  .job:first-child { border-top: 0; }
+  .note { background: var(--warn-soft); color: var(--warn); border-radius: 12px; padding: 10px 14px; font-size: 13.5px; margin: 0 0 14px; }
+  ul.plain { margin: 4px 0 0; padding-inline-start: 18px; color: var(--muted); font-size: 14px; }
+  .seg { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 4px; overflow-x: auto; scrollbar-width: none; }
+  .seg button { flex: 1; border: 0; background: none; color: var(--muted); font: inherit; font-weight: 600; font-size: 14px; padding: 9px 12px; border-radius: 10px;
+                cursor: pointer; white-space: nowrap; }
+  .seg button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
+  .tabs-sticky { position: sticky; top: 64px; z-index: 4; margin: 14px 0; }
+  @media (min-width: 900px) { .tabs-sticky { top: 72px; max-width: 520px; } }
+  .person { display: grid; gap: 8px; }
+  .person .name { font-weight: 700; font-size: 15.5px; }
+  .person .actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  .person .actions:empty { display: none; }
+  .contact { color: var(--muted); font-size: 13.5px; overflow-wrap: anywhere; }
+  .codev { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; letter-spacing: 2px; font-weight: 700; }
+  .btn.danger { color: var(--err); }
+  .pick { display: flex; gap: 10px; align-items: flex-start; color: var(--ink); font-size: 14px; font-weight: 400; border-top: 1px solid var(--line); padding: 9px 0; margin: 0; }
+  .pick input { width: 18px; height: 18px; margin-top: 3px; flex: none; }
+  .tools-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tools-bar .q { flex: 2 1 220px; } .tools-bar .f { flex: 1 1 150px; }
+  .count { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+  .empty { text-align: center; color: var(--muted); padding: 28px 16px; }
+  .login { max-width: 420px; margin: 8vh auto 0; }
+  .login h2 { font-size: 22px; }
+  .rowline { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; padding: 10px 0; border-top: 1px solid var(--line); }
+  .rowline:first-of-type { border-top: 0; }
+  dialog.sheet { border: 0; padding: 0; background: var(--surface); color: var(--ink); border-radius: 18px; width: min(680px, calc(100vw - 20px));
+                 max-height: calc(100vh - 40px); box-shadow: 0 20px 60px rgba(0, 0, 0, .35); animation: rise .2s ease-out; }
+  dialog.sheet::backdrop { background: rgba(8, 18, 28, .55); }
+  dialog.sheet > * { padding: 20px; }
+  @media (max-width: 600px) {
+    dialog.sheet { width: 100vw; max-width: 100vw; max-height: 92vh; margin: auto 0 0; border-radius: 18px 18px 0 0; }
+    dialog.sheet > * { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+  }
 </style>
 </head>
-<body>
-<header><b>لوحة المنظمين<span class="full"> · منصة الشواهد</span></b><span class="who" id="who"></span>
-  <button id="back" hidden>→ الأنشطة</button>
-  <details id="more" hidden><summary>☰ القائمة</summary><div class="menu">
-    <button id="parts" hidden>المشاركون</button><button id="users" hidden>الحسابات</button><button id="pw" hidden>كلمة السر</button></div></details>
-  <button id="out" hidden>خروج</button></header>
-<main id="app"></main>
-<div id="toast"></div>
+<body class="app">
+<div class="shell" id="shell">
+  <aside class="side" id="side"></aside>
+  <div style="min-width:0">
+    <header class="appbar" id="appbar"></header>
+    <main id="app" aria-live="polite"></main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" hidden></nav>
+
 <script>
-  const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
-  const app = document.getElementById('app'), KEY = 'shawahid-dashboard';
-  const ROLE = {scanner: 1, organizer: 2, admin: 3}, ROLE_NAME = {scanner: 'ماسح', organizer: 'منظم', admin: 'مسؤول'};
-  const JOB = {sync: 'مزامنة', issue: 'إصدار الشواهد', email: 'إرسال الشواهد بالبريد', activity: 'نشاط جديد', update: 'تعديل النشاط', bundle: 'شواهد لشخص في عدة أنشطة'};
-  let session = (() => { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } })();
-  let me = null;  // the signed-in account, as the Apps Script sees it on each answer
-  const remember = s => { session = s; try { s ? localStorage.setItem(KEY, s) : localStorage.removeItem(KEY); } catch (e) {} };
-  const can = role => me && ROLE[me.role] >= ROLE[role];
-  // every value comes from the registration form or the sheets: text nodes only, never HTML
-  function el(tag, props, ...kids) {
-    const n = Object.assign(document.createElement(tag), props || {});
-    kids.flat().forEach(k => k != null && k !== false && n.append(k instanceof Node ? k : String(k)));
-    return n;
-  }
-  function toast(msg) {
-    const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block';
-    clearTimeout(t.h); t.h = setTimeout(() => t.style.display = 'none', 4000);
-  }
-  async function call(action, extra) {
-    let j;
-    try {
-      const r = await fetch(EXEC, {method: 'POST', credentials: 'omit', body: JSON.stringify(Object.assign({action, session}, extra))});
-      j = await r.json();
-    } catch (e) { toast('تعذر الاتصال بالإنترنت أو بـ Google — أعد المحاولة'); throw e; }
-    if (j.status === 'login') { remember(''); showLogin(); throw new Error('login'); }
-    if (j.status === 'role') { toast('ليس لحسابك هذا الإذن'); throw new Error('role'); }
-    if (j.user) setMe(j.user);
-    // an Apps Script from before the accounts (not redeployed yet) names no user: its only sign-in is the admin's
-    else if (!me && j.status === 'ok' && action !== 'login') setMe({login: 'admin', name: 'المسؤول', role: 'admin'});
-    return j;
-  }
-  function setMe(u) {
-    me = u;
-    document.getElementById('who').textContent = u.name + ' · ' + (ROLE_NAME[u.role] || u.role);
-    document.getElementById('users').hidden = !can('admin');
-    document.getElementById('parts').hidden = !can('organizer');
-    document.getElementById('pw').hidden = u.login === 'admin';  // the admin's password is set in the app
-    document.getElementById('more').hidden = ['parts', 'users', 'pw'].every(id => document.getElementById(id).hidden);
-    document.getElementById('out').hidden = false;
-  }
-  const fmtDate = s => { const d = new Date(s); return isNaN(d) || !s ? '' : d.toLocaleString('ar-MA', {dateStyle: 'medium', timeStyle: 'short'}); };
-  const nav = (back) => { document.getElementById('back').hidden = !back; };
-  const btn = (text, onclick, sec) => el('button', {className: 'act' + (sec ? ' sec' : ''), type: 'button', textContent: text, onclick});
-  const field = (label, props) => { const i = el('input', props); return [el('label', null, label, i), i]; };
-  const select = (opts, value) => el('select', null, ...opts.map(([v, t]) => el('option', {value: v, textContent: t, selected: String(v) === String(value)})));
-  const loading = () => app.replaceChildren(el('p', {className: 'muted', textContent: 'جارٍ التحميل...'}));
+const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec', KEY = 'shawahid-dashboard';
+const T = {
+  ar: {
+    dash: 'لوحة المنظمين', loading: 'جارٍ التحميل...', noRole: 'ليس لحسابك هذا الإذن', cancel: 'إلغاء', save: 'حفظ', back: 'رجوع',
+    copy: 'نسخ', open: 'فتح', share: 'مشاركة', linkCopied: 'نُسخ الرابط', sent: 'أُرسل الطلب، ويُنفَّذ على الحاسوب', reqFail: 'تعذر إرسال الطلب',
+    exists: 'طلب من النوع نفسه ما زال ينتظر الحاسوب', saveFail: 'تعذر الحفظ', adminName: 'المسؤول',
+    rScanner: 'ماسح', rOrganizer: 'منظم', rAdmin: 'مسؤول', nActs: 'الأنشطة', nParts: 'المشاركون', nUsers: 'الحسابات', nMe: 'حسابي',
+    loginT: 'دخول المنظمين', loginD: 'الأنشطة والمشاركون والحضور والشواهد، من أي هاتف أو حاسوب.', login: 'اسم الدخول', loginPh: 'admin للمسؤول',
+    password: 'كلمة السر', enter: 'دخول', wrongLogin: 'اسم الدخول أو كلمة السر غير صحيح', locked: 'محاولات خاطئة كثيرة: أعد المحاولة بعد 15 دقيقة',
+    nopassword: 'لم تُضبط كلمة سر المسؤول بعد (الإعدادات في المنصة على الحاسوب)', loginFail: 'تعذر الدخول',
+    pcNever: 'لم تتصل المنصة على الحاسوب بهذه اللوحة بعد: الطلبات تنتظر فتحها.', pcOn: 'الحاسوب متصل: الطلبات تُنفَّذ خلال دقيقة',
+    pcOff: d => 'الحاسوب غير متصل منذ ' + d + ': الطلبات تُنفَّذ عند فتح المنصة عليه',
+    jSync: 'مزامنة', jIssue: 'إصدار الشواهد', jEmail: 'إرسال الشواهد بالبريد', jActivity: 'نشاط جديد', jUpdate: 'تعديل النشاط', jBundle: 'شواهد لشخص في عدة أنشطة',
+    jsWait: 'ينتظر الحاسوب', jsRun: 'قيد التنفيذ', jsDone: 'تم', jsErr: 'تعذّر',
+    copyText: 'نسخ النص والروابط', copiedText: 'نُسخ: الصقه في واتساب أو غيره', onePdf: 'ملف واحد بكل الشواهد',
+    newAct: 'نشاط جديد', bundle: 'شواهد لشخص', reqT: 'طلبات للحاسوب', reqHint: 'أنشئ نشاطاً من هنا: تُنشأ استمارته وجدوله على الحاسوب، ثم يظهر في هذه اللائحة.',
+    totals: 'الإجمالي', sActs: 'نشاط', sReg: 'مسجل', sHere: 'حاضر', sCert: 'شهادة', sMail: 'بريد', hereNow: 'حاضر الآن',
+    noActs: 'لا أنشطة منشورة بعد: زامن نشاطاً في المنصة على الحاسوب، أو أنشئ واحداً من هنا.', activity: 'نشاط',
+    sessionsLine: (n, s) => `${n} حصص، المسح الآن للحصة ${s}`,
+    pcOnlyT: 'على الحاسوب', pcOnlyItems: ['تصميم الشهادات ومعاينتها', 'أسئلة الاستمارة الإضافية', 'الاستيراد من Excel', 'اللوائح والتقارير وملفات الطباعة (PDF وExcel)',
+      'إلغاء شهادة أو إرجاعها', 'الجهات المنظمة والأنواع والإعدادات', 'سلة المحذوفات والنسخ الاحتياطية'],
+    pcOnlyNote: 'إصدار الشواهد وإرسالها يُطلب من هنا، ويُنفَّذ على الحاسوب.',
+    noChoices: 'لم تنشر المنصة على الحاسوب قوائمها بعد (الجهات والأنواع): افتحها مرة واحدة وهي متصلة بالإنترنت.',
+    fTitle: 'العنوان', fKind: 'نوع النشاط', fOrg: 'الجهة المنظمة', fLang: 'لغة النشاط والوثائق', langAr: 'العربية', langFr: 'الفرنسية', langEn: 'الإنجليزية',
+    fType: 'نوع الشهادة الرئيسي', fDates: 'التاريخ / الأيام', datesPh: 'مثال: 12 و13 مارس 2026', fHours: 'التوقيت أو عدد الساعات', fPlace: 'المكان',
+    fSessions: 'عدد الحصص', fMin: 'الحد الأدنى للحضور (حصص)', minPh: 'كل الحصص', fTickets: 'عدد البطاقات المطبوعة', fWa: 'رابط مجموعة واتساب',
+    fTpl: 'أسئلة إضافية من نموذج', noTpl: 'بلا أسئلة إضافية',
+    editHint: 'ما يُترك فارغاً يبقى كما هو. العنوان والتاريخ والمكان تتبعها الاستمارة في Google Forms.',
+    newHint: 'تُنشأ على الحاسوب الاستمارة وجدول التسجيلات، ثم يظهر النشاط هنا برابط استمارته. التصميم يُضاف على الحاسوب.',
+    askEdit: 'طلب التعديل', askNew: 'طلب إنشاء النشاط', editT: 'تعديل النشاط', newT: 'نشاط جديد', notitle: 'اكتب العنوان', editWaiting: 'تعديل سابق ما زال ينتظر الحاسوب',
+    bT: 'شواهد لشخص في عدة أنشطة',
+    bD: 'يُضاف إلى كل نشاط تختاره حاضراً، وتصدر شهادته برقم ذلك النشاط وتصميمه، ثم تصله رسالة واحدة بكل شواهده، وتجد هنا روابطها وملفاً واحداً بها. إن كان مسجلاً فيه بالبريد نفسه فلا يُكرَّر.',
+    firstAr: 'الاسم الشخصي بالعربية', lastAr: 'الاسم العائلي بالعربية', firstLat: 'Prénom (بالحروف اللاتينية)', lastLat: 'Nom (بالحروف اللاتينية)',
+    gender: 'الجنس', male: 'ذكر', female: 'أنثى', certType: 'نوع الشهادة', bEmail: 'البريد (تصله عليه الرسالة)', email: 'البريد', phone: 'الهاتف', mention: 'الميزة/النتيجة',
+    bActs: 'الأنشطة', noDesign: 'لا تصميم لهذا النوع', starNote: '* يطبعه تصميم الشهادة في الأنشطة المختارة: أكمله حتى تخرج كل النسخ كاملة ومتطابقة.',
+    bSave: 'طلب إنشاء الشواهد وإرسالها', pickOne: 'اختر نشاطاً واحداً على الأقل', lack: 'أكمل ما يطبعه التصميم: ', nameAr: 'الاسم بالعربية', nameLat: 'الاسم باللاتينية',
+    noname: 'اكتب الاسم على الأقل', badEmail: 'البريد غير صحيح', sameWaiting: 'الطلب نفسه ما زال ينتظر الحاسوب',
+    tOverview: 'نظرة عامة', tPeople: 'المشاركون', tRequests: 'الطلبات', scanNow: s => 'المسح الآن للحصة ' + s, curSession: 'الحصة الجارية (للمسح والتأكيد)',
+    sessionN: i => 'الحصة ' + i, sessionSet: s => 'المسح الآن للحصة ' + s + ' في كل الهواتف', formLink: 'رابط استمارة التسجيل', addPerson: 'إضافة مشارك',
+    search: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fAll: 'الكل', fHere: 'حاضرون', fHereIn: s => 'حاضرون في الحصة ' + s, fAway: 'غير مؤكدين',
+    fIssued: 'لهم شهادة', fMail: 'مشكلة في البريد', countOf: (n, m) => `${n} من ${m}`,
+    syncNote: d => `البيانات كما في آخر مزامنة للمنصة (${d}). ما تؤكده أو تعدّله هنا يظهر فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`,
+    scanT: 'رابط المسح للمنظمين', scanD: 'يفتح صفحة مسح البطاقات بكاميرا الهاتف، دون حساب ودون الحاجة للحاسوب.', scanMake: 'إنشاء رابط المسح', scanNew: 'رابط جديد',
+    scanSure: 'إنشاء رابط جديد؟ الرابط الحالي يتوقف فوراً في كل الهواتف.', scanMade: 'أُنشئ رابط المسح: أرسله إلى المنظمين', scanFail: 'تعذر إنشاء الرابط', scanTitle: 'مسح الحضور',
+    issue: 'إصدار الشواهد', issueSure: 'إصدار شواهد كل الحاضرين المؤكدين (بعد مزامنة الحضور)؟', emailAll: 'إرسال الشواهد بالبريد',
+    emailSure: 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟', sync: 'مزامنة الآن', editAct: 'تعديل النشاط',
+    noTicket: 'دون بطاقة', pending: 'تعديل ينتظر المزامنة', hereIn: s => 'حاضر في الحصة ' + s, here: 'حاضر', away: 'غير مؤكد', sessions: 'الحصص: ',
+    certOf: x => 'شهادة ' + x, revoked: 'ملغاة', code: 'رمز التحقق', download: 'تحميل',
+    mSent: 'أُرسل البريد', mErr: 'تعذر الإرسال', mPending: 'في الطابور', mStopped: 'أُوقف',
+    markIn: s => 'حاضر في الحصة ' + s, mark: 'تأكيد الحضور', marked: 'سُجّل الحضور، ويصل إلى المنصة عند المزامنة',
+    resend: 'إعادة إرسال البريد', resendSure: e => 'إعادة إرسال رسالة الشهادة نفسها إلى ' + e + '؟', resent: 'وُضعت الرسالة في طابور الإرسال',
+    resendOld: 'نص الرسالة لم يعد محفوظاً (أقدم من 30 يوماً): أعد الإرسال من المنصة', edit: 'تعديل', del: 'حذف',
+    delSure: n => 'حذف ' + n + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)', deleted: 'حُذف، ويصل الحذف إلى المنصة عند المزامنة',
+    fixT: n => 'تصحيح: ' + n, newPersonT: 'مشارك جديد (دون بطاقة)', hasCert: 'له شهادة: تُعاد بالرقم والرابط نفسيهما عند المزامنة.',
+    saveFix: 'حفظ التصحيح', add: 'إضافة', fixed: 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة', added: 'أُضيف، ويصل إلى المنصة عند المزامنة',
+    partsD: 'كل من له شهادة صالحة ببريد صحيح له رقم مشارك دائم، ويدخل صفحة «شواهدي» برقمه أو ببريده ورمز يصله على بريده، دون كلمة سر. القائمة تُحدَّث من المنصة على الحاسوب.',
+    partsSearch: 'بحث بالاسم أو البريد أو الرقم أو رقم الشهادة...', certsN: n => n + ' شهادة: ', meLink: 'شواهدي',
+    usersD: 'حساب المسؤول admin تُضبط كلمة سره في المنصة على الحاسوب، ويبقى دائماً طريقاً للدخول.', newUser: 'حساب جديد',
+    uLogin: 'اسم الدخول (أحرف لاتينية صغيرة وأرقام)', uName: 'الاسم', uPw: 'كلمة السر (8 أحرف على الأقل)', uRole: 'الدور',
+    roOrganizer: 'منظم: كل شيء ما عدا الحسابات', roScanner: 'ماسح: الحضور فقط، دون بيانات التواصل', roAdmin: 'مسؤول: كل شيء والحسابات',
+    create: 'إنشاء الحساب', createHint: 'أعطِ صاحب الحساب اسم الدخول وكلمة السر بنفسك، ويغيّرها هو من «حسابي» بعد دخوله.', created: 'أُنشئ الحساب',
+    badlogin: 'اسم الدخول: من 3 إلى 30 حرفاً لاتينياً صغيراً أو رقماً (وليس admin)', taken: 'اسم الدخول مستعمل', short: 'كلمة السر قصيرة', badName: 'اكتب الاسم',
+    createFail: 'تعذر الإنشاء', active: 'مفعّل', stopped: 'موقوف', roleChanged: 'تغيّر الدور', self: 'لا تعدّل حسابك من هنا', mine: 'حسابك: يعدّله مسؤول آخر.',
+    stop: 'إيقاف الحساب', start: 'تفعيل الحساب', stoppedMsg: 'أُوقف الحساب، ويخرج من اللوحة فوراً', startedMsg: 'فُعّل الحساب', newPw: 'كلمة سر جديدة',
+    newPwAsk: n => 'كلمة السر الجديدة لـ ' + n + ' (8 أحرف على الأقل):', pwChanged: 'تغيّرت كلمة السر',
+    signedAs: 'دخلتَ باسم', language: 'اللغة', theme: 'المظهر', thAuto: 'حسب الجهاز', thLight: 'فاتح', thDark: 'داكن', pwT: 'تغيير كلمة السر',
+    pwOld: 'كلمة السر الحالية', pwNew: 'كلمة السر الجديدة (8 أحرف على الأقل)', wrongPw: 'كلمة السر الحالية غير صحيحة', shortNew: 'كلمة السر الجديدة قصيرة',
+    ownerPw: 'كلمة سر المسؤول تُغيَّر في المنصة على الحاسوب', logout: 'خروج',
+  },
+  fr: {
+    dash: 'Espace organisateurs', loading: 'Chargement...', noRole: 'Votre compte n’a pas cette autorisation', cancel: 'Annuler', save: 'Enregistrer', back: 'Retour',
+    copy: 'Copier', open: 'Ouvrir', share: 'Partager', linkCopied: 'Lien copié', sent: 'Demande envoyée : l’ordinateur l’exécutera', reqFail: 'Envoi de la demande impossible',
+    exists: 'Une demande du même type attend déjà l’ordinateur', saveFail: 'Enregistrement impossible', adminName: 'Administrateur',
+    rScanner: 'Scanneur', rOrganizer: 'Organisateur', rAdmin: 'Administrateur', nActs: 'Activités', nParts: 'Participants', nUsers: 'Comptes', nMe: 'Mon compte',
+    loginT: 'Connexion des organisateurs', loginD: 'Activités, participants, présences et attestations, depuis un téléphone ou un ordinateur.', login: 'Identifiant',
+    loginPh: 'admin pour l’administrateur', password: 'Mot de passe', enter: 'Se connecter', wrongLogin: 'Identifiant ou mot de passe incorrect',
+    locked: 'Trop d’essais : réessayez dans 15 minutes', nopassword: 'Le mot de passe administrateur n’est pas encore défini (réglages de la plateforme sur l’ordinateur)',
+    loginFail: 'Connexion impossible',
+    pcNever: 'La plateforme de l’ordinateur ne s’est pas encore connectée : les demandes attendent son ouverture.', pcOn: 'Ordinateur connecté : demandes exécutées en une minute',
+    pcOff: d => 'Ordinateur hors ligne depuis ' + d + ' : les demandes seront exécutées à son ouverture',
+    jSync: 'Synchronisation', jIssue: 'Émission des attestations', jEmail: 'Envoi des attestations par e-mail', jActivity: 'Nouvelle activité', jUpdate: 'Modification de l’activité',
+    jBundle: 'Attestations d’une personne pour plusieurs activités', jsWait: 'Attend l’ordinateur', jsRun: 'En cours', jsDone: 'Fait', jsErr: 'Échec',
+    copyText: 'Copier le texte et les liens', copiedText: 'Copié : collez-le dans WhatsApp ou ailleurs', onePdf: 'Un seul fichier avec toutes les attestations',
+    newAct: 'Nouvelle activité', bundle: 'Attestations d’une personne', reqT: 'Demandes à l’ordinateur',
+    reqHint: 'Créez une activité ici : son formulaire et sa feuille sont créés sur l’ordinateur, puis elle apparaît dans cette liste.',
+    totals: 'Total', sActs: 'activités', sReg: 'inscrits', sHere: 'présents', sCert: 'attestations', sMail: 'e-mails', hereNow: 'présents',
+    noActs: 'Aucune activité publiée : synchronisez-en une sur l’ordinateur, ou créez-en une ici.', activity: 'Activité',
+    sessionsLine: (n, s) => `${n} séances, scan en cours : séance ${s}`,
+    pcOnlyT: 'Sur l’ordinateur', pcOnlyItems: ['Conception et aperçu des attestations', 'Questions supplémentaires du formulaire', 'Import depuis Excel',
+      'Listes, rapports et fichiers à imprimer (PDF et Excel)', 'Annuler ou rétablir une attestation', 'Organismes, types et réglages', 'Corbeille et sauvegardes'],
+    pcOnlyNote: 'L’émission et l’envoi des attestations se demandent ici et s’exécutent sur l’ordinateur.',
+    noChoices: 'La plateforme de l’ordinateur n’a pas encore publié ses listes (organismes et types) : ouvrez-la une fois connectée à Internet.',
+    fTitle: 'Titre', fKind: 'Type d’activité', fOrg: 'Organisme', fLang: 'Langue de l’activité et des documents', langAr: 'Arabe', langFr: 'Français', langEn: 'Anglais',
+    fType: 'Type d’attestation principal', fDates: 'Date / jours', datesPh: 'ex. 12 et 13 mars 2026', fHours: 'Horaire ou nombre d’heures', fPlace: 'Lieu',
+    fSessions: 'Nombre de séances', fMin: 'Présence minimale (séances)', minPh: 'Toutes les séances', fTickets: 'Nombre de cartes imprimées', fWa: 'Lien du groupe WhatsApp',
+    fTpl: 'Questions supplémentaires d’un modèle', noTpl: 'Sans questions supplémentaires',
+    editHint: 'Un champ laissé vide reste inchangé. Le titre, la date et le lieu sont repris dans le formulaire Google Forms.',
+    newHint: 'Le formulaire et la feuille des inscriptions sont créés sur l’ordinateur, puis l’activité apparaît ici avec son lien. Le design s’ajoute sur l’ordinateur.',
+    askEdit: 'Demander la modification', askNew: 'Demander la création', editT: 'Modifier l’activité', newT: 'Nouvelle activité', notitle: 'Saisissez le titre',
+    editWaiting: 'Une modification précédente attend encore l’ordinateur',
+    bT: 'Attestations d’une personne pour plusieurs activités',
+    bD: 'La personne est ajoutée comme présente à chaque activité choisie ; chaque attestation reçoit le numéro et le design de son activité, puis un seul e-mail les regroupe toutes, et leurs liens et un fichier unique apparaissent ici. Déjà inscrite avec le même e-mail : pas de doublon.',
+    firstAr: 'Prénom en arabe', lastAr: 'Nom en arabe', firstLat: 'Prénom (latin)', lastLat: 'Nom (latin)',
+    gender: 'Civilité', male: 'Homme', female: 'Femme', certType: 'Type d’attestation', bEmail: 'E-mail (reçoit le message)', email: 'E-mail', phone: 'Téléphone', mention: 'Mention / résultat',
+    bActs: 'Activités', noDesign: 'pas de design pour ce type', starNote: '* Imprimé par le design des activités choisies : complétez-le pour des copies complètes et identiques.',
+    bSave: 'Demander la création et l’envoi', pickOne: 'Choisissez au moins une activité', lack: 'Complétez ce que le design imprime : ', nameAr: 'nom en arabe', nameLat: 'nom en latin',
+    noname: 'Saisissez au moins le nom', badEmail: 'E-mail incorrect', sameWaiting: 'La même demande attend encore l’ordinateur',
+    tOverview: 'Aperçu', tPeople: 'Participants', tRequests: 'Demandes', scanNow: s => 'Scan en cours : séance ' + s, curSession: 'Séance en cours (scan et confirmation)',
+    sessionN: i => 'Séance ' + i, sessionSet: s => 'Scan en cours : séance ' + s + ' sur tous les téléphones', formLink: 'Lien du formulaire d’inscription', addPerson: 'Ajouter un participant',
+    search: 'Rechercher par nom, carte, numéro d’attestation ou e-mail...', fAll: 'Tous', fHere: 'Présents', fHereIn: s => 'Présents à la séance ' + s, fAway: 'Non confirmés',
+    fIssued: 'Avec attestation', fMail: 'Problème d’e-mail', countOf: (n, m) => `${n} sur ${m}`,
+    syncNote: d => `Données de la dernière synchronisation (${d}). Ce que vous confirmez ou modifiez ici s’affiche aussitôt et rejoint la plateforme à la synchronisation.`,
+    scanT: 'Lien de scan des organisateurs', scanD: 'Ouvre la page de scan des cartes avec l’appareil photo du téléphone, sans compte ni ordinateur.', scanMake: 'Créer le lien de scan',
+    scanNew: 'Nouveau lien', scanSure: 'Créer un nouveau lien ? L’actuel cesse aussitôt de fonctionner sur tous les téléphones.', scanMade: 'Lien de scan créé : envoyez-le aux organisateurs',
+    scanFail: 'Création du lien impossible', scanTitle: 'Scan des présences',
+    issue: 'Émettre les attestations', issueSure: 'Émettre les attestations de tous les présents confirmés (après synchronisation des présences) ?', emailAll: 'Envoyer les attestations',
+    emailSure: 'Mettre en file d’envoi les e-mails de ceux qui n’ont pas encore reçu leur attestation ?', sync: 'Synchroniser', editAct: 'Modifier l’activité',
+    noTicket: 'Sans carte', pending: 'Modification en attente de synchronisation', hereIn: s => 'Présent séance ' + s, here: 'Présent', away: 'Non confirmé', sessions: 'Séances : ',
+    certOf: x => 'Attestation ' + x, revoked: 'Annulée', code: 'Code de vérification', download: 'Télécharger',
+    mSent: 'E-mail envoyé', mErr: 'Envoi échoué', mPending: 'En file d’attente', mStopped: 'Arrêté',
+    markIn: s => 'Présent séance ' + s, mark: 'Confirmer la présence', marked: 'Présence enregistrée ; elle rejoint la plateforme à la synchronisation',
+    resend: 'Renvoyer l’e-mail', resendSure: e => 'Renvoyer le même e-mail d’attestation à ' + e + ' ?', resent: 'E-mail remis en file d’envoi',
+    resendOld: 'Le texte de l’e-mail n’est plus conservé (plus de 30 jours) : renvoyez-le depuis la plateforme', edit: 'Modifier', del: 'Supprimer',
+    delSure: n => 'Supprimer ' + n + ' de cette activité ? (corbeille de la plateforme)', deleted: 'Supprimé ; la suppression rejoint la plateforme à la synchronisation',
+    fixT: n => 'Correction : ' + n, newPersonT: 'Nouveau participant (sans carte)', hasCert: 'A une attestation : elle sera refaite avec le même numéro et le même lien.',
+    saveFix: 'Enregistrer la correction', add: 'Ajouter', fixed: 'Correction enregistrée ; elle rejoint la plateforme à la synchronisation', added: 'Ajouté ; il rejoint la plateforme à la synchronisation',
+    partsD: 'Chaque titulaire d’une attestation valide avec un e-mail correct a un numéro de participant permanent et se connecte à « Mes attestations » avec ce numéro ou son e-mail et un code reçu par e-mail, sans mot de passe. Liste mise à jour par la plateforme de l’ordinateur.',
+    partsSearch: 'Rechercher par nom, e-mail, numéro ou attestation...', certsN: n => n + ' attestation(s) : ', meLink: 'Mes attestations',
+    usersD: 'Le mot de passe du compte admin se règle dans la plateforme sur l’ordinateur ; ce compte reste toujours un accès.', newUser: 'Nouveau compte',
+    uLogin: 'Identifiant (lettres latines minuscules et chiffres)', uName: 'Nom', uPw: 'Mot de passe (8 caractères minimum)', uRole: 'Rôle',
+    roOrganizer: 'Organisateur : tout sauf les comptes', roScanner: 'Scanneur : présences seulement, sans coordonnées', roAdmin: 'Administrateur : tout, comptes compris',
+    create: 'Créer le compte', createHint: 'Remettez vous-même l’identifiant et le mot de passe ; la personne le change ensuite dans « Mon compte ».', created: 'Compte créé',
+    badlogin: 'Identifiant : 3 à 30 lettres latines minuscules ou chiffres (pas admin)', taken: 'Identifiant déjà utilisé', short: 'Mot de passe trop court', badName: 'Saisissez le nom',
+    createFail: 'Création impossible', active: 'Actif', stopped: 'Suspendu', roleChanged: 'Rôle modifié', self: 'Ne modifiez pas votre propre compte ici',
+    mine: 'Votre compte : un autre administrateur le modifie.', stop: 'Suspendre', start: 'Réactiver', stoppedMsg: 'Compte suspendu : déconnecté aussitôt', startedMsg: 'Compte réactivé',
+    newPw: 'Nouveau mot de passe', newPwAsk: n => 'Nouveau mot de passe pour ' + n + ' (8 caractères minimum) :', pwChanged: 'Mot de passe modifié',
+    signedAs: 'Connecté en tant que', language: 'Langue', theme: 'Thème', thAuto: 'Appareil', thLight: 'Clair', thDark: 'Sombre', pwT: 'Changer le mot de passe',
+    pwOld: 'Mot de passe actuel', pwNew: 'Nouveau mot de passe (8 caractères minimum)', wrongPw: 'Mot de passe actuel incorrect', shortNew: 'Nouveau mot de passe trop court',
+    ownerPw: 'Le mot de passe administrateur se change dans la plateforme sur l’ordinateur', logout: 'Se déconnecter',
+  },
+  en: {
+    dash: 'Organizers', loading: 'Loading...', noRole: 'Your account is not allowed to do this', cancel: 'Cancel', save: 'Save', back: 'Back',
+    copy: 'Copy', open: 'Open', share: 'Share', linkCopied: 'Link copied', sent: 'Request sent: the computer will carry it out', reqFail: 'Could not send the request',
+    exists: 'A request of the same kind is still waiting for the computer', saveFail: 'Could not save', adminName: 'Administrator',
+    rScanner: 'Scanner', rOrganizer: 'Organizer', rAdmin: 'Administrator', nActs: 'Activities', nParts: 'Participants', nUsers: 'Accounts', nMe: 'My account',
+    loginT: 'Organizers sign-in', loginD: 'Activities, participants, attendance and certificates, from any phone or computer.', login: 'Username', loginPh: 'admin for the administrator',
+    password: 'Password', enter: 'Sign in', wrongLogin: 'Wrong username or password', locked: 'Too many wrong attempts: try again in 15 minutes',
+    nopassword: 'The administrator password is not set yet (settings of the platform on the computer)', loginFail: 'Could not sign in',
+    pcNever: 'The platform on the computer has not connected yet: requests wait until it is opened.', pcOn: 'Computer online: requests run within a minute',
+    pcOff: d => 'Computer offline since ' + d + ': requests run when the platform is opened',
+    jSync: 'Sync', jIssue: 'Issue certificates', jEmail: 'Email certificates', jActivity: 'New activity', jUpdate: 'Edit activity', jBundle: 'One person’s certificates in several activities',
+    jsWait: 'Waiting for the computer', jsRun: 'Running', jsDone: 'Done', jsErr: 'Failed',
+    copyText: 'Copy text and links', copiedText: 'Copied: paste it in WhatsApp or elsewhere', onePdf: 'One file with all certificates',
+    newAct: 'New activity', bundle: 'Certificates for one person', reqT: 'Requests to the computer',
+    reqHint: 'Create an activity here: its form and sheet are created on the computer, then it shows up in this list.',
+    totals: 'Totals', sActs: 'activities', sReg: 'registered', sHere: 'present', sCert: 'certificates', sMail: 'emailed', hereNow: 'present now',
+    noActs: 'No published activities yet: sync one on the computer, or create one here.', activity: 'Activity',
+    sessionsLine: (n, s) => `${n} sessions, now scanning session ${s}`,
+    pcOnlyT: 'On the computer', pcOnlyItems: ['Certificate designs and previews', 'Extra form questions', 'Import from Excel', 'Lists, reports and print files (PDF and Excel)',
+      'Revoke or restore a certificate', 'Organizations, types and settings', 'Trash and backups'],
+    pcOnlyNote: 'Issuing and emailing certificates are requested here and carried out on the computer.',
+    noChoices: 'The platform on the computer has not published its lists yet (organizations and types): open it once while online.',
+    fTitle: 'Title', fKind: 'Activity type', fOrg: 'Organization', fLang: 'Language of the activity and documents', langAr: 'Arabic', langFr: 'French', langEn: 'English',
+    fType: 'Main certificate type', fDates: 'Date / days', datesPh: 'e.g. 12 and 13 March 2026', fHours: 'Time or number of hours', fPlace: 'Place',
+    fSessions: 'Number of sessions', fMin: 'Minimum attendance (sessions)', minPh: 'All sessions', fTickets: 'Printed tickets', fWa: 'WhatsApp group link',
+    fTpl: 'Extra questions from a template', noTpl: 'No extra questions',
+    editHint: 'Fields left empty stay as they are. The Google Form follows the title, date and place.',
+    newHint: 'The form and registration sheet are created on the computer, then the activity shows here with its form link. The design is added on the computer.',
+    askEdit: 'Request the change', askNew: 'Request the activity', editT: 'Edit activity', newT: 'New activity', notitle: 'Enter the title',
+    editWaiting: 'An earlier change is still waiting for the computer',
+    bT: 'One person’s certificates in several activities',
+    bD: 'The person is added as present to each activity you pick; each certificate gets that activity’s number and design, then one email carries them all, and their links and one combined file appear here. Already registered with the same email: no duplicate.',
+    firstAr: 'First name in Arabic', lastAr: 'Last name in Arabic', firstLat: 'First name (Latin)', lastLat: 'Last name (Latin)',
+    gender: 'Gender', male: 'Male', female: 'Female', certType: 'Certificate type', bEmail: 'Email (receives the message)', email: 'Email', phone: 'Phone', mention: 'Grade / result',
+    bActs: 'Activities', noDesign: 'no design for this type', starNote: '* Printed by the chosen activities’ design: fill it in so every copy comes out complete and identical.',
+    bSave: 'Request the certificates and email', pickOne: 'Pick at least one activity', lack: 'Fill in what the design prints: ', nameAr: 'name in Arabic', nameLat: 'name in Latin script',
+    noname: 'Enter at least the name', badEmail: 'Invalid email', sameWaiting: 'The same request is still waiting for the computer',
+    tOverview: 'Overview', tPeople: 'Participants', tRequests: 'Requests', scanNow: s => 'Now scanning session ' + s, curSession: 'Current session (scanning and confirming)',
+    sessionN: i => 'Session ' + i, sessionSet: s => 'All phones now scan session ' + s, formLink: 'Registration form link', addPerson: 'Add participant',
+    search: 'Search by name, ticket, certificate number or email...', fAll: 'All', fHere: 'Present', fHereIn: s => 'Present in session ' + s, fAway: 'Not confirmed',
+    fIssued: 'With certificate', fMail: 'Email problem', countOf: (n, m) => `${n} of ${m}`,
+    syncNote: d => `Data as of the platform’s last sync (${d}). What you confirm or change here shows at once, and reaches the platform at the next sync.`,
+    scanT: 'Organizers’ scanning link', scanD: 'Opens the ticket-scanning page with the phone camera, no account and no computer needed.', scanMake: 'Create scanning link', scanNew: 'New link',
+    scanSure: 'Create a new link? The current one stops at once on every phone.', scanMade: 'Scanning link created: send it to the organizers', scanFail: 'Could not create the link',
+    scanTitle: 'Attendance scan',
+    issue: 'Issue certificates', issueSure: 'Issue certificates to every confirmed attendee (after syncing attendance)?', emailAll: 'Email certificates',
+    emailSure: 'Queue the emails of everyone who has not received their certificate yet?', sync: 'Sync now', editAct: 'Edit activity',
+    noTicket: 'No ticket', pending: 'Change waiting for sync', hereIn: s => 'Present in session ' + s, here: 'Present', away: 'Not confirmed', sessions: 'Sessions: ',
+    certOf: x => 'Certificate: ' + x, revoked: 'Revoked', code: 'Verification code', download: 'Download',
+    mSent: 'Email sent', mErr: 'Email failed', mPending: 'Queued', mStopped: 'Stopped',
+    markIn: s => 'Present in session ' + s, mark: 'Confirm attendance', marked: 'Attendance recorded; it reaches the platform at the next sync',
+    resend: 'Resend email', resendSure: e => 'Send the same certificate email again to ' + e + '?', resent: 'The email is back in the sending queue',
+    resendOld: 'The email text is no longer kept (older than 30 days): resend it from the platform', edit: 'Edit', del: 'Delete',
+    delSure: n => 'Remove ' + n + ' from this activity? (goes to the platform’s trash)', deleted: 'Deleted; it reaches the platform at the next sync',
+    fixT: n => 'Correct: ' + n, newPersonT: 'New participant (no ticket)', hasCert: 'Has a certificate: it is redrawn with the same number and link at the next sync.',
+    saveFix: 'Save correction', add: 'Add', fixed: 'Correction saved; it reaches the platform at the next sync', added: 'Added; it reaches the platform at the next sync',
+    partsD: 'Everyone with a valid certificate and a correct email has a permanent participant number, and signs in to “My certificates” with it or their email plus a code sent by email, no password. The platform on the computer keeps this list up to date.',
+    partsSearch: 'Search by name, email, number or certificate...', certsN: n => n + ' certificate(s): ', meLink: 'My certificates',
+    usersD: 'The admin account’s password is set in the platform on the computer, and it always remains a way in.', newUser: 'New account',
+    uLogin: 'Username (lowercase Latin letters and digits)', uName: 'Name', uPw: 'Password (at least 8 characters)', uRole: 'Role',
+    roOrganizer: 'Organizer: everything except accounts', roScanner: 'Scanner: attendance only, no contact details', roAdmin: 'Administrator: everything, accounts included',
+    create: 'Create account', createHint: 'Hand over the username and password yourself; the person changes it in “My account” after signing in.', created: 'Account created',
+    badlogin: 'Username: 3 to 30 lowercase Latin letters or digits (not admin)', taken: 'Username already used', short: 'Password too short', badName: 'Enter the name',
+    createFail: 'Could not create the account', active: 'Active', stopped: 'Suspended', roleChanged: 'Role changed', self: 'Do not edit your own account here',
+    mine: 'Your account: another administrator edits it.', stop: 'Suspend', start: 'Reactivate', stoppedMsg: 'Account suspended: signed out at once', startedMsg: 'Account reactivated',
+    newPw: 'New password', newPwAsk: n => 'New password for ' + n + ' (at least 8 characters):', pwChanged: 'Password changed',
+    signedAs: 'Signed in as', language: 'Language', theme: 'Theme', thAuto: 'Device', thLight: 'Light', thDark: 'Dark', pwT: 'Change password',
+    pwOld: 'Current password', pwNew: 'New password (at least 8 characters)', wrongPw: 'Current password is wrong', shortNew: 'The new password is too short',
+    ownerPw: 'The administrator password is changed in the platform on the computer', logout: 'Sign out',
+  },
+};
+const ICON = {
+  acts: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>',
+  parts: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 010 6.8M18 14.8c2 .8 3.2 2.6 3.5 5.2"/></svg>',
+  users: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7.5 3v6c0 5-3.4 8.7-7.5 10-4.1-1.3-7.5-5-7.5-10v-6z"/><circle cx="12" cy="10" r="2.5"/><path d="M8 16.5c.8-1.8 2.2-2.7 4-2.7s3.2.9 4 2.7"/></svg>',
+  me: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"/></svg>',
+  back: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+};
+const ROLE = {scanner: 1, organizer: 2, admin: 3};
+const {el, svg, t} = UI, app = document.getElementById('app');
+let session = UI.store.get(KEY) || '', me = null;  // me: the signed-in account, as the Apps Script sees it on each answer
+const remember = s => { session = s; UI.store.set(KEY, s || null); };
+const can = role => me && ROLE[me.role] >= ROLE[role];
+const roleName = r => t({scanner: 'rScanner', organizer: 'rOrganizer', admin: 'rAdmin'}[r]) || r;
+const toast = msg => UI.toast(msg, 4000);
+const when = s => { const d = new Date(s); return !s || isNaN(d) ? '' : UI.fmtDate(d, {dateStyle: 'medium', timeStyle: 'short'}); };
 
-  function pcLine(pc) {  // requests are carried out by the app on the computer: say whether it is there
-    const age = Date.now() - pc;
-    if (!pc) return el('div', {className: 'pc muted', textContent: 'لم تتصل المنصة على الحاسوب بهذه اللوحة بعد: الطلبات تنتظر فتحها.'});
-    return el('div', {className: 'pc'}, age < 3 * 60e3
-      ? el('span', {className: 'badge ok', textContent: '● الحاسوب متصل: الطلبات تُنفَّذ خلال دقيقة'})
-      : el('span', {className: 'badge warn', textContent: '● الحاسوب غير متصل منذ ' + fmtDate(pc) + ': الطلبات تُنفَّذ عند فتح المنصة عليه'}));
-  }
+async function call(action, extra) {
+  let j;
+  try {
+    const r = await fetch(EXEC, {method: 'POST', credentials: 'omit', body: JSON.stringify(Object.assign({action, session}, extra))});
+    j = await r.json();
+  } catch (e) { toast(t('net')); throw e; }
+  if (j.status === 'login') { remember(''); showLogin(); throw new Error('login'); }
+  if (j.status === 'role') { toast(t('noRole')); throw new Error('role'); }
+  if (j.user) setMe(j.user);
+  // an Apps Script from before the accounts (not redeployed yet) names no user: its only sign-in is the admin's
+  else if (!me && j.status === 'ok' && action !== 'login') setMe({login: 'admin', name: t('adminName'), role: 'admin'});
+  return j;
+}
 
-  function jobList(jobs) {
-    if (!jobs || !jobs.length) return null;
-    return el('div', null, ...jobs.map(j => el('div', {className: 'job'},
-      el('b', {textContent: JOB[j.kind] || j.kind}),
+// ---------- frame: sidebar (wide screens), top bar, bottom tab bar (phones) ----------
+
+let current = 'acts';  // the section shown, marked in both menus
+function navItems() {
+  return [['acts', '#', 'nActs', true], ['parts', '#parts', 'nParts', can('organizer')], ['users', '#users', 'nUsers', can('admin')], ['me', '#me', 'nMe', true]]
+    .filter(x => x[3]);
+}
+function setMe(u) {
+  const first = !me;
+  me = u;
+  if (first) frame();
+}
+function frame() {  // drawn once signed in (and again when the language changes)
+  const links = () => navItems().map(([id, href, key]) =>
+    el('a', {href, ariaCurrent: id === current ? 'page' : null, dataset: {nav: id}}, svg(ICON[id]), el('span', {textContent: t(key)})));
+  document.getElementById('side').replaceChildren(UI.brand('#', 'dash'), el('nav', {}, ...links()),
+    el('div', {className: 'who'}, el('b', {dir: 'auto', textContent: me.name}), roleName(me.role)));
+  const bar = document.getElementById('tabbar');
+  bar.replaceChildren(...links());
+  bar.hidden = false;
+  document.getElementById('shell').classList.add('in');
+  UI.paint(document.getElementById('side'));  // the brand's name and tagline
+}
+function mark(id) {
+  current = id;
+  document.querySelectorAll('[data-nav]').forEach(a => a.dataset.nav === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+}
+function bar(title, back) {  // the top bar: back arrow inside an activity, the page title, language and theme
+  const b = document.getElementById('appbar');
+  b.replaceChildren(...[
+    back ? el('button', {type: 'button', className: 'iconbtn back', title: t('back'), ariaLabel: t('back'), onclick: () => { location.hash = back; }}, svg(ICON.back))
+         : session ? null : UI.brand('#', 'dash'),  // signed out: the brand; signed in: where you are
+    session || back ? el('h1', {dir: 'auto', textContent: title}) : null,
+    el('div', {className: 'tools'}, UI.langSwitch(), UI.themeButton())].filter(Boolean));
+  UI.paint(b);
+}
+const loading = () => app.replaceChildren(el('div', {className: 'card', ariaBusy: 'true'},
+  el('div', {className: 'skeleton'}, el('i', {style: 'width:40%'}), el('i', {style: 'width:80%'}), el('span', {className: 'hint', textContent: t('loading')}))));
+
+// ---------- small pieces ----------
+
+const btn = (text, onclick, kind) => el('button', {className: 'btn sm' + (kind ? ' ' + kind : ''), type: 'button', textContent: text, onclick});
+const field = (label, props) => { const i = el('input', props); return [el('label', {className: 'fld'}, el('span', {textContent: label}), i), i]; };
+const select = (opts, value) => el('select', {}, ...opts.map(([v, x]) => el('option', {value: v, textContent: x, selected: String(v) === String(value)})));
+const labelled = (label, input) => el('label', {className: 'fld'}, el('span', {textContent: label}), input);
+const stats = pairs => el('div', {className: 'stats'}, ...pairs.map(([k, v]) => el('div', {className: 'stat'}, el('b', {textContent: v || 0}), k)));
+function sheet(node) {  // a form in a dialog: a bottom sheet on phones, a window on wide screens; returns its closer
+  const d = el('dialog', {className: 'sheet'}, node);
+  d.addEventListener('close', () => d.remove());
+  document.body.append(d);
+  d.showModal();
+  return () => d.close();
+}
+function pcLine(pc) {  // requests are carried out by the app on the computer: say whether it is there
+  if (!pc) return el('p', {className: 'pc hint', textContent: t('pcNever')});
+  return el('p', {className: 'pc'}, Date.now() - pc < 3 * 60e3 ? el('span', {className: 'badge ok', textContent: '● ' + t('pcOn')})
+    : el('span', {className: 'badge warn', textContent: '● ' + t('pcOff')(when(pc))}));
+}
+function jobList(jobs) {
+  if (!jobs || !jobs.length) return null;
+  const kind = {sync: 'jSync', issue: 'jIssue', email: 'jEmail', activity: 'jActivity', update: 'jUpdate', bundle: 'jBundle'};
+  return el('div', {}, ...jobs.map(j => el('div', {className: 'job'},
+    el('div', {className: 'row'}, el('b', {textContent: kind[j.kind] ? t(kind[j.kind]) : j.kind}),
       el('span', {className: 'badge ' + ({done: 'ok', error: 'err'}[j.status] || 'warn'),
-        textContent: {'': 'ينتظر الحاسوب', running: 'قيد التنفيذ', done: 'تم', error: 'تعذّر'}[j.status] || j.status}),
-      el('span', {className: 'muted', textContent: [j.by, fmtDate(j.at)].filter(Boolean).join(' · ')}),
-      j.result ? el('div', {className: 'muted', style: 'flex-basis:100%', textContent: j.result}) : null, shareBar(j))));
+        textContent: t({'': 'jsWait', running: 'jsRun', done: 'jsDone', error: 'jsErr'}[j.status] || '') || j.status}),
+      el('span', {className: 'hint', textContent: [j.by, when(j.at)].filter(Boolean).join(' · ')})),
+    j.result ? el('div', {className: 'hint', dir: 'auto', textContent: j.result}) : null, shareBar(j))));
+}
+function shareBar(j) {  // after one person's certificates: their links to paste in WhatsApp, and one file with all of them
+  let s;
+  try { s = JSON.parse(j.share || 'null'); } catch (e) { return null; }
+  if (!s || !s.text) return null;
+  return el('div', {className: 'row'},
+    btn(t('copyText'), async () => { try { await navigator.clipboard.writeText(s.text); toast(t('copiedText')); } catch (e) { prompt('', s.text); } }, 'ghost'),
+    navigator.share ? btn(t('share'), () => navigator.share({text: s.text}).catch(() => {}), 'ghost') : null,
+    /^https:\/\//.test(s.pdf || '') ? el('a', {className: 'btn sm ghost', href: s.pdf, target: '_blank', rel: 'noopener', textContent: t('onePdf')}) : null);
+}
+function linkBox(url, label) {  // copy, open or share a link from the phone
+  return el('div', {className: 'linkbox'}, el('span', {className: 'ltr', textContent: url}),
+    btn(t('copy'), async () => { try { await navigator.clipboard.writeText(url); toast(t('linkCopied')); } catch (e) { prompt('', url); } }, 'ghost'),
+    navigator.share ? btn(t('share'), () => navigator.share({title: label, url}).catch(() => {}), 'ghost') : null,
+    el('a', {className: 'btn sm ghost', href: url, target: '_blank', rel: 'noopener', textContent: t('open')}));
+}
+
+// ---------- sign-in ----------
+
+function showLogin(msg) {
+  me = null;
+  document.getElementById('shell').classList.remove('in');
+  document.getElementById('tabbar').hidden = true;
+  document.getElementById('side').replaceChildren();
+  bar('');
+  const [lf, login] = field(t('login'), {autocomplete: 'username', dir: 'ltr', placeholder: t('loginPh')});
+  const [pf, pw] = field(t('password'), {type: 'password', autocomplete: 'current-password'});
+  const err = el('p', {className: 'err', role: 'alert', textContent: msg || ''});
+  const go = el('button', {className: 'btn block', type: 'submit', textContent: t('enter')});
+  const form = el('form', {className: 'card form login rise', noValidate: true}, el('div', {}, el('h2', {textContent: t('loginT')}),
+    el('p', {className: 'hint', textContent: t('loginD')})), lf, pf, go, err);
+  form.onsubmit = async e => {
+    e.preventDefault();
+    go.disabled = true;
+    try {
+      const j = await call('login', {login: login.value, password: pw.value});
+      if (j.status === 'ok') { remember(j.session); return route(); }
+      err.textContent = t({wrong: 'wrongLogin', locked: 'locked', nopassword: 'nopassword'}[j.status] || 'loginFail');
+    } catch (x) { /* toast shown */ } finally { go.disabled = false; }
+  };
+  app.replaceChildren(form);
+  login.focus();
+}
+
+// ---------- activities ----------
+
+async function showList() {
+  mark('acts'); bar(t('nActs')); loading();
+  const j = await call('activities');
+  const acts = j.activities.sort((x, y) => Number(y.id) - Number(x.id));
+  const sum = k => acts.reduce((n, a) => n + (Number(a[k]) || 0), 0);
+  const cards = acts.map(a => el('a', {className: 'card act-card rise', href: '#a' + a.id},
+    el('div', {className: 'row'}, el('span', {className: 'badge', textContent: a.kind || t('activity')}), el('span', {className: 'hint', dir: 'auto', textContent: a.org})),
+    el('h3', {dir: 'auto', textContent: a.title}),
+    el('div', {className: 'hint', textContent: [a.dates, a.sessions > 1 ? t('sessionsLine')(a.sessions, a.session) : ''].filter(Boolean).join(' · ')}),
+    stats([[t('sReg'), a.registered], [t('sHere'), a.present], [t('sCert'), a.issued], [t('sMail'), a.emailed]])));
+  const blocks = [el('section', {className: 'card rise'}, el('h2', {textContent: t('totals')}),
+    stats([[t('sActs'), acts.length], [t('sReg'), sum('registered')], [t('sHere'), sum('present')], [t('sCert'), sum('issued')], [t('sMail'), sum('emailed')]]))];
+  if (can('organizer')) {
+    const add = el('button', {className: 'btn sm', type: 'button', onclick: () => { const close = sheet(activityForm(j.choices, null, () => { close(); showList(); }, () => close())); }},
+      svg(ICON.plus), t('newAct'));
+    const many = el('button', {className: 'btn sm ghost', type: 'button', onclick: () => { const close = sheet(bundleForm(j.choices, acts, () => { close(); showList(); }, () => close())); }},
+      svg(ICON.plus), t('bundle'));
+    blocks.push(el('section', {className: 'card section rise'}, el('h2', {textContent: t('reqT')}), el('div', {className: 'row', style: 'margin-bottom:12px'}, add, many),
+      pcLine(j.pc), jobList(j.jobs) || el('p', {className: 'hint', textContent: t('reqHint')})));
   }
+  blocks.push(el('section', {className: 'section'}, cards.length ? el('div', {className: 'grid'}, ...cards) : el('div', {className: 'card empty', textContent: t('noActs')})));
+  if (can('organizer')) blocks.push(el('section', {className: 'card section'}, el('h2', {textContent: t('pcOnlyT')}),
+    el('ul', {className: 'plain'}, ...t('pcOnlyItems').map(x => el('li', {textContent: x}))), el('p', {className: 'hint', style: 'margin-top:8px', textContent: t('pcOnlyNote')})));
+  app.replaceChildren(...blocks);
+}
 
-  function shareBar(j) {  // after one person's certificates: their links to paste in WhatsApp, and one file with all of them
-    let s;
-    try { s = JSON.parse(j.share || 'null'); } catch (e) { return null; }
-    if (!s || !s.text) return null;
-    const copy = btn('📋 نسخ النص والروابط', async () => {
-      try { await navigator.clipboard.writeText(s.text); toast('نُسخ: الصقه في واتساب أو غيره'); } catch (e) { prompt('انسخ النص:', s.text); }
-    }, true);
-    return el('div', {className: 'bar', style: 'flex-basis:100%'}, copy,
-      navigator.share ? btn('مشاركة', () => navigator.share({text: s.text}).catch(() => {}), true) : null,
-      /^https:\/\//.test(s.pdf || '') ? el('a', {href: s.pdf, target: '_blank', rel: 'noopener', textContent: '⬇ ملف واحد بكل الشواهد'}) : null);
+// new activity (a null) or its details: a request the app carries out like its own form
+function activityForm(ch, a, done, close) {
+  if (!ch) return el('div', {className: 'form'}, el('p', {className: 'note', textContent: t('noChoices')}), el('div', {className: 'row end'}, btn(t('cancel'), close, 'ghost')));
+  const inputs = {}, v = a || {sessions: 1, tickets: ch.tickets, lang: ch.lang};
+  const f = (k, label, props) => { const [l, i] = field(label, Object.assign({value: v[k] == null ? '' : v[k]}, props)); inputs[k] = i; return l; };
+  const s = (k, label, opts) => { inputs[k] = select(opts, v[k] == null ? opts[0][0] : v[k]); return labelled(label, inputs[k]); };
+  const kinds = ch.kinds.map(k => [k, k]);
+  if (a && a.kind && !ch.kinds.includes(a.kind)) kinds.unshift([a.kind, a.kind]);
+  const err = el('p', {className: 'err', role: 'alert'});
+  const save = el('button', {className: 'btn', type: 'submit', textContent: t(a ? 'askEdit' : 'askNew')});
+  const form = el('form', {className: 'form', noValidate: true}, el('h2', {textContent: t(a ? 'editT' : 'newT')}),
+    f('title', t('fTitle'), {required: true, maxLength: 200}),
+    el('div', {className: 'grid2'}, s('kind', t('fKind'), kinds), a ? null : s('org_id', t('fOrg'), ch.orgs.map(o => [o.id, o.name]))),
+    a ? null : el('div', {className: 'grid2'}, s('lang', t('fLang'), [['ar', t('langAr')], ['fr', t('langFr')], ['en', t('langEn')]]),
+      s('cert_type', t('fType'), ch.types.map(x => [x, x]))),
+    el('div', {className: 'grid2'}, f('dates', t('fDates'), {placeholder: t('datesPh')}), f('hours', t('fHours'))),
+    f('place', t('fPlace')),
+    el('div', {className: 'grid2'}, f('sessions', t('fSessions'), {type: 'number', min: 1, max: 60}),
+      f('min_sessions', t('fMin'), {type: 'number', min: 1, max: 60, placeholder: t('minPh')})),
+    el('div', {className: 'grid2'}, f('tickets', t('fTickets'), {type: 'number', min: 0, max: 2000}), f('whatsapp', t('fWa'), {dir: 'ltr', type: 'url'})),
+    a || !ch.templates.length ? null : s('template', t('fTpl'), [['', t('noTpl')], ...ch.templates.map(x => [x.id, x.name])]),
+    el('p', {className: 'hint', textContent: t(a ? 'editHint' : 'newHint')}),
+    el('div', {className: 'row'}, save, btn(t('cancel'), close, 'ghost')), err);
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const data = {};
+    Object.entries(inputs).forEach(([k, x]) => { const val = x.value.trim(); if (val !== '' && (!a || val !== String(v[k] == null ? '' : v[k]))) data[k] = val; });
+    if (a && !Object.keys(data).length) return close();
+    save.disabled = true;
+    try {
+      const r = await call('request', a ? {id: a.id, kind: 'update', data} : {kind: 'activity', data});
+      if (r.status === 'ok') { toast(t('sent')); return done(); }
+      err.textContent = t({notitle: 'notitle', exists: 'editWaiting'}[r.status] || 'reqFail');
+    } catch (x) { /* toast shown */ }
+    save.disabled = false;
+  };
+  return form;
+}
+
+// one person (an organizer, a speaker...) given certificates in several past activities at once, then one message
+function bundleForm(ch, acts, done, close) {
+  if (!ch) return activityForm(ch, null, done, close);
+  const inputs = {}, picked = new Set(), answers = {};
+  const fld = (k, label, props) => { const [l, i] = field(label, props); inputs[k] = i; return l; };
+  inputs.gender = select([['m', t('male')], ['f', t('female')], ['', '—']], 'm');
+  inputs.type = select(ch.types.map(x => [x, x]), ch.types[0]);
+  // what each activity's design prints for a type (published by the app); an app of 1.8.0 only names the types
+  const needs = (id, x) => ch.needs ? (ch.needs[id] || {})[x]
+    : !ch.designs || (ch.designs[id] || []).includes(x) ? {names: [], mention: false, qs: []} : null;
+  const list = el('div'), asked = el('div', {className: 'grid2'}), note = el('p', {className: 'hint'});
+  const labels = {};
+  let want = new Set(), qs = new Map();  // what the ticked designs print
+  const draw = () => {
+    want = new Set(); qs = new Map();
+    list.replaceChildren(...acts.map(a => {
+      const n = needs(a.id, inputs.type.value);
+      if (!n) picked.delete(a.id);
+      if (n && picked.has(a.id)) { n.names.forEach(x => want.add(x)); if (n.mention) want.add('mention'); n.qs.forEach(q => qs.has(q.title) || qs.set(q.title, q)); }
+      const box = el('input', {type: 'checkbox', checked: picked.has(a.id), disabled: !n,
+        onchange: () => { box.checked ? picked.add(a.id) : picked.delete(a.id); draw(); }});
+      return el('label', {className: 'pick', style: n ? '' : 'opacity:.5'}, box,
+        el('span', {}, el('b', {dir: 'auto', textContent: a.title}), ' ', el('span', {className: 'hint', textContent: [a.dates, n ? '' : t('noDesign')].filter(Boolean).join(' — ')})));
+    }));
+    // every detail the ticked designs print is asked for, so no copy comes out with a blank
+    Object.entries({ar: 'first_ar', lat: 'first_lat', mention: 'mention'}).forEach(([k, f]) => { labels[f].textContent = want.has(k) ? ' *' : ''; });
+    asked.replaceChildren(...[...qs.values()].map(q => {
+      const i = (q.options || []).length && q.type !== 'checkbox' ? select([['', '—'], ...q.options.map(o => [o, o])], answers[q.title] || '')
+        : el('input', {value: answers[q.title] || ''});
+      i.oninput = i.onchange = () => { answers[q.title] = i.value; };
+      i.dataset.q = q.title;
+      return el('label', {className: 'fld'}, el('span', {dir: 'auto', textContent: q.title}, el('span', {className: 'star', textContent: ' *'})), i);
+    }));
+    note.textContent = want.size || qs.size ? t('starNote') : '';
+  };
+  const star = (f, l) => { labels[f] = el('span', {className: 'star'}); l.firstChild.append(labels[f]); return l; };
+  const err = el('p', {className: 'err', role: 'alert'});
+  const save = el('button', {className: 'btn', type: 'submit', textContent: t('bSave')});
+  const form = el('form', {className: 'form', noValidate: true}, el('div', {}, el('h2', {textContent: t('bT')}), el('p', {className: 'hint', textContent: t('bD')})),
+    el('div', {className: 'grid2'}, star('first_ar', fld('first_ar', t('firstAr'))), fld('last_ar', t('lastAr')),
+      star('first_lat', fld('first_lat', t('firstLat'), {dir: 'ltr'})), fld('last_lat', t('lastLat'), {dir: 'ltr'})),
+    el('div', {className: 'grid2'}, labelled(t('gender'), inputs.gender), labelled(t('certType'), inputs.type)),
+    el('div', {className: 'grid2'}, fld('email', t('bEmail'), {type: 'email', dir: 'ltr'}), fld('phone', t('phone'), {type: 'tel', dir: 'ltr'})),
+    star('mention', fld('mention', t('mention'))), asked, note,
+    el('div', {}, el('h2', {style: 'margin:4px 0 0', textContent: t('bActs')}), list),
+    el('div', {className: 'row'}, save, btn(t('cancel'), close, 'ghost')), err);
+  inputs.type.onchange = draw; draw();
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const data = {acts: [...picked], answers: {}};
+    Object.entries(inputs).forEach(([k, x]) => { const val = x.value.trim(); if (val !== '') data[k] = val; });
+    asked.querySelectorAll('[data-q]').forEach(i => { if (i.value.trim()) data.answers[i.dataset.q] = i.value.trim(); });
+    if (!data.acts.length) { err.textContent = t('pickOne'); return; }
+    const has = (...ks) => ks.some(k => data[k]);
+    const lack = [want.has('ar') && !has('first_ar', 'last_ar') && t('nameAr'), want.has('lat') && !has('first_lat', 'last_lat') && t('nameLat'),
+      want.has('mention') && !has('mention') && t('mention'), ...[...qs.keys()].filter(x => !data.answers[x])].filter(Boolean);
+    if (lack.length) { err.textContent = t('lack') + lack.join('، '); return; }
+    save.disabled = true;
+    try {
+      const r = await call('request', {kind: 'bundle', data});
+      if (r.status === 'ok') { toast(t('sent')); return done(); }
+      err.textContent = t({noname: 'noname', email: 'badEmail', exists: 'sameWaiting'}[r.status] || 'reqFail');
+    } catch (x) { /* toast shown */ }
+    save.disabled = false;
+  };
+  return form;
+}
+
+// ---------- one activity: overview, participants, requests ----------
+
+const sessionsOf = p => [...new Set(String(p.attended || '').split(',').filter(Boolean).map(Number).concat(p.phone_scans))].sort();
+
+async function showActivity(id, tab) {
+  mark('acts'); bar(t('activity'), '#'); loading();
+  const j = await call('activity', {id});
+  if (j.status !== 'ok') return showList();
+  const a = j.activity, people = j.people;
+  bar(a.title, '#');
+  // present now: recorded by the app (its sessions, or "present" for a one-session activity) or by a phone since
+  const here = p => sessionsOf(p).includes(a.session) || (a.sessions === 1 && Number(p.present) === 1);
+  const tabs = [['overview', 'tOverview'], ['people', 'tPeople'], ...(can('organizer') ? [['requests', 'tRequests']] : [])];
+  if (!tabs.some(x => x[0] === tab)) tab = can('organizer') ? 'overview' : 'people';
+  const body = el('div');
+  const seg = el('div', {className: 'seg', role: 'tablist'}, ...tabs.map(([k, key]) => el('button', {type: 'button', role: 'tab', textContent: t(key),
+    ariaPressed: String(k === tab), onclick: () => open(k)})));
+  const reload = () => showActivity(a.id, tab);
+  function open(k) {
+    tab = k;
+    history.replaceState(null, '', '#a' + a.id + (k === 'overview' ? '' : '/' + k));
+    seg.querySelectorAll('button').forEach((b, i) => b.setAttribute('aria-pressed', String(tabs[i][0] === k)));
+    body.replaceChildren(...{overview, people: list, requests}[k]());
   }
-
-  function linkBox(url, label) {  // copy, open or share a link from the phone
-    const copy = btn('نسخ', async () => { try { await navigator.clipboard.writeText(url); toast('نُسخ الرابط'); } catch (e) { prompt('انسخ الرابط:', url); } }, true);
-    const share = navigator.share ? btn('مشاركة', () => navigator.share({title: label, url}).catch(() => {}), true) : null;
-    return el('div', {className: 'link'}, el('span', {className: 'ltr', textContent: url}), copy, share,
-      el('a', {href: url, target: '_blank', rel: 'noopener', textContent: 'فتح'}));
-  }
-
-  function showLogin(msg) {
-    me = null;
-    ['out', 'back', 'users', 'pw', 'parts', 'more'].forEach(id => { document.getElementById(id).hidden = true; });
-    document.getElementById('who').textContent = '';
-    const [lf, login] = field('اسم الدخول', {autocomplete: 'username', dir: 'ltr', placeholder: 'admin للمسؤول'});
-    const [pf, pw] = field('كلمة السر', {type: 'password', autocomplete: 'current-password'});
-    const err = el('p', {className: 'muted', textContent: msg || ''});
-    const go = el('button', {className: 'act', textContent: 'دخول', style: 'width:100%;padding:11px'});
-    const submit = async () => {
-      go.disabled = true;
-      try {
-        const j = await call('login', {login: login.value, password: pw.value});
-        if (j.status === 'ok') { remember(j.session); return route(); }
-        err.textContent = {wrong: 'اسم الدخول أو كلمة السر غير صحيح', locked: 'محاولات خاطئة كثيرة: أعد المحاولة بعد 15 دقيقة',
-                           nopassword: 'لم تُضبط كلمة سر المسؤول بعد (الإعدادات في المنصة على الحاسوب)'}[j.status] || 'تعذر الدخول';
-      } catch (e) { /* toast shown */ } finally { go.disabled = false; }
-    };
-    go.onclick = submit; pw.onkeydown = e => { if (e.key === 'Enter') submit(); };
-    app.replaceChildren(el('div', {className: 'card', id: 'login'}, el('h1', {textContent: 'دخول المنظمين'}),
-      el('p', {className: 'muted', style: 'margin:0', textContent: 'الأنشطة والمشاركون والحضور والشواهد، من أي هاتف أو حاسوب.'}), lf, pf, go, err));
-    login.focus();
-  }
-
-  // ---------- activities ----------
-
-  async function showList() {
-    nav(false); loading();
-    const j = await call('activities');
-    const acts = j.activities.sort((x, y) => Number(y.id) - Number(x.id));
-    const sum = k => acts.reduce((n, a) => n + (Number(a[k]) || 0), 0);
-    const cards = acts.map(a => el('a', {className: 'card', href: '#a' + a.id},
-      el('div', {className: 'bar'}, el('span', {className: 'badge', textContent: a.kind || 'نشاط'}), el('span', {className: 'muted', textContent: a.org})),
-      el('h2', {textContent: a.title}),
-      el('div', {className: 'muted', textContent: (a.dates || '') + (a.sessions > 1 ? ` · ${a.sessions} حصص، المسح الآن للحصة ${a.session}` : '')}),
-      el('div', {className: 'nums'}, ...[['مسجل', a.registered], ['حاضر', a.present], ['شهادة', a.issued], ['بريد', a.emailed]]
-        .map(([k, v]) => el('div', null, el('b', {textContent: v || 0}), k)))));
-    const top = [el('h1', {textContent: 'الأنشطة'})];
-    if (can('organizer')) {
-      top.push(pcLine(j.pc));
-      const box = el('div');
-      const add = btn('+ نشاط جديد', () => box.replaceChildren(activityForm(j.choices, null, () => showList())));
-      const many = btn('+ شواهد لشخص', () => box.replaceChildren(bundleForm(j.choices, acts, () => showList())), true);
-      top.push(el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {style: 'flex:1;margin:0', textContent: 'طلبات للحاسوب'}), add, many), box,
-        jobList(j.jobs) || el('p', {className: 'muted', style: 'margin:4px 0 0', textContent: 'أنشئ نشاطاً من هنا: تُنشأ استمارته وجدوله على الحاسوب، ثم يظهر في هذه اللائحة.'})));
-    }
-    top.push(el('div', {className: 'card'}, el('h2', {textContent: 'الإجمالي'}),
-      el('div', {className: 'nums five'}, ...[['نشاط', acts.length], ['مسجل', sum('registered')], ['حاضر', sum('present')], ['شهادة', sum('issued')], ['بريد', sum('emailed')]]
-        .map(([k, v]) => el('div', null, el('b', {textContent: v}), k)))));
-    app.replaceChildren(...top,
-      ...(cards.length ? cards : [el('p', {className: 'muted', textContent: 'لا أنشطة منشورة بعد: زامن نشاطاً في المنصة على الحاسوب، أو أنشئ واحداً من هنا.'})]),
-      can('organizer') ? pcOnly() : null);
-  }
-
-  function pcOnly() {  // what stays on the computer: heavy work, or files to print
-    return el('div', {className: 'card'}, el('h2', {textContent: 'على الحاسوب (يُفضَّل استخدام الحاسوب)'}),
-      el('ul', {className: 'pconly'}, ...['تصميم الشهادات ومعاينتها', 'أسئلة الاستمارة الإضافية', 'الاستيراد من Excel',
-        'اللوائح والتقارير وملفات الطباعة (PDF وExcel)', 'إلغاء شهادة أو إرجاعها', 'الجهات المنظمة والأنواع والإعدادات',
-        'سلة المحذوفات والنسخ الاحتياطية'].map(t => el('li', {textContent: t}))),
-      el('p', {className: 'muted', style: 'margin:6px 0 0', textContent: 'إصدار الشواهد وإرسالها يُطلب من هنا، ويُنفَّذ على الحاسوب.'}));
-  }
-
-  // new activity (a null) or its details: a request the app carries out like its own form
-  function activityForm(ch, a, close) {
-    if (!ch) return el('div', {className: 'note', textContent: 'لم تنشر المنصة على الحاسوب قوائمها بعد (الجهات والأنواع): افتحها مرة واحدة وهي متصلة بالإنترنت.'});
-    const inputs = {}, v = a || {sessions: 1, tickets: ch.tickets, lang: ch.lang};
-    const f = (k, label, props) => { const [l, i] = field(label, Object.assign({value: v[k] == null ? '' : v[k]}, props)); inputs[k] = i; return l; };
-    const s = (k, label, opts) => { inputs[k] = select(opts, v[k] == null ? opts[0][0] : v[k]); return el('label', null, label, inputs[k]); };
-    const kinds = ch.kinds.map(k => [k, k]);
-    if (a && a.kind && !ch.kinds.includes(a.kind)) kinds.unshift([a.kind, a.kind]);
-    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
-    const save = el('button', {className: 'act', type: 'submit', textContent: a ? 'طلب التعديل' : 'طلب إنشاء النشاط'});
-    const form = el('form', {className: 'card person'}, el('h2', {textContent: a ? 'تعديل النشاط' : 'نشاط جديد'}),
-      f('title', 'العنوان', {required: true, maxLength: 200}),
-      el('div', {className: 'grid2'}, s('kind', 'نوع النشاط', kinds),
-        a ? null : s('org_id', 'الجهة المنظمة', ch.orgs.map(o => [o.id, o.name]))),
-      a ? null : el('div', {className: 'grid2'}, s('lang', 'لغة النشاط والوثائق', [['ar', 'العربية'], ['fr', 'الفرنسية'], ['en', 'الإنجليزية']]),
-        s('cert_type', 'نوع الشهادة الرئيسي', ch.types.map(t => [t, t]))),
-      el('div', {className: 'grid2'}, f('dates', 'التاريخ / الأيام', {placeholder: 'مثال: 12 و13 مارس 2026'}), f('hours', 'التوقيت أو عدد الساعات')),
-      f('place', 'المكان'),
-      el('div', {className: 'grid2'}, f('sessions', 'عدد الحصص', {type: 'number', min: 1, max: 60}),
-        f('min_sessions', 'الحد الأدنى للحضور (حصص)', {type: 'number', min: 1, max: 60, placeholder: 'كل الحصص'})),
-      el('div', {className: 'grid2'}, f('tickets', 'عدد البطاقات المطبوعة', {type: 'number', min: 0, max: 2000}),
-        f('whatsapp', 'رابط مجموعة واتساب', {dir: 'ltr', type: 'url'})),
-      a || !ch.templates.length ? null : s('template', 'أسئلة إضافية من نموذج', [['', 'بلا أسئلة إضافية'], ...ch.templates.map(t => [t.id, t.name])]),
-      el('p', {className: 'muted', textContent: a ? 'ما يُترك فارغاً يبقى كما هو. العنوان والتاريخ والمكان تتبعها الاستمارة في Google Forms.'
-        : 'تُنشأ على الحاسوب الاستمارة وجدول التسجيلات، ثم يظهر النشاط هنا برابط استمارته. التصميم يُضاف على الحاسوب.'}),
-      el('div', {className: 'bar'}, save, btn('إلغاء', close, true)), err);
-    form.onsubmit = async e => {
-      e.preventDefault();
-      const data = {};
-      Object.entries(inputs).forEach(([k, x]) => { const t = x.value.trim(); if (t !== '' && (!a || t !== String(v[k] == null ? '' : v[k]))) data[k] = t; });
-      if (a && !Object.keys(data).length) return close();
-      save.disabled = true;
-      try {
-        const r = await call('request', a ? {id: a.id, kind: 'update', data} : {kind: 'activity', data});
-        if (r.status === 'ok') { toast('أُرسل الطلب، ويُنفَّذ على الحاسوب'); return close(); }
-        err.textContent = {notitle: 'اكتب العنوان', exists: 'تعديل سابق ما زال ينتظر الحاسوب'}[r.status] || 'تعذر إرسال الطلب';
-      } catch (x) { /* toast shown */ }
-      save.disabled = false;
-    };
-    return form;
-  }
-
-  // one person (an organizer, a speaker...) given certificates in several past activities at once, then one message
-  function bundleForm(ch, acts, close) {
-    if (!ch) return activityForm(ch);
-    const inputs = {}, picked = new Set(), answers = {};
-    const fld = (k, label, props) => { const [l, i] = field(label, props); inputs[k] = i; return l; };
-    inputs.gender = select([['m', 'ذكر'], ['f', 'أنثى'], ['', '—']], 'm');
-    inputs.type = select(ch.types.map(t => [t, t]), ch.types[0]);
-    // what each activity's design prints for a type (published by the app); an app of 1.8.0 only names the types
-    const needs = (id, t) => ch.needs ? (ch.needs[id] || {})[t]
-      : !ch.designs || (ch.designs[id] || []).includes(t) ? {names: [], mention: false, qs: []} : null;
-    const list = el('div'), asked = el('div', {className: 'grid2'}), note = el('p', {className: 'muted'});
-    const labels = {};
-    let want = new Set(), qs = new Map();  // what the ticked designs print
-    const draw = () => {
-      want = new Set(); qs = new Map();
-      list.replaceChildren(...acts.map(a => {
-        const n = needs(a.id, inputs.type.value);
-        if (!n) picked.delete(a.id);
-        if (n && picked.has(a.id)) { n.names.forEach(x => want.add(x)); if (n.mention) want.add('mention'); n.qs.forEach(q => qs.has(q.title) || qs.set(q.title, q)); }
-        const box = el('input', {type: 'checkbox', checked: picked.has(a.id), disabled: !n,
-          onchange: () => { box.checked ? picked.add(a.id) : picked.delete(a.id); draw(); }});
-        return el('label', {className: 'pick', style: n ? '' : 'opacity:.5'}, box,
-          el('span', null, el('b', {textContent: a.title}), ' ', el('span', {className: 'muted', textContent: (a.dates || '') + (n ? '' : ' — لا تصميم لهذا النوع')})));
-      }));
-      // every detail the ticked designs print is asked for, so no copy comes out with a blank
-      Object.entries({ar: 'first_ar', lat: 'first_lat', mention: 'mention'}).forEach(([k, f]) => { labels[f].textContent = want.has(k) ? ' *' : ''; });
-      asked.replaceChildren(...[...qs.values()].map(q => {
-        const i = (q.options || []).length && q.type !== 'checkbox' ? select([['', '—'], ...q.options.map(o => [o, o])], answers[q.title] || '')
-          : el('input', {value: answers[q.title] || ''});
-        i.oninput = i.onchange = () => { answers[q.title] = i.value; };
-        i.dataset.q = q.title;
-        return el('label', null, q.title + ' *', i);
-      }));
-      note.textContent = want.size || qs.size ? '* يطبعه تصميم الشهادة في الأنشطة المختارة: أكمله حتى تخرج كل النسخ كاملة ومتطابقة.' : '';
-    };
-    const star = (f, l) => { labels[f] = el('span', {style: 'color:var(--err)'}); l.firstChild.after(labels[f]); return l; };
-    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
-    const save = el('button', {className: 'act', type: 'submit', textContent: 'طلب إنشاء الشواهد وإرسالها'});
-    const form = el('form', {className: 'card person'}, el('h2', {textContent: 'شواهد لشخص في عدة أنشطة'}),
-      el('p', {className: 'muted', style: 'margin-top:0', textContent: 'يُضاف إلى كل نشاط تختاره حاضراً، وتصدر شهادته برقم ذلك النشاط وتصميمه، ثم تصله رسالة واحدة بكل شواهده، وتجد هنا روابطها وملفاً واحداً بها. إن كان مسجلاً فيه بالبريد نفسه فلا يُكرَّر.'}),
-      el('div', {className: 'grid2'}, star('first_ar', fld('first_ar', 'الاسم الشخصي بالعربية')), fld('last_ar', 'الاسم العائلي بالعربية'),
-        star('first_lat', fld('first_lat', 'Prénom', {dir: 'ltr'})), fld('last_lat', 'Nom', {dir: 'ltr'})),
-      el('div', {className: 'grid2'}, el('label', null, 'الجنس', inputs.gender), el('label', null, 'نوع الشهادة', inputs.type)),
-      el('div', {className: 'grid2'}, fld('email', 'البريد (تصله عليه الرسالة)', {type: 'email', dir: 'ltr'}), fld('phone', 'الهاتف', {type: 'tel', dir: 'ltr'})),
-      star('mention', fld('mention', 'الميزة/النتيجة')), asked, note,
-      el('h2', {style: 'margin:12px 0 0', textContent: 'الأنشطة'}), list,
-      el('div', {className: 'bar', style: 'margin-top:10px'}, save, btn('إلغاء', close, true)), err);
-    inputs.type.onchange = draw; draw();
-    form.onsubmit = async e => {
-      e.preventDefault();
-      const data = {acts: [...picked], answers: {}};
-      Object.entries(inputs).forEach(([k, x]) => { const t = x.value.trim(); if (t !== '') data[k] = t; });
-      asked.querySelectorAll('[data-q]').forEach(i => { if (i.value.trim()) data.answers[i.dataset.q] = i.value.trim(); });
-      if (!data.acts.length) { err.textContent = 'اختر نشاطاً واحداً على الأقل'; return; }
-      const has = (...ks) => ks.some(k => data[k]);
-      const lack = [want.has('ar') && !has('first_ar', 'last_ar') && 'الاسم بالعربية', want.has('lat') && !has('first_lat', 'last_lat') && 'الاسم باللاتينية',
-        want.has('mention') && !has('mention') && 'الميزة/النتيجة', ...[...qs.keys()].filter(t => !data.answers[t])].filter(Boolean);
-      if (lack.length) { err.textContent = 'أكمل ما يطبعه التصميم: ' + lack.join('، '); return; }
-      save.disabled = true;
-      try {
-        const r = await call('request', {kind: 'bundle', data});
-        if (r.status === 'ok') { toast('أُرسل الطلب، ويُنفَّذ على الحاسوب'); return close(); }
-        err.textContent = {noname: 'اكتب الاسم على الأقل', email: 'البريد غير صحيح', exists: 'الطلب نفسه ما زال ينتظر الحاسوب'}[r.status] || 'تعذر إرسال الطلب';
-      } catch (x) { /* toast shown */ }
-      save.disabled = false;
-    };
-    return form;
-  }
-
-  async function showActivity(id) {
-    nav(true); loading();
-    const j = await call('activity', {id});
-    if (j.status !== 'ok') return showList();
-    const a = j.activity, people = j.people;
-    // present now: recorded by the app (its sessions, or "present" for a one-session activity) or by a phone since
-    const here = p => sessionsOf(p).includes(a.session) || (a.sessions === 1 && Number(p.present) === 1);
-    const q = el('input', {type: 'search', placeholder: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...'});
-    const f = select([['all', 'الكل'], ['here', `حاضرون${a.sessions > 1 ? ' في الحصة ' + a.session : ''}`], ['away', 'غير مؤكدين'],
-      ['issued', 'لهم شهادة'], ...(can('organizer') ? [['mail', 'مشكلة في البريد']] : [])], 'all');
-    const listBox = el('div');
-    const head = el('div', {className: 'card'}, el('h1', {textContent: a.title}),
-      el('div', {className: 'muted', textContent: [a.kind, a.org, a.dates].filter(Boolean).join(' · ')}),
-      el('div', {className: 'nums'}, ...[['مسجل', people.length], ['حاضر الآن', people.filter(here).length],
-        ['شهادة', people.filter(p => p.serial).length], ['بريد', people.filter(p => Number(p.emailed) === 1).length]]
-        .map(([k, v]) => el('div', null, el('b', {textContent: v}), k))));
-    if (a.sessions > 1 && !can('organizer')) head.append(el('p', {className: 'muted', style: 'margin:8px 0 0', textContent: 'المسح الآن للحصة ' + a.session}));
+  function overview() {
+    const head = el('section', {className: 'card rise'},
+      el('div', {className: 'hint', dir: 'auto', style: 'margin-bottom:10px', textContent: [a.kind, a.org, a.dates].filter(Boolean).join(' · ')}),
+      stats([[t('sReg'), people.length], [t('hereNow'), people.filter(here).length], [t('sCert'), people.filter(p => p.serial).length],
+             [t('sMail'), people.filter(p => Number(p.emailed) === 1).length]]));
+    if (a.sessions > 1 && !can('organizer')) head.append(el('p', {className: 'hint', style: 'margin-top:10px', textContent: t('scanNow')(a.session)}));
     if (a.sessions > 1 && can('organizer')) {
-      const s = select(Array.from({length: a.sessions}, (_, i) => [i + 1, 'الحصة ' + (i + 1)]), a.session);
-      s.style.width = 'auto';
-      s.onchange = async () => { const r = await call('setsession', {id, s: Number(s.value)}); if (r.status === 'ok') { toast('المسح الآن للحصة ' + r.session + ' في كل الهواتف'); showActivity(id); } };
-      head.append(el('div', {className: 'bar', style: 'margin-top:10px'}, el('span', {className: 'muted', textContent: 'الحصة الجارية (للمسح والتأكيد):'}), s));
+      const s = select(Array.from({length: a.sessions}, (_, i) => [i + 1, t('sessionN')(i + 1)]), a.session);
+      s.onchange = async () => { const r = await call('setsession', {id: a.id, s: Number(s.value)}); if (r.status === 'ok') { toast(t('sessionSet')(r.session)); reload(); } };
+      head.append(el('div', {style: 'margin-top:12px;max-width:320px'}, labelled(t('curSession'), s)));
     }
-    const blocks = [head];
+    const out = [head];
     if (can('organizer')) {
-      if (/^https:\/\//.test(a.form)) head.append(el('div', {style: 'margin-top:8px'}, el('span', {className: 'muted', textContent: 'رابط استمارة التسجيل:'}), linkBox(a.form, a.title)));
-      const addBtn = btn('+ إضافة مشارك', () => addBtn.replaceWith(personForm(a, null, () => showActivity(a.id))), true);
-      addBtn.style.marginTop = '10px';
-      head.append(addBtn);
-      blocks.push(scanCard(a, j.link), requestsCard(a, j));
+      if (/^https:\/\//.test(a.form)) out.push(el('section', {className: 'card section'}, el('h2', {textContent: t('formLink')}), linkBox(a.form, a.title)));
+      out.push(scanCard(a, j.link, reload));
     }
+    return out;
+  }
+  function list() {
+    const q = el('input', {type: 'search', placeholder: t('search')});
+    const f = select([['all', t('fAll')], ['here', a.sessions > 1 ? t('fHereIn')(a.session) : t('fHere')], ['away', t('fAway')], ['issued', t('fIssued')],
+      ...(can('organizer') ? [['mail', t('fMail')]] : [])], 'all');
+    const box = el('div');
     const draw = () => {
       const s = q.value.trim().toLowerCase();
       const keep = {all: () => true, here, away: p => !here(p), issued: p => p.serial, mail: p => p.mail && p.mail.status === 'error'}[f.value];
       const shown = people.filter(p => keep(p) && (!s || [p.name, p.name_ar, p.name_lat, p.ticket, p.serial, p.email, p.phone].join(' ').toLowerCase().includes(s)));
-      listBox.replaceChildren(el('p', {className: 'muted', textContent: `${shown.length} من ${people.length}`}), ...shown.map(p => personCard(a, p, here)));
+      box.replaceChildren(el('p', {className: 'count', textContent: t('countOf')(shown.length, people.length)}),
+        el('div', {className: 'grid'}, ...shown.map(p => personCard(a, p, here, reload))));
     };
     q.oninput = draw; f.onchange = draw;
-    app.replaceChildren(...blocks,
-      el('div', {className: 'note', textContent: `البيانات كما في آخر مزامنة للمنصة (${fmtDate(a.updated) || '—'}). ما تؤكده أو تعدّله هنا يظهر فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`}),
-      el('div', {className: 'bar', style: 'margin-bottom:10px'}, el('div', {style: 'flex:2;min-width:200px'}, q), el('div', {style: 'flex:1;min-width:140px'}, f)),
-      listBox);
+    const tools = el('div', {className: 'tools-bar'}, el('div', {className: 'q'}, q), el('div', {className: 'f'}, f),
+      can('organizer') ? el('button', {className: 'btn', type: 'button', onclick: () => { const close = sheet(personForm(a, null, () => { close(); reload(); }, () => close())); }},
+        svg(ICON.plus), t('addPerson')) : null);
     draw();
+    return [el('p', {className: 'note', textContent: t('syncNote')(when(a.updated) || '—')}), tools, box];
   }
-
-  function scanCard(a, token) {  // the phones' scanning link: made here, it works at once and the previous one stops
-    const url = token ? new URL('scan.html#' + token, location.href).href : '';
-    const make = btn(token ? '↻ رابط جديد' : 'إنشاء رابط المسح', async () => {
-      if (token && !confirm('إنشاء رابط جديد؟ الرابط الحالي يتوقف فوراً في كل الهواتف.')) return;
-      make.disabled = true;
-      const r = await call('link', {id: a.id}).catch(() => ({}));
-      if (r.status === 'ok') { toast('أُنشئ رابط المسح: أرسله إلى المنظمين'); showActivity(a.id); } else { toast('تعذر إنشاء الرابط'); make.disabled = false; }
-    }, !!token);
-    return el('div', {className: 'card'}, el('h2', {textContent: 'رابط المسح للمنظمين'}),
-      url ? linkBox(url, 'مسح الحضور · ' + a.title)
-          : el('p', {className: 'muted', style: 'margin:0 0 6px', textContent: 'يفتح صفحة مسح البطاقات بكاميرا الهاتف، دون حساب ودون الحاجة للحاسوب.'}),
-      make);
-  }
-
-  function requestsCard(a, j) {
-    const ask = (kind, text, sure) => btn(text, async e => {
-      if (sure && !confirm(sure)) return;
+  function requests() {
+    const ask = (kind, key, sure, ghost) => btn(t(key), async e => {
+      if (sure && !confirm(t(sure))) return;
       e.target.disabled = true;
       const r = await call('request', {id: a.id, kind}).catch(() => ({}));
-      if (r.status === 'ok') { toast('أُرسل الطلب، ويُنفَّذ على الحاسوب'); return showActivity(a.id); }
-      toast(r.status === 'exists' ? 'طلب من النوع نفسه ما زال ينتظر الحاسوب' : 'تعذر إرسال الطلب');
+      if (r.status === 'ok') { toast(t('sent')); return reload(); }
+      toast(t(r.status === 'exists' ? 'exists' : 'reqFail'));
       e.target.disabled = false;
-    }, kind !== 'issue');
-    const box = el('div');
-    const edit = btn('✎ تعديل النشاط', () => box.replaceChildren(activityForm(j.choices, a, () => showActivity(a.id))), true);
-    return el('div', {className: 'card'}, el('h2', {textContent: 'طلبات للحاسوب'}), pcLine(j.pc),
-      el('div', {className: 'bar'}, ask('issue', 'إصدار الشواهد', 'إصدار شواهد كل الحاضرين المؤكدين (بعد مزامنة الحضور)؟'),
-        ask('email', '✉ إرسال الشواهد بالبريد', 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟'), ask('sync', '↻ مزامنة الآن'), edit),
-      box, jobList(j.jobs));
+    }, ghost ? 'ghost' : '');
+    const edit = btn(t('editAct'), () => { const close = sheet(activityForm(j.choices, a, () => { close(); reload(); }, () => close())); }, 'ghost');
+    return [el('section', {className: 'card rise'}, el('h2', {textContent: t('reqT')}), pcLine(j.pc),
+      el('div', {className: 'row'}, ask('issue', 'issue', 'issueSure'), ask('email', 'emailAll', 'emailSure', true), ask('sync', 'sync', null, true), edit),
+      el('div', {style: 'margin-top:12px'}, jobList(j.jobs)))];
   }
+  app.replaceChildren(el('div', {className: 'tabs-sticky'}, seg), body);
+  open(tab);
+}
 
-  const sessionsOf = p => [...new Set(String(p.attended || '').split(',').filter(Boolean).map(Number).concat(p.phone_scans))].sort();
+function scanCard(a, token, reload) {  // the phones' scanning link: made here, it works at once and the previous one stops
+  const url = token ? new URL('scan.html#' + token, location.href).href : '';
+  const make = btn(t(token ? 'scanNew' : 'scanMake'), async () => {
+    if (token && !confirm(t('scanSure'))) return;
+    make.disabled = true;
+    const r = await call('link', {id: a.id}).catch(() => ({}));
+    if (r.status === 'ok') { toast(t('scanMade')); reload(); } else { toast(t('scanFail')); make.disabled = false; }
+  }, token ? 'ghost' : '');
+  return el('section', {className: 'card section'}, el('h2', {textContent: t('scanT')}),
+    url ? linkBox(url, t('scanTitle') + ' · ' + a.title) : el('p', {className: 'hint', textContent: t('scanD')}),
+    el('div', {style: 'margin-top:10px'}, make));
+}
 
-  function personCard(a, p, here) {
-    const card = el('div', {className: 'card person'});
-    const att = sessionsOf(p);
-    card.append(el('div', {className: 'top'}, el('b', {textContent: p.name || p.name_ar || p.name_lat}),
-      p.ticket ? el('span', {className: 'muted ltr', textContent: p.ticket}) : el('span', {className: 'badge', textContent: 'دون بطاقة'})));
-    const tags = el('div', {className: 'bar'});
-    if (p.pending) tags.append(el('span', {className: 'badge warn', textContent: 'تعديل ينتظر المزامنة'}));
-    tags.append(here(p) ? el('span', {className: 'badge ok', textContent: a.sessions > 1 ? `حاضر في الحصة ${a.session}` : 'حاضر'})
-                        : el('span', {className: 'badge', textContent: 'غير مؤكد'}));
-    if (a.sessions > 1 && att.length) tags.append(el('span', {className: 'muted', textContent: 'الحصص: ' + att.join('، ')}));
-    if (p.type) tags.append(el('span', {className: 'badge', textContent: 'شهادة ' + p.type}));
-    card.append(tags);
-    if (p.serial) {
-      card.append(el('div', {className: 'bar'}, el('span', {className: 'ltr', textContent: p.serial}),
-        p.revoked ? el('span', {className: 'badge err', textContent: 'ملغاة'}) : [
-          p.code ? el('span', null, 'رمز التحقق: ', el('span', {className: 'code ltr', textContent: p.code})) : null,
-          /^https:\/\//.test(p.link) ? el('a', {href: p.link, target: '_blank', rel: 'noopener', textContent: 'تحميل'}) : null]));
-    }
+function personCard(a, p, here, reload) {
+  const card = el('article', {className: 'card person'});
+  const att = sessionsOf(p);
+  const draw = () => {
+    const tags = el('div', {className: 'row'});
+    if (p.pending) tags.append(el('span', {className: 'badge warn', textContent: t('pending')}));
+    tags.append(here(p) ? el('span', {className: 'badge ok', textContent: a.sessions > 1 ? t('hereIn')(a.session) : t('here')})
+                        : el('span', {className: 'badge', textContent: t('away')}));
+    if (a.sessions > 1 && att.length) tags.append(el('span', {className: 'hint', textContent: t('sessions') + att.join('، ')}));
+    if (p.type) tags.append(el('span', {className: 'badge', dir: 'auto', textContent: t('certOf')(p.type)}));
+    const parts = [el('div', {className: 'row'}, el('span', {className: 'name grow', dir: 'auto', textContent: p.name || p.name_ar || p.name_lat}),
+      p.ticket ? el('span', {className: 'hint ltr', textContent: p.ticket}) : el('span', {className: 'badge', textContent: t('noTicket')})), tags];
+    if (p.serial) parts.push(el('div', {className: 'row'}, el('span', {className: 'serial ltr', textContent: p.serial}),
+      p.revoked ? el('span', {className: 'badge err', textContent: t('revoked')}) : [
+        p.code ? el('span', {className: 'hint'}, t('code') + ': ', el('span', {className: 'codev ltr', textContent: p.code})) : null,
+        /^https:\/\//.test(p.link) ? el('a', {href: p.link, target: '_blank', rel: 'noopener', textContent: t('download')}) : null]));
     const contact = [p.email, p.phone].filter(Boolean).join(' · ');
-    if (contact) card.append(el('div', {className: 'muted ltr', style: 'text-align:right', textContent: contact}));
-    if (p.mail) card.append(el('div', null, el('span', {className: 'badge ' + ({sent: 'ok', error: 'err', pending: 'warn'}[p.mail.status] || ''),
-      textContent: {sent: '✉ أُرسل البريد', error: '✉ تعذر الإرسال', pending: '✉ في الطابور', cancelled: '✉ أُوقف'}[p.mail.status] || p.mail.status}),
-      p.mail.error ? el('span', {className: 'muted', textContent: ' ' + p.mail.error}) : null));
-    const acts = el('div', {className: 'bar'});
+    if (contact) parts.push(el('div', {className: 'contact ltr', textContent: contact}));
+    if (p.mail) parts.push(el('div', {}, el('span', {className: 'badge ' + ({sent: 'ok', error: 'err', pending: 'warn'}[p.mail.status] || ''),
+      textContent: '✉ ' + (t({sent: 'mSent', error: 'mErr', pending: 'mPending', cancelled: 'mStopped'}[p.mail.status] || '') || p.mail.status)}),
+      p.mail.error ? el('span', {className: 'hint', textContent: ' ' + p.mail.error}) : null));
+    const acts = el('div', {className: 'actions'});
     if (!here(p) && (p.ticket || p.uid)) {
-      const b = btn(a.sessions > 1 ? `✓ حاضر في الحصة ${a.session}` : '✓ تأكيد الحضور', async () => {
+      const b = btn('✓ ' + (a.sessions > 1 ? t('markIn')(a.session) : t('mark')), async () => {
         b.disabled = true;
         const r = await call('mark', p.ticket ? {id: a.id, ticket: p.ticket} : {id: a.id, uid: p.uid}).catch(() => ({}));
-        if (r.status === 'ok') { p.phone_scans.push(r.session); toast('سُجّل الحضور، ويصل إلى المنصة عند المزامنة'); card.replaceWith(personCard(a, p, here)); }
-        else b.disabled = false;
+        if (r.status === 'ok') { p.phone_scans.push(r.session); att.push(r.session); toast(t('marked')); draw(); } else b.disabled = false;
       });
       acts.append(b);
     }
     if (can('organizer')) {
       if (p.serial && !p.revoked && p.mail && p.mail.resendable) {
-        const b = btn('↻ إعادة إرسال البريد', async () => {
-          if (!confirm('إعادة إرسال رسالة الشهادة نفسها إلى ' + p.email + '؟')) return;
+        const b = btn(t('resend'), async () => {
+          if (!confirm(t('resendSure')(p.email))) return;
           b.disabled = true;
           const r = await call('resend', {id: a.id, pid: p.pid}).catch(() => ({}));
-          toast(r.status === 'ok' ? 'وُضعت الرسالة في طابور الإرسال' : 'نص الرسالة لم يعد محفوظاً (أقدم من 30 يوماً): أعد الإرسال من المنصة');
-        }, true);
+          toast(t(r.status === 'ok' ? 'resent' : 'resendOld'));
+        }, 'ghost');
         acts.append(b);
       }
-      if (p.uid) acts.append(btn('✎ تعديل', () => card.replaceWith(personForm(a, p, () => showActivity(a.id))), true));
+      if (p.uid) acts.append(btn(t('edit'), () => { const close = sheet(personForm(a, p, () => { close(); reload(); }, () => close())); }, 'ghost'));
       if (p.uid && !p.serial) {  // a certificate's holder stays: its number is public
-        const del = btn('حذف', async () => {
-          if (!confirm('حذف ' + (p.name || p.name_ar || p.name_lat) + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)')) return;
+        const del = btn(t('del'), async () => {
+          if (!confirm(t('delSure')(p.name || p.name_ar || p.name_lat))) return;
           del.disabled = true;
           const r = await call('edit', {id: a.id, op: 'delete', uid: p.uid}).catch(() => ({}));
-          if (r.status === 'ok') { toast('حُذف، ويصل الحذف إلى المنصة عند المزامنة'); showActivity(a.id); } else del.disabled = false;
-        }, true);
-        del.style.color = 'var(--err)';
+          if (r.status === 'ok') { toast(t('deleted')); reload(); } else del.disabled = false;
+        }, 'ghost danger');
         acts.append(del);
       }
     }
-    card.append(acts);
-    return card;
-  }
+    card.replaceChildren(...parts, acts);
+  };
+  draw();
+  return card;
+}
 
-  // add (p null) or correct a person; the app applies it at its next sync, like the same action on the computer
-  function personForm(a, p, close) {
-    const v = p || {}, inputs = {};
-    const fld = (k, label, props) => { const [l, i] = field(label, Object.assign({value: v[k] || ''}, props)); inputs[k] = i; return l; };
-    inputs.gender = select([['', '—'], ['m', 'ذكر'], ['f', 'أنثى']], v.gender || '');
-    const types = a.types && a.types.length ? a.types : [v.type].filter(Boolean);
-    inputs.type = select(types.map(t => [t, t]), v.type);
-    inputs.type.disabled = !!v.serial;
-    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
-    const save = el('button', {className: 'act', type: 'submit', textContent: p ? 'حفظ التصحيح' : 'إضافة'});
-    const form = el('form', {className: 'card person'}, el('h2', {textContent: p ? 'تصحيح: ' + (v.name || v.name_ar || v.name_lat) : 'مشارك جديد (دون بطاقة)'}),
-      el('div', {className: 'grid2'}, fld('first_ar', 'الاسم الشخصي بالعربية'), fld('last_ar', 'الاسم العائلي بالعربية'),
-        fld('first_lat', 'Prénom', {dir: 'ltr'}), fld('last_lat', 'Nom', {dir: 'ltr'})),
-      el('div', {className: 'grid2'}, el('label', null, 'الجنس', inputs.gender), el('label', null, 'نوع الشهادة', inputs.type)),
-      el('div', {className: 'grid2'}, fld('email', 'البريد', {type: 'email', dir: 'ltr'}), fld('phone', 'الهاتف', {type: 'tel', dir: 'ltr'})),
-      fld('mention', 'الميزة/النتيجة'),
-      v.serial ? el('p', {className: 'muted', textContent: 'له شهادة: تُعاد بالرقم والرابط نفسيهما عند المزامنة.'}) : null,
-      el('div', {className: 'bar'}, save, btn('إلغاء', close, true)), err);
-    form.onsubmit = async e => {
-      e.preventDefault();
-      const data = {};
-      // only what changed: a sheet the app has not rewritten yet shows some boxes empty, and they must not erase anything
-      Object.entries(inputs).forEach(([k, x]) => { if (!x.disabled && (!p || x.value.trim() !== String(v[k] || ''))) data[k] = x.value.trim(); });
-      if (p && !Object.keys(data).length) return close();
-      save.disabled = true;
-      try {
-        const r = await call('edit', p ? {id: a.id, op: 'edit', uid: p.uid, data} : {id: a.id, op: 'add', data});
-        if (r.status === 'ok') { toast(p ? 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة' : 'أُضيف، ويصل إلى المنصة عند المزامنة'); return close(); }
-        err.textContent = {noname: 'اكتب الاسم على الأقل', email: 'البريد غير صحيح'}[r.status] || 'تعذر الحفظ';
-      } catch (x) { /* toast shown */ }
-      save.disabled = false;
-    };
-    return form;
-  }
+// add (p null) or correct a person; the app applies it at its next sync, like the same action on the computer
+function personForm(a, p, done, close) {
+  const v = p || {}, inputs = {};
+  const fld = (k, label, props) => { const [l, i] = field(label, Object.assign({value: v[k] || ''}, props)); inputs[k] = i; return l; };
+  inputs.gender = select([['', '—'], ['m', t('male')], ['f', t('female')]], v.gender || '');
+  const types = a.types && a.types.length ? a.types : [v.type].filter(Boolean);
+  inputs.type = select(types.map(x => [x, x]), v.type);
+  inputs.type.disabled = !!v.serial;
+  const err = el('p', {className: 'err', role: 'alert'});
+  const save = el('button', {className: 'btn', type: 'submit', textContent: t(p ? 'saveFix' : 'add')});
+  const form = el('form', {className: 'form', noValidate: true}, el('h2', {dir: 'auto', textContent: p ? t('fixT')(v.name || v.name_ar || v.name_lat) : t('newPersonT')}),
+    el('div', {className: 'grid2'}, fld('first_ar', t('firstAr')), fld('last_ar', t('lastAr')), fld('first_lat', t('firstLat'), {dir: 'ltr'}), fld('last_lat', t('lastLat'), {dir: 'ltr'})),
+    el('div', {className: 'grid2'}, labelled(t('gender'), inputs.gender), labelled(t('certType'), inputs.type)),
+    el('div', {className: 'grid2'}, fld('email', t('email'), {type: 'email', dir: 'ltr'}), fld('phone', t('phone'), {type: 'tel', dir: 'ltr'})),
+    fld('mention', t('mention')),
+    v.serial ? el('p', {className: 'hint', textContent: t('hasCert')}) : null,
+    el('div', {className: 'row'}, save, btn(t('cancel'), close, 'ghost')), err);
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const data = {};
+    // only what changed: a sheet the app has not rewritten yet shows some boxes empty, and they must not erase anything
+    Object.entries(inputs).forEach(([k, x]) => { if (!x.disabled && (!p || x.value.trim() !== String(v[k] || ''))) data[k] = x.value.trim(); });
+    if (p && !Object.keys(data).length) return close();
+    save.disabled = true;
+    try {
+      const r = await call('edit', p ? {id: a.id, op: 'edit', uid: p.uid, data} : {id: a.id, op: 'add', data});
+      if (r.status === 'ok') { toast(t(p ? 'fixed' : 'added')); return done(); }
+      err.textContent = t({noname: 'noname', email: 'badEmail'}[r.status] || 'saveFail');
+    } catch (x) { /* toast shown */ }
+    save.disabled = false;
+  };
+  return form;
+}
 
-  // ---------- participants: everyone with certificates, as they sign in to «شواهدي» (me.html) ----------
+// ---------- participants: everyone with certificates, as they sign in to «شواهدي» (me.html) ----------
 
-  async function showParticipants() {
-    nav(true); loading();
-    const j = await call('participants');
-    if (j.status !== 'ok') return showList();
-    const q = el('input', {type: 'search', placeholder: 'بحث بالاسم أو البريد أو الرقم أو رقم الشهادة...'});
-    const box = el('div');
-    const draw = () => {
-      const s = q.value.trim().toLowerCase();
-      const shown = j.participants.filter(p => !s || [p.name, p.email, p.number, ...p.serials].join(' ').toLowerCase().includes(s));
-      box.replaceChildren(el('p', {className: 'muted', textContent: `${shown.length} من ${j.participants.length}`}),
-        ...shown.slice(0, 200).map(p => el('div', {className: 'card person'},
-          el('div', {className: 'top'}, el('b', {textContent: p.name}), el('span', {className: 'muted ltr', textContent: p.number})),
-          el('div', {className: 'muted ltr', style: 'text-align:right', textContent: p.email}),
-          el('div', {className: 'muted'}, `${p.serials.length} شهادة: `, el('span', {className: 'ltr', textContent: p.serials.join('، ')})))));
-    };
-    q.oninput = draw;
-    const page = new URL('me.html', location.href).href;
-    app.replaceChildren(el('h1', {textContent: 'المشاركون'}),
-      el('div', {className: 'card'}, el('p', {className: 'muted', style: 'margin:0 0 6px',
-        textContent: 'كل من له شهادة صالحة ببريد صحيح له رقم مشارك دائم، ويدخل صفحة «شواهدي» برقمه أو ببريده ورمز يصله على بريده، دون كلمة سر. القائمة تُحدَّث من المنصة على الحاسوب.'}),
-        linkBox(page, 'شواهدي')),
-      el('div', {style: 'margin-bottom:10px'}, q), box);
-    draw();
-  }
+async function showParticipants() {
+  mark('parts'); bar(t('nParts')); loading();
+  const j = await call('participants');
+  if (j.status !== 'ok') return showList();
+  const q = el('input', {type: 'search', placeholder: t('partsSearch')});
+  const box = el('div');
+  const draw = () => {
+    const s = q.value.trim().toLowerCase();
+    const shown = j.participants.filter(p => !s || [p.name, p.email, p.number, ...p.serials].join(' ').toLowerCase().includes(s));
+    box.replaceChildren(el('p', {className: 'count', textContent: t('countOf')(shown.length, j.participants.length)}),
+      el('div', {className: 'grid'}, ...shown.slice(0, 200).map(p => el('article', {className: 'card person'},
+        el('div', {className: 'row'}, el('span', {className: 'name grow', dir: 'auto', textContent: p.name}), el('span', {className: 'badge ltr', textContent: p.number})),
+        el('div', {className: 'contact ltr', textContent: p.email}),
+        el('div', {className: 'hint'}, t('certsN')(p.serials.length), el('span', {className: 'ltr', textContent: p.serials.join(', ')}))))));
+  };
+  q.oninput = draw;
+  app.replaceChildren(el('section', {className: 'card rise'}, el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('partsD')}),
+    linkBox(new URL('me.html', location.href).href, t('meLink'))),
+    el('div', {className: 'tools-bar section'}, el('div', {className: 'q'}, q)), box);
+  draw();
+}
 
-  // ---------- accounts (admin) and one's own password ----------
+// ---------- accounts (admin) ----------
 
-  async function showUsers() {
-    nav(true); loading();
-    const j = await call('users');
-    if (j.status !== 'ok') return showList();
-    const roleOpts = [['organizer', 'منظم: كل شيء ما عدا الحسابات'], ['scanner', 'ماسح: الحضور فقط، دون بيانات التواصل'], ['admin', 'مسؤول: كل شيء والحسابات']];
-    const [lf, login] = field('اسم الدخول (أحرف لاتينية صغيرة وأرقام)', {dir: 'ltr', autocomplete: 'off', required: true, pattern: '[a-z0-9._\\-]{3,30}'});
-    const [nf, name] = field('الاسم', {required: true, maxLength: 60});
-    const [pf, pw] = field('كلمة السر (8 أحرف على الأقل)', {type: 'password', autocomplete: 'new-password', required: true, minLength: 8});
-    const role = select(roleOpts, 'organizer');
-    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
-    const add = el('form', {className: 'card person'}, el('h2', {textContent: 'حساب جديد'}),
-      el('div', {className: 'grid2'}, lf, nf), el('div', {className: 'grid2'}, pf, el('label', null, 'الدور', role)),
-      el('div', {className: 'bar'}, el('button', {className: 'act', type: 'submit', textContent: 'إنشاء الحساب'})), err,
-      el('p', {className: 'muted', style: 'margin:0', textContent: 'أعطِ صاحب الحساب اسم الدخول وكلمة السر بنفسك، ويغيّرها هو من «كلمة السر» بعد دخوله.'}));
-    add.onsubmit = async e => {
-      e.preventDefault();
-      const r = await call('user', {op: 'add', login: login.value, name: name.value, role: role.value, password: pw.value}).catch(() => ({}));
-      if (r.status === 'ok') { toast('أُنشئ الحساب'); return showUsers(); }
-      err.textContent = {badlogin: 'اسم الدخول: من 3 إلى 30 حرفاً لاتينياً صغيراً أو رقماً (وليس admin)', taken: 'اسم الدخول مستعمل',
-                         short: 'كلمة السر قصيرة', bad: 'اكتب الاسم'}[r.status] || 'تعذر الإنشاء';
-    };
-    const set = async (u, change, done) => {
-      const r = await call('user', Object.assign({op: 'set', login: u.login}, change)).catch(() => ({}));
-      toast(r.status === 'ok' ? done : {short: 'كلمة السر قصيرة', self: 'لا تعدّل حسابك من هنا'}[r.status] || 'تعذر الحفظ');
-      if (r.status === 'ok') showUsers();
-    };
-    const cards = j.users.map(u => {
-      const r = select(roleOpts, u.role);
-      r.onchange = () => set(u, {role: r.value}, 'تغيّر الدور');
-      const mine = me && u.login === me.login;
-      r.disabled = mine;
-      return el('div', {className: 'card person'},
-        el('div', {className: 'top'}, el('b', {textContent: u.name}), el('span', {className: 'muted ltr', textContent: u.login}),
-          el('span', {className: 'badge ' + (u.active ? 'ok' : 'err'), textContent: u.active ? 'مفعّل' : 'موقوف'})),
-        r, mine ? el('p', {className: 'muted', style: 'margin:0', textContent: 'حسابك: يعدّله مسؤول آخر.'}) : el('div', {className: 'bar'},
-          btn(u.active ? 'إيقاف الحساب' : 'تفعيل الحساب', () => set(u, {active: !u.active}, u.active ? 'أُوقف الحساب، ويخرج من اللوحة فوراً' : 'فُعّل الحساب'), true),
-          btn('كلمة سر جديدة', () => { const p = prompt('كلمة السر الجديدة لـ ' + u.name + ' (8 أحرف على الأقل):'); if (p) set(u, {password: p}, 'تغيّرت كلمة السر'); }, true)));
-    });
-    app.replaceChildren(el('h1', {textContent: 'الحسابات'}),
-      el('p', {className: 'muted', textContent: 'حساب المسؤول admin تُضبط كلمة سره في المنصة على الحاسوب، ويبقى دائماً طريقاً للدخول.'}),
-      add, ...cards);
-  }
+async function showUsers() {
+  mark('users'); bar(t('nUsers')); loading();
+  const j = await call('users');
+  if (j.status !== 'ok') return showList();
+  const roleOpts = [['organizer', t('roOrganizer')], ['scanner', t('roScanner')], ['admin', t('roAdmin')]];
+  const [lf, login] = field(t('uLogin'), {dir: 'ltr', autocomplete: 'off', required: true, pattern: '[a-z0-9._\\-]{3,30}'});
+  const [nf, name] = field(t('uName'), {required: true, maxLength: 60});
+  const [pf, pw] = field(t('uPw'), {type: 'password', autocomplete: 'new-password', required: true, minLength: 8});
+  const role = select(roleOpts, 'organizer');
+  const err = el('p', {className: 'err', role: 'alert'});
+  const add = el('form', {className: 'card form rise'}, el('h2', {textContent: t('newUser')}),
+    el('div', {className: 'grid2'}, lf, nf), el('div', {className: 'grid2'}, pf, labelled(t('uRole'), role)),
+    el('div', {className: 'row'}, el('button', {className: 'btn', type: 'submit', textContent: t('create')})), err,
+    el('p', {className: 'hint', textContent: t('createHint')}));
+  add.onsubmit = async e => {
+    e.preventDefault();
+    const r = await call('user', {op: 'add', login: login.value, name: name.value, role: role.value, password: pw.value}).catch(() => ({}));
+    if (r.status === 'ok') { toast(t('created')); return showUsers(); }
+    err.textContent = t({badlogin: 'badlogin', taken: 'taken', short: 'short', bad: 'badName'}[r.status] || 'createFail');
+  };
+  const set = async (u, change, done) => {
+    const r = await call('user', Object.assign({op: 'set', login: u.login}, change)).catch(() => ({}));
+    toast(r.status === 'ok' ? t(done) : t({short: 'short', self: 'self'}[r.status] || 'saveFail'));
+    if (r.status === 'ok') showUsers();
+  };
+  const cards = j.users.map(u => {
+    const r = select(roleOpts, u.role);
+    r.onchange = () => set(u, {role: r.value}, 'roleChanged');
+    const mine = me && u.login === me.login;
+    r.disabled = mine;
+    return el('article', {className: 'card person'},
+      el('div', {className: 'row'}, el('span', {className: 'name grow', dir: 'auto', textContent: u.name}), el('span', {className: 'hint ltr', textContent: u.login}),
+        el('span', {className: 'badge ' + (u.active ? 'ok' : 'err'), textContent: t(u.active ? 'active' : 'stopped')})),
+      r, mine ? el('p', {className: 'hint', textContent: t('mine')}) : el('div', {className: 'actions'},
+        btn(t(u.active ? 'stop' : 'start'), () => set(u, {active: !u.active}, u.active ? 'stoppedMsg' : 'startedMsg'), 'ghost'),
+        btn(t('newPw'), () => { const p = prompt(t('newPwAsk')(u.name)); if (p) set(u, {password: p}, 'pwChanged'); }, 'ghost')));
+  });
+  app.replaceChildren(el('p', {className: 'note', textContent: t('usersD')}), add, el('div', {className: 'grid section'}, ...cards));
+}
 
-  function showPassword() {
-    nav(true);
-    const [of, old] = field('كلمة السر الحالية', {type: 'password', autocomplete: 'current-password', required: true});
-    const [nf, pw] = field('كلمة السر الجديدة (8 أحرف على الأقل)', {type: 'password', autocomplete: 'new-password', required: true, minLength: 8});
-    const err = el('p', {className: 'muted', style: 'color:var(--err)'});
-    const form = el('form', {className: 'card person', style: 'max-width:420px'}, el('h2', {textContent: 'تغيير كلمة السر'}), of, nf,
-      el('div', {className: 'bar'}, el('button', {className: 'act', type: 'submit', textContent: 'حفظ'})), err);
+// ---------- my account: language, theme, password, sign out ----------
+
+async function showMe() {
+  mark('me'); bar(t('nMe'));
+  if (!me) { loading(); await call('activities'); }  // opened directly: the answer names the account
+  const choice = (opts, value, pick) => el('div', {className: 'seg'}, ...opts.map(([v, key]) => el('button', {type: 'button', textContent: t(key),
+    ariaPressed: String(v === value), onclick: e => { pick(v); e.target.parentNode.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === e.target))); }})));
+  const blocks = [el('section', {className: 'card rise'}, el('p', {className: 'hint', style: 'margin:0', textContent: t('signedAs')}),
+    el('div', {className: 'row'}, el('span', {className: 'name grow', dir: 'auto', style: 'font-size:18px;font-weight:700', textContent: me.name}),
+      el('span', {className: 'badge', textContent: roleName(me.role)}), el('span', {className: 'hint ltr', textContent: me.login})),
+    el('div', {className: 'grid2', style: 'margin-top:16px'},
+      labelled(t('language'), choice([['ar', 'langAr'], ['fr', 'langFr'], ['en', 'langEn']], UI.lang, l => UI.setLang(l))),
+      labelled(t('theme'), choice([['auto', 'thAuto'], ['light', 'thLight'], ['dark', 'thDark']], UI.theme, v => UI.setTheme(v)))))];
+  if (me.login !== 'admin') {  // the admin's password is set in the app
+    const [of, old] = field(t('pwOld'), {type: 'password', autocomplete: 'current-password', required: true});
+    const [nf, pw] = field(t('pwNew'), {type: 'password', autocomplete: 'new-password', required: true, minLength: 8});
+    const err = el('p', {className: 'err', role: 'alert'});
+    const form = el('form', {className: 'card form section'}, el('h2', {textContent: t('pwT')}), el('div', {className: 'grid2'}, of, nf),
+      el('div', {className: 'row'}, el('button', {className: 'btn', type: 'submit', textContent: t('save')})), err);
     form.onsubmit = async e => {
       e.preventDefault();
       const r = await call('password', {old: old.value, password: pw.value}).catch(() => ({}));
-      if (r.status === 'ok') { toast('تغيّرت كلمة السر'); location.hash = ''; return; }
-      err.textContent = {wrong: 'كلمة السر الحالية غير صحيحة', short: 'كلمة السر الجديدة قصيرة', owner: 'كلمة سر المسؤول تُغيَّر في المنصة على الحاسوب'}[r.status] || 'تعذر الحفظ';
+      if (r.status === 'ok') { toast(t('pwChanged')); old.value = pw.value = ''; err.textContent = ''; return; }
+      err.textContent = t({wrong: 'wrongPw', short: 'shortNew', owner: 'ownerPw'}[r.status] || 'saveFail');
     };
-    app.replaceChildren(form);
+    blocks.push(form);
   }
+  blocks.push(el('div', {className: 'section'}, el('button', {className: 'btn ghost danger', type: 'button', textContent: t('logout'), onclick: async () => {
+    try { await call('logout'); } catch (e) { /* signed out here anyway */ }
+    remember(''); location.hash = ''; showLogin();
+  }})));
+  app.replaceChildren(...blocks);
+}
 
-  function route() {
-    if (!session) return showLogin();
-    const m = location.hash.match(/^#a(\d+)$/);
-    (m ? showActivity(m[1]) : location.hash === '#users' ? showUsers() : location.hash === '#parts' ? showParticipants() : location.hash === '#pw' ? Promise.resolve(showPassword()) : showList()).catch(() => {});
-  }
-  document.getElementById('back').onclick = () => { location.hash = ''; };
-  document.querySelector('#more .menu').addEventListener('click', () => { document.getElementById('more').open = false; });
-  document.getElementById('users').onclick = () => { location.hash = '#users'; };
-  document.getElementById('parts').onclick = () => { location.hash = '#parts'; };
-  document.getElementById('pw').onclick = () => { location.hash = '#pw'; };
-  document.getElementById('out').onclick = async () => { try { await call('logout'); } catch (e) {} remember(''); location.hash = ''; showLogin(); };
-  addEventListener('hashchange', route);
-  route();
+function route() {
+  if (!session) return showLogin();
+  const h = location.hash, m = h.match(/^#a(\d+)(?:\/(\w+))?$/);
+  if (h === '#pw') { location.hash = '#me'; return; }  // the old address of the password page
+  const go = m ? () => showActivity(m[1], m[2]) : {'#users': showUsers, '#parts': showParticipants, '#me': showMe}[h] || showList;
+  scrollTo(0, 0);
+  go().catch(() => {});
+}
+UI.init({page: 'dashboard', name: 'dash', shell: false, T, onLang: () => { if (me) { frame(); route(); } else if (!session) showLogin(); }});
+addEventListener('hashchange', route);
+route();
 </script>
 </body>
 </html>

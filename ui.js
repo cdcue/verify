@@ -73,33 +73,44 @@
   }
   function setTheme(v) { theme = v; store.set('theme', v === 'auto' ? null : v); applyTheme(); }
 
+  function paint(root) {  // the texts of the current language into [data-t], [data-tp] and [data-name] under root
+    root.querySelectorAll('[data-t]').forEach(n => { n.textContent = t(n.dataset.t); });
+    root.querySelectorAll('[data-tp]').forEach(n => { n.placeholder = t(n.dataset.tp); });
+    root.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    root.querySelectorAll('[data-name]').forEach(n => { n.textContent = NAME[lang]; });
+  }
   function setLang(l) {
     lang = l;
     store.set('lang', l);
     root.lang = l;
     root.dir = l === 'ar' ? 'rtl' : 'ltr';
-    document.querySelectorAll('[data-t]').forEach(n => { n.textContent = t(n.dataset.t); });
-    document.querySelectorAll('[data-tp]').forEach(n => { n.placeholder = t(n.dataset.tp); });
-    document.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
-    document.querySelectorAll('[data-name]').forEach(n => { n.textContent = NAME[l]; });
+    paint(document);
     document.title = (page.name ? t(page.name) + ' · ' : '') + NAME[l];
     applyTheme();
     if (page.onLang) page.onLang(l);
   }
 
-  function header(current) {  // the bar at the top of <header class="top">, then links to the public pages
-    const brand = el('a', {className: 'brand', href: 'index.html'},
+  function brand(href, sub) {
+    return el('a', {className: 'brand', href},
       LOGO ? el('img', {src: LOGO, alt: ''}) : el('span', {className: 'seal', ariaHidden: 'true'}, svg(ICON.seal)),
-      el('span', {style: 'min-width:0'}, el('b', {dataset: {name: ''}}), el('small', {dataset: {t: 'tagline'}})));
-    const langs = el('div', {className: 'langs', role: 'group', ariaLabel: 'Language'},
+      el('span', {style: 'min-width:0'}, el('b', {dataset: {name: ''}}), el('small', {dataset: {t: sub}})));
+  }
+  function langSwitch() {
+    return el('div', {className: 'langs', role: 'group', ariaLabel: 'Language'},
       ...LANGS.map(l => el('button', {type: 'button', lang: l, textContent: {ar: 'ع', fr: 'FR', en: 'EN'}[l], dataset: {lang: l},
-                                       onclick: () => setLang(l)})));
-    const themeBtn = el('button', {type: 'button', className: 'iconbtn', id: 'themeBtn',
-                                   onclick: () => setTheme(THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length])});
+                                       ariaPressed: String(l === lang), onclick: () => setLang(l)})));
+  }
+  function themeButton() {  // one button going round: device, light, dark
+    const b = el('button', {type: 'button', className: 'iconbtn', id: 'themeBtn',
+                            onclick: () => setTheme(THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length])});
+    queueMicrotask(applyTheme);
+    return b;
+  }
+  function header(current) {  // the bar at the top of <header class="top">, then links to the public pages
     const tabs = el('nav', {className: 'tabs', ariaLabel: 'Pages'},
       ...[['index.html', 'nVerify', 'verify'], ['me.html', 'nMe', 'me']].map(([href, key, id]) =>
         el('a', {href, dataset: {t: key}, ariaCurrent: id === current ? 'page' : null})));
-    return [el('div', {className: 'bar'}, brand, el('div', {className: 'tools'}, langs, themeBtn)), tabs];
+    return [el('div', {className: 'bar'}, brand('index.html', 'tagline'), el('div', {className: 'tools'}, langSwitch(), themeButton())), tabs];
   }
   function footer() {
     return el('footer', {}, el('div', {className: 'foot'},
@@ -109,14 +120,17 @@
       el('span', {className: 'ltr', textContent: String(new Date().getFullYear())})));
   }
 
-  function init(opts) {
+  function init(opts) {  // opts.shell false: the page draws its own frame (the dashboard), with the pieces below
     page = Object.assign(page, opts);
     const top = document.querySelector('header.top');
-    if (top) top.prepend(...header(opts.page));
-    document.body.append(footer());
+    if (opts.shell !== false) {
+      if (top) top.prepend(...header(opts.page));
+      document.body.append(footer());
+    }
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
     setLang(lang);
   }
 
-  window.UI = {init, setLang, t, el, svg, toast, fmtDate, store, get lang() { return lang; }};
+  window.UI = {init, setLang, setTheme, paint, t, el, svg, toast, fmtDate, store, brand, langSwitch, themeButton, NAME, LANGS, THEMES,
+               get lang() { return lang; }, get theme() { return theme; }};
 })();
