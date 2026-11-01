@@ -54,6 +54,16 @@
   .side .who button { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .25); color: #fff; }
   .pclock { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; color: var(--muted); border: 1px dashed var(--field);
             border-radius: 20px; padding: 1px 8px; white-space: nowrap; }
+  .pcbtn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border: 1px dashed var(--field); border-radius: 9px;
+           color: var(--muted); font-weight: 600; font-size: 14px; cursor: not-allowed; background: var(--soft); }
+  .pclink { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); cursor: not-allowed; }
+  .method.locked { opacity: .62; cursor: not-allowed; }
+  .method.locked:hover { background: var(--soft); border-color: var(--line); }
+  .doclink.locked { cursor: not-allowed; opacity: .7; }
+  .doclink.locked:hover { background: var(--soft); border-color: var(--line); }
+  .doclink.locked b { display: flex; align-items: center; gap: 6px; justify-content: space-between; }
+  .menu .items .lockrow { display: flex; align-items: center; gap: 8px; padding: 8px 10px; color: var(--muted); font-size: 14px; cursor: not-allowed; white-space: nowrap; }
+  @media (max-width: 560px) { .kpis { grid-template-columns: 1fr 1fr; } .kpi { padding: 10px 12px; gap: 10px; } .kpi .ico { width: 36px; height: 36px; } }
   .pclist { display: grid; gap: 6px; margin: 4px 0 0; padding: 0; list-style: none; }
   .pclist li { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--muted); }
   .pclist .ic { color: var(--muted); width: 15px; height: 15px; }
@@ -309,6 +319,39 @@ const T = {
     usersRO: 'الحسابات تُدار من المنصة على الحاسوب («الحسابات»): إضافة حساب، وتغيير دوره وجهته وكلمة سره، وإغلاقه. تظهر هنا كما هي هناك خلال دقيقة.',
     accOpen: 'مفتوح', accClosedB: 'مغلق', allOrgs: 'كل الجهات',
     pwPc: 'تُغيَّر كلمة السر من المنصة على الحاسوب («حسابي»)، وتصل إلى هنا خلال دقيقة.', pwT: 'كلمة السر',
+    more: 'المزيد', close: 'إغلاق', dupAct: 'نسخ كنشاط جديد (مع التصاميم)', archAct: 'أرشفة النشاط', revokeAll: 'إلغاء كل الشواهد', delAct: 'حذف النشاط',
+    s1: 'التسجيل والبطاقات', s2: 'الحضور والمشاركون', s3: 'تصميم الشواهد', s4: 'الإصدار والإرسال', stepsL: 'مراحل النشاط',
+    formReady: 'الاستمارة جاهزة', noForm: 'لم تُنشأ الاستمارة', hereOf: (h, n) => `${h} حاضر من ${n}`, noPeople: 'لا مشاركين بعد',
+    issuedSent: (i, e) => `${i} صادرة · ${e} مرسلة`, noIssued: 'لم تصدر شواهد',
+    formT: 'استمارة التسجيل', formD: 'استمارة Google بلغة النشاط، منشورة وتقبل الردود. تعديل عنوان النشاط أو تاريخه يحدّثها تلقائياً.',
+    lSheet: 'جدول التسجيلات (Sheets)', lFolder: 'مجلد النشاط (Drive)', lResp: 'الردود في Google Forms',
+    noFormD: 'تُنشأ استمارة Google بلغة النشاط مع جدول التسجيلات ومجلد Drive من المنصة على الحاسوب.', makeForm: 'إنشاء الاستمارة وجدول التسجيلات',
+    ticketsT: 'بطاقات الحضور', ticketsN: n => `${n} بطاقة`, ticketsD: s => `، 14 في كل ورقة A4 (${s} ورقة). كل بطاقة برقم فريد ورمز QR يفتح الاستمارة ورقمها معبأ مسبقاً، وتُسلَّم عند الخروج لإثبات الحضور.`,
+    ticketsPdf: 'تحميل البطاقات للطباعة (PDF)', ticketsChange: 'تغيير العدد',
+    attT: 'تأكيد الحضور', sessPick: 'المسح الآن للحصة', mPhones: 'بهواتف المنظمين عند الخروج', mPhonesCode: c => 'الرابط جاهز، أو بالرمز ' + c,
+    mPhonesReady: 'الرابط جاهز: امسحوا رمزه بالهاتف', mPhonesNone: 'أنشئ رابط المسح أولاً', mUpload: 'رفع مسح البطاقات المسلَّمة',
+    mUploadD: 'ملف PDF أو صور، يُقرأ رمز كل بطاقة', mNumbers: 'إدخال أرقام البطاقات', mNumbersD: 'بلوحة المفاتيح أو بقارئ QR يدوي',
+    mSign: 'لائحة التوقيع الموقّعة', mSignD: 'صوّرها بعد النشاط: يُقرأ من وقّع تلقائياً',
+    numbersD: 'اكتب أرقام البطاقات المسلَّمة (7 أو T4-007)، مفصولة بفاصلة أو مسافة أو سطر: يُسجَّل أصحابها حاضرين في الحصة الحالية.',
+    markThese: 'تسجيل الحضور', marking: (d, n) => `${d} من ${n}...`, markedN: n => `سُجّل ${n} حاضراً`, notReg: 'غير مسجلة بعد (تُحفظ وتُطابق عند المزامنة): ',
+    pSearch: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fProblem: 'تحتاج مراجعة', fPending: 'تعديلات تنتظر الحاسوب',
+    sName: 'الترتيب: الاسم', sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً',
+    hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم', cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة',
+    docsMenu: 'Excel والوثائق', dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
+    dSummary: 'التقرير الختامي للنشاط (PDF)', teamT: 'فريق النشاط', teamD: 'يُضاف المنظمون والمساعدون إلى النشاط من المنصة على الحاسوب («الحضور والمشاركون» ← «فريق النشاط»).',
+    designT: 'تصميم الشواهد', designD: 'تصميم الشهادة يتم في المنصة على الحاسوب: رفع التصميم (PDF من Canva أو غيره)، ووضع الاسم ورقم الشهادة ورمز QR عليه بالنقر، ومعاينته وتصغير حجمه.',
+    designItems: ['رفع التصميم لكل نوع شهادة', 'وضع المتغيرات على الشهادة ومعاينتها', 'نسخ تصميم من نشاط آخر', 'تصغير حجم التصميم'],
+    issueT: 'إصدار الشواهد ورفعها', thType: 'النوع', thPresent: 'حاضرون', thTodo: 'بلا شهادة', beforeT: 'قبل الإصدار',
+    chkProblems: n => `${n} تسجيل يحتاج مراجعة (اسم ناقص أو بريد غير صالح)`, chkOk: 'التسجيلات مراجَعة: لا أسماء ناقصة ولا بريد غير صالح',
+    chkPending: n => `${n} تعديل ينتظر الحاسوب: يُطبَّق قبل الإصدار`, chkPresent: n => `${n} حاضراً يستحقون الشهادة`,
+    issueAsk: n => `طلب إصدار الشواهد (${n})`, issueNote: 'كل حاضر يأخذ رقماً نهائياً لا يتكرر، وتُنشأ شهادته على الحاسوب وتُرفع إلى Drive وتُسجَّل في منصة التحقق.',
+    refreshT: 'تحديث كل الشواهد بعد خطأ في التصميم',
+    mailT: 'الإرسال بالبريد', mSentN: 'أُرسلت', mQueued: 'في الطابور', mTodo: 'لم تُرسل بعد', mFailed: 'تعذرت',
+    mailErrT: 'لم تصل الشهادة إلى هؤلاء: صحّح البريد بزر «تصحيح» ثم أعد الإرسال.', emailAsk: n => `طلب الإرسال (${n})`, previewT: 'معاينة البريد', testT: 'إرسال تجريبي إلى بريدي',
+    mailNote: 'من استلم لا يُرسل إليه مرة ثانية. الرسائل تخرج من حساب Google المتصل بالمنصة، برابط الشهادة.',
+    docsT: 'الوثائق والروابط', gPrint: 'للطباعة', gChat: 'للنشر في واتساب', gArchive: 'للمتابعة والأرشيف', docAll: 'كل الشواهد في ملف واحد (PDF)',
+    docSign: 'لائحة التوقيع (PDF)', docSummary: 'التقرير الختامي للنشاط (PDF)', docReport: 'لائحة المستفيدين (PDF)', docUndelivered: 'من لم تصلهم الشهادة (PDF)',
+    docXlsx: 'لائحة المشاركين (Excel)', docZip: 'كل الشواهد (ZIP)', lVerify: 'منصة التحقق', noJobs: 'لا طلبات لهذا النشاط بعد.', archived: 'مؤرشف',
   },
   fr: {
     dash: 'Espace organisateurs', loading: 'Chargement...', noRole: 'Votre compte n’a pas cette autorisation', cancel: 'Annuler', save: 'Enregistrer', back: 'Retour',
@@ -405,6 +448,39 @@ const T = {
     usersRO: 'Les comptes se gèrent dans la plateforme sur l’ordinateur (« Comptes ») : ajout, rôle, organisme, mot de passe, fermeture. Ils apparaissent ici tels quels dans la minute.',
     accOpen: 'Ouvert', accClosedB: 'Fermé', allOrgs: 'Tous les organismes',
     pwPc: 'Le mot de passe se change dans la plateforme sur l’ordinateur (« Mon compte ») et arrive ici dans la minute.', pwT: 'Mot de passe',
+    more: 'Plus', close: 'Fermer', dupAct: 'Dupliquer (avec les modèles)', archAct: 'Archiver l’activité', revokeAll: 'Annuler toutes les attestations', delAct: 'Supprimer l’activité',
+    s1: 'Inscription et cartes', s2: 'Présences et participants', s3: 'Modèles d’attestation', s4: 'Émission et envoi', stepsL: 'Étapes de l’activité',
+    formReady: 'Formulaire prêt', noForm: 'Formulaire non créé', hereOf: (h, n) => `${h} présents sur ${n}`, noPeople: 'Aucun participant',
+    issuedSent: (i, e) => `${i} émises · ${e} envoyées`, noIssued: 'Aucune attestation émise',
+    formT: 'Formulaire d’inscription', formD: 'Formulaire Google dans la langue de l’activité, publié et ouvert. Il suit les changements de titre ou de date.',
+    lSheet: 'Feuille des inscriptions (Sheets)', lFolder: 'Dossier de l’activité (Drive)', lResp: 'Réponses dans Google Forms',
+    noFormD: 'Le formulaire Google, sa feuille et son dossier Drive se créent depuis la plateforme sur l’ordinateur.', makeForm: 'Créer le formulaire et sa feuille',
+    ticketsT: 'Cartes de présence', ticketsN: n => `${n} cartes`, ticketsD: s => `, 14 par feuille A4 (${s} feuilles). Chaque carte a un numéro unique et un code QR qui ouvre le formulaire, numéro prérempli ; elle est remise à la sortie.`,
+    ticketsPdf: 'Télécharger les cartes (PDF)', ticketsChange: 'Changer le nombre',
+    attT: 'Confirmer les présences', sessPick: 'Scan pour la séance', mPhones: 'Avec les téléphones à la sortie', mPhonesCode: c => 'Lien prêt, ou par le code ' + c,
+    mPhonesReady: 'Lien prêt : scannez son code', mPhonesNone: 'Créez d’abord le lien de scan', mUpload: 'Importer le scan des cartes rendues',
+    mUploadD: 'PDF ou photos, chaque code est lu', mNumbers: 'Saisir les numéros de cartes', mNumbersD: 'Au clavier ou avec un lecteur QR',
+    mSign: 'Liste d’émargement signée', mSignD: 'Photographiée après l’activité : les signatures sont lues',
+    numbersD: 'Saisissez les numéros des cartes rendues (7 ou T4-007), séparés par virgule, espace ou ligne : leurs titulaires sont marqués présents pour la séance en cours.',
+    markThese: 'Marquer présents', marking: (d, n) => `${d} sur ${n}...`, markedN: n => `${n} marqués présents`, notReg: 'Pas encore inscrits (gardés et rapprochés à la synchronisation) : ',
+    pSearch: 'Rechercher par nom, carte, attestation ou e-mail...', fProblem: 'À revoir', fPending: 'Changements en attente de l’ordinateur',
+    sName: 'Tri : nom', sTicket: 'Tri : numéro de carte', sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord',
+    hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation', contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double',
+    docsMenu: 'Excel et documents', dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
+    dSummary: 'Rapport final (PDF)', teamT: 'Équipe de l’activité', teamD: 'Les organisateurs et assistants s’ajoutent depuis la plateforme sur l’ordinateur.',
+    designT: 'Modèles d’attestation', designD: 'La conception se fait dans la plateforme sur l’ordinateur : importer le modèle (PDF de Canva ou autre), y placer le nom, le numéro et le code QR, l’aperçu et la réduction de taille.',
+    designItems: ['Importer le modèle de chaque type', 'Placer les champs et prévisualiser', 'Copier le modèle d’une autre activité', 'Réduire la taille du modèle'],
+    issueT: 'Émettre et publier les attestations', thType: 'Type', thPresent: 'Présents', thTodo: 'Sans attestation', beforeT: 'Avant l’émission',
+    chkProblems: n => `${n} inscriptions à revoir (nom incomplet ou e-mail invalide)`, chkOk: 'Inscriptions revues : ni nom incomplet ni e-mail invalide',
+    chkPending: n => `${n} changements en attente de l’ordinateur : appliqués avant l’émission`, chkPresent: n => `${n} présents ont droit à l’attestation`,
+    issueAsk: n => `Demander l’émission (${n})`, issueNote: 'Chaque présent reçoit un numéro définitif ; son attestation est créée sur l’ordinateur, publiée sur Drive et inscrite au registre de vérification.',
+    refreshT: 'Mettre à jour toutes les attestations après une erreur de modèle',
+    mailT: 'Envoi par e-mail', mSentN: 'Envoyés', mQueued: 'En file', mTodo: 'Pas encore envoyés', mFailed: 'Échecs',
+    mailErrT: 'L’attestation n’est pas parvenue à ces personnes : corrigez l’e-mail puis renvoyez.', emailAsk: n => `Demander l’envoi (${n})`, previewT: 'Aperçu de l’e-mail', testT: 'Envoi de test',
+    mailNote: 'Personne ne reçoit deux fois. Les e-mails partent du compte Google relié à la plateforme, avec le lien de l’attestation.',
+    docsT: 'Documents et liens', gPrint: 'À imprimer', gChat: 'Pour WhatsApp', gArchive: 'Suivi et archives', docAll: 'Toutes les attestations (PDF)',
+    docSign: 'Liste d’émargement (PDF)', docSummary: 'Rapport final (PDF)', docReport: 'Liste des bénéficiaires (PDF)', docUndelivered: 'Attestations non reçues (PDF)',
+    docXlsx: 'Liste des participants (Excel)', docZip: 'Toutes les attestations (ZIP)', lVerify: 'Plateforme de vérification', noJobs: 'Aucune demande pour cette activité.', archived: 'Archivée',
   },
   en: {
     dash: 'Organizers', loading: 'Loading...', noRole: 'Your account is not allowed to do this', cancel: 'Cancel', save: 'Save', back: 'Back',
@@ -500,6 +576,39 @@ const T = {
     usersRO: 'Accounts are managed in the platform on the computer (“Accounts”): adding one, its role, organizer and password, closing it. They show here as they are there within a minute.',
     accOpen: 'Open', accClosedB: 'Closed', allOrgs: 'All organizers',
     pwPc: 'The password is changed in the platform on the computer (“My account”) and reaches this page within a minute.', pwT: 'Password',
+    more: 'More', close: 'Close', dupAct: 'Duplicate (with designs)', archAct: 'Archive the activity', revokeAll: 'Revoke every certificate', delAct: 'Delete the activity',
+    s1: 'Registration and cards', s2: 'Attendance and participants', s3: 'Certificate designs', s4: 'Issuing and emailing', stepsL: 'Activity steps',
+    formReady: 'Form ready', noForm: 'No form yet', hereOf: (h, n) => `${h} present of ${n}`, noPeople: 'No participants yet',
+    issuedSent: (i, e) => `${i} issued · ${e} emailed`, noIssued: 'No certificates issued',
+    formT: 'Registration form', formD: 'A Google form in the activity’s language, published and open. It follows changes to the title or date.',
+    lSheet: 'Registrations sheet (Sheets)', lFolder: 'Activity folder (Drive)', lResp: 'Responses in Google Forms',
+    noFormD: 'The Google form, its sheet and its Drive folder are made from the platform on the computer.', makeForm: 'Create the form and its sheet',
+    ticketsT: 'Attendance cards', ticketsN: n => `${n} cards`, ticketsD: s => `, 14 per A4 sheet (${s} sheets). Each card has a unique number and a QR code opening the form with its number filled in; it is handed in on the way out.`,
+    ticketsPdf: 'Download the cards (PDF)', ticketsChange: 'Change the number',
+    attT: 'Confirm attendance', sessPick: 'Scanning for session', mPhones: 'With organizers’ phones at the exit', mPhonesCode: c => 'Link ready, or by the code ' + c,
+    mPhonesReady: 'Link ready: scan its code', mPhonesNone: 'Make the scanning link first', mUpload: 'Upload scans of returned cards',
+    mUploadD: 'A PDF or photos, each code is read', mNumbers: 'Type the card numbers', mNumbersD: 'With the keyboard or a QR reader',
+    mSign: 'Signed attendance sheet', mSignD: 'Photographed after the activity: signatures are read',
+    numbersD: 'Type the numbers of the returned cards (7 or T4-007), separated by commas, spaces or lines: their holders are marked present for the current session.',
+    markThese: 'Mark present', marking: (d, n) => `${d} of ${n}...`, markedN: n => `${n} marked present`, notReg: 'Not registered yet (kept and matched at the sync): ',
+    pSearch: 'Search by name, card, certificate number or email...', fProblem: 'To review', fPending: 'Changes waiting for the computer',
+    sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number', sHereFirst: 'Present first',
+    hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing', qEmail: 'Invalid email', dupT: 'Duplicate card',
+    docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel', dSign: 'Attendance sheet (PDF)', dLister: 'List builder',
+    dSummary: 'Final report (PDF)', teamT: 'Activity team', teamD: 'Organizers and helpers are added from the platform on the computer.',
+    designT: 'Certificate designs', designD: 'Designs are made in the platform on the computer: upload the design (a PDF from Canva or elsewhere), place the name, number and QR code on it, preview it and make it smaller.',
+    designItems: ['Upload a design for each certificate type', 'Place the fields and preview', 'Copy a design from another activity', 'Make the design smaller'],
+    issueT: 'Issue and publish certificates', thType: 'Type', thPresent: 'Present', thTodo: 'Without certificate', beforeT: 'Before issuing',
+    chkProblems: n => `${n} registrations to review (name missing or invalid email)`, chkOk: 'Registrations reviewed: no missing name or invalid email',
+    chkPending: n => `${n} changes waiting for the computer: applied before issuing`, chkPresent: n => `${n} present are entitled to a certificate`,
+    issueAsk: n => `Ask to issue (${n})`, issueNote: 'Each present person gets a final number; the certificate is made on the computer, uploaded to Drive and recorded for verification.',
+    refreshT: 'Update every certificate after a design mistake',
+    mailT: 'Emailing', mSentN: 'Sent', mQueued: 'Queued', mTodo: 'Not sent yet', mFailed: 'Failed',
+    mailErrT: 'The certificate did not reach these people: correct the email, then send again.', emailAsk: n => `Ask to send (${n})`, previewT: 'Email preview', testT: 'Test email',
+    mailNote: 'Nobody gets it twice. Emails leave from the Google account linked to the platform, with the certificate’s link.',
+    docsT: 'Documents and links', gPrint: 'To print', gChat: 'For WhatsApp', gArchive: 'Follow-up and archive', docAll: 'Every certificate in one file (PDF)',
+    docSign: 'Attendance sheet (PDF)', docSummary: 'Final report (PDF)', docReport: 'List of recipients (PDF)', docUndelivered: 'Certificates not received (PDF)',
+    docXlsx: 'Participants list (Excel)', docZip: 'Every certificate (ZIP)', lVerify: 'Verification site', noJobs: 'No requests for this activity yet.', archived: 'Archived',
   },
 };
 const ICON = {
@@ -890,82 +999,273 @@ function bundleForm(ch, acts, done, close) {
 
 // ---------- one activity: overview, participants, requests ----------
 
-const sessionsOf = p => [...new Set(String(p.attended || '').split(',').filter(Boolean).map(Number).concat(p.phone_scans))].sort();
+const sessionsOf = p => [...new Set(String(p.attended || '').split(',').filter(Boolean).map(Number).concat(p.phone_scans || []))].sort();
+
+const pcTag = () => el('span', {className: 'pclock', title: t('onPcT')}, ic('lock'), t('onPc'));
+const pcBtn = (label, icon) => el('span', {className: 'pcbtn', title: t('onPcT'), ariaDisabled: 'true'}, ic(icon || 'lock'), label, pcTag());
+const pcLink = (icon, label) => el('span', {className: 'pclink', title: t('onPcT')}, ic(icon), label, pcTag());
+const pcDoc = (key, sub) => el('span', {className: 'doclink locked', title: t('onPcT')}, el('b', {}, t(key), pcTag()), sub ? el('small', {textContent: sub}) : null);
+const okEmail = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
+const quality = p => [!(p.name_ar || p.name_lat || p.name) && t('qName'), p.email && !okEmail(p.email) && t('qEmail')].filter(Boolean);
+const pname = p => p.name || p.name_ar || p.name_lat || '';
+function method(icon, title, sub, onclick) {  // a way to confirm attendance; the ones that need the computer are shown locked
+  return el('button', {type: 'button', className: 'method' + (onclick ? '' : ' locked'), disabled: !onclick, title: onclick ? null : t('onPcT'), onclick},
+    el('span', {className: 'ico'}, ic(icon)), el('span', {}, el('b', {}, title, onclick ? null : [' ', pcTag()]), el('small', {textContent: sub})));
+}
 
 async function showActivity(id, tab) {
   mark('acts'); bar(t('activity'), '#'); loading();
   const j = await call('activity', {id});
   if (j.status !== 'ok') return showList();
-  const a = j.activity, people = j.people;
+  const a = j.activity, people = j.people, org = can('organizer');
   bar(a.title, '#');
   // present now: recorded by the app (its sessions, or "present" for a one-session activity) or by a phone since
   const here = p => sessionsOf(p).includes(a.session) || (a.sessions === 1 && Number(p.present) === 1);
-  const tabs = [['overview', 'tOverview'], ['people', 'tPeople'], ...(can('organizer') ? [['requests', 'tRequests']] : [])];
-  if (!tabs.some(x => x[0] === tab)) tab = can('organizer') ? 'overview' : 'people';
-  const body = el('div');
-  const seg = el('div', {className: 'seg', role: 'tablist'}, ...tabs.map(([k, key]) => el('button', {type: 'button', role: 'tab', textContent: t(key),
-    ariaPressed: String(k === tab), onclick: () => open(k)})));
+  const issued = people.filter(p => p.serial), emailed = people.filter(p => Number(p.emailed) === 1);
   const reload = () => showActivity(a.id, tab);
+  const editAct = () => { const close = sheet(activityForm(j.choices, a, () => { close(); reload(); }, () => close())); };
+  const ask = (kind, label, sure, kindClass) => el('button', {type: 'button', className: kindClass || '', onclick: async e => {
+    if (sure && !confirm(t(sure))) return;
+    e.currentTarget.disabled = true;
+    const r = await call('request', {id: a.id, kind}).catch(() => ({}));
+    if (r.status === 'ok') { toast(t('sent')); return reload(); }
+    toast(t(r.status === 'exists' ? 'exists' : 'reqFail'));
+    e.target.disabled = false;
+  }}, ic({issue: 'cert', email: 'mail', sync: 'sync'}[kind]), label);
+  const more = el('details', {className: 'menu'}, el('summary', {className: 'btn sec', textContent: t('more') + ' ▾'}),
+    el('div', {className: 'items'}, ...[['copy', 'dupAct'], ['archive', 'archAct'], ...(can('admin') ? [['alert', 'revokeAll'], ['trash', 'delAct']] : [])]
+      .map(([icon, key]) => el('div', {className: 'lockrow', title: t('onPcT')}, ic(icon), t(key), el('span', {className: 'sp', style: 'flex:1'}), pcTag()))));
+  const head = el('header', {className: 'acthead rise'},
+    el('nav', {className: 'crumbs', ariaLabel: t('nHome')}, el('a', {href: '#'}, ic('home'), t('nHome')), el('span', {textContent: '/'}), el('span', {className: 'ltr', textContent: '#' + a.id})),
+    el('div', {className: 'bar', style: 'align-items:flex-start'},
+      el('div', {style: 'flex:1;min-width:240px'}, el('h1', {dir: 'auto'}, a.title, String(a.archived) === '1' ? [' ', el('span', {className: 'badge warn', textContent: t('archived')})] : null),
+        el('div', {className: 'meta'}, el('span', {className: 'badge gold', dir: 'auto', textContent: a.kind || t('activity')}),
+          a.org ? el('span', {dir: 'auto'}, ic('people'), a.org) : null, a.dates ? el('span', {dir: 'auto'}, ic('calendar'), a.dates) : null,
+          a.sessions > 1 ? el('span', {}, ic('clock'), t('sessionsLine')(a.sessions, a.session)) : null,
+          a.types.length ? el('span', {dir: 'auto'}, ic('award'), a.types.join('، ')) : null)),
+      org ? el('div', {className: 'bar'}, el('button', {type: 'button', className: 'sec', onclick: editAct}, ic('edit'), t('editAct')), more) : null),
+    el('div', {className: 'kpis', style: 'margin:16px 0 0'}, kpi('people', people.length, 'kReg'), kpi('check', people.filter(here).length, 'hereNow', 'ok'),
+      kpi('cert', issued.length, 'kCert', 'gold'), kpi('mail', emailed.length, 'kMail')));
+  // the steps, as on the computer; a helper has the attendance only
+  const steps = (org ? [['register', 's1', /^https:/.test(a.form || ''), t(a.form ? 'formReady' : 'noForm')],
+    ['people', 's2', people.some(here), people.length ? t('hereOf')(people.filter(here).length, people.length) : t('noPeople')],
+    ['design', 's3', null, t('onPcT')],
+    ['issue', 's4', issued.length > 0, issued.length ? t('issuedSent')(issued.length, emailed.length) : t('noIssued')]]
+    : [['people', 's2', people.some(here), t('hereOf')(people.filter(here).length, people.length)]]);
+  tab = {overview: 'people', requests: 'issue'}[tab] || tab;
+  if (!steps.some(x => x[0] === tab)) tab = org && !a.form ? 'register' : 'people';
+  const nav = el('nav', {className: 'steptabs', ariaLabel: t('stepsL'), style: org ? '' : 'grid-template-columns:minmax(0,1fr)'},
+    ...steps.map(([k, key, done, sub], i) => el('a', {href: '#a' + a.id + '/' + k, dataset: {t: k}, onclick: e => { e.preventDefault(); open(k); }},
+      el('span', {className: 'n' + (done ? ' done' : '')}, done ? ic('check') : done === null ? ic('lock') : String(i + 1)),
+      el('span', {}, el('b', {textContent: t(key)}), el('small', {textContent: sub})))));
+  const body = el('div');
   function open(k) {
     tab = k;
-    history.replaceState(null, '', '#a' + a.id + (k === 'overview' ? '' : '/' + k));
-    seg.querySelectorAll('button').forEach((b, i) => b.setAttribute('aria-pressed', String(tabs[i][0] === k)));
-    body.replaceChildren(...{overview, people: list, requests}[k]());
+    history.replaceState(null, '', '#a' + a.id + '/' + k);
+    nav.querySelectorAll('a').forEach(x => x.classList.toggle('on', x.dataset.t === k));
+    body.replaceChildren(...{register, people: attendance, design, issue}[k]().filter(Boolean));
   }
-  function overview() {
-    const head = el('section', {className: 'card rise'},
-      el('div', {className: 'hint', dir: 'auto', style: 'margin-bottom:10px', textContent: [a.kind, a.org, a.dates].filter(Boolean).join(' · ')}),
-      stats([[t('sReg'), people.length], [t('hereNow'), people.filter(here).length], [t('sCert'), people.filter(p => p.serial).length],
-             [t('sMail'), people.filter(p => Number(p.emailed) === 1).length]]));
-    if (a.sessions > 1 && !can('organizer')) head.append(el('p', {className: 'hint', style: 'margin-top:10px', textContent: t('scanNow')(a.session)}));
-    if (a.sessions > 1 && can('organizer')) {
-      const s = select(Array.from({length: a.sessions}, (_, i) => [i + 1, t('sessionN')(i + 1)]), a.session);
-      s.onchange = async () => { const r = await call('setsession', {id: a.id, s: Number(s.value)}); if (r.status === 'ok') { toast(t('sessionSet')(r.session)); reload(); } };
-      head.append(el('div', {style: 'margin-top:12px;max-width:320px'}, labelled(t('curSession'), s)));
+
+  // 1. registration: the form's link here; the cards' PDF on the computer
+  function register() {
+    return [el('div', {className: 'grid2'},
+      el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('form'), t('formT')),
+        /^https:/.test(a.form || '') ? [el('p', {className: 'muted', style: 'margin-top:0', textContent: t('formD')}), linkBox(a.form, a.title),
+          el('div', {className: 'links'}, pcLink('sheet', t('lSheet')), pcLink('folder', t('lFolder')), pcLink('chart', t('lResp')))]
+          : [el('p', {textContent: t('noFormD')}), pcBtn(t('makeForm'), 'plus')]),
+      el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('ticketsT')),
+        el('p', {className: 'muted', style: 'margin-top:0'}, el('b', {style: 'color:var(--ink)', textContent: t('ticketsN')(a.tickets || 0)}), t('ticketsD')(Math.ceil((a.tickets || 0) / 14))),
+        el('div', {className: 'bar'}, pcBtn(t('ticketsPdf'), 'print'), el('button', {type: 'button', className: 'ghost', onclick: editAct}, t('ticketsChange')))))];
+  }
+
+  // 2. attendance and participants
+  function attendance() {
+    let sess = null;
+    if (a.sessions > 1 && org) {
+      sess = el('select', {ariaLabel: t('curSession'), style: 'width:auto', onchange: async () => {
+        const r = await call('setsession', {id: a.id, s: Number(sess.value)}).catch(() => ({}));
+        if (r.status === 'ok') { toast(t('sessionSet')(r.session)); reload(); }
+      }}, ...Array.from({length: a.sessions}, (_, i) => el('option', {value: i + 1, selected: i + 1 === a.session, textContent: t('sessionN')(i + 1)})));
     }
-    const out = [head];
-    if (can('organizer')) {
-      if (/^https:\/\//.test(a.form)) out.push(el('section', {className: 'card section'}, el('h2', {textContent: t('formLink')}), linkBox(a.form, a.title)));
-      out.push(scanCard(a, j.link, j.code, reload));
+    const code = j.code ? j.code.slice(0, 4) + '-' + j.code.slice(4) : '';
+    const methods = el('div', {className: 'methods'},
+      org ? method('board', t('mPhones'), code ? t('mPhonesCode')(code) : t(j.link ? 'mPhonesReady' : 'mPhonesNone'),
+        () => { const close = sheet(el('div', {}, scanCard(a, j.link, j.code, () => { close(); reload(); }), el('div', {className: 'bar', style: 'margin-top:12px'}, btn(t('close'), () => close(), 'ghost')))); }) : null,
+      org ? method('folder', t('mUpload'), t('mUploadD')) : null,
+      method('text', t('mNumbers'), t('mNumbersD'), () => { const close = sheet(numbers(() => close())); }),
+      org ? method('print', t('mSign'), t('mSignD')) : null);
+    return [el('div', {className: 'card'}, el('div', {className: 'sec-h'}, el('h2', {}, ic('check'), t('attT')),
+      sess ? [el('span', {className: 'sp'}), el('span', {className: 'muted', textContent: t('sessPick')}), sess] : null), methods),
+      peopleCard(),
+      org ? el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('people'), t('teamT')), el('span', {className: 'sp'}), pcTag()),
+        el('p', {className: 'muted', style: 'margin:8px 0 0', textContent: t('teamD')})) : null];
+  }
+  function numbers(close) {  // card numbers typed (or read by a handheld QR reader), each marked present at the current session
+    const ta = el('textarea', {rows: 5, dir: 'ltr', placeholder: '1, 2, 15\nT' + a.id + '-007', ariaLabel: t('mNumbers')});
+    const say = el('p', {className: 'hint'});
+    const go = el('button', {type: 'submit'}, ic('check'), t('markThese'));
+    const known = new Set(people.map(p => String(p.ticket).toUpperCase()));
+    const f = el('form', {className: 'form', noValidate: true}, el('h2', {textContent: t('mNumbers')}), el('p', {className: 'hint', textContent: t('numbersD')}), ta,
+      el('div', {className: 'bar'}, go, btn(t('cancel'), close, 'ghost')), say);
+    f.onsubmit = async e => {
+      e.preventDefault();
+      const nums = [...new Set((ta.value.match(/T\d+-\d+|\d+/gi) || []).map(x => /^t/i.test(x) ? x.toUpperCase() : 'T' + a.id + '-' + x.padStart(3, '0')))];
+      if (!nums.length) return ta.focus();
+      go.disabled = true;
+      let done = 0;
+      for (const n of nums) {
+        const r = await call('mark', {id: a.id, ticket: n}).catch(() => ({}));
+        done += r.status === 'ok';
+        say.textContent = t('marking')(done, nums.length);
+      }
+      toast(t('markedN')(done));
+      const unknown = nums.filter(n => !known.has(n));
+      if (unknown.length) { say.textContent = t('notReg') + unknown.join('، '); go.disabled = false; return; }
+      close(); reload();
+    };
+    setTimeout(() => ta.focus(), 50);
+    return f;
+  }
+  function peopleCard() {
+    const tickets = {};
+    people.forEach(p => { if (p.ticket) tickets[p.ticket] = (tickets[p.ticket] || 0) + 1; });
+    const q = el('input', {type: 'search', placeholder: t('pSearch'), ariaLabel: t('pSearch'), style: 'flex:2;min-width:200px'});
+    const opt = (v, key) => el('option', {value: v, textContent: key});
+    const f = el('select', {ariaLabel: t('tPeople'), style: 'flex:1;min-width:150px'}, opt('all', t('fAll')),
+      opt('here', a.sessions > 1 ? t('fHereIn')(a.session) : t('fHere')), opt('away', t('fAway')), opt('issued', t('fIssued')),
+      ...(org ? [opt('problem', t('fProblem')), opt('mail', t('fMail')), opt('pending', t('fPending'))] : []));
+    const so = el('select', {ariaLabel: t('sName'), style: 'flex:1;min-width:150px'}, opt('name', t('sName')), opt('ticket', t('sTicket')),
+      opt('serial', t('sSerial')), opt('here', t('sHereFirst')));
+    const count = el('span', {className: 'muted', style: 'font-weight:400'});
+    const tb = el('tbody');
+    const cert = p => p.serial ? [el('a', {className: 'ltr', href: /^https:\/\//.test(p.link) ? p.link : null, target: '_blank', rel: 'noopener', textContent: p.serial}),
+      p.revoked ? [' ', el('span', {className: 'badge err', textContent: t('revoked')})] : null,
+      p.code && !p.revoked ? el('div', {className: 'muted', style: 'font-size:12px'}, t('code') + ': ', el('b', {className: 'ltr', style: 'letter-spacing:1px', textContent: p.code})) : null,
+      p.mail ? el('div', {}, el('span', {className: 'badge ' + ({sent: 'ok', error: 'err', pending: 'warn'}[p.mail.status] || ''),
+        title: p.mail.error || null}, ic('mail'), t({sent: 'mSent', error: 'mErr', pending: 'mPending', cancelled: 'mStopped'}[p.mail.status] || '') || p.mail.status)) : null]
+      : el('span', {className: 'muted', textContent: '—'});
+    const actions = p => {
+      const out = [];
+      if (p.serial && !p.revoked && p.mail && p.mail.resendable) out.push(btn(t('resend'), async e => {
+        if (!confirm(t('resendSure')(p.email))) return;
+        e.target.disabled = true;
+        const r = await call('resend', {id: a.id, pid: p.pid}).catch(() => ({}));
+        toast(t(r.status === 'ok' ? 'resent' : 'resendOld'));
+      }, 'ghost'));
+      if (p.uid) out.push(btn(t('edit'), () => { const close = sheet(personForm(a, p, () => { close(); reload(); }, () => close())); }, 'ghost'));
+      if (p.uid && !p.serial) out.push(btn(t('del'), async e => {  // a certificate's holder stays: its number is public
+        if (!confirm(t('delSure')(pname(p)))) return;
+        e.target.disabled = true;
+        const r = await call('edit', {id: a.id, op: 'delete', uid: p.uid}).catch(() => ({}));
+        if (r.status === 'ok') { toast(t('deleted')); reload(); } else e.target.disabled = false;
+      }, 'ghost danger'));
+      return out;
+    };
+    const row = p => {
+      const isHere = here(p), att = sessionsOf(p), qs = org ? quality(p) : [];
+      const markBtn = !isHere && (p.ticket || p.uid) ? btn('✓ ' + t('mark') + (a.sessions > 1 ? ' · ' + t('sessionN')(a.session) : ''), async e => {
+        e.target.disabled = true;
+        const r = await call('mark', p.ticket ? {id: a.id, ticket: p.ticket} : {id: a.id, uid: p.uid}).catch(() => ({}));
+        if (r.status === 'ok') { p.phone_scans.push(r.session); toast(t('marked')); draw(); } else e.target.disabled = false;
+      }, 'sec') : null;
+      return el('tr', {},
+        el('td', {className: 'c-att', dataset: {l: t('hereCol')}}, isHere ? el('span', {className: 'badge ok'}, ic('check'), a.sessions > 1 ? t('hereIn')(a.session) : t('here'))
+          : markBtn || el('span', {className: 'badge', textContent: t('away')}),
+          a.sessions > 1 && att.length ? el('div', {className: 'muted', style: 'font-size:12px', textContent: t('sessions') + att.join('، ')}) : null),
+        el('td', {className: 'ltr c-ticket', dataset: {l: t('ticket')}, style: 'white-space:nowrap'}, p.ticket
+          ? (tickets[p.ticket] > 1 ? el('span', {className: 'badge err', title: t('dupT'), textContent: p.ticket}) : p.ticket)
+          : el('span', {className: 'badge', textContent: t('noTicket')})),
+        el('td', {className: 'c-name'}, el('b', {dir: 'auto', style: 'font-weight:600', textContent: pname(p)}),
+          p.pending ? [' ', el('span', {className: 'badge warn', textContent: t('pending')})] : null, ...qs.map(x => [' ', el('span', {className: 'badge warn', textContent: x})]),
+          p.name_lat && p.name_ar ? el('div', {className: 'muted', dir: 'auto', textContent: p.name_lat}) : null),
+        el('td', {dataset: {l: t('certType')}, dir: 'auto', textContent: p.type || '—'}),
+        el('td', {className: 'c-wide', dataset: {l: t('cert')}}, cert(p)),
+        org ? el('td', {className: 'muted ltr c-wide', dataset: {l: t('contact')}, style: 'font-size:12px'}, p.email || '', p.phone ? [el('br'), p.phone] : null) : null,
+        org ? el('td', {className: 'c-edit'}, el('div', {className: 'bar', style: 'gap:4px;justify-content:flex-end'}, ...actions(p))) : null);
+    };
+    const keep = {all: () => true, here, away: p => !here(p), issued: p => p.serial, problem: p => quality(p).length || tickets[p.ticket] > 1,
+                  mail: p => p.mail && p.mail.status === 'error', pending: p => p.pending};
+    const order = {name: (x, y) => pname(x).localeCompare(pname(y), 'ar'), ticket: (x, y) => String(x.ticket || '~').localeCompare(String(y.ticket || '~'), 'en', {numeric: true}),
+                   serial: (x, y) => String(x.serial || '~').localeCompare(String(y.serial || '~'), 'en', {numeric: true}), here: (x, y) => here(y) - here(x)};
+    function draw() {
+      const s = q.value.trim().toLowerCase();
+      const shown = people.filter(p => keep[f.value](p) && (!s || [pname(p), p.name_ar, p.name_lat, p.ticket, p.serial, p.email, p.phone].join(' ').toLowerCase().includes(s)))
+        .sort(order[so.value]);
+      tb.replaceChildren(...shown.map(row));
+      count.textContent = '(' + t('countOf')(shown.length, people.length) + ')';
     }
+    [q, f, so].forEach(x => x.addEventListener('input', draw));
+    draw();
+    const docs = el('details', {className: 'menu'}, el('summary', {className: 'btn sec'}, ic('sheet'), t('docsMenu') + ' ▾'),
+      el('div', {className: 'items'}, ...['dExport', 'dImport', 'dSign', 'dLister', 'dSummary'].map(k =>
+        el('div', {className: 'lockrow', title: t('onPcT')}, t(k), el('span', {style: 'flex:1'}), pcTag()))));
+    const cols = [t('hereCol'), t('ticket'), t('name'), t('certType'), t('cert'), ...(org ? [t('contact'), ''] : [])];
+    return el('div', {className: 'card'},
+      el('div', {className: 'sec-h'}, el('h2', {}, ic('people'), t('tPeople'), ' ', count), el('span', {className: 'sp'}),
+        org && a.form ? ask('sync', t('sync')) : null,
+        org ? el('button', {type: 'button', className: 'sec', onclick: () => { const close = sheet(personForm(a, null, () => { close(); reload(); }, () => close())); }}, ic('plus'), t('addPerson')) : null,
+        org ? docs : null),
+      el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('syncNote')(when(a.updated) || '—')}),
+      people.length ? [el('div', {className: 'bar', style: 'margin-bottom:10px'}, q, f, so),
+        el('div', {className: 'tablewrap'}, el('table', {className: 'cards'}, el('thead', {}, el('tr', {}, ...cols.map(c => el('th', {textContent: c})))), tb))]
+        : el('p', {className: 'empty', textContent: t('noPeople')}));
+  }
+
+  // 3. designs: made on the computer
+  function design() {
+    return [el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('award'), t('designT')), el('span', {className: 'sp'}), pcTag()),
+      el('p', {className: 'muted', textContent: t('designD')}),
+      a.types.length ? el('div', {className: 'bar'}, ...a.types.map(x => el('span', {className: 'badge', dir: 'auto', textContent: t('certOf')(x)}))) : null,
+      el('ul', {className: 'pclist', style: 'margin-top:14px'}, ...t('designItems').map(x => el('li', {}, ic('lock'), x))))];
+  }
+
+  // 4. issuing and emailing: asked for here, carried out by the computer
+  function issue() {
+    const present = people.filter(p => Number(p.present) === 1 || here(p));
+    const types = [...new Set([...a.types, ...people.map(p => p.type).filter(Boolean)])];
+    const problems = people.filter(p => quality(p).length).length, pending = people.filter(p => p.pending).length;
+    const live = issued.filter(p => !p.revoked);
+    const failed = live.filter(p => p.mail && p.mail.status === 'error' && Number(p.emailed) !== 1);
+    const queued = live.filter(p => p.mail && p.mail.status === 'pending').length;
+    const todo = live.filter(p => okEmail(p.email || '') && Number(p.emailed) !== 1).length;
+    const reach = live.filter(p => okEmail(p.email || '')).length;
+    const check = (ok, text) => el('div', {style: 'font-size:13px;margin-top:4px;display:flex;gap:6px;align-items:center'},
+      el('span', {style: 'color:var(--' + (ok ? 'ok' : 'warn') + ')'}, ic(ok ? 'check' : 'alert')), el('span', {style: ok ? '' : 'font-weight:600', textContent: text}));
+    const stat = (n, key) => el('div', {className: 'stat'}, el('b', {textContent: n}), el('span', {textContent: t(key)}));
+    const out = [];
+    if (org) out.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('sync'), t('reqT')), pcLine(j.pc), jobList(j.jobs) || el('p', {className: 'hint', textContent: t('noJobs')})));
+    out.push(el('div', {className: 'grid2'},
+      el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('issueT')),
+        el('table', {style: 'margin-bottom:12px'}, el('tr', {}, ...['thType', 'thPresent', 'thTodo'].map(k => el('th', {textContent: t(k)}))),
+          ...types.map(x => el('tr', {}, el('td', {dir: 'auto', textContent: x}), el('td', {textContent: present.filter(p => (p.type || a.types[0]) === x).length}),
+            el('td', {textContent: present.filter(p => (p.type || a.types[0]) === x && !p.serial).length})))),
+        el('div', {className: 'card flat', style: 'margin:0 0 12px;padding:10px 12px'}, el('b', {style: 'font-size:14px', textContent: t('beforeT')}),
+          check(!problems, problems ? t('chkProblems')(problems) : t('chkOk')), pending ? check(false, t('chkPending')(pending)) : null,
+          check(present.length > 0, t('chkPresent')(present.length))),
+        org ? ask('issue', t('issueAsk')(present.length), 'issueSure', 'lg') : null,
+        el('p', {className: 'muted', textContent: t('issueNote')}),
+        issued.length ? el('div', {style: 'margin-top:8px'}, pcBtn(t('refreshT'), 'sync')) : null),
+      el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('mail'), t('mailT')),
+        el('div', {className: 'stats', style: 'grid-template-columns:repeat(auto-fit,minmax(90px,1fr));margin:10px 0'},
+          stat(emailed.length, 'mSentN'), stat(queued, 'mQueued'), stat(todo, 'mTodo'), stat(failed.length, 'mFailed')),
+        el('div', {className: 'progress'}, el('i', {style: 'width:' + (reach ? Math.round(100 * emailed.filter(p => !p.revoked).length / reach) : 0) + '%'})),
+        failed.length ? el('div', {style: 'margin:12px 0'}, el('p', {className: 'hint', style: 'margin-bottom:8px', textContent: t('mailErrT')}),
+          el('div', {className: 'tablewrap', style: 'max-height:260px'}, el('table', {}, ...failed.map(p => el('tr', {},
+            el('td', {dir: 'auto', textContent: pname(p)}), el('td', {className: 'ltr', textContent: p.email}), el('td', {className: 'muted', style: 'font-size:12px', textContent: p.mail.error || ''}),
+            el('td', {}, org && p.uid ? btn(t('edit'), () => { const close = sheet(personForm(a, p, () => { close(); reload(); }, () => close())); }, 'ghost') : null)))))) : null,
+        el('div', {className: 'bar', style: 'margin-top:12px'}, org ? ask('email', t('emailAsk')(todo), 'emailSure', 'lg') : null, pcBtn(t('previewT'), 'mail'), pcBtn(t('testT'), 'mail')),
+        el('p', {className: 'muted', textContent: t('mailNote')}))));
+    out.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('folder'), t('docsT')),
+      el('div', {className: 'docgroups'},
+        el('div', {}, el('h3', {}, ic('print'), t('gPrint')), pcDoc('docAll'), pcDoc('docSign'), pcDoc('docSummary')),
+        el('div', {}, el('h3', {}, ic('chat'), t('gChat')), pcDoc('docReport'), pcDoc('docUndelivered')),
+        el('div', {}, el('h3', {}, ic('sheet'), t('gArchive')), pcDoc('docXlsx'), pcDoc('docZip'))),
+      el('div', {className: 'links'}, pcLink('folder', t('lFolder')), pcLink('sheet', t('lSheet')),
+        el('a', {href: new URL('.', location.href).href, target: '_blank', rel: 'noopener'}, ic('verify'), t('lVerify')))));
     return out;
   }
-  function list() {
-    const q = el('input', {type: 'search', placeholder: t('search')});
-    const f = select([['all', t('fAll')], ['here', a.sessions > 1 ? t('fHereIn')(a.session) : t('fHere')], ['away', t('fAway')], ['issued', t('fIssued')],
-      ...(can('organizer') ? [['mail', t('fMail')]] : [])], 'all');
-    f.setAttribute('aria-label', t('tPeople'));
-    q.setAttribute('aria-label', t('search'));
-    const box = el('div');
-    const draw = () => {
-      const s = q.value.trim().toLowerCase();
-      const keep = {all: () => true, here, away: p => !here(p), issued: p => p.serial, mail: p => p.mail && p.mail.status === 'error'}[f.value];
-      const shown = people.filter(p => keep(p) && (!s || [p.name, p.name_ar, p.name_lat, p.ticket, p.serial, p.email, p.phone].join(' ').toLowerCase().includes(s)));
-      box.replaceChildren(el('p', {className: 'count', textContent: t('countOf')(shown.length, people.length)}),
-        el('div', {className: 'grid'}, ...shown.map(p => personCard(a, p, here, reload))));
-    };
-    q.oninput = draw; f.onchange = draw;
-    const tools = el('div', {className: 'tools-bar'}, el('div', {className: 'q'}, q), el('div', {className: 'f'}, f),
-      can('organizer') ? el('button', {className: 'btn', type: 'button', onclick: () => { const close = sheet(personForm(a, null, () => { close(); reload(); }, () => close())); }},
-        svg(ICON.plus), t('addPerson')) : null);
-    draw();
-    return [el('p', {className: 'note', textContent: t('syncNote')(when(a.updated) || '—')}), tools, box];
-  }
-  function requests() {
-    const ask = (kind, key, sure, ghost) => btn(t(key), async e => {
-      if (sure && !confirm(t(sure))) return;
-      e.target.disabled = true;
-      const r = await call('request', {id: a.id, kind}).catch(() => ({}));
-      if (r.status === 'ok') { toast(t('sent')); return reload(); }
-      toast(t(r.status === 'exists' ? 'exists' : 'reqFail'));
-      e.target.disabled = false;
-    }, ghost ? 'ghost' : '');
-    const edit = btn(t('editAct'), () => { const close = sheet(activityForm(j.choices, a, () => { close(); reload(); }, () => close())); }, 'ghost');
-    return [el('section', {className: 'card rise'}, el('h2', {textContent: t('reqT')}), pcLine(j.pc),
-      el('div', {className: 'row'}, ask('issue', 'issue', 'issueSure'), ask('email', 'emailAll', 'emailSure', true), ask('sync', 'sync', null, true), edit),
-      el('div', {style: 'margin-top:12px'}, jobList(j.jobs)))];
-  }
-  app.replaceChildren(el('div', {className: 'tabs-sticky'}, seg), body);
+
+  app.replaceChildren(head, nav, body);
   open(tab);
 }
 
