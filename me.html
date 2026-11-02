@@ -86,7 +86,8 @@ const T = {
        copyAll: 'نسخ كل الروابط', copied: 'نُسخت الروابط', share: 'مشاركة', listHead: n => 'شواهد ' + n + ':',
        revoked: 'ملغاة', cert: 'شهادة', serial: 'رقم الشهادة', vcode: 'رمز التحقق', download: 'تحميل', verify: 'صفحة التحقق', addedB: 'أضفتَها برقمها',
        addT: 'أضف شهادة باسمك', addD: 'شهادة صدرت دون بريد أو بغير بريدك؟ اكتب رقمها كما هو عليها: تُضاف إن كان الاسم عليها اسمك.',
-       addPh: 'CDCUE-2026-P0012', add: 'إضافة', added: 'أُضيفت الشهادة إلى حسابك',
+       addPh: 'CDCUE-2026-P0012', add: 'إضافة', added: 'أُضيفت الشهادة إلى حسابك', vcodeL: 'رمز التحقق المطبوع على الشهادة (إن وُجد)',
+       codeC: 'لهذه الشهادة رمز تحقق: اكتبه كما هو مطبوع عليها (بجانب رمز QR).',
        notfound: 'لا شهادة بهذا الرقم: تأكد منه كما هو مكتوب عليها.', have: 'هذه الشهادة في حسابك أصلاً.', revokedC: 'هذه الشهادة ملغاة.',
        nameC: 'الاسم على هذه الشهادة ليس اسمك في الحساب.', waitC: 'محاولات كثيرة اليوم: أعد المحاولة غداً.',
        accT: 'حسابي', chPw: 'تغيير كلمة السر', oldPw: 'كلمة السر الحالية', wrongPw: 'كلمة السر غير صحيحة.', pwChanged: 'تغيّرت كلمة السر',
@@ -122,7 +123,8 @@ const T = {
        copyAll: 'Copier tous les liens', copied: 'Liens copiés', share: 'Partager', listHead: n => 'Attestations de ' + n + ' :',
        revoked: 'Annulée', cert: 'Attestation', serial: 'Numéro', vcode: 'Code de vérification', download: 'Télécharger', verify: 'Page de vérification', addedB: 'Ajoutée par numéro',
        addT: 'Ajouter une attestation à votre nom', addD: 'Une attestation émise sans e-mail, ou avec un autre ? Saisissez son numéro tel qu’il y figure : elle est ajoutée si le nom est le vôtre.',
-       addPh: 'CDCUE-2026-P0012', add: 'Ajouter', added: 'Attestation ajoutée à votre compte',
+       addPh: 'CDCUE-2026-P0012', add: 'Ajouter', added: 'Attestation ajoutée à votre compte', vcodeL: 'Code de vérification imprimé (s’il y en a un)',
+       codeC: 'Cette attestation a un code de vérification : saisissez-le tel qu’imprimé (près du code QR).',
        notfound: 'Aucune attestation avec ce numéro : vérifiez-le.', have: 'Cette attestation est déjà dans votre compte.', revokedC: 'Cette attestation est annulée.',
        nameC: 'Le nom sur cette attestation n’est pas celui de votre compte.', waitC: 'Trop d’essais aujourd’hui : réessayez demain.',
        accT: 'Mon compte', chPw: 'Changer le mot de passe', oldPw: 'Mot de passe actuel', wrongPw: 'Mot de passe incorrect.', pwChanged: 'Mot de passe changé',
@@ -158,7 +160,8 @@ const T = {
        copyAll: 'Copy all links', copied: 'Links copied', share: 'Share', listHead: n => 'Certificates of ' + n + ':',
        revoked: 'Revoked', cert: 'Certificate', serial: 'Number', vcode: 'Verification code', download: 'Download', verify: 'Verification page', addedB: 'Added by number',
        addT: 'Add a certificate in your name', addD: 'A certificate issued without an email, or to another one? Type its number as printed on it: it is added if the name on it is yours.',
-       addPh: 'CDCUE-2026-P0012', add: 'Add', added: 'Certificate added to your account',
+       addPh: 'CDCUE-2026-P0012', add: 'Add', added: 'Certificate added to your account', vcodeL: 'Verification code printed on it (if any)',
+       codeC: 'This certificate has a verification code: type it as printed (next to the QR code).',
        notfound: 'No certificate with this number: check it as printed.', have: 'This certificate is already in your account.', revokedC: 'This certificate was revoked.',
        nameC: 'The name on this certificate is not your account’s name.', waitC: 'Too many tries today: try again tomorrow.',
        accT: 'My account', chPw: 'Change the password', oldPw: 'Current password', wrongPw: 'Wrong password.', pwChanged: 'Password changed',
@@ -349,19 +352,21 @@ const signOut = () => { keep(''); data = null; signIn(); };
 
 function addBox() {  // a certificate added by its number, when the name on it is the account's
   const [sb, serial] = input('serial', {dir: 'ltr', autocomplete: 'off', spellcheck: false, placeholder: t('addPh'), style: 'text-transform:uppercase'});
+  const [cb, vcode] = input('vcodeL', {dir: 'ltr', autocomplete: 'off', spellcheck: false, maxLength: 8, style: 'text-transform:uppercase'});
   const say = el('p', {className: 'say', role: 'alert'});
   const go = el('button', {className: 'btn', type: 'submit', textContent: t('add')});
   const f = el('form', {className: 'card pad stack rise', noValidate: true},
-    el('div', {}, el('h2', {textContent: t('addT')}), el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('addD')})), sb, go, say);
+    el('div', {}, el('h2', {textContent: t('addT')}), el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('addD')})), sb, cb, go, say);
   f.onsubmit = async e => {
     e.preventDefault();
     if (!serial.value.trim()) return serial.focus();
     const done = busy(go);
     try {
-      const r = await call('meclaim', {token, serial: serial.value});
+      const r = await call('meclaim', {token, serial: serial.value, code: vcode.value});
       if (r.status === 'ok') { UI.toast(t('added')); data = null; return mine(); }
       if (r.status === 'login') return signOut();
-      say.textContent = t({notfound: 'notfound', have: 'have', revoked: 'revokedC', name: 'nameC', wait: 'waitC'}[r.status] || 'sendFail');
+      say.textContent = t({notfound: 'notfound', have: 'have', revoked: 'revokedC', name: 'nameC', wait: 'waitC', code: 'codeC'}[r.status] || 'sendFail');
+      if (r.status === 'code') vcode.focus();
     } catch (e2) { /* toast shown */ }
     done();
   };

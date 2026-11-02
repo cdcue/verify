@@ -1480,7 +1480,7 @@ async function showSearch(start) {  // one person across one's activities, as on
     if (v.length < 2) return out.replaceChildren(el('p', {className: 'muted', textContent: t('search2')}));
     go.disabled = true;
     out.replaceChildren(el('div', {className: 'card skeleton'}, el('i', {style: 'width:60%'}), el('i', {style: 'width:85%'})));
-    const j = await call('search', {q: v}).catch(() => null);
+    const j = await call('search', {q: v}).catch(e => { if (e.message === 'role') location.hash = '#'; return null; });
     go.disabled = false;
     history.replaceState(null, '', '#search/' + encodeURIComponent(v));
     if (!j || j.status !== 'ok') return out.replaceChildren();
@@ -1684,7 +1684,7 @@ function route() {
     : h.startsWith('#search') ? () => showSearch(decodeURIComponent(h.slice(8)))
     : {'#users': showUsers, '#parts': showParticipants, '#me': showMe, '#stats': showStats, '#org': showOrg, '#bundle': () => showList(newBundle)}[h] || (() => showList());
   scrollTo(0, 0);
-  go().catch(() => {});
+  go().catch(e => { if (e.message === 'role') location.hash = '#'; });  // a page this role does not open: home, not a page left loading
 }
 UI.init({page: 'dashboard', name: 'dash', shell: false, T, onLang: () => { if (me) { frame(); route(); } else if (!session) showLogin(); }});
 addEventListener('hashchange', route);
