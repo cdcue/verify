@@ -239,8 +239,11 @@ const T = {
     fDates: 'التاريخ / الأيام', datesPh: 'مثال: 12 و13 مارس 2026', fHours: 'التوقيت أو عدد الساعات', fPlace: 'المكان', fSessions: 'عدد الحصص',
     fMin: 'الحد الأدنى للحضور (حصص)', minPh: 'كل الحصص', fTickets: 'عدد البطاقات المطبوعة', fWa: 'رابط مجموعة واتساب', fTpl: 'أسئلة إضافية من نموذج',
     noTpl: 'بلا أسئلة إضافية', editHint: 'ما يُترك فارغاً يبقى كما هو. العنوان والتاريخ والمكان تتبعها الاستمارة في Google Forms.',
-    newHint: 'تُنشأ على الحاسوب الاستمارة وجدول التسجيلات، ثم يظهر النشاط هنا برابط استمارته. التصميم يُضاف على الحاسوب.', askEdit: 'طلب التعديل',
-    askNew: 'طلب إنشاء النشاط', editT: 'تعديل النشاط', newT: 'نشاط جديد', notitle: 'اكتب العنوان', editWaiting: 'تعديل سابق ما زال ينتظر الحاسوب',
+    newHint: 'يُنشأ النشاط هنا مباشرة مع استمارة Google بلغته ومجلد Drive، وتصل تسجيلاتها إلى المنصة تلقائياً. التصميم والطباعة على الحاسوب.',
+    askEdit: 'حفظ التعديل', askNew: 'إنشاء النشاط واستمارته', making: 'جارٍ إنشاء الاستمارة… قد يستغرق ذلك نصف دقيقة', saved: 'حُفظ التعديل',
+    madeAct: 'أُنشئ النشاط واستمارته', madeForm: 'أُنشئت الاستمارة', formFail: 'حُفظ النشاط لكن تعذر إنشاء الاستمارة أو تحديثها: أعد المحاولة من خطوة التسجيل',
+    badOrg: 'الجهة المنظمة غير موجودة', badVal: 'قيمة غير صالحة (اللغة أو نوع الشهادة)',
+    importOk: r => `قُرئت ${r.read} إجابة: ${r.added} جديدة و${r.changed} معدّلة`, editT: 'تعديل النشاط', newT: 'نشاط جديد', notitle: 'اكتب العنوان',
     bT: 'شواهد لشخص في عدة أنشطة',
     bD: 'يُضاف إلى كل نشاط تختاره حاضراً، وتصدر شهادته برقم ذلك النشاط وتصميمه، ثم تصله رسالة واحدة بكل شواهده، وتجد هنا روابطها وملفاً واحداً بها. إن كان مسجلاً فيه بالبريد نفسه فلا يُكرَّر.',
     firstAr: 'الاسم الشخصي بالعربية', lastAr: 'الاسم العائلي بالعربية', firstLat: 'Prénom (بالحروف اللاتينية)', lastLat: 'Nom (بالحروف اللاتينية)',
@@ -258,7 +261,7 @@ const T = {
     scanFail: 'تعذر إنشاء الرابط', scanTitle: 'مسح الحضور', scanCodeT: 'أو برمز المسح',
     scanCodeD: page => `يفتح المساعد ${page} ويكتب هذا الرمز، دون رابط ولا رمز QR. يتغير مع كل رابط جديد، ويتوقف بأرشفة النشاط.`, copyCode: 'نسخ الرمز',
     codeCopied: 'نُسخ الرمز', issue: 'إصدار الشواهد', issueSure: 'إصدار شواهد كل الحاضرين المؤكدين (بعد مزامنة الحضور)؟',
-    emailSure: 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟', sync: 'مزامنة الآن', editAct: 'تعديل النشاط', noTicket: 'دون بطاقة',
+    emailSure: 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟', sync: 'جلب التسجيلات الآن', editAct: 'تعديل النشاط', noTicket: 'دون بطاقة',
     pending: 'تعديل ينتظر المزامنة', hereIn: s => 'حاضر في الحصة ' + s, here: 'حاضر', away: 'غير مؤكد', sessions: 'الحصص: ', certOf: x => 'شهادة ' + x,
     revoked: 'ملغاة', code: 'رمز التحقق', download: 'تحميل', mSent: 'أُرسل البريد', mErr: 'تعذر الإرسال', mPending: 'في الطابور', mStopped: 'أُوقف',
     markIn: s => 'حاضر في الحصة ' + s, mark: 'تأكيد الحضور', marked: 'سُجّل الحضور، ويصل إلى المنصة عند المزامنة', resend: 'إعادة إرسال البريد',
@@ -295,7 +298,7 @@ const T = {
     hereOf: (h, n) => `${h} حاضر من ${n}`, noPeople: 'لا مشاركين بعد', issuedSent: (i, e) => `${i} صادرة · ${e} مرسلة`, noIssued: 'لم تصدر شواهد',
     formT: 'استمارة التسجيل', formD: 'استمارة Google بلغة النشاط، منشورة وتقبل الردود. تعديل عنوان النشاط أو تاريخه يحدّثها تلقائياً.',
     lSheet: 'جدول التسجيلات (Sheets)', lFolder: 'مجلد النشاط (Drive)', lResp: 'الردود في Google Forms',
-    noFormD: 'تُنشأ استمارة Google بلغة النشاط مع جدول التسجيلات ومجلد Drive من المنصة على الحاسوب.', makeForm: 'إنشاء الاستمارة وجدول التسجيلات',
+    noFormD: 'لا استمارة لهذا النشاط بعد: أنشئها الآن بلغة النشاط، مع مجلد Drive.', makeForm: 'إنشاء الاستمارة',
     ticketsT: 'بطاقات الحضور', ticketsN: n => `${n} بطاقة`,
     ticketsD: s => `، 14 في كل ورقة A4 (${s} ورقة). كل بطاقة برقم فريد ورمز QR يفتح الاستمارة ورقمها معبأ مسبقاً، وتُسلَّم عند الخروج لإثبات الحضور.`,
     ticketsPdf: 'تحميل البطاقات للطباعة (PDF)', ticketsChange: 'تغيير العدد', attT: 'تأكيد الحضور', sessPick: 'المسح الآن للحصة',
@@ -367,9 +370,12 @@ const T = {
     fPlace: 'Lieu', fSessions: 'Nombre de séances', fMin: 'Présence minimale (séances)', minPh: 'Toutes les séances', fTickets: 'Nombre de cartes imprimées',
     fWa: 'Lien du groupe WhatsApp', fTpl: 'Questions supplémentaires d’un modèle', noTpl: 'Sans questions supplémentaires',
     editHint: 'Un champ laissé vide reste inchangé. Le titre, la date et le lieu sont repris dans le formulaire Google Forms.',
-    newHint: 'Le formulaire et la feuille des inscriptions sont créés sur l’ordinateur, puis l’activité apparaît ici avec son lien. Le design s’ajoute sur l’ordinateur.',
-    askEdit: 'Demander la modification', askNew: 'Demander la création', editT: 'Modifier l’activité', newT: 'Nouvelle activité', notitle: 'Saisissez le titre',
-    editWaiting: 'Une modification précédente attend encore l’ordinateur', bT: 'Attestations d’une personne pour plusieurs activités',
+    newHint: 'L’activité est créée ici directement, avec son formulaire Google dans sa langue et son dossier Drive ; les inscriptions arrivent seules. Le design et l’impression se font sur l’ordinateur.',
+    askEdit: 'Enregistrer', askNew: 'Créer l’activité et son formulaire', making: 'Création du formulaire… jusqu’à une demi-minute', saved: 'Modification enregistrée',
+    madeAct: 'Activité et formulaire créés', madeForm: 'Formulaire créé', formFail: 'Activité enregistrée, mais le formulaire n’a pu être créé ou mis à jour : réessayez depuis l’étape Inscription',
+    badOrg: 'Organisme introuvable', badVal: 'Valeur non valide (langue ou type d’attestation)',
+    importOk: r => `${r.read} réponses lues : ${r.added} nouvelles, ${r.changed} modifiées`, editT: 'Modifier l’activité', newT: 'Nouvelle activité', notitle: 'Saisissez le titre',
+    bT: 'Attestations d’une personne pour plusieurs activités',
     bD: 'La personne est ajoutée comme présente à chaque activité choisie ; chaque attestation reçoit le numéro et le design de son activité, puis un seul e-mail les regroupe toutes, et leurs liens et un fichier unique apparaissent ici. Déjà inscrite avec le même e-mail : pas de doublon.',
     firstAr: 'Prénom en arabe', lastAr: 'Nom en arabe', firstLat: 'Prénom (latin)', lastLat: 'Nom (latin)', gender: 'Civilité', male: 'Homme', female: 'Femme',
     certType: 'Type d’attestation', bEmail: 'E-mail (reçoit le message)', email: 'E-mail', phone: 'Téléphone', mention: 'Mention / résultat',
@@ -390,7 +396,7 @@ const T = {
     scanCodeD: page => `L’assistant ouvre ${page} et saisit ce code, sans lien ni code QR. Il change à chaque nouveau lien et s’arrête quand l’activité est archivée.`,
     copyCode: 'Copier le code', codeCopied: 'Code copié', issue: 'Émettre les attestations',
     issueSure: 'Émettre les attestations de tous les présents confirmés (après synchronisation des présences) ?',
-    emailSure: 'Mettre en file d’envoi les e-mails de ceux qui n’ont pas encore reçu leur attestation ?', sync: 'Synchroniser', editAct: 'Modifier l’activité',
+    emailSure: 'Mettre en file d’envoi les e-mails de ceux qui n’ont pas encore reçu leur attestation ?', sync: 'Récupérer les inscriptions', editAct: 'Modifier l’activité',
     noTicket: 'Sans carte', pending: 'Modification en attente de synchronisation', hereIn: s => 'Présent séance ' + s, here: 'Présent', away: 'Non confirmé',
     sessions: 'Séances : ', certOf: x => 'Attestation ' + x, revoked: 'Annulée', code: 'Code de vérification', download: 'Télécharger', mSent: 'E-mail envoyé',
     mErr: 'Envoi échoué', mPending: 'En file d’attente', mStopped: 'Arrêté', markIn: s => 'Présent séance ' + s, mark: 'Confirmer la présence',
@@ -435,8 +441,8 @@ const T = {
     issuedSent: (i, e) => `${i} émises · ${e} envoyées`, noIssued: 'Aucune attestation émise', formT: 'Formulaire d’inscription',
     formD: 'Formulaire Google dans la langue de l’activité, publié et ouvert. Il suit les changements de titre ou de date.',
     lSheet: 'Feuille des inscriptions (Sheets)', lFolder: 'Dossier de l’activité (Drive)', lResp: 'Réponses dans Google Forms',
-    noFormD: 'Le formulaire Google, sa feuille et son dossier Drive se créent depuis la plateforme sur l’ordinateur.',
-    makeForm: 'Créer le formulaire et sa feuille', ticketsT: 'Cartes de présence', ticketsN: n => `${n} cartes`,
+    noFormD: 'Cette activité n’a pas encore de formulaire : créez-le maintenant, dans sa langue, avec son dossier Drive.',
+    makeForm: 'Créer le formulaire', ticketsT: 'Cartes de présence', ticketsN: n => `${n} cartes`,
     ticketsD: s => `, 14 par feuille A4 (${s} feuilles). Chaque carte a un numéro unique et un code QR qui ouvre le formulaire, numéro prérempli ; elle est remise à la sortie.`,
     ticketsPdf: 'Télécharger les cartes (PDF)', ticketsChange: 'Changer le nombre', attT: 'Confirmer les présences', sessPick: 'Scan pour la séance',
     mPhones: 'Avec les téléphones à la sortie', mPhonesCode: c => 'Lien prêt, ou par le code ' + c, mPhonesReady: 'Lien prêt : scannez son code',
@@ -513,9 +519,12 @@ const T = {
     fSessions: 'Number of sessions', fMin: 'Minimum attendance (sessions)', minPh: 'All sessions', fTickets: 'Printed tickets', fWa: 'WhatsApp group link',
     fTpl: 'Extra questions from a template', noTpl: 'No extra questions',
     editHint: 'Fields left empty stay as they are. The Google Form follows the title, date and place.',
-    newHint: 'The form and registration sheet are created on the computer, then the activity shows here with its form link. The design is added on the computer.',
-    askEdit: 'Request the change', askNew: 'Request the activity', editT: 'Edit activity', newT: 'New activity', notitle: 'Enter the title',
-    editWaiting: 'An earlier change is still waiting for the computer', bT: 'One person’s certificates in several activities',
+    newHint: 'The activity is created here directly, with its Google form in its language and its Drive folder; registrations arrive by themselves. Design and printing are on the computer.',
+    askEdit: 'Save', askNew: 'Create the activity and its form', making: 'Creating the form… up to half a minute', saved: 'Change saved',
+    madeAct: 'Activity and form created', madeForm: 'Form created', formFail: 'The activity is saved, but its form could not be created or updated: try again from the Registration step',
+    badOrg: 'Organization not found', badVal: 'Invalid value (language or certificate type)',
+    importOk: r => `${r.read} answers read: ${r.added} new, ${r.changed} changed`, editT: 'Edit activity', newT: 'New activity', notitle: 'Enter the title',
+    bT: 'One person’s certificates in several activities',
     bD: 'The person is added as present to each activity you pick; each certificate gets that activity’s number and design, then one email carries them all, and their links and one combined file appear here. Already registered with the same email: no duplicate.',
     firstAr: 'First name in Arabic', lastAr: 'Last name in Arabic', firstLat: 'First name (Latin)', lastLat: 'Last name (Latin)', gender: 'Gender',
     male: 'Male', female: 'Female', certType: 'Certificate type', bEmail: 'Email (receives the message)', email: 'Email', phone: 'Phone',
@@ -535,7 +544,7 @@ const T = {
     scanCodeD: page => `The assistant opens ${page} and types this code, no link or QR code needed. It changes with every new link and stops when the activity is archived.`,
     copyCode: 'Copy the code', codeCopied: 'Code copied', issue: 'Issue certificates',
     issueSure: 'Issue certificates to every confirmed attendee (after syncing attendance)?',
-    emailSure: 'Queue the emails of everyone who has not received their certificate yet?', sync: 'Sync now', editAct: 'Edit activity', noTicket: 'No ticket',
+    emailSure: 'Queue the emails of everyone who has not received their certificate yet?', sync: 'Fetch registrations now', editAct: 'Edit activity', noTicket: 'No ticket',
     pending: 'Change waiting for sync', hereIn: s => 'Present in session ' + s, here: 'Present', away: 'Not confirmed', sessions: 'Sessions: ',
     certOf: x => 'Certificate: ' + x, revoked: 'Revoked', code: 'Verification code', download: 'Download', mSent: 'Email sent', mErr: 'Email failed',
     mPending: 'Queued', mStopped: 'Stopped', markIn: s => 'Present in session ' + s, mark: 'Confirm attendance',
@@ -579,7 +588,7 @@ const T = {
     noIssued: 'No certificates issued', formT: 'Registration form',
     formD: 'A Google form in the activity’s language, published and open. It follows changes to the title or date.', lSheet: 'Registrations sheet (Sheets)',
     lFolder: 'Activity folder (Drive)', lResp: 'Responses in Google Forms',
-    noFormD: 'The Google form, its sheet and its Drive folder are made from the platform on the computer.', makeForm: 'Create the form and its sheet',
+    noFormD: 'This activity has no form yet: create it now, in its language, with its Drive folder.', makeForm: 'Create the form',
     ticketsT: 'Attendance cards', ticketsN: n => `${n} cards`,
     ticketsD: s => `, 14 per A4 sheet (${s} sheets). Each card has a unique number and a QR code opening the form with its number filled in; it is handed in on the way out.`,
     ticketsPdf: 'Download the cards (PDF)', ticketsChange: 'Change the number', attT: 'Confirm attendance', sessPick: 'Scanning for session',
@@ -821,7 +830,7 @@ function showLogin(msg) {
 let home = null;  // the last answer of the home page: the forms opened from the menu and the top bar use it
 function newActivity() {
   if (!home) { location.hash = '#'; return; }
-  const close = sheet(activityForm(home.choices, null, () => { close(); showList(); }, () => close()));
+  const close = sheet(activityForm(home.choices, null, id => { close(); location.hash = '#a' + id + '/register'; }, () => close()));
 }
 function newBundle() {
   if (!can('organizer')) return;
@@ -901,7 +910,7 @@ async function showList(then) {
   if (then) then();
 }
 
-// new activity (a null) or its details: a request the app carries out like its own form
+// new activity (a null), made here with its Google form, or its details changed (its form's title and text follow)
 function activityForm(ch, a, done, close) {
   if (!ch) return el('div', {className: 'form'}, el('p', {className: 'note', textContent: t('noChoices')}), el('div', {className: 'row end'}, btn(t('cancel'), close, 'ghost')));
   const inputs = {}, v = a || {sessions: 1, tickets: ch.tickets, lang: ch.lang};
@@ -930,11 +939,12 @@ function activityForm(ch, a, done, close) {
     Object.entries(inputs).forEach(([k, x]) => { const val = x.value.trim(); if (val !== '' && (!a || val !== String(v[k] == null ? '' : v[k]))) data[k] = val; });
     if (a && !Object.keys(data).length) return close();
     save.disabled = true;
+    err.textContent = a ? '' : t('making');
     try {
-      const r = await call('request', a ? {id: a.id, kind: 'update', data} : {kind: 'activity', data});
-      if (r.status === 'ok') { toast(t('sent')); return done(); }
-      err.textContent = t({notitle: 'notitle', exists: 'editWaiting'}[r.status] || 'reqFail');
-    } catch (x) { /* toast shown */ }
+      const r = await call('actsave', a ? {id: a.id, data} : {data});
+      if (r.status === 'ok') { toast(t(r.form === 'fail' ? 'formFail' : a ? 'saved' : 'madeAct')); return done(r.id); }
+      err.textContent = t({notitle: 'notitle', nochoices: 'noChoices', org: 'badOrg', bad: 'badVal'}[r.status] || 'saveFail');
+    } catch (x) { err.textContent = ''; /* toast shown */ }
     save.disabled = false;
   };
   return form;
@@ -1083,7 +1093,15 @@ async function showActivity(id, tab) {
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('form'), t('formT')),
         /^https:/.test(a.form || '') ? [el('p', {className: 'muted', style: 'margin-top:0', textContent: t('formD')}), linkBox(a.form, a.title),
           el('div', {className: 'links'}, pcLink('sheet', t('lSheet')), pcLink('folder', t('lFolder')), pcLink('chart', t('lResp')))]
-          : [el('p', {textContent: t('noFormD')}), pcBtn(t('makeForm'), 'plus')]),
+          : [el('p', {textContent: t('noFormD')}), el('button', {type: 'button', onclick: async e => {
+            const b = e.currentTarget;
+            b.disabled = true;
+            toast(t('making'));
+            const r = await call('mkform', {id: a.id}).catch(() => ({}));
+            if (r.status === 'ok' || r.status === 'exists') { toast(t('madeForm')); return reload(); }
+            toast(t('formFail'));
+            b.disabled = false;
+          }}, ic('plus'), t('makeForm'))]),
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('ticketsT')),
         el('p', {className: 'muted', style: 'margin-top:0'}, el('b', {style: 'color:var(--ink)', textContent: t('ticketsN')(a.tickets || 0)}), t('ticketsD')(Math.ceil((a.tickets || 0) / 14))),
         el('div', {className: 'bar'}, pcBtn(t('ticketsPdf'), 'print'), el('button', {type: 'button', className: 'ghost', onclick: editAct}, t('ticketsChange')))))];
@@ -1213,7 +1231,15 @@ async function showActivity(id, tab) {
     const cols = [t('hereCol'), t('ticket'), t('name'), t('certType'), t('cert'), ...(org ? [t('contact'), ''] : [])];
     return el('div', {className: 'card'},
       el('div', {className: 'sec-h'}, el('h2', {}, ic('people'), t('tPeople'), ' ', count), el('span', {className: 'sp'}),
-        org && a.form ? ask('sync', t('sync')) : null,
+        org && a.form ? el('button', {type: 'button', onclick: async e => {
+          const b = e.currentTarget;
+          b.disabled = true;
+          let r = await call('import', {id: a.id}).catch(() => ({}));
+          if (r.status === 'ok') { toast(t('importOk')(r)); return reload(); }
+          if (r.status === 'pc') r = await call('request', {id: a.id, kind: 'sync'}).catch(() => ({}));
+          toast(t(r.status === 'ok' ? 'sent' : r.status === 'exists' ? 'exists' : 'reqFail'));
+          b.disabled = false;
+        }}, ic('sync'), t('sync')) : null,
         org ? el('button', {type: 'button', className: 'sec', onclick: () => { const close = sheet(personForm(a, null, () => { close(); reload(); }, () => close())); }}, ic('plus'), t('addPerson')) : null,
         org ? docs : null),
       el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('syncNote')(when(a.updated) || '—')}),
