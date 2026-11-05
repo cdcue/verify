@@ -942,7 +942,7 @@ function activityForm(ch, a, done, close) {
     err.textContent = a ? '' : t('making');
     try {
       const r = await call('actsave', a ? {id: a.id, data} : {data});
-      if (r.status === 'ok') { toast(t(r.form === 'fail' ? 'formFail' : a ? 'saved' : 'madeAct')); return done(r.id); }
+      if (r.status === 'ok') { toast(r.form === 'fail' ? t('formFail') + (r.error ? ' — ' + r.error : '') : t(a ? 'saved' : 'madeAct')); return done(r.id); }
       err.textContent = t({notitle: 'notitle', nochoices: 'noChoices', org: 'badOrg', bad: 'badVal'}[r.status] || 'saveFail');
     } catch (x) { err.textContent = ''; /* toast shown */ }
     save.disabled = false;
@@ -1099,7 +1099,7 @@ async function showActivity(id, tab) {
             toast(t('making'));
             const r = await call('mkform', {id: a.id}).catch(() => ({}));
             if (r.status === 'ok' || r.status === 'exists') { toast(t('madeForm')); return reload(); }
-            toast(t('formFail'));
+            toast(t('formFail') + (r.error ? ' — ' + r.error : ''));
             b.disabled = false;
           }}, ic('plus'), t('makeForm'))]),
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('ticketsT')),
