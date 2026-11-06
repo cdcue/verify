@@ -311,14 +311,19 @@ function scan(raw) {  // the read is confirmed at once and the camera goes on; t
     answer({status: 'saved', ticket: label}, li, key, label);
   });
 }
-async function retry() {  // scans kept during a network cut leave as soon as it is back, oldest first
-  const p = pending();
-  if (!p.length) return;
+let sending = false;
+async function retry() {  // scans kept on the phone (network cut, page closed or reopened) all leave as soon as it is back, oldest first
+  if (sending) return;
+  sending = true;
   try {
-    const j = await call({action: 'scan', ticket: p[0]});
-    setPending(pending().slice(1));
-    counts(j);
-  } catch (e) { /* still offline */ }
+    while (pending().length) {
+      const j = await call({action: 'scan', ticket: pending()[0]});
+      if (j.status === 'denied') break;  // the link was replaced: kept until the organizer sees it
+      setPending(pending().slice(1));
+      counts(j);
+    }
+  } catch (e) { /* still offline: tried again in 8 seconds or when the network is back */ }
+  sending = false;
 }
 setInterval(retry, 8000);
 
@@ -345,7 +350,7 @@ function start(token) {  // the page goes on with this link, kept on the phone f
   history.replaceState(null, '', '#' + encodeURIComponent(token));
   UI.store.set('shawahid-scan', token);
   $('codeBox').hidden = true; $('main').hidden = false; $('main').style.display = 'grid';
-  keptNames(); info(); setInterval(info, 20000); names(); setInterval(names, 60000); showNet();
+  keptNames(); info(); setInterval(info, 20000); names(); setInterval(names, 60000); showNet(); retry();
 }
 function describe() {
   if (about) $('what').removeAttribute('data-t');  // from now on its text is the activity's, not "loading"
