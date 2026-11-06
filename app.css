@@ -147,6 +147,12 @@ tr:hover td { background: color-mix(in srgb, var(--pri) 3%, transparent); }
 @keyframes in { from { transform: translateY(8px); opacity: 0; } }
 .menu { position: relative; display: inline-block; }
 .menu > summary { list-style: none; } .menu > summary::-webkit-details-marker { display: none; }
+.bell summary { position: relative; }
+.bell .dot { position: absolute; top: 2px; inset-inline-end: 2px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--bad, #e5484d);
+  color: #fff; font-size: 11px; line-height: 17px; text-align: center; }
+.bell .items { width: min(360px, calc(100vw - 32px)); max-height: 70vh; overflow-y: auto; }
+.bell-item { display: grid; gap: 2px; padding: 8px 10px; border-radius: 8px; color: var(--ink); text-decoration: none; }
+.bell-item:hover { background: var(--soft); } .bell-item b { font-size: 13px; } .bell-item span { font-size: 12.5px; color: var(--muted); }
 .menu .items { position: absolute; inset-inline-end: 0; top: calc(100% + 6px); background: var(--card); border: 1px solid var(--line); border-radius: 12px;
   box-shadow: 0 12px 32px rgba(15, 23, 42, .18); min-width: 230px; padding: 6px; z-index: 20; }
 .menu .items form, .menu .items a { display: block; }
