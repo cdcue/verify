@@ -131,7 +131,7 @@ const T = {
        stop: 'إيقاف الكاميرا', flip: 'تبديل الكاميرا', checking: 'جارٍ التأكيد…', noTicket: 'بلا بطاقة',
        ok: 'تم تأكيد حضور', already: 'مؤكد سابقاً في هذه الحصة', unregistered: x => `البطاقة ${x} غير مسجلة في الاستمارة`,
        unregisteredSub: 'احتُفظ بها، وتُؤكَّد عند تسجيل صاحبها', duplicate: x => `البطاقة ${x} مسجلة باسمين`, duplicateSub: 'يُحسم الأمر من لوحة التحكم',
-       invalid: x => `الرقم ${x} غير موجود ضمن البطاقات المطبوعة`, goOn: 'متابعة', email: 'بريده غير صحيح', emailSub: 'تأكد حضوره؛ اطلب منه تصحيح بريده الآن لتصله الشهادة', saved: x => `حُفظت البطاقة ${x} في الهاتف`, savedSub: 'تُرسل تلقائياً عند عودة الاتصال'},
+       invalid: x => `الرقم ${x} غير موجود ضمن البطاقات المطبوعة`, goOn: 'متابعة', listed: n => `${n} اسماً في الهاتف: المسح فوري ولو انقطع الإنترنت`, email: 'بريده غير صحيح', emailSub: 'تأكد حضوره؛ اطلب منه تصحيح بريده الآن لتصله الشهادة', saved: x => `حُفظت البطاقة ${x} في الهاتف`, savedSub: 'تُرسل تلقائياً عند عودة الاتصال'},
   fr: {title: 'Scan des présences', loading: 'Chargement...', denied: 'Ce lien n’est pas valide ou a été remplacé. Demandez le lien actuel à l’organisateur, ou saisissez le code de scan.',
        codeT: 'Accès par code de scan', codeD: 'Saisissez le code donné par l’organisateur (8 lettres et chiffres), ou ouvrez directement le lien de scan.', codeL: 'Code de scan', codeGo: 'Entrer',
        codeWrong: 'Code incorrect, remplacé par un nouveau lien, ou activité terminée.', codeBusy: 'Trop d’essais : réessayez dans 10 minutes.', codeNet: 'Connexion impossible : vérifiez Internet puis réessayez.',
@@ -143,7 +143,7 @@ const T = {
        stop: 'Arrêter la caméra', flip: 'Changer de caméra', checking: 'Vérification…', noTicket: 'Sans carte',
        ok: 'Présence confirmée', already: 'Déjà confirmé pour cette séance', unregistered: x => `La carte ${x} n’est pas inscrite au formulaire`,
        unregisteredSub: 'Elle est gardée et sera confirmée à l’inscription de son titulaire', duplicate: x => `La carte ${x} est inscrite sous deux noms`,
-       duplicateSub: 'À régler depuis l’espace organisateurs', invalid: x => `Le numéro ${x} ne fait pas partie des cartes imprimées`, goOn: 'Continuer', email: 'E-mail incorrect',
+       duplicateSub: 'À régler depuis l’espace organisateurs', invalid: x => `Le numéro ${x} ne fait pas partie des cartes imprimées`, goOn: 'Continuer', listed: n => `${n} noms sur le téléphone : scan immédiat, même sans Internet`, email: 'E-mail incorrect',
        emailSub: 'Présence confirmée ; demandez-lui de corriger son e-mail pour recevoir l’attestation',
        saved: x => `Carte ${x} gardée sur le téléphone`, savedSub: 'Envoyée automatiquement au retour de la connexion'},
   en: {title: 'Attendance scan', loading: 'Loading...', denied: 'This link is not valid or was replaced by a new one. Ask the organizer for the current link, or type the scanning code.',
@@ -157,7 +157,7 @@ const T = {
        stop: 'Stop the camera', flip: 'Switch camera', checking: 'Checking…', noTicket: 'No ticket',
        ok: 'Attendance confirmed', already: 'Already confirmed for this session', unregistered: x => `Ticket ${x} is not registered in the form`,
        unregisteredSub: 'Kept, and confirmed once its holder registers', duplicate: x => `Ticket ${x} is registered under two names`,
-       duplicateSub: 'To be settled from the organizers’ dashboard', invalid: x => `Number ${x} is not among the printed tickets`, goOn: 'Continue', email: 'Wrong email', emailSub: 'Attendance confirmed; ask them to fix their email now to get the certificate',
+       duplicateSub: 'To be settled from the organizers’ dashboard', invalid: x => `Number ${x} is not among the printed tickets`, goOn: 'Continue', listed: n => `${n} names on this phone: instant scans, even offline`, email: 'Wrong email', emailSub: 'Attendance confirmed; ask them to fix their email now to get the certificate',
        saved: x => `Ticket ${x} kept on the phone`, savedSub: 'Sent automatically when the connection is back'},
 };
 const {t} = UI, $ = id => document.getElementById(id);
@@ -181,7 +181,7 @@ const setPending = p => { try { localStorage.setItem(KEY, JSON.stringify(p)); } 
 function showNet() {
   const n = pending().length, on = navigator.onLine;
   $('net').className = 'netline ' + (on && !n ? 'on' : 'off');
-  $('net').querySelector('span').textContent = n ? t('pending')(n) : t(on ? 'online' : 'offline');
+  $('net').querySelector('span').textContent = n ? t('pending')(n) : NAMES ? t('listed')(Object.keys(NAMES.people).length) : t(on ? 'online' : 'offline');
 }
 addEventListener('online', () => { showNet(); retry(); });
 addEventListener('offline', showNet);
@@ -243,13 +243,30 @@ function answer(j, li, key, label) {
   counts(j);
 }
 let NAMES = null;  // {people, bad, seen, id, tickets}: from the server, refreshed each minute; null = ask the server each time
+const NKEY = () => 'shawahid-names-' + TOKEN.slice(0, 8);
+function keptNames() {  // the list as the phone last had it (the page opened again with no network)
+  try {
+    const k = JSON.parse(localStorage.getItem(NKEY()) || 'null');
+    if (k) NAMES = {people: k.people, bad: new Set(k.bad), seen: new Set(k.seen), tickets: k.tickets, id: k.id, session: k.session};
+  } catch (e) { /* none kept */ }
+}
+function keepNames() {
+  try {
+    localStorage.setItem(NKEY(), JSON.stringify({people: NAMES.people, bad: [...NAMES.bad], seen: [...NAMES.seen], tickets: NAMES.tickets,
+                                                  id: NAMES.id, session: NAMES.session}));
+  } catch (e) { /* the phone keeps no copy: still answers while open */ }
+}
 async function names() {
   try {
     const j = await call({action: 'names'});
     if (j.status === 'names') {
       const id = (Object.keys(j.people).find(k => /^T\d+-/.test(k)) || '').match(/^T(\d+)-/);
-      NAMES = {people: j.people, bad: new Set(j.bademail), seen: new Set(j.seen.concat(NAMES ? [...NAMES.seen] : [])), tickets: j.tickets,
-               id: id ? id[1] : (about && about.id) || ''};
+      // a new session (chosen on the dashboard) starts with nobody seen; the same one keeps what this phone saw
+      const mine = NAMES && NAMES.session === j.session ? [...NAMES.seen] : [];
+      NAMES = {people: j.people, bad: new Set(j.bademail), seen: new Set(j.seen.concat(mine)), tickets: j.tickets,
+               id: id ? id[1] : (about && about.id) || '', session: j.session};
+      keepNames();
+      showNet();
     }
   } catch (e) { /* the older server, or offline: each scan asks it */ }
 }
@@ -262,6 +279,7 @@ function local(raw) {  // the answer from the list on the phone, or null
   const who = NAMES.people[ticket] || [];
   if (NAMES.seen.has(ticket)) return {status: 'already', ticket, name: who[0] || ''};
   NAMES.seen.add(ticket);
+  keepNames();
   return {status: who.length > 1 ? 'duplicate' : !who.length ? 'unregistered' : NAMES.bad.has(ticket) ? 'email' : 'ok', ticket, name: who.length === 1 ? who[0] : ''};
 }
 function scan(raw) {  // the read is confirmed at once and the camera goes on; the answer fills its line when it comes
@@ -327,7 +345,7 @@ function start(token) {  // the page goes on with this link, kept on the phone f
   history.replaceState(null, '', '#' + encodeURIComponent(token));
   UI.store.set('shawahid-scan', token);
   $('codeBox').hidden = true; $('main').hidden = false; $('main').style.display = 'grid';
-  info(); setInterval(info, 20000); names(); setInterval(names, 60000); showNet();
+  keptNames(); info(); setInterval(info, 20000); names(); setInterval(names, 60000); showNet();
 }
 function describe() {
   if (about) $('what').removeAttribute('data-t');  // from now on its text is the activity's, not "loading"
