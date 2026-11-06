@@ -70,6 +70,11 @@
   #flash .icon { width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; font-size: 72px; line-height: 1; margin-bottom: 18px;
                  background: rgba(255, 255, 255, .18); }
   #flash .sub { display: block; font-size: 17px; font-weight: 500; opacity: .92; margin-top: 6px; }
+  #flash .go { margin-top: 26px; min-width: 200px; min-height: 56px; border-radius: 14px; border: 2px solid #fff; background: rgba(255, 255, 255, .16);
+               color: #fff; font: inherit; font-size: 20px; }
+  .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .pad button { min-height: 58px; font-size: 26px; font-weight: 700; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+  .pad .ok { background: var(--gold); color: #fff; border-color: transparent; }
   @keyframes pop { from { opacity: 0; transform: scale(.96); } }
   .denied { margin: 0; padding: 12px 14px; border-radius: 12px; line-height: 1.8; background: var(--warn-soft); color: var(--ink); }
   .codebox { max-width: 460px; margin: 0 auto; width: 100%; }
@@ -103,11 +108,12 @@
         <button type="button" class="iconbtn" id="flip" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 00-14.3-4.9L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0014.3 4.9L20 16"/><path d="M20 21v-5h-5"/></svg></button>
         <button type="button" class="iconbtn" id="torch" hidden aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 6h-4z"/><path d="M10 8h4v12a2 2 0 01-4 0z"/></svg></button></div>
       <div class="hit" id="hit" hidden><b></b><span dir="auto"></span></div></div>
-    <form class="manual" id="manualForm"><input id="manual" inputmode="numeric" autocomplete="off" data-tp="manualPh"><button class="btn ghost" data-t="confirm"></button></form>
+    <form class="manual" id="manualForm"><input id="manual" inputmode="none" autocomplete="off" data-tp="manualPh"><button class="btn ghost" data-t="confirm"></button></form>
+    <div class="pad" id="pad"></div>
     <ul id="log" aria-live="polite"></ul>
   </div>
 </main>
-<div id="flash" role="alert"><div class="icon"></div><div class="msg"></div></div>
+<div id="flash" role="alert"><div class="icon"></div><div class="msg"></div><button type="button" class="go" data-t="goOn"></button></div>
 
 <script>
 // the Apps Script web app (same /exec address as the verification page); the activity's secret is after "#"
@@ -125,7 +131,7 @@ const T = {
        stop: 'إيقاف الكاميرا', flip: 'تبديل الكاميرا', checking: 'جارٍ التأكيد…', noTicket: 'بلا بطاقة',
        ok: 'تم تأكيد حضور', already: 'مؤكد سابقاً في هذه الحصة', unregistered: x => `البطاقة ${x} غير مسجلة في الاستمارة`,
        unregisteredSub: 'احتُفظ بها، وتُؤكَّد عند تسجيل صاحبها', duplicate: x => `البطاقة ${x} مسجلة باسمين`, duplicateSub: 'يُحسم الأمر من لوحة التحكم',
-       invalid: x => `الرقم ${x} غير موجود ضمن البطاقات المطبوعة`, saved: x => `حُفظت البطاقة ${x} في الهاتف`, savedSub: 'تُرسل تلقائياً عند عودة الاتصال'},
+       invalid: x => `الرقم ${x} غير موجود ضمن البطاقات المطبوعة`, goOn: 'متابعة', email: 'بريده غير صحيح', emailSub: 'تأكد حضوره؛ اطلب منه تصحيح بريده الآن لتصله الشهادة', saved: x => `حُفظت البطاقة ${x} في الهاتف`, savedSub: 'تُرسل تلقائياً عند عودة الاتصال'},
   fr: {title: 'Scan des présences', loading: 'Chargement...', denied: 'Ce lien n’est pas valide ou a été remplacé. Demandez le lien actuel à l’organisateur, ou saisissez le code de scan.',
        codeT: 'Accès par code de scan', codeD: 'Saisissez le code donné par l’organisateur (8 lettres et chiffres), ou ouvrez directement le lien de scan.', codeL: 'Code de scan', codeGo: 'Entrer',
        codeWrong: 'Code incorrect, remplacé par un nouveau lien, ou activité terminée.', codeBusy: 'Trop d’essais : réessayez dans 10 minutes.', codeNet: 'Connexion impossible : vérifiez Internet puis réessayez.',
@@ -137,7 +143,8 @@ const T = {
        stop: 'Arrêter la caméra', flip: 'Changer de caméra', checking: 'Vérification…', noTicket: 'Sans carte',
        ok: 'Présence confirmée', already: 'Déjà confirmé pour cette séance', unregistered: x => `La carte ${x} n’est pas inscrite au formulaire`,
        unregisteredSub: 'Elle est gardée et sera confirmée à l’inscription de son titulaire', duplicate: x => `La carte ${x} est inscrite sous deux noms`,
-       duplicateSub: 'À régler depuis l’espace organisateurs', invalid: x => `Le numéro ${x} ne fait pas partie des cartes imprimées`,
+       duplicateSub: 'À régler depuis l’espace organisateurs', invalid: x => `Le numéro ${x} ne fait pas partie des cartes imprimées`, goOn: 'Continuer', email: 'E-mail incorrect',
+       emailSub: 'Présence confirmée ; demandez-lui de corriger son e-mail pour recevoir l’attestation',
        saved: x => `Carte ${x} gardée sur le téléphone`, savedSub: 'Envoyée automatiquement au retour de la connexion'},
   en: {title: 'Attendance scan', loading: 'Loading...', denied: 'This link is not valid or was replaced by a new one. Ask the organizer for the current link, or type the scanning code.',
        codeT: 'Sign in with the scanning code', codeD: 'Type the code the organizer gave you (8 letters and digits), or open the scanning link directly.', codeL: 'Scanning code', codeGo: 'Enter',
@@ -150,7 +157,7 @@ const T = {
        stop: 'Stop the camera', flip: 'Switch camera', checking: 'Checking…', noTicket: 'No ticket',
        ok: 'Attendance confirmed', already: 'Already confirmed for this session', unregistered: x => `Ticket ${x} is not registered in the form`,
        unregisteredSub: 'Kept, and confirmed once its holder registers', duplicate: x => `Ticket ${x} is registered under two names`,
-       duplicateSub: 'To be settled from the organizers’ dashboard', invalid: x => `Number ${x} is not among the printed tickets`,
+       duplicateSub: 'To be settled from the organizers’ dashboard', invalid: x => `Number ${x} is not among the printed tickets`, goOn: 'Continue', email: 'Wrong email', emailSub: 'Attendance confirmed; ask them to fix their email now to get the certificate',
        saved: x => `Ticket ${x} kept on the phone`, savedSub: 'Sent automatically when the connection is back'},
 };
 const {t} = UI, $ = id => document.getElementById(id);
@@ -165,6 +172,7 @@ const LOOK = {  // icon, color, main line, second line
   unregistered: ['!', '#c98a0c', j => [t('unregistered')(j.ticket), t('unregisteredSub')]],
   duplicate: ['!', '#c98a0c', j => [t('duplicate')(j.ticket), t('duplicateSub')]],
   invalid: ['✕', '#e5484d', j => [t('invalid')(j.ticket), '']],
+  email: ['@', '#c98a0c', j => [t('email') + ' — ' + (j.name || ''), t('emailSub')]],
   saved: ['⏳', '#7a560f', j => [t('saved')(j.ticket), t('savedSub')]],
 };
 
@@ -198,8 +206,12 @@ function show(j) {  // a problem: the whole screen, so the organizer stops this 
   // names come from the public form: text only, never HTML
   flash.querySelector('.msg').replaceChildren(line1, line2 ? UI.el('span', {className: 'sub', dir: 'auto', textContent: line2}) : '');
   flash.classList.add('on');
-  setTimeout(() => flash.classList.remove('on'), 2200);
+  flash.dataset.k = j.key || '';
+  flash.querySelector('.go').hidden = j.status === 'saved';
+  if (j.status === 'saved') setTimeout(() => flash.classList.remove('on'), 2200);  // a network cut is no problem of this person
+  else flash.querySelector('.go').focus();
 }
+flash.querySelector('.go').onclick = () => flash.classList.remove('on');
 let hitT = 0;
 function strip(ticket, text, kind) {  // the line on the camera: what was just read, then its answer
   const h = $('hit');
@@ -219,14 +231,38 @@ function row(ticket) {  // a line in the list, filled when the answer comes
 let shown = '';  // the code whose answer the strip shows now
 function answer(j, li, key, label) {
   const [icon, color, text] = LOOK[j.status], [line1] = text(j), good = j.status === 'ok' || j.status === 'already';
+  j.key = key;
+  if (good && flash.dataset.k === key) flash.classList.remove('on');
   li.querySelector('.s').style.background = color;
   li.querySelector('.s').textContent = icon;
   li.querySelector('.n').textContent = j.name || line1;
   said.set(key, [j.name || line1, good ? 'ok' : 'warn']);
   if (shown === key) strip(label, j.name || line1, good ? 'ok' : 'warn');
   if (!good) { beep(false); if (navigator.vibrate) navigator.vibrate([80, 60, 80]); show(j); }
-  if (j.status === 'ok') $('mine').textContent = ++mine;
+  if (j.status === 'ok' || j.status === 'email') $('mine').textContent = ++mine;
   counts(j);
+}
+let NAMES = null;  // {people, bad, seen, id, tickets}: from the server, refreshed each minute; null = ask the server each time
+async function names() {
+  try {
+    const j = await call({action: 'names'});
+    if (j.status === 'names') {
+      const id = (Object.keys(j.people).find(k => /^T\d+-/.test(k)) || '').match(/^T(\d+)-/);
+      NAMES = {people: j.people, bad: new Set(j.bademail), seen: new Set(j.seen.concat(NAMES ? [...NAMES.seen] : [])), tickets: j.tickets,
+               id: id ? id[1] : (about && about.id) || ''};
+    }
+  } catch (e) { /* the older server, or offline: each scan asks it */ }
+}
+function local(raw) {  // the answer from the list on the phone, or null
+  if (!NAMES || !NAMES.id) return null;
+  const s = String(raw).trim().toUpperCase().replace(/\s+/g, ''), m = s.match(/T(\d+)-(\d+)/) || s.match(/^()(\d+)$/);
+  if (!m) return null;
+  const n = Number(m[2]), ticket = 'T' + NAMES.id + '-' + String(n).padStart(3, '0');
+  if ((m[1] && m[1] !== NAMES.id) || !n || (NAMES.tickets && n > NAMES.tickets)) return {status: 'invalid', ticket: m[0]};
+  const who = NAMES.people[ticket] || [];
+  if (NAMES.seen.has(ticket)) return {status: 'already', ticket, name: who[0] || ''};
+  NAMES.seen.add(ticket);
+  return {status: who.length > 1 ? 'duplicate' : !who.length ? 'unregistered' : NAMES.bad.has(ticket) ? 'email' : 'ok', ticket, name: who.length === 1 ? who[0] : ''};
 }
 function scan(raw) {  // the read is confirmed at once and the camera goes on; the answer fills its line when it comes
   const s = String(raw).trim(), key = (s.toUpperCase().match(CODE) || [s])[0];
@@ -243,11 +279,16 @@ function scan(raw) {  // the read is confirmed at once and the camera goes on; t
   if (navigator.vibrate) navigator.vibrate(40);
   shown = key;
   strip(label, t('checking'));
-  const li = row(label);
+  const li = row(label), mine0 = local(s);
+  if (mine0) answer(mine0, li, key, label);
   call({action: 'scan', ticket: s}).then(j => {
     if (j.status === 'denied') return denied();
-    if (LOOK[j.status]) answer(j, li, key, label);
+    if (!LOOK[j.status]) return;
+    // the server's word stands when it differs (registered meanwhile, scanned by another phone): not twice the same alarm
+    if (!mine0 || (j.status !== mine0.status && !(mine0.status === 'ok' && j.status === 'already') && !(mine0.status === 'email' && j.status === 'ok'))) answer(j, li, key, label);
+    else counts(j);
   }).catch(() => {
+    if (mine0) return setPending(pending().concat([s]));  // answered by the phone already: sent when the network is back
     setPending(pending().concat([s]));
     answer({status: 'saved', ticket: label}, li, key, label);
   });
@@ -286,7 +327,7 @@ function start(token) {  // the page goes on with this link, kept on the phone f
   history.replaceState(null, '', '#' + encodeURIComponent(token));
   UI.store.set('shawahid-scan', token);
   $('codeBox').hidden = true; $('main').hidden = false; $('main').style.display = 'grid';
-  info(); setInterval(info, 20000); showNet();
+  info(); setInterval(info, 20000); names(); setInterval(names, 60000); showNet();
 }
 function describe() {
   if (about) $('what').removeAttribute('data-t');  // from now on its text is the activity's, not "loading"
@@ -372,6 +413,12 @@ async function loop() {
   }
   setTimeout(loop, 70);
 }
+$('pad').append(...['1', '2', '3', '4', '5', '6', '7', '8', '9', '⌫', '0', '✓'].map(k => UI.el('button', {type: 'button', className: k === '✓' ? 'ok' : '',
+  textContent: k, ariaLabel: k === '⌫' ? 'مسح' : k === '✓' ? t('confirm') : k, onclick: () => {
+    const m = $('manual');
+    if (k === '✓') return $('manualForm').requestSubmit();
+    m.value = k === '⌫' ? m.value.slice(0, -1) : (m.value + k).slice(0, 4);
+  }})));
 $('manualForm').onsubmit = e => {
   e.preventDefault();
   const v = $('manual').value.trim();
