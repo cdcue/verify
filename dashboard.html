@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="app.css?v=1">
-<script src="ui.js?v=4"></script>
+<script src="ui.js?v=5"></script>
 <style>
   /* the platform's look (app.css, the same file as on the computer), plus what the public pages' ui.css gave this page */
   :root { --surface: var(--card); --surface-2: var(--soft); --brand: var(--pri); --brand-2: var(--pri); --on-brand: var(--on-pri);
@@ -221,7 +221,7 @@ const T = {
   ar: {
     dash: 'لوحة المنظمين', loading: 'جارٍ التحميل...', noRole: 'ليس لحسابك هذا الإذن', cancel: 'إلغاء', back: 'رجوع', copy: 'نسخ', open: 'فتح', share: 'مشاركة',
     linkCopied: 'نُسخ الرابط', sent: 'أُرسل الطلب، ويُنفَّذ على الحاسوب', reqFail: 'تعذر إرسال الطلب', exists: 'طلب من النوع نفسه ما زال ينتظر الحاسوب',
-    saveFail: 'تعذر الحفظ', rScanner: 'مساعد', rOrganizer: 'منظم', rAdmin: 'مسؤول الجهة', nParts: '«شواهدي» والمشاركون', nUsers: 'الحسابات', nMe: 'حسابي',
+    saveFail: 'تعذر الحفظ', rScanner: 'مسؤول الدرجة الرابعة', rOrganizer: 'مسؤول الدرجة الثالثة', rAdmin: 'مسؤول الدرجة الثانية', nParts: '«شواهدي» والمشاركون', nUsers: 'الحسابات', nMe: 'حسابي',
     login: 'اسم الدخول', password: 'كلمة السر', enter: 'دخول', wrongLogin: 'اسم الدخول أو كلمة السر غير صحيح',
     locked: 'محاولات خاطئة كثيرة: أعد المحاولة بعد 15 دقيقة', loginFail: 'تعذر الدخول',
     pcNever: 'لم تتصل المنصة على الحاسوب بهذه اللوحة بعد: الطلبات تنتظر فتحها.', pcOn: 'الحاسوب متصل: الطلبات تُنفَّذ خلال دقيقة',
@@ -281,7 +281,7 @@ const T = {
     recApplyAsk: (n, e) => `هل تحققتَ من هوية «${n}»؟ يصبح ${e} بريد الحساب.`, recDone: 'تم', uName: 'الاسم', uRole: 'الدور', taken: 'اسم الدخول مستعمل',
     short: 'كلمة السر قصيرة', self: 'لا تعدّل حسابك من هنا', newPw: 'كلمة سر جديدة', signedAs: 'دخلتَ باسم', language: 'اللغة', theme: 'المظهر',
     thAuto: 'حسب الجهاز', thLight: 'فاتح', thDark: 'داكن', wrongPw: 'كلمة السر الحالية غير صحيحة', shortNew: 'كلمة السر الجديدة قصيرة', logout: 'خروج',
-    rSuper: 'المدير العام', nHome: 'الرئيسية والأنشطة', nBundle: 'شواهد شخص في عدة أنشطة', nSearch: 'البحث عن مشارك', nStats: 'الإحصائيات',
+    rSuper: 'مسؤول الدرجة الأولى', nHome: 'الرئيسية والأنشطة', nBundle: 'شواهد شخص في عدة أنشطة', nSearch: 'البحث عن مشارك', nStats: 'الإحصائيات',
     nSettings: 'الإعدادات', nOrg: 'الجهة', nPlat: 'المنصات المنشورة', nVerify: 'التحقق من الشواهد', nMeSite: 'شواهدي', menu: 'القائمة', online: 'نسخة الإنترنت',
     onPc: 'الحاسوب', onPcT: 'يُستعمل من المنصة على الحاسوب', siSub: 'لوحة المنظمين · نسخة الإنترنت', siF1: 'الأنشطة والمشاركون والحضور، من أي هاتف أو حاسوب',
     siF2: 'المسح بالهاتف، وروابطه ورموزه', siF3: 'إصدار الشواهد وإرسالها، طلباً تنفّذه المنصة على الحاسوب', siH: 'تسجيل الدخول',
@@ -338,7 +338,7 @@ const T = {
     setItems: ['حساب Google ومنصة التحقق', 'الأنواع والترقيم', 'نماذج الاستمارات', 'نصوص الوثائق والبريد', 'النسخ الاحتياطي والتحديثات'], myT: 'حسابي',
     pwOldL: 'كلمة السر الحالية', pwNewL: 'كلمة سر جديدة (8 أحرف على الأقل)', pwNew2: 'أعد كتابتها', pwChange: 'تغيير كلمة السر',
     pwSent: 'أُرسل الطلب: تتغير كلمة السر خلال دقيقة ما دامت المنصة مفتوحة على الحاسوب.', pwMismatch: 'كلمتا السر غير متطابقتين.', rolesT: 'الأدوار',
-    rolesItems: ['المدير العام: كل الجهات وكل الأنشطة، والإعدادات وكل الحسابات.', 'مسؤول الجهة: كل أنشطة جهته، وإلغاء الشواهد وحذف الأنشطة والإحصائيات، وحسابات منظميها ومساعديها.', 'منظم: الأنشطة التي أنشأها أو أُضيف إلى فريقها: التسجيل والحضور والإصدار والإرسال.', 'مساعد: الحضور في الأنشطة التي أُضيف إليها.'],
+    rolesItems: ['مسؤول الدرجة الأولى (المسؤول العام): كل الجهات وكل الأنشطة، والإعدادات وكل الحسابات.', 'مسؤول الدرجة الثانية (مسؤول جهة): كل أنشطة جهته، وإلغاء الشواهد وحذف الأنشطة والإحصائيات، وحسابات منظميها ومساعديها.', 'مسؤول الدرجة الثالثة (منظم): الأنشطة التي أنشأها أو أُضيف إلى فريقها: التسجيل والحضور والإصدار والإرسال.', 'مسؤول الدرجة الرابعة (مساعد المسح): الحضور في الأنشطة التي أُضيف إليها.'],
     usersHow: 'كل تغيير هنا طلب تنفّذه المنصة على الحاسوب خلال دقيقة، ثم يظهر هنا. يُضاف المنظم أو المساعد إلى نشاط من المنصة على الحاسوب («فريق النشاط»).',
     unchanged: 'دون تغيير', stateL: 'الحالة', accOpenO: 'مفتوح', accCloseO: 'مغلق', saveRow: 'حفظ', newAccT: 'حساب جديد', fullName: 'الاسم الكامل',
     pwMin: 'كلمة السر (8 أحرف على الأقل)', createAcc: 'إنشاء الحساب', staffSent: 'أُرسل الطلب: يُنفَّذ على الحاسوب خلال دقيقة.',
@@ -349,7 +349,7 @@ const T = {
     dash: 'Espace organisateurs', loading: 'Chargement...', noRole: 'Votre compte n’a pas cette autorisation', cancel: 'Annuler', back: 'Retour',
     copy: 'Copier', open: 'Ouvrir', share: 'Partager', linkCopied: 'Lien copié', sent: 'Demande envoyée : l’ordinateur l’exécutera',
     reqFail: 'Envoi de la demande impossible', exists: 'Une demande du même type attend déjà l’ordinateur', saveFail: 'Enregistrement impossible',
-    rScanner: 'Assistant', rOrganizer: 'Organisateur', rAdmin: 'Responsable de l’organisme', nParts: '« Mes attestations » et participants', nUsers: 'Comptes',
+    rScanner: 'Responsable de niveau 4', rOrganizer: 'Responsable de niveau 3', rAdmin: 'Responsable de niveau 2', nParts: '« Mes attestations » et participants', nUsers: 'Comptes',
     nMe: 'Mon compte', login: 'Identifiant', password: 'Mot de passe', enter: 'Se connecter', wrongLogin: 'Identifiant ou mot de passe incorrect',
     locked: 'Trop d’essais : réessayez dans 15 minutes', loginFail: 'Connexion impossible',
     pcNever: 'La plateforme de l’ordinateur ne s’est pas encore connectée : les demandes attendent son ouverture.',
@@ -420,7 +420,7 @@ const T = {
     recDismiss: 'Refuser', recApplyAsk: (n, e) => `Avez-vous vérifié l’identité de « ${n} » ? ${e} devient l’e-mail du compte.`, recDone: 'Fait', uName: 'Nom',
     uRole: 'Rôle', taken: 'Identifiant déjà utilisé', short: 'Mot de passe trop court', self: 'Ne modifiez pas votre propre compte ici',
     newPw: 'Nouveau mot de passe', signedAs: 'Connecté en tant que', language: 'Langue', theme: 'Thème', thAuto: 'Appareil', thLight: 'Clair', thDark: 'Sombre',
-    wrongPw: 'Mot de passe actuel incorrect', shortNew: 'Nouveau mot de passe trop court', logout: 'Déconnexion', rSuper: 'Administrateur général',
+    wrongPw: 'Mot de passe actuel incorrect', shortNew: 'Nouveau mot de passe trop court', logout: 'Déconnexion', rSuper: 'Responsable de niveau 1',
     nHome: 'Accueil et activités', nBundle: 'Attestations d’une personne', nSearch: 'Rechercher un participant', nStats: 'Statistiques',
     nSettings: 'Paramètres', nOrg: 'Organisme', nPlat: 'Pages publiées', nVerify: 'Vérifier une attestation', nMeSite: 'Mes attestations', menu: 'Menu',
     online: 'version en ligne', onPc: 'Ordinateur', onPcT: 'S’utilise depuis la plateforme sur l’ordinateur', siSub: 'Espace organisateurs · version en ligne',
@@ -488,7 +488,7 @@ const T = {
     myT: 'Mon compte', pwOldL: 'Mot de passe actuel', pwNewL: 'Nouveau mot de passe (8 caractères au moins)', pwNew2: 'Confirmez-le',
     pwChange: 'Changer le mot de passe', pwSent: 'Demande envoyée : le mot de passe change dans la minute tant que la plateforme est ouverte sur l’ordinateur.',
     pwMismatch: 'Les mots de passe ne correspondent pas.', rolesT: 'Rôles',
-    rolesItems: ['Administrateur général : tous les organismes et activités, les paramètres et tous les comptes.', 'Responsable de l’organisme : toutes ses activités, annulation, suppression, statistiques, et les comptes de ses organisateurs et assistants.', 'Organisateur : les activités créées ou celles de son équipe.', 'Assistant : les présences des activités de son équipe.'],
+    rolesItems: ['Niveau 1 (responsable général) : tous les organismes et activités, les paramètres et tous les comptes.', 'Niveau 2 (responsable d’organisme) : toutes ses activités, annulation, suppression, statistiques, et les comptes de ses organisateurs et assistants.', 'Niveau 3 (organisateur) : les activités créées ou celles de son équipe.', 'Niveau 4 (assistant de scan) : les présences des activités de son équipe.'],
     usersHow: 'Chaque changement ici est une demande faite par la plateforme sur l’ordinateur dans la minute, puis visible ici. L’équipe d’une activité se règle sur l’ordinateur.',
     unchanged: 'inchangé', stateL: 'État', accOpenO: 'Ouvert', accCloseO: 'Fermé', saveRow: 'Enregistrer', newAccT: 'Nouveau compte', fullName: 'Nom complet',
     pwMin: 'Mot de passe (8 caractères au moins)', createAcc: 'Créer le compte', staffSent: 'Demande envoyée : faite par l’ordinateur dans la minute.',
@@ -499,8 +499,8 @@ const T = {
   en: {
     dash: 'Organizers', loading: 'Loading...', noRole: 'Your account is not allowed to do this', cancel: 'Cancel', back: 'Back', copy: 'Copy', open: 'Open',
     share: 'Share', linkCopied: 'Link copied', sent: 'Request sent: the computer will carry it out', reqFail: 'Could not send the request',
-    exists: 'A request of the same kind is still waiting for the computer', saveFail: 'Could not save', rScanner: 'Helper', rOrganizer: 'Organizer',
-    rAdmin: 'Organizer’s administrator', nParts: '“My certificates” and participants', nUsers: 'Accounts', nMe: 'My account', login: 'Username',
+    exists: 'A request of the same kind is still waiting for the computer', saveFail: 'Could not save', rScanner: 'Level 4 manager', rOrganizer: 'Level 3 manager',
+    rAdmin: 'Level 2 manager', nParts: '“My certificates” and participants', nUsers: 'Accounts', nMe: 'My account', login: 'Username',
     password: 'Password', enter: 'Sign in', wrongLogin: 'Wrong username or password', locked: 'Too many wrong attempts: try again in 15 minutes',
     loginFail: 'Could not sign in', pcNever: 'The platform on the computer has not connected yet: requests wait until it is opened.',
     pcOn: 'Computer online: requests run within a minute', pcOff: d => 'Computer offline since ' + d + ': requests run when the platform is opened',
@@ -567,7 +567,7 @@ const T = {
     recApplyAsk: (n, e) => `Did you check who “${n}” is? ${e} becomes the account’s email.`, recDone: 'Done', uName: 'Name', uRole: 'Role',
     taken: 'Username already used', short: 'Password too short', self: 'Do not edit your own account here', newPw: 'New password', signedAs: 'Signed in as',
     language: 'Language', theme: 'Theme', thAuto: 'Device', thLight: 'Light', thDark: 'Dark', wrongPw: 'Current password is wrong',
-    shortNew: 'The new password is too short', logout: 'Sign out', rSuper: 'General administrator', nHome: 'Home and activities',
+    shortNew: 'The new password is too short', logout: 'Sign out', rSuper: 'Level 1 manager', nHome: 'Home and activities',
     nBundle: 'One person’s certificates', nSearch: 'Find a participant', nStats: 'Statistics', nSettings: 'Settings', nOrg: 'Organizer',
     nPlat: 'Published pages', nVerify: 'Verify a certificate', nMeSite: 'My certificates', menu: 'Menu', online: 'online version', onPc: 'Computer',
     onPcT: 'Used from the platform on the computer', siSub: 'Organizers · online version',
@@ -632,7 +632,7 @@ const T = {
     myT: 'My account', pwOldL: 'Current password', pwNewL: 'New password (at least 8 characters)', pwNew2: 'Type it again', pwChange: 'Change the password',
     pwSent: 'Request sent: the password changes within a minute while the platform is open on the computer.', pwMismatch: 'The passwords do not match.',
     rolesT: 'Roles',
-    rolesItems: ['General administrator: every organizer and activity, the settings and every account.', 'Organizer’s administrator: every activity of their organizer, revoking, deleting, statistics, and their organizers’ and helpers’ accounts.', 'Organizer: the activities they made or whose team they are on.', 'Helper: attendance in the activities whose team they are on.'],
+    rolesItems: ['Level 1 (general manager): every organizer and activity, the settings and every account.', 'Level 2 (organization manager): every activity of their organizer, revoking, deleting, statistics, and their organizers’ and helpers’ accounts.', 'Level 3 (organizer): the activities they made or whose team they are on.', 'Level 4 (scan helper): attendance in the activities whose team they are on.'],
     usersHow: 'Each change here is a request the platform on the computer carries out within a minute, then shown here. An activity’s team is set on the computer.',
     unchanged: 'unchanged', stateL: 'Status', accOpenO: 'Open', accCloseO: 'Closed', saveRow: 'Save', newAccT: 'New account', fullName: 'Full name',
     pwMin: 'Password (at least 8 characters)', createAcc: 'Create the account', staffSent: 'Request sent: carried out by the computer within a minute.',

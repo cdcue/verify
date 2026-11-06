@@ -1,7 +1,7 @@
 // Pages and their files come from the network first; the last copy is kept, so a page already opened once
 // (the scanning page at an event, above all) still opens when the connection drops. Calls to Google are never cached.
-const CACHE = 'shawahid-v2';
-const KEEP = ['scan.html', 'ui.css?v=4', 'ui.js?v=4'];
+const CACHE = 'shawahid-v3';
+const KEEP = ['scan.html', 'ui.css?v=4', 'ui.js?v=5'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(KEEP)).catch(() => {}));

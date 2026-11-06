@@ -287,6 +287,8 @@ h2.ch { display: flex; align-items: center; gap: 8px; }
 @media (max-width: 760px) {  /* phones: each participant becomes a card */
   .tablewrap:has(table.cards) { border: 0; max-height: none; overflow: visible; }
   table.cards thead { display: none; }
+  table.cards[style] { min-width: 0 !important; }  /* a width set for the computer's screen (accounts) */
+  .menu .items { position: fixed; inset-inline: 16px; top: auto; min-width: 0; }  /* opens across the phone, never past its edge */
   table.cards, table.cards tbody { display: block; }
   table.cards tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 12px; padding: 12px; margin-bottom: 10px;
                    border: 1px solid var(--line); border-radius: 12px; background: var(--card); }

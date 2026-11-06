@@ -29,7 +29,7 @@
   const pick = (v, list) => list.includes(v) ? v : null;
 
   let theme = pick(store.get('theme'), THEMES) || 'auto';
-  let lang = pick(params.get('lang'), LANGS) || pick(store.get('lang'), LANGS) || pick((navigator.language || '').slice(0, 2), LANGS) || 'ar';
+  let lang = pick(params.get('lang'), LANGS) || pick(store.get('lang'), LANGS) || 'ar';  // the platform speaks Arabic first; FR/EN from the switch
   let page = {T: {}, onLang: null, name: ''};
   applyTheme();
   root.lang = lang;
