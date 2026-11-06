@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="app.css?v=1">
-<script src="ui.js?v=5"></script>
+<script src="ui.js?v=6"></script>
 <style>
   /* the platform's look (app.css, the same file as on the computer), plus what the public pages' ui.css gave this page */
   :root { --surface: var(--card); --surface-2: var(--soft); --brand: var(--pri); --brand-2: var(--pri); --on-brand: var(--on-pri);
@@ -294,7 +294,12 @@ const T = {
     allDone: 'اكتملت كل المراحل', nReg: 'مسجل', nHere: 'حاضر', nCert: 'شهادة', copyLink: 'نسخ الرابط', noDate: 'بدون تاريخ',
     platVerify: 'أي شخص يتحقق من صحة شهادة برقمها أو برمز QR فيها.', platMe: 'المشاركون يجدون كل شواهدهم بحسابهم.',
     platPrivacy: 'ما تحفظه المنصة من بيانات وكيف تُستعمل.', nPrivacy: 'سياسة الخصوصية', allOrgs: 'كل الجهات', more: 'المزيد', close: 'إغلاق',
-    dupAct: 'نسخ كنشاط جديد (مع التصاميم)', archAct: 'أرشفة النشاط', revokeAll: 'إلغاء كل الشواهد', delAct: 'حذف النشاط', s1: 'التسجيل والبطاقات',
+    dupAct: 'نسخ كنشاط جديد (مع التصاميم)', archAct: 'أرشفة النشاط', unarchAct: 'إخراج من الأرشيف', archOk: 'أُرشف النشاط', unarchOk: 'عاد النشاط إلى القائمة',
+    archList: 'الأرشيف', actList: 'الأنشطة الجارية', archT: 'الأنشطة المؤرشفة', teamT: 'فريق النشاط', teamD: 'حسابات جهتك التي تعمل على هذا النشاط (إضافة إلى من أنشأه).',
+    teamNone: 'لا توجد حسابات أخرى في هذه الجهة', teamOk: 'حُفظ الفريق', saveB: 'حفظ', addTypeT: 'شهادة أخرى لهذا الشخص', addTypeB: 'إضافة',
+    typeOk: 'أُضيفت الشهادة؛ تصدر متى كان تصميمها جاهزاً', typeWait: 'هذا الشخص أُضيف للتو: انتظر دقيقة ثم أعد المحاولة', typeHave: 'لهذا الشخص كل الأصناف',
+    revokeB: 'إلغاء الشهادة', restoreB: 'استعادة الشهادة', revokeAsk: 'سبب إلغاء الشهادة (يظهر في صفحة التحقق):', revokeOk: 'أُلغيت الشهادة: صفحة التحقق تعرضها ملغاة',
+    restoreOk: 'استُعيدت الشهادة', restoreSure: 'استعادة هذه الشهادة؟', extraT: 'شهادة إضافية', revokeAll: 'إلغاء كل الشواهد', delAct: 'حذف النشاط', s1: 'التسجيل والبطاقات',
     s2: 'الحضور والمشاركون', s3: 'تصميم الشواهد', s4: 'الإصدار والإرسال', stepsL: 'مراحل النشاط', formReady: 'الاستمارة جاهزة', noForm: 'لم تُنشأ الاستمارة',
     hereOf: (h, n) => `${h} حاضر من ${n}`, noPeople: 'لا مشاركين بعد', issuedSent: (i, e) => `${i} صادرة · ${e} مرسلة`, noIssued: 'لم تصدر شواهد',
     formT: 'استمارة التسجيل', formD: 'استمارة Google بلغة النشاط، منشورة وتقبل الردود. تعديل عنوان النشاط أو تاريخه يحدّثها تلقائياً.',
@@ -313,8 +318,8 @@ const T = {
     sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
     cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
     dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
-    dSummary: 'التقرير الختامي للنشاط (PDF)', teamT: 'فريق النشاط',
-    teamD: 'يُضاف المنظمون والمساعدون إلى النشاط من المنصة على الحاسوب («الحضور والمشاركون» ← «فريق النشاط»).', designT: 'تصميم الشواهد',
+    dSummary: 'التقرير الختامي للنشاط (PDF)',
+    designT: 'تصميم الشواهد',
     designD: 'تصميم الشهادة يتم في المنصة على الحاسوب: رفع التصميم (PDF من Canva أو غيره)، ووضع الاسم ورقم الشهادة ورمز QR عليه بالنقر، ومعاينته وتصغير حجمه.',
     designItems: ['رفع التصميم لكل نوع شهادة', 'وضع المتغيرات على الشهادة ومعاينتها', 'نسخ تصميم من نشاط آخر', 'تصغير حجم التصميم'],
     issueT: 'إصدار الشواهد ورفعها', thType: 'النوع', thPresent: 'حاضرون', thTodo: 'بلا شهادة', beforeT: 'قبل الإصدار',
@@ -436,7 +441,12 @@ const T = {
     nReg: 'inscrits', nHere: 'présents', nCert: 'attestations', copyLink: 'Copier le lien', noDate: 'Sans date',
     platVerify: 'Chacun vérifie une attestation par son numéro ou son code QR.', platMe: 'Les participants retrouvent toutes leurs attestations.',
     platPrivacy: 'Les données conservées et leur usage.', nPrivacy: 'Confidentialité', allOrgs: 'Tous les organismes', more: 'Plus', close: 'Fermer',
-    dupAct: 'Dupliquer (avec les modèles)', archAct: 'Archiver l’activité', revokeAll: 'Annuler toutes les attestations', delAct: 'Supprimer l’activité',
+    dupAct: 'Dupliquer (avec les modèles)', archAct: 'Archiver l’activité', unarchAct: 'Désarchiver', archOk: 'Activité archivée', unarchOk: 'Activité de retour dans la liste',
+    archList: 'Archives', actList: 'Activités en cours', archT: 'Activités archivées', teamT: 'Équipe de l’activité', teamD: 'Les comptes de votre organisme qui travaillent sur cette activité (en plus de son créateur).',
+    teamNone: 'Aucun autre compte dans cet organisme', teamOk: 'Équipe enregistrée', saveB: 'Enregistrer', addTypeT: 'Une autre attestation pour cette personne', addTypeB: 'Ajouter',
+    typeOk: 'Attestation ajoutée ; émise dès que son modèle est prêt', typeWait: 'Personne ajoutée à l’instant : réessayez dans une minute', typeHave: 'Cette personne a déjà tous les types',
+    revokeB: 'Annuler l’attestation', restoreB: 'Rétablir l’attestation', revokeAsk: 'Motif de l’annulation (affiché sur la page de vérification) :', revokeOk: 'Attestation annulée : la vérification l’affiche annulée',
+    restoreOk: 'Attestation rétablie', restoreSure: 'Rétablir cette attestation ?', extraT: 'Attestation supplémentaire', revokeAll: 'Annuler toutes les attestations', delAct: 'Supprimer l’activité',
     s1: 'Inscription et cartes', s2: 'Présences et participants', s3: 'Modèles d’attestation', s4: 'Émission et envoi', stepsL: 'Étapes de l’activité',
     formReady: 'Formulaire prêt', noForm: 'Formulaire non créé', hereOf: (h, n) => `${h} présents sur ${n}`, noPeople: 'Aucun participant',
     issuedSent: (i, e) => `${i} émises · ${e} envoyées`, noIssued: 'Aucune attestation émise', formT: 'Formulaire d’inscription',
@@ -457,7 +467,7 @@ const T = {
     sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
     contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
     dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
-    dSummary: 'Rapport final (PDF)', teamT: 'Équipe de l’activité', teamD: 'Les organisateurs et assistants s’ajoutent depuis la plateforme sur l’ordinateur.',
+    dSummary: 'Rapport final (PDF)',
     designT: 'Modèles d’attestation',
     designD: 'La conception se fait dans la plateforme sur l’ordinateur : importer le modèle (PDF de Canva ou autre), y placer le nom, le numéro et le code QR, l’aperçu et la réduction de taille.',
     designItems: ['Importer le modèle de chaque type', 'Placer les champs et prévisualiser', 'Copier le modèle d’une autre activité', 'Réduire la taille du modèle'],
@@ -582,7 +592,12 @@ const T = {
     st: ['Registration form', 'Attendance', 'Issuing', 'Emailing'], nextStep: 'Next step: ', allDone: 'Every step is done', nReg: 'registered',
     nHere: 'present', nCert: 'certificates', copyLink: 'Copy link', noDate: 'No date', platVerify: 'Anyone checks a certificate by its number or QR code.',
     platMe: 'Participants find all their certificates.', platPrivacy: 'What the platform keeps and how it is used.', nPrivacy: 'Privacy',
-    allOrgs: 'All organizers', more: 'More', close: 'Close', dupAct: 'Duplicate (with designs)', archAct: 'Archive the activity',
+    allOrgs: 'All organizers', more: 'More', close: 'Close', dupAct: 'Duplicate (with designs)', archAct: 'Archive the activity', unarchAct: 'Unarchive', archOk: 'Activity archived', unarchOk: 'Activity back in the list',
+    archList: 'Archive', actList: 'Current activities', archT: 'Archived activities', teamT: 'Activity team', teamD: 'Accounts of your organizer working on this activity (besides its creator).',
+    teamNone: 'No other accounts in this organizer', teamOk: 'Team saved', saveB: 'Save', addTypeT: 'Another certificate for this person', addTypeB: 'Add',
+    typeOk: 'Certificate added; issued once its design is ready', typeWait: 'Just added: try again in a minute', typeHave: 'This person already has every type',
+    revokeB: 'Revoke certificate', restoreB: 'Restore certificate', revokeAsk: 'Reason for revoking (shown on the verification page):', revokeOk: 'Certificate revoked: verification shows it revoked',
+    restoreOk: 'Certificate restored', restoreSure: 'Restore this certificate?', extraT: 'Extra certificate',
     revokeAll: 'Revoke every certificate', delAct: 'Delete the activity', s1: 'Registration and cards', s2: 'Attendance and participants',
     s3: 'Certificate designs', s4: 'Issuing and emailing', stepsL: 'Activity steps', formReady: 'Form ready', noForm: 'No form yet',
     hereOf: (h, n) => `${h} present of ${n}`, noPeople: 'No participants yet', issuedSent: (i, e) => `${i} issued · ${e} emailed`,
@@ -603,8 +618,8 @@ const T = {
     fPending: 'Changes waiting for the computer', sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
     sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
     qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
-    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', teamT: 'Activity team',
-    teamD: 'Organizers and helpers are added from the platform on the computer.', designT: 'Certificate designs',
+    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)',
+    designT: 'Certificate designs',
     designD: 'Designs are made in the platform on the computer: upload the design (a PDF from Canva or elsewhere), place the name, number and QR code on it, preview it and make it smaller.',
     designItems: ['Upload a design for each certificate type', 'Place the fields and preview', 'Copy a design from another activity', 'Make the design smaller'],
     issueT: 'Issue and publish certificates', thType: 'Type', thPresent: 'Present', thTodo: 'Without certificate', beforeT: 'Before issuing',
@@ -848,9 +863,10 @@ function tile(icon, title, desc, url) {  // a published page: open it, or copy i
       }}, ic('copy'), t('copyLink')))));
 }
 
+let showArch = false;  // the archived activities instead of the current ones
 async function showList(then) {
   mark('acts'); bar(t('nHome')); loading();
-  const j = await call('activities');
+  const j = await call('activities', showArch ? {archived: true} : {});
   home = j;
   const acts = j.activities.sort((x, y) => Number(y.id) - Number(x.id));
   const sum = k => acts.reduce((n, a) => n + (Number(a[k]) || 0), 0);
@@ -894,7 +910,8 @@ async function showList(then) {
   };
   [q, fk, fo].forEach(x => x && x.addEventListener('input', filter));
   const actsBlock = el('section', {id: 'acts'},
-    el('div', {className: 'sec-h'}, el('h2', {}, ic('calendar'), t('actsT') + ' (' + acts.length + ')')),
+    el('div', {className: 'sec-h'}, el('h2', {}, ic('calendar'), t(showArch ? 'archT' : 'actsT') + ' (' + acts.length + ')'), el('span', {className: 'sp'}),
+      el('button', {type: 'button', className: 'ghost sm', onclick: () => { showArch = !showArch; showList(); }}, ic('archive'), t(showArch ? 'actList' : 'archList'))),
     acts.length ? [el('div', {className: 'filters'}, q, fk, fo), el('div', {className: 'acts'}, ...cards), none]
       : el('div', {className: 'card empty'}, el('div', {style: 'color:var(--gold)'}, ic('cert')), el('p', {textContent: t('noActs')})));
   const vu = new URL('.', location.href).href;
@@ -1040,6 +1057,7 @@ async function showActivity(id, tab) {
   const j = await call('activity', {id});
   if (j.status !== 'ok') return showList();
   const a = j.activity, people = j.people, org = can('organizer');
+  a.people = people;  // the person's window lists the types they already have
   bar(a.title, '#');
   // present now: recorded by the app (its sessions, or "present" for a one-session activity) or by a phone since
   const here = p => sessionsOf(p).includes(a.session) || (a.sessions === 1 && Number(p.present) === 1);
@@ -1054,8 +1072,15 @@ async function showActivity(id, tab) {
     toast(t(r.status === 'exists' ? 'exists' : 'reqFail'));
     e.target.disabled = false;
   }}, ic({issue: 'cert', email: 'mail', sync: 'sync'}[kind]), label);
+  const archived = String(a.archived) === '1';
+  const archive = async () => {
+    const r = await call('actstate', {id: a.id, on: !archived}).catch(() => ({}));
+    if (r.status === 'ok') { toast(t(archived ? 'unarchOk' : 'archOk')); reload(); } else toast(t('saveFail'));
+  };
   const more = el('details', {className: 'menu'}, el('summary', {className: 'btn sec', textContent: t('more') + ' ▾'}),
-    el('div', {className: 'items'}, ...[['copy', 'dupAct'], ['archive', 'archAct'], ...(can('admin') ? [['alert', 'revokeAll'], ['trash', 'delAct']] : [])]
+    el('div', {className: 'items'}, el('button', {type: 'button', onclick: () => teamSheet(a, j.staff || [], reload)}, ic('people'), t('teamT')),
+      el('button', {type: 'button', onclick: archive}, ic('archive'), t(archived ? 'unarchAct' : 'archAct')),
+      ...[['copy', 'dupAct'], ...(can('admin') ? [['alert', 'revokeAll'], ['trash', 'delAct']] : [])]
       .map(([icon, key]) => el('div', {className: 'lockrow', title: t('onPcT')}, ic(icon), t(key), el('span', {className: 'sp', style: 'flex:1'}), pcTag()))));
   const head = el('header', {className: 'acthead rise'},
     el('nav', {className: 'crumbs', ariaLabel: t('nHome')}, el('a', {href: '#'}, ic('home'), t('nHome')), el('span', {textContent: '/'}), el('span', {className: 'ltr', textContent: '#' + a.id})),
@@ -1066,7 +1091,7 @@ async function showActivity(id, tab) {
           a.sessions > 1 ? el('span', {}, ic('clock'), t('sessionsLine')(a.sessions, a.session)) : null,
           a.types.length ? el('span', {dir: 'auto'}, ic('award'), a.types.join('، ')) : null)),
       org ? el('div', {className: 'bar'}, el('button', {type: 'button', className: 'sec', onclick: editAct}, ic('edit'), t('editAct')), more) : null),
-    el('div', {className: 'kpis', style: 'margin:16px 0 0'}, kpi('people', people.length, 'kReg'), kpi('check', people.filter(here).length, 'hereNow', 'ok'),
+    el('div', {className: 'kpis', style: 'margin:16px 0 0'}, kpi('people', people.filter(p => !p.of).length, 'kReg'), kpi('check', people.filter(here).length, 'hereNow', 'ok'),
       kpi('cert', issued.length, 'kCert', 'gold'), kpi('mail', emailed.length, 'kMail')));
   // the steps, as on the computer; a helper has the attendance only
   const steps = (org ? [['register', 's1', /^https:/.test(a.form || ''), t(a.form ? 'formReady' : 'noForm')],
@@ -1127,7 +1152,8 @@ async function showActivity(id, tab) {
     return [el('div', {className: 'card'}, el('div', {className: 'sec-h'}, el('h2', {}, ic('check'), t('attT')),
       sess ? [el('span', {className: 'sp'}), el('span', {className: 'muted', textContent: t('sessPick')}), sess] : null), methods),
       peopleCard(),
-      org ? el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('people'), t('teamT')), el('span', {className: 'sp'}), pcTag()),
+      org ? el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('people'), t('teamT')), el('span', {className: 'sp'}),
+        btn(t('edit'), () => teamSheet(a, j.staff || [], reload), 'sec')),
         el('p', {className: 'muted', style: 'margin:8px 0 0', textContent: t('teamD')})) : null];
   }
   function numbers(close) {  // card numbers typed (or read by a handheld QR reader), each marked present at the current session
@@ -1157,8 +1183,9 @@ async function showActivity(id, tab) {
     return f;
   }
   function peopleCard() {
-    const tickets = {};
-    people.forEach(p => { if (p.ticket) tickets[p.ticket] = (tickets[p.ticket] || 0) + 1; });
+    const tickets = {}, extras = {};
+    people.forEach(p => { if (p.ticket) tickets[p.ticket] = (tickets[p.ticket] || 0) + 1; if (p.of) (extras[p.of] = extras[p.of] || []).push(p); });
+    const persons = people.filter(p => !p.of);
     const q = el('input', {type: 'search', placeholder: t('pSearch'), ariaLabel: t('pSearch'), style: 'flex:2;min-width:200px'});
     const opt = (v, key) => el('option', {value: v, textContent: key});
     const f = el('select', {ariaLabel: t('tPeople'), style: 'flex:1;min-width:150px'}, opt('all', t('fAll')),
@@ -1208,8 +1235,10 @@ async function showActivity(id, tab) {
         el('td', {className: 'c-name'}, el('b', {dir: 'auto', style: 'font-weight:600', textContent: pname(p)}),
           p.pending ? [' ', el('span', {className: 'badge warn', textContent: t('pending')})] : null, ...qs.map(x => [' ', el('span', {className: 'badge warn', textContent: x})]),
           p.name_lat && p.name_ar ? el('div', {className: 'muted', dir: 'auto', textContent: p.name_lat}) : null),
-        el('td', {dataset: {l: t('certType')}, dir: 'auto', textContent: p.type || '—'}),
-        el('td', {className: 'c-wide', dataset: {l: t('cert')}}, cert(p)),
+        el('td', {dataset: {l: t('certType')}, dir: 'auto'}, p.type || '—', ...(extras[p.pid] || []).map(x => el('div', {style: 'margin-top:4px'},
+          el('button', {type: 'button', className: 'badge gold', title: t('extraT'), style: 'cursor:pointer;border:0', disabled: !org,
+            onclick: () => { const close = sheet(personForm(a, x, () => { close(); reload(); }, () => close())); }}, '+ ', x.type)))),
+        el('td', {className: 'c-wide', dataset: {l: t('cert')}}, cert(p), ...(extras[p.pid] || []).filter(x => x.serial).map(x => el('div', {style: 'margin-top:4px'}, cert(x)))),
         org ? el('td', {className: 'muted ltr c-wide', dataset: {l: t('contact')}, style: 'font-size:12px'}, p.email || '', p.phone ? [el('br'), p.phone] : null) : null,
         org ? el('td', {className: 'c-edit'}, el('div', {className: 'bar', style: 'gap:4px;justify-content:flex-end'}, ...actions(p))) : null);
     };
@@ -1219,10 +1248,10 @@ async function showActivity(id, tab) {
                    serial: (x, y) => String(x.serial || '~').localeCompare(String(y.serial || '~'), 'en', {numeric: true}), here: (x, y) => here(y) - here(x)};
     function draw() {
       const s = q.value.trim().toLowerCase();
-      const shown = people.filter(p => keep[f.value](p) && (!s || [pname(p), p.name_ar, p.name_lat, p.ticket, p.serial, p.email, p.phone].join(' ').toLowerCase().includes(s)))
+      const shown = persons.filter(p => keep[f.value](p) && (!s || [pname(p), p.name_ar, p.name_lat, p.ticket, p.serial, p.email, p.phone].join(' ').toLowerCase().includes(s)))
         .sort(order[so.value]);
       tb.replaceChildren(...shown.map(row));
-      count.textContent = '(' + t('countOf')(shown.length, people.length) + ')';
+      count.textContent = '(' + t('countOf')(shown.length, persons.length) + ')';
     }
     [q, f, so].forEach(x => x.addEventListener('input', draw));
     draw();
@@ -1382,6 +1411,38 @@ function personCard(a, p, here, reload) {
   return card;
 }
 
+function typeBox(a, p, done) {  // another certificate for the same person (organizing...), issued once its design is ready
+  const have = new Set([p.type, ...(a.people || []).filter(x => x.of === p.pid).map(x => x.type)]);
+  const left = (a.types || []).filter(x => !have.has(x));
+  if (!left.length) return null;
+  const sel = select(left.map(x => [x, x]), left[0]);
+  return el('div', {style: 'margin-top:14px;border-top:1px solid var(--line);padding-top:12px'}, labelled(t('addTypeT'), sel),
+    el('div', {className: 'row', style: 'margin-top:8px'}, btn(t('addTypeB'), async e => {
+      e.target.disabled = true;
+      const r = await call('addtype', {id: a.id, uid: p.uid, type: sel.value}).catch(() => ({}));
+      if (r.status === 'ok') { toast(t('typeOk')); return done(); }
+      toast(t(r.status === 'wait' ? 'typeWait' : 'saveFail')); e.target.disabled = false;
+    }, 'sec')));
+}
+
+function teamSheet(a, staff, reload) {  // who works on the activity besides who made it
+  const on = new Set(a.team || []);
+  const boxes = staff.map(s => { const b = el('input', {type: 'checkbox', value: s.id, checked: on.has(s.id)}); return el('label', {className: 'row', style: 'gap:8px'}, b, s.name); });
+  let close;
+  const save = el('button', {className: 'btn', type: 'submit', textContent: t('saveB')});
+  const form = el('form', {className: 'form', noValidate: true}, el('h2', {textContent: t('teamT')}), el('p', {className: 'hint', textContent: t('teamD')}),
+    staff.length ? boxes : el('p', {className: 'muted', textContent: t('teamNone')}), el('div', {className: 'row'}, staff.length ? save : null, btn(t('cancel'), () => close(), 'ghost')));
+  form.onsubmit = async e => {
+    e.preventDefault();
+    save.disabled = true;
+    const team = boxes.map(l => l.querySelector('input')).filter(x => x.checked).map(x => x.value);
+    const r = await call('team', {id: a.id, team}).catch(() => ({}));
+    if (r.status === 'ok') { toast(t('teamOk')); close(); return reload(); }
+    toast(t('saveFail')); save.disabled = false;
+  };
+  close = sheet(form);
+}
+
 // add (p null) or correct a person; the app applies it at its next sync, like the same action on the computer
 function personForm(a, p, done, close) {
   const v = p || {}, inputs = {};
@@ -1398,7 +1459,16 @@ function personForm(a, p, done, close) {
     el('div', {className: 'grid2'}, fld('email', t('email'), {type: 'email', dir: 'ltr'}), fld('phone', t('phone'), {type: 'tel', dir: 'ltr'})),
     fld('mention', t('mention')),
     v.serial ? el('p', {className: 'hint', textContent: t('hasCert')}) : null,
-    el('div', {className: 'row'}, save, btn(t('cancel'), close, 'ghost')), err);
+    el('div', {className: 'row'}, save, btn(t('cancel'), close, 'ghost')), err,
+    p && p.uid && !p.of ? typeBox(a, p, done) : null,
+    p && p.serial && can('admin') ? el('div', {className: 'row', style: 'margin-top:12px'}, btn(t(p.revoked ? 'restoreB' : 'revokeB'), async e => {
+      const reason = p.revoked ? (confirm(t('restoreSure')) ? '' : null) : prompt(t('revokeAsk'));
+      if (reason === null || (!p.revoked && !reason.trim())) return;
+      e.target.disabled = true;
+      const r = await call('revoke', {id: a.id, uid: p.uid, on: !p.revoked, reason}).catch(() => ({}));
+      if (r.status === 'ok') { toast(t(p.revoked ? 'restoreOk' : 'revokeOk')); return done(); }
+      toast(t('saveFail')); e.target.disabled = false;
+    }, p.revoked ? 'sec' : 'ghost danger')) : null);
   form.onsubmit = async e => {
     e.preventDefault();
     const data = {};

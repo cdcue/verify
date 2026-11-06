@@ -43,7 +43,7 @@
       else if (k.startsWith('aria')) n.setAttribute('aria-' + k.slice(4).toLowerCase(), v);  // ariaLabel -> aria-label
       else n[k] = v;
     }
-    kids.flat().forEach(k => k != null && k !== false && n.append(k instanceof Node ? k : String(k)));
+    kids.flat(Infinity).forEach(k => k != null && k !== false && n.append(k instanceof Node ? k : String(k)));
     return n;
   }
   function svg(html) { const s = document.createElement('span'); s.innerHTML = html; return s.firstChild; }  // our own constant icons only
