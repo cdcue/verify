@@ -40,7 +40,7 @@
   .rise { animation: rise .25s ease-out; }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
   .langs { display: inline-flex; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
-  .langs button { background: none; border: 0; color: var(--ink); min-width: 36px; min-height: 30px; padding: 0 9px; border-radius: 999px; font-size: 13px; }
+  .langs button { background: none; border: 0; color: var(--ink); min-width: 40px; min-height: 38px; padding: 0 10px; border-radius: 999px; font-size: 13px; }  /* a finger, not a cursor */
   .langs button[aria-pressed="true"] { background: var(--pri); color: var(--on-pri); }
   .iconbtn svg { width: 19px; height: 19px; }
   .appbar h1 { font-size: 18px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -54,15 +54,16 @@
   .side .who button { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .25); color: #fff; }
   .pclock { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; color: var(--muted); border: 1px dashed var(--field);
             border-radius: 20px; padding: 1px 8px; white-space: nowrap; }
-  .pcbtn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border: 1px dashed var(--field); border-radius: 9px;
+  .pcbtn { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 7px; padding: 8px 14px; border: 1px dashed var(--field); border-radius: 9px;
            color: var(--muted); font-weight: 600; font-size: 14px; cursor: not-allowed; background: var(--soft); }
-  .pclink { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); cursor: not-allowed; }
+  .pclink { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--muted); cursor: not-allowed; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px 16px; }  /* on a phone the links go under each other */
   .method.locked { opacity: .62; cursor: not-allowed; }
   .method.locked:hover { background: var(--soft); border-color: var(--line); }
   .doclink.locked { cursor: not-allowed; opacity: .7; }
   .doclink.locked:hover { background: var(--soft); border-color: var(--line); }
   .doclink.locked b { display: flex; align-items: center; gap: 6px; justify-content: space-between; }
-  .menu .items .lockrow { display: flex; align-items: center; gap: 8px; padding: 8px 10px; color: var(--muted); font-size: 14px; cursor: not-allowed; white-space: nowrap; }
+  .menu .items .lockrow { display: flex; align-items: center; gap: 8px; padding: 8px 10px; color: var(--muted); font-size: 14px; cursor: not-allowed; flex-wrap: wrap; }  /* long French labels wrap on a phone */
   @media (max-width: 560px) { .kpis { grid-template-columns: 1fr 1fr; } .kpi { padding: 10px 12px; gap: 10px; } .kpi .ico { width: 36px; height: 36px; } }
   .pclist { display: grid; gap: 6px; margin: 4px 0 0; padding: 0; list-style: none; }
   .pclist li { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--muted); }
@@ -120,8 +121,8 @@
   select:focus { outline: none; border-color: var(--brand-2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-2) 18%, transparent); }
   .fld { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); margin: 0; }
   .fld .star { color: var(--err); }
-  .grid2 { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
-  @media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+  .grid2 { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  @media (max-width: 560px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
   .form { display: grid; gap: 14px; }
   .form .hint { font-weight: 400; }
   .err { color: var(--err); font-size: 14px; margin: 0; min-height: 1.2em; }

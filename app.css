@@ -338,3 +338,9 @@ main:focus { outline: none; }
 .shrink .lv img { width: 100%; border-radius: 8px; border: 1px solid var(--line); background: #fff; }
 #shrinkDlg { max-width: 1060px; }
 [data-locked] { display: none !important; }  /* a part the account's role does not open */
+/* a section that opens and closes: its title is the button */
+details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary::after { content: "▾"; margin-inline-start: auto; color: var(--muted); transition: transform .15s; }
+details.fold[open] > summary::after { transform: rotate(180deg); }
+details.fold[open] > summary { margin-bottom: 12px; }
