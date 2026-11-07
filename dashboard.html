@@ -233,7 +233,7 @@ const T = {
     reqHint: 'أنشئ نشاطاً من هنا: تُنشأ استمارته وجدوله على الحاسوب، ثم يظهر في هذه اللائحة.', hereNow: 'حاضر الآن',
     noActs: 'لا أنشطة منشورة بعد: زامن نشاطاً في المنصة على الحاسوب، أو أنشئ واحداً من هنا.', activity: 'نشاط',
     sessionsLine: (n, s) => `${n} حصص، المسح الآن للحصة ${s}`, pcOnlyT: 'على الحاسوب',
-    pcOnlyItems: ['تصميم الشهادات ومعاينتها', 'أسئلة الاستمارة الإضافية', 'الاستيراد من Excel', 'اللوائح والتقارير وملفات الطباعة (PDF وExcel)', 'إلغاء شهادة أو إرجاعها', 'الجهات المنظمة والأنواع والإعدادات', 'سلة المحذوفات والنسخ الاحتياطية'],
+    pcOnlyItems: ['صور التصميم (شعار، توقيع، ختم)', 'أسئلة الاستمارة الإضافية', 'الجهات المنظمة والأنواع والإعدادات', 'النسخ الاحتياطية'],
     pcOnlyNote: 'إصدار الشواهد وإرسالها يُطلب من هنا، ويُنفَّذ على الحاسوب.',
     noChoices: 'لم تنشر المنصة على الحاسوب قوائمها بعد (الجهات والأنواع): افتحها مرة واحدة وهي متصلة بالإنترنت.', fTitle: 'العنوان', fKind: 'نوع النشاط',
     fOrg: 'الجهة المنظمة', fLang: 'لغة النشاط والوثائق', langAr: 'العربية', langFr: 'الفرنسية', langEn: 'الإنجليزية', fType: 'نوع الشهادة الرئيسي',
@@ -329,7 +329,8 @@ const T = {
     sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
     cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
     dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
-    dSummary: 'التقرير الختامي للنشاط (PDF)', imD: 'ملف Excel أو CSV: سطر لكل شخص. ملف التصدير يصحّح أصحابه بأرقامهم، وكل سطر آخر يُضاف مشاركاً حاضراً. حدّد ما في كل عمود ثم استورد.',
+    dSummary: 'التقرير الختامي للنشاط (PDF)', trT: 'المحذوفات', trD: 'ما حُذف من الموقع أو من الحاسوب خلال آخر 30 يوماً. الاسترجاع يعيده كما كان، ويأخذه الحاسوب في مزامنته التالية.',
+    trNone: 'لا شيء في المحذوفات', trBack: 'استرجاع', trDone: 'استُرجع', trAct: x => 'نشاط · ' + x.n + ' مشارك', trPerson: x => 'مشارك في «' + x.title + '»', imD: 'ملف Excel أو CSV: سطر لكل شخص. ملف التصدير يصحّح أصحابه بأرقامهم، وكل سطر آخر يُضاف مشاركاً حاضراً. حدّد ما في كل عمود ثم استورد.',
     imTpl: 'تحميل النموذج', imBad: 'تعذرت قراءة الملف', imEmpty: 'الملف فارغ أو بلا صف عناوين', imSkip: '— لا يُستورد —', imGo: n => 'استيراد ' + n + ' سطراً',
     imNoName: 'حدّد عموداً واحداً على الأقل للاسم', imCol: 'العمود', imEx: 'أمثلة', imIs: 'ما فيه',
     imDone: s => 'أضيف ' + s.added + '، وصُحّح ' + s.updated + (s.issued ? '، وبقي ' + s.issued + ' كما هم لأن لهم شهادة صادرة' : '') + (s.skipped ? '، وتُخطّي ' + s.skipped + ' بلا اسم' : ''),
@@ -388,7 +389,7 @@ const T = {
     reqHint: 'Créez une activité ici : son formulaire et sa feuille sont créés sur l’ordinateur, puis elle apparaît dans cette liste.', hereNow: 'présents',
     noActs: 'Aucune activité publiée : synchronisez-en une sur l’ordinateur, ou créez-en une ici.', activity: 'Activité',
     sessionsLine: (n, s) => `${n} séances, scan en cours : séance ${s}`, pcOnlyT: 'Sur l’ordinateur',
-    pcOnlyItems: ['Conception et aperçu des attestations', 'Questions supplémentaires du formulaire', 'Import depuis Excel', 'Listes, rapports et fichiers à imprimer (PDF et Excel)', 'Annuler ou rétablir une attestation', 'Organismes, types et réglages', 'Corbeille et sauvegardes'],
+    pcOnlyItems: ['Images des modèles (logo, signature, cachet)', 'Questions supplémentaires du formulaire', 'Organismes, types et réglages', 'Sauvegardes'],
     pcOnlyNote: 'L’émission et l’envoi des attestations se demandent ici et s’exécutent sur l’ordinateur.',
     noChoices: 'La plateforme de l’ordinateur n’a pas encore publié ses listes (organismes et types) : ouvrez-la une fois connectée à Internet.',
     fTitle: 'Titre', fKind: 'Type d’activité', fOrg: 'Organisme', fLang: 'Langue de l’activité et des documents', langAr: 'Arabe', langFr: 'Français',
@@ -498,7 +499,8 @@ const T = {
     sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
     contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
     dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
-    dSummary: 'Rapport final (PDF)', imD: 'Fichier Excel ou CSV, une ligne par personne. Un fichier exporté corrige les personnes par leur numéro ; toute autre ligne ajoute un participant présent. Indiquez le contenu de chaque colonne, puis importez.',
+    dSummary: 'Rapport final (PDF)', trT: 'Corbeille', trD: 'Ce qui a été supprimé ici ou sur l’ordinateur ces 30 derniers jours. Le restaurer le remet tel quel ; l’ordinateur le reprend à sa prochaine synchronisation.',
+    trNone: 'La corbeille est vide', trBack: 'Restaurer', trDone: 'Restauré', trAct: x => 'Activité · ' + x.n + ' participant(s)', trPerson: x => 'Participant de « ' + x.title + ' »', imD: 'Fichier Excel ou CSV, une ligne par personne. Un fichier exporté corrige les personnes par leur numéro ; toute autre ligne ajoute un participant présent. Indiquez le contenu de chaque colonne, puis importez.',
     imTpl: 'Télécharger le modèle', imBad: 'Fichier illisible', imEmpty: 'Fichier vide ou sans ligne de titres', imSkip: '— non importée —', imGo: n => 'Importer ' + n + ' ligne(s)',
     imNoName: 'Choisissez au moins une colonne pour le nom', imCol: 'Colonne', imEx: 'Exemples', imIs: 'Contenu',
     imDone: s => s.added + ' ajouté(s), ' + s.updated + ' corrigé(s)' + (s.issued ? ', ' + s.issued + ' inchangé(s) (attestation déjà émise)' : '') + (s.skipped ? ', ' + s.skipped + ' sans nom ignoré(s)' : ''),
@@ -562,7 +564,7 @@ const T = {
     reqHint: 'Create an activity here: its form and sheet are created on the computer, then it shows up in this list.', hereNow: 'present now',
     noActs: 'No published activities yet: sync one on the computer, or create one here.', activity: 'Activity',
     sessionsLine: (n, s) => `${n} sessions, now scanning session ${s}`, pcOnlyT: 'On the computer',
-    pcOnlyItems: ['Certificate designs and previews', 'Extra form questions', 'Import from Excel', 'Lists, reports and print files (PDF and Excel)', 'Revoke or restore a certificate', 'Organizations, types and settings', 'Trash and backups'],
+    pcOnlyItems: ['Design pictures (logo, signature, stamp)', 'Extra form questions', 'Organizations, types and settings', 'Backups'],
     pcOnlyNote: 'Issuing and emailing certificates are requested here and carried out on the computer.',
     noChoices: 'The platform on the computer has not published its lists yet (organizations and types): open it once while online.', fTitle: 'Title',
     fKind: 'Activity type', fOrg: 'Organization', fLang: 'Language of the activity and documents', langAr: 'Arabic', langFr: 'French', langEn: 'English',
@@ -669,7 +671,8 @@ const T = {
     fPending: 'Changes waiting for the computer', sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
     sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
     qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
-    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', imD: 'An Excel or CSV file, one row per person. An exported file corrects people by their number; any other row adds a present participant. Say what each column holds, then import.',
+    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', trT: 'Trash', trD: 'What was deleted here or on the computer in the last 30 days. Restoring puts it back as it was; the computer takes it back at its next sync.',
+    trNone: 'The trash is empty', trBack: 'Restore', trDone: 'Restored', trAct: x => 'Activity · ' + x.n + ' participant(s)', trPerson: x => 'Participant of “' + x.title + '”', imD: 'An Excel or CSV file, one row per person. An exported file corrects people by their number; any other row adds a present participant. Say what each column holds, then import.',
     imTpl: 'Download the template', imBad: 'The file could not be read', imEmpty: 'The file is empty or has no header row', imSkip: '— not imported —', imGo: n => 'Import ' + n + ' row(s)',
     imNoName: 'Pick at least one column for the name', imCol: 'Column', imEx: 'Examples', imIs: 'Holds',
     imDone: s => s.added + ' added, ' + s.updated + ' corrected' + (s.issued ? ', ' + s.issued + ' unchanged (certificate already issued)' : '') + (s.skipped ? ', ' + s.skipped + ' without a name skipped' : ''),
@@ -923,6 +926,27 @@ function tile(icon, title, desc, url) {  // a published page: open it, or copy i
       }}, ic('copy'), t('copyLink')))));
 }
 
+function trashSheet() {  // the deleted activities and people, each with its way back
+  const box = el('div', {}, el('p', {className: 'muted', textContent: t('dzLoading')}));
+  const close = sheet(el('div', {}, el('h2', {className: 'ch'}, ic('trash'), t('trT')), el('p', {className: 'muted', textContent: t('trD')}), box,
+    el('div', {className: 'bar', style: 'margin-top:12px'}, btn(t('close'), () => close(), 'ghost'))));
+  call('trash').catch(() => ({})).then(r => {
+    if (r.status !== 'ok') return box.replaceChildren(el('p', {className: 'hint', textContent: t('reqFail')}));
+    box.replaceChildren(r.items.length ? el('div', {}, ...r.items.map(x => el('div', {className: 'bar', style: 'border-top:1px solid var(--line);padding:10px 0'},
+      el('span', {style: 'flex:1;min-width:0'}, el('b', {dir: 'auto', textContent: x.label}),
+        el('div', {className: 'muted', style: 'font-size:12px', textContent: t(x.kind === 'activity' ? 'trAct' : 'trPerson')(x) + ' · ' + when(x.at)})),
+      btn(t('trBack'), async e => {
+        const b = e.currentTarget;
+        b.disabled = true;
+        const s = await call('restore', {kind: x.kind, uid: x.uid}).catch(() => ({}));
+        if (s.status !== 'ok') { toast(t('reqFail')); b.disabled = false; return; }
+        toast(t('trDone'));
+        b.closest('.bar').remove();
+        if (x.kind === 'activity') showList();
+      }, 'sec')))) : el('p', {className: 'empty', textContent: t('trNone')}));
+  });
+}
+
 let showArch = false;  // the archived activities instead of the current ones
 async function showList(then) {
   mark('acts'); bar(t('nHome')); loading();
@@ -971,6 +995,7 @@ async function showList(then) {
   [q, fk, fo].forEach(x => x && x.addEventListener('input', filter));
   const actsBlock = el('section', {id: 'acts'},
     el('div', {className: 'sec-h'}, el('h2', {}, ic('calendar'), t(showArch ? 'archT' : 'actsT') + ' (' + acts.length + ')'), el('span', {className: 'sp'}),
+      can('organizer') ? el('button', {type: 'button', className: 'ghost sm', onclick: trashSheet}, ic('trash'), t('trT')) : null,
       el('button', {type: 'button', className: 'ghost sm', onclick: () => { showArch = !showArch; showList(); }}, ic('archive'), t(showArch ? 'actList' : 'archList'))),
     acts.length ? [el('div', {className: 'filters'}, q, fk, fo), el('div', {className: 'acts'}, ...cards), none]
       : el('div', {className: 'card empty'}, el('div', {style: 'color:var(--gold)'}, ic('cert')), el('p', {textContent: t('noActs')})));
