@@ -302,7 +302,7 @@ const T = {
     dzLong: 'طويلة (7 نونبر 2026)', dzImgPc: 'الصور (شعار، توقيع، ختم) تُضاف من البرنامج على الحاسوب.', dzSampleName: 'اسم المشارك', wbT: 'الإصدار من هذه الصفحة', wbD: 'تُرسم الشواهد في متصفحك بالتصميم نفسه، وتُرفع إلى Drive وتُسجَّل في صفحة التحقق. أبقِ الصفحة مفتوحة حتى ينتهي.',
     wbGo: n => 'إصدار ' + n + ' شهادة الآن', wbNone: 'لا توجد شواهد تنتظر الإصدار (الحاضرون ولهم تصميم جاهز)', wbNoDesign: x => 'لا تصميم جاهز لـ«' + x + '» بعد: ' ,
     wbRun: (i, n) => 'تُصدر ' + i + ' من ' + n + '... لا تغلق الصفحة', wbDone: (n, f) => 'صدرت ' + n + ' شهادة' + (f ? '، وتعذرت ' + f : ''), wbSure: n => 'إصدار ' + n + ' شهادة الآن؟ تأخذ كل شهادة رقماً لا يتغير.',
-    wbLeave: 'الإصدار جارٍ: إن أغلقت الصفحة يتوقف، ويُكمل لاحقاً بنفس الأرقام.', wbRules: 'شغّل البرنامج على الحاسوب مرة بآخر إصدار: ينشر قواعد الطباعة (عنوان التحقق، السيد/السيدة)، ثم أعد تحميل الصفحة.', dzHowShort: 'الملف ومواضع المتغيرات', formOn: 'الاستمارة تقبل التسجيلات', formOff: 'الاستمارة موقوفة: لا تقبل تسجيلات', formStop: 'إيقاف التسجيل ومزامنة',
+    wbLeave: 'الإصدار جارٍ: إن أغلقت الصفحة يتوقف، ويُكمل لاحقاً بنفس الأرقام.', mqOk: n => n ? 'وُضعت ' + n + ' رسالة في الطابور: تُرسل خلال دقائق' : 'لا رسائل تنتظر الإرسال', wbRules: 'شغّل البرنامج على الحاسوب مرة بآخر إصدار: ينشر قواعد الطباعة (عنوان التحقق، السيد/السيدة)، ثم أعد تحميل الصفحة.', dzHowShort: 'الملف ومواضع المتغيرات', formOn: 'الاستمارة تقبل التسجيلات', formOff: 'الاستمارة موقوفة: لا تقبل تسجيلات', formStop: 'إيقاف التسجيل ومزامنة',
     formReopen: 'إعادة فتح الاستمارة', formStopSure: 'إيقاف استقبال التسجيلات الآن؟ تصل الردود الأخيرة مباشرة، ويمكن إعادة الفتح متى شئت.',
     formStopped: n => 'أُوقفت الاستمارة' + (n ? '، ووصل ' + n + ' تسجيلاً جديداً' : ''), formReopened: 'أُعيد فتح الاستمارة', formNoPerm: 'تعذر: أذن لـ Google Forms في Apps Script (autoriser)',
     newRegs: n => 'وصل ' + n + ' تسجيلاً جديداً', unarchAct: 'إخراج من الأرشيف', archOk: 'أُرشف النشاط', unarchOk: 'عاد النشاط إلى القائمة',
@@ -460,7 +460,7 @@ const T = {
     dzLong: 'Long (7 novembre 2026)', dzImgPc: 'Les images (logo, signature, cachet) s’ajoutent sur l’ordinateur.', dzSampleName: 'Nom du participant', wbT: 'Émettre depuis cette page', wbD: 'Les attestations sont dessinées dans votre navigateur avec le même modèle, envoyées sur Drive et inscrites à la vérification. Gardez la page ouverte.',
     wbGo: n => 'Émettre ' + n + ' attestation(s)', wbNone: 'Aucune attestation en attente (présents avec un modèle prêt)', wbNoDesign: x => 'Pas de modèle prêt pour « ' + x + ' » : ',
     wbRun: (i, n) => 'Émission ' + i + ' / ' + n + '... ne fermez pas la page', wbDone: (n, f) => n + ' attestation(s) émise(s)' + (f ? ', ' + f + ' échec(s)' : ''), wbSure: n => 'Émettre ' + n + ' attestation(s) ? Chacune reçoit un numéro définitif.',
-    wbLeave: 'Émission en cours : fermer la page l’arrête ; elle reprendra avec les mêmes numéros.', wbRules: 'Lancez une fois la plateforme à jour sur l’ordinateur (elle publie les règles d’impression), puis rechargez.', dzHowShort: 'Fichier et champs', formOn: 'Le formulaire accepte les inscriptions', formOff: 'Formulaire fermé : plus d’inscriptions', formStop: 'Fermer et synchroniser',
+    wbLeave: 'Émission en cours : fermer la page l’arrête ; elle reprendra avec les mêmes numéros.', mqOk: n => n ? n + ' message(s) en file : envoyés dans quelques minutes' : 'Aucun message en attente', wbRules: 'Lancez une fois la plateforme à jour sur l’ordinateur (elle publie les règles d’impression), puis rechargez.', dzHowShort: 'Fichier et champs', formOn: 'Le formulaire accepte les inscriptions', formOff: 'Formulaire fermé : plus d’inscriptions', formStop: 'Fermer et synchroniser',
     formReopen: 'Rouvrir le formulaire', formStopSure: 'Fermer les inscriptions maintenant ? Les dernières réponses arrivent tout de suite ; vous pourrez rouvrir.',
     formStopped: n => 'Formulaire fermé' + (n ? ', ' + n + ' nouvelle(s) inscription(s)' : ''), formReopened: 'Formulaire rouvert', formNoPerm: 'Échec : autorisez Google Forms dans Apps Script (autoriser)',
     newRegs: n => n + ' nouvelle(s) inscription(s)', unarchAct: 'Désarchiver', archOk: 'Activité archivée', unarchOk: 'Activité de retour dans la liste',
@@ -622,7 +622,7 @@ const T = {
     dzLong: 'Long (7 November 2026)', dzImgPc: 'Pictures (logo, signature, stamp) are added on the computer.', dzSampleName: 'Participant name', wbT: 'Issue from this page', wbD: 'Certificates are drawn in your browser with the same design, uploaded to Drive and added to verification. Keep the page open.',
     wbGo: n => 'Issue ' + n + ' certificate(s) now', wbNone: 'No certificates waiting (present people with a ready design)', wbNoDesign: x => 'No ready design for “' + x + '”: ',
     wbRun: (i, n) => 'Issuing ' + i + ' of ' + n + '... keep the page open', wbDone: (n, f) => n + ' certificate(s) issued' + (f ? ', ' + f + ' failed' : ''), wbSure: n => 'Issue ' + n + ' certificate(s) now? Each gets a permanent number.',
-    wbLeave: 'Issuing in progress: closing the page stops it; it resumes with the same numbers.', wbRules: 'Run the updated platform on the computer once (it publishes the printing rules), then reload.', dzHowShort: 'File and fields', formOn: 'The form accepts registrations', formOff: 'Form closed: no more registrations', formStop: 'Close and sync',
+    wbLeave: 'Issuing in progress: closing the page stops it; it resumes with the same numbers.', mqOk: n => n ? n + ' message(s) queued: sent within minutes' : 'No messages waiting', wbRules: 'Run the updated platform on the computer once (it publishes the printing rules), then reload.', dzHowShort: 'File and fields', formOn: 'The form accepts registrations', formOff: 'Form closed: no more registrations', formStop: 'Close and sync',
     formReopen: 'Reopen the form', formStopSure: 'Close registration now? The last answers come in at once; you can reopen any time.',
     formStopped: n => 'Form closed' + (n ? ', ' + n + ' new registration(s)' : ''), formReopened: 'Form reopened', formNoPerm: 'Failed: allow Google Forms in Apps Script (autoriser)',
     newRegs: n => n + ' new registration(s)', unarchAct: 'Unarchive', archOk: 'Activity archived', unarchOk: 'Activity back in the list',
@@ -1367,7 +1367,15 @@ async function showActivity(id, tab) {
           el('div', {className: 'tablewrap', style: 'max-height:260px'}, el('table', {}, ...failed.map(p => el('tr', {},
             el('td', {dir: 'auto', textContent: pname(p)}), el('td', {className: 'ltr', textContent: p.email}), el('td', {className: 'muted', style: 'font-size:12px', textContent: p.mail.error || ''}),
             el('td', {}, org && p.uid ? btn(t('edit'), () => { const close = sheet(personForm(a, p, () => { close(); reload(); }, () => close())); }, 'ghost') : null)))))) : null,
-        el('div', {className: 'bar', style: 'margin-top:12px'}, org ? ask('email', t('emailAsk')(todo), 'emailSure', 'lg') : null, pcBtn(t('previewT'), 'mail'), pcBtn(t('testT'), 'mail')),
+        el('div', {className: 'bar', style: 'margin-top:12px'}, org ? el('button', {type: 'button', className: 'lg', disabled: !todo, onclick: async e => {  // queued here: Google sends them within minutes
+          if (!confirm(t('emailSure'))) return;
+          const b = e.currentTarget;
+          b.disabled = true;
+          const r = await call('mailqueue', {id: a.id}).catch(() => ({}));
+          if (r.status === 'ok') { toast(t('mqOk')(r.queued)); return reload(); }
+          toast(t(r.status === 'rules' ? 'wbRules' : 'reqFail'));
+          b.disabled = false;
+        }}, ic('mail'), t('emailAsk')(todo)) : null, pcBtn(t('previewT'), 'mail'), pcBtn(t('testT'), 'mail')),
         el('p', {className: 'muted', textContent: t('mailNote')}))));
     out.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('folder'), t('docsT')),
       el('div', {className: 'docgroups'},
