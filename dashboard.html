@@ -329,7 +329,13 @@ const T = {
     sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
     cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
     dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
-    dSummary: 'التقرير الختامي للنشاط (PDF)', prPopup: 'اسمح للصفحة بفتح نافذة جديدة، ثم أعد المحاولة', prNoForm: 'أنشئ الاستمارة أولاً: رمز كل بطاقة يفتحها', prList: 'طباعة هذه اللائحة كما هي معروضة',
+    dSummary: 'التقرير الختامي للنشاط (PDF)', imD: 'ملف Excel أو CSV: سطر لكل شخص. ملف التصدير يصحّح أصحابه بأرقامهم، وكل سطر آخر يُضاف مشاركاً حاضراً. حدّد ما في كل عمود ثم استورد.',
+    imTpl: 'تحميل النموذج', imBad: 'تعذرت قراءة الملف', imEmpty: 'الملف فارغ أو بلا صف عناوين', imSkip: '— لا يُستورد —', imGo: n => 'استيراد ' + n + ' سطراً',
+    imNoName: 'حدّد عموداً واحداً على الأقل للاسم', imCol: 'العمود', imEx: 'أمثلة', imIs: 'ما فيه',
+    imDone: s => 'أضيف ' + s.added + '، وصُحّح ' + s.updated + (s.issued ? '، وبقي ' + s.issued + ' كما هم لأن لهم شهادة صادرة' : '') + (s.skipped ? '، وتُخطّي ' + s.skipped + ' بلا اسم' : ''),
+    imFields: {id: 'المعرف (من ملف التصدير)', ticket: 'رقم البطاقة', first_ar: 'الاسم الشخصي بالعربية', last_ar: 'الاسم العائلي بالعربية', full_ar: 'الاسم الكامل بالعربية',
+      first_lat: 'الاسم الشخصي باللاتينية', last_lat: 'الاسم العائلي باللاتينية', full_lat: 'الاسم الكامل باللاتينية', gender: 'الجنس', email: 'البريد', phone: 'الهاتف',
+      cert_type: 'نوع الشهادة', mention: 'الميزة/النتيجة', present: 'حاضر (نعم/لا)', attended: 'الحصص المحضورة'}, prPopup: 'اسمح للصفحة بفتح نافذة جديدة، ثم أعد المحاولة', prNoForm: 'أنشئ الاستمارة أولاً: رمز كل بطاقة يفتحها', prList: 'طباعة هذه اللائحة كما هي معروضة',
     smT: 'التقرير الختامي', smInfo: 'معلومات النشاط', smNums: 'الأرقام', smByType: 'الشواهد حسب النوع', smBySess: 'الحضور في كل حصة', smKind: 'نوع النشاط',
     smOrg: 'الجهة المنظمة', smDates: 'التاريخ', smHours: 'المدة', smPlace: 'المكان', smReg: 'المسجلون', smPresent: 'الحاضرون المستحقون', smIssued: 'الشواهد الصادرة',
     smRevoked: 'الشواهد الملغاة', smMailed: 'أُرسلت بالبريد', smReview: 'تسجيلات تحتاج مراجعة', smCount: 'العدد', smMade: d => 'أُعدّ في ' + d,
@@ -492,7 +498,13 @@ const T = {
     sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
     contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
     dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
-    dSummary: 'Rapport final (PDF)', prPopup: 'Autorisez la page à ouvrir une fenêtre, puis réessayez', prNoForm: 'Créez d’abord le formulaire : le code de chaque carte l’ouvre', prList: 'Imprimer cette liste telle qu’affichée',
+    dSummary: 'Rapport final (PDF)', imD: 'Fichier Excel ou CSV, une ligne par personne. Un fichier exporté corrige les personnes par leur numéro ; toute autre ligne ajoute un participant présent. Indiquez le contenu de chaque colonne, puis importez.',
+    imTpl: 'Télécharger le modèle', imBad: 'Fichier illisible', imEmpty: 'Fichier vide ou sans ligne de titres', imSkip: '— non importée —', imGo: n => 'Importer ' + n + ' ligne(s)',
+    imNoName: 'Choisissez au moins une colonne pour le nom', imCol: 'Colonne', imEx: 'Exemples', imIs: 'Contenu',
+    imDone: s => s.added + ' ajouté(s), ' + s.updated + ' corrigé(s)' + (s.issued ? ', ' + s.issued + ' inchangé(s) (attestation déjà émise)' : '') + (s.skipped ? ', ' + s.skipped + ' sans nom ignoré(s)' : ''),
+    imFields: {id: 'Identifiant (fichier exporté)', ticket: 'N° de carte', first_ar: 'Prénom en arabe', last_ar: 'Nom en arabe', full_ar: 'Nom complet en arabe',
+      first_lat: 'Prénom en latin', last_lat: 'Nom en latin', full_lat: 'Nom complet en latin', gender: 'Genre', email: 'E-mail', phone: 'Téléphone',
+      cert_type: 'Type d’attestation', mention: 'Mention / résultat', present: 'Présent (oui/non)', attended: 'Séances suivies'}, prPopup: 'Autorisez la page à ouvrir une fenêtre, puis réessayez', prNoForm: 'Créez d’abord le formulaire : le code de chaque carte l’ouvre', prList: 'Imprimer cette liste telle qu’affichée',
     smT: 'Rapport final', smInfo: 'L’activité', smNums: 'Les chiffres', smByType: 'Attestations par type', smBySess: 'Présence par séance', smKind: 'Type d’activité',
     smOrg: 'Organisateur', smDates: 'Dates', smHours: 'Durée', smPlace: 'Lieu', smReg: 'Inscrits', smPresent: 'Présents éligibles', smIssued: 'Attestations émises',
     smRevoked: 'Attestations annulées', smMailed: 'Envoyées par e-mail', smReview: 'Inscriptions à vérifier', smCount: 'Nombre', smMade: d => 'Établi le ' + d,
@@ -657,7 +669,13 @@ const T = {
     fPending: 'Changes waiting for the computer', sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
     sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
     qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
-    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', prPopup: 'Allow the page to open a new window, then try again', prNoForm: 'Make the form first: each card’s code opens it', prList: 'Print this list as shown',
+    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', imD: 'An Excel or CSV file, one row per person. An exported file corrects people by their number; any other row adds a present participant. Say what each column holds, then import.',
+    imTpl: 'Download the template', imBad: 'The file could not be read', imEmpty: 'The file is empty or has no header row', imSkip: '— not imported —', imGo: n => 'Import ' + n + ' row(s)',
+    imNoName: 'Pick at least one column for the name', imCol: 'Column', imEx: 'Examples', imIs: 'Holds',
+    imDone: s => s.added + ' added, ' + s.updated + ' corrected' + (s.issued ? ', ' + s.issued + ' unchanged (certificate already issued)' : '') + (s.skipped ? ', ' + s.skipped + ' without a name skipped' : ''),
+    imFields: {id: 'Number (exported file)', ticket: 'Card number', first_ar: 'First name in Arabic', last_ar: 'Last name in Arabic', full_ar: 'Full name in Arabic',
+      first_lat: 'First name in Latin', last_lat: 'Last name in Latin', full_lat: 'Full name in Latin', gender: 'Gender', email: 'Email', phone: 'Phone',
+      cert_type: 'Certificate type', mention: 'Grade / result', present: 'Present (yes/no)', attended: 'Sessions attended'}, prPopup: 'Allow the page to open a new window, then try again', prNoForm: 'Make the form first: each card’s code opens it', prList: 'Print this list as shown',
     smT: 'Final report', smInfo: 'The activity', smNums: 'The numbers', smByType: 'Certificates by type', smBySess: 'Attendance per session', smKind: 'Kind of activity',
     smOrg: 'Organizer', smDates: 'Dates', smHours: 'Duration', smPlace: 'Place', smReg: 'Registered', smPresent: 'Eligible attendees', smIssued: 'Certificates issued',
     smRevoked: 'Certificates revoked', smMailed: 'Emailed', smReview: 'Registrations to check', smCount: 'Count', smMade: d => 'Made on ' + d,
@@ -1080,7 +1098,7 @@ function bundleForm(ch, acts, done, close) {
 
 // ---------- one activity: overview, participants, requests ----------
 
-const sessionsOf = p => [...new Set(String(p.attended || '').split(',').filter(Boolean).map(Number).concat(p.phone_scans || []))].sort();
+const sessionsOf = p => [...new Set((String(p.attended || '').match(/\d+/g) || []).map(Number).concat(p.phone_scans || []))].sort((x, y) => x - y);
 
 const pcTag = () => el('span', {className: 'pclock', title: t('onPcT')}, ic('lock'), t('onPc'));
 const pcBtn = (label, icon) => el('span', {className: 'pcbtn', title: t('onPcT'), ariaDisabled: 'true'}, ic(icon || 'lock'), label, pcTag());
@@ -1318,8 +1336,8 @@ async function showActivity(id, tab) {
     draw();
     const docs = el('details', {className: 'menu'}, el('summary', {className: 'btn sec'}, ic('sheet'), t('docsMenu') + ' ▾'),
       el('div', {className: 'items'}, btn(t('dSign'), () => printSign(a, people), 'ghost'), btn(t('prList'), () => printShown(a, shown, f.selectedOptions[0].textContent, org), 'ghost'),
-        btn(t('dSummary'), () => printSummary(a, people, isPresent), 'ghost'), ...['dExport', 'dImport'].map(k =>
-        el('div', {className: 'lockrow', title: t('onPcT')}, t(k), el('span', {style: 'flex:1'}), pcTag()))));
+        btn(t('dSummary'), () => printSummary(a, people, isPresent), 'ghost'), btn(t('dExport'), () => exportXlsx(a, people).catch(() => toast(t('reqFail'))), 'ghost'),
+        btn(t('dImport'), () => { const close = sheet(importSheet(a, () => close(), reload)); }, 'ghost')));
     const cols = [t('hereCol'), t('ticket'), t('name'), t('certType'), t('cert'), ...(org ? [t('contact'), ''] : [])];
     return el('div', {className: 'card'},
       el('div', {className: 'sec-h'}, el('h2', {}, ic('people'), t('tPeople'), ' ', count), el('span', {className: 'sp'}),
@@ -1520,7 +1538,8 @@ function teamSheet(a, staff, reload) {  // who works on the activity besides who
 // Texts are drawn by the browser with the platform's own Arabic fonts (fonts served with these pages), in the boxes the
 // app's MuPDF fills: (x, y) is a field's centre in PDF points; a text that does not fit its box is made smaller.
 const CDN = 'https://cdnjs.cloudflare.com/ajax/libs/';
-const LIBS = {pdfjs: CDN + 'pdf.js/3.11.174/pdf.min.js', pdflib: CDN + 'pdf-lib/1.17.1/pdf-lib.min.js', qr: CDN + 'qrcode-generator/1.4.4/qrcode.min.js'};
+const LIBS = {pdfjs: CDN + 'pdf.js/3.11.174/pdf.min.js', pdflib: CDN + 'pdf-lib/1.17.1/pdf-lib.min.js', qr: CDN + 'qrcode-generator/1.4.4/qrcode.min.js',
+  xlsx: CDN + 'xlsx/0.18.5/xlsx.full.min.js'};
 const libs = {};
 function lib(name) {  // a script from the CDN, loaded once, when a design is first opened
   return libs[name] = libs[name] || new Promise((ok, bad) => document.head.append(el('script', {src: LIBS[name], onload: ok, onerror: () => bad(new Error(name))})));
@@ -1804,6 +1823,145 @@ function printSummary(a, people, present) {  // the final report, as the compute
     ...sec(t('smByType'), [t('certType'), t('smCount')], Object.entries(types).sort((x, y) => y[1] - x[1])),
     ...(a.sessions > 1 ? sec(t('smBySess'), ['', t('smCount')], Array.from({length: a.sessions}, (_, i) =>
       [t('sessionN')(i + 1), pct(persons.filter(p => sessionsOf(p).includes(i + 1)).length, n)])) : [])));
+}
+
+// ---------- Excel: the people's table out (the app's export columns, so either side reads it back) and in ----------
+const XL_COLS = [['id', 'المعرف (لا تغيّره)'], ['ticket', 'رقم البطاقة'], ['first_ar', 'الاسم الشخصي بالعربية'], ['last_ar', 'الاسم العائلي بالعربية'],
+  ['first_lat', 'الاسم الشخصي باللاتينية'], ['last_lat', 'الاسم العائلي باللاتينية'], ['gender', 'الجنس (m/f)'], ['email', 'البريد'], ['phone', 'الهاتف'],
+  ['present', 'حاضر (نعم/لا)'], ['cert_type', 'نوع الشهادة'], ['mention', 'الميزة/النتيجة'], ['serial', 'رقم الشهادة'], ['verify_code', 'رمز التحقق'],
+  ['link', 'رابط الشهادة'], ['verify_link', 'رابط التحقق'], ['emailed', 'أُرسل البريد'], ['mail_note', 'حالة البريد'], ['attended', 'الحصص المحضورة']];  // as the app's XL_COLS
+const TEMPLATE_COLS = ['ticket', 'first_ar', 'last_ar', 'first_lat', 'last_lat', 'gender', 'email', 'phone', 'cert_type', 'present'];
+const IM_FIELDS = ['id', 'ticket', 'first_ar', 'last_ar', 'full_ar', 'first_lat', 'last_lat', 'full_lat', 'gender', 'email', 'phone', 'cert_type', 'mention', 'present', 'attended'];
+
+function saveXlsx(name, sheets) {  // [[sheet name, rows]] as a file the browser downloads; text stays text (never a formula)
+  const wb = XLSX.utils.book_new();
+  sheets.forEach(([n, rows]) => {
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = rows[0].map(() => ({wch: 24}));
+    XLSX.utils.book_append_sheet(wb, ws, n);
+  });
+  wb.Workbook = {Views: [{RTL: true}]};
+  XLSX.writeFile(wb, name);
+}
+
+async function exportXlsx(a, people) {
+  await lib('xlsx');
+  const iss = (a.choices || {}).issue || {}, qs = a.questions || [];
+  const val = {id: p => p.pid, present: p => Number(p.present) === 1 ? 'نعم' : 'لا', emailed: p => Number(p.emailed) === 1 ? 'نعم' : '', cert_type: p => p.type,
+    attended: p => sessionsOf(p).join('، '), verify_code: p => p.code,
+    verify_link: p => p.serial && iss.verify_url ? iss.verify_url + '?s=' + p.serial + (p.code ? '&k=' + p.code : '') : '',
+    mail_note: p => !p.mail ? '' : p.mail.status === 'error' ? 'تعذر الإرسال: ' + (p.mail.error || '') : p.mail.status === 'pending' ? 'في الطابور' : ''};
+  const rows = [...people].sort((x, y) => byNum('serial')(x, y) || byNum('ticket')(x, y));
+  saveXlsx('participants-' + a.id + '.xlsx', [['المشاركون', [[...XL_COLS.map(c => c[1]), ...qs.map(q => q.title)],
+    ...rows.map(p => [...XL_COLS.map(([k]) => String((val[k] ? val[k](p) : p[k]) ?? '')), ...qs.map(q => String((p.answers || {})[q.key] || ''))])]]]);
+}
+
+async function templateXlsx(a) {  // the import's own columns (and the activity's questions), with a sheet saying what each takes
+  await lib('xlsx');
+  const lab = Object.fromEntries(XL_COLS);
+  const ex = {ticket: 'T' + a.id + '-001 (أو فارغ لمن لا بطاقة له)', first_ar: 'سلمى', last_ar: 'العلوي', first_lat: 'Salma', last_lat: 'ALAOUI',
+    gender: 'f (أنثى) أو m (ذكر)', email: 'salma@example.com', phone: '0612345678', cert_type: 'أحد: ' + a.types.join('، '), present: 'نعم أو لا'};
+  saveXlsx('template-' + a.id + '.xlsx', [['المشاركون', [[...TEMPLATE_COLS.map(k => lab[k]), ...(a.questions || []).map(q => q.title)]]],
+    ['تعليمات', [['العمود', 'مثال وما يُكتب فيه'], ...TEMPLATE_COLS.map(k => [lab[k], ex[k]]), [],
+      ['سطر لكل شخص في ورقة «المشاركون». الاسم بالعربية أو باللاتينية إلزامي، وباقي الأعمدة اختيارية.']]]]);
+}
+
+// what a column of any file is, from its title (and the script of its values, for names), as the app's guess_field
+const GUESS = [['email', ['mail', 'بريد', 'courriel']], ['phone', ['هاتف', 'tel', 'phone', 'gsm', 'واتساب', 'whatsapp', 'mobile']], ['ticket', ['بطاقة', 'ticket']],
+  ['gender', ['جنس', 'genre', 'sexe', 'gender', 'civilit']], ['mention', ['ميزة', 'نتيجة', 'mention', 'note', 'result']], ['cert_type', ['نوع الشهادة']],
+  ['attended', ['حصص', 'séances', 'sessions']], ['present', ['حاضر', 'حضور', 'présen', 'presen']],
+  ['full', ['الكامل', 'complet', 'full', 'الاسم والنسب', 'nom et prénom', 'nom & prénom']], ['first', ['الشخصي', 'prénom', 'prenom', 'first']],
+  ['last', ['العائلي', 'النسب', 'nom', 'last', 'famille', 'surname']], ['full', ['الاسم', 'name']]];
+function guessField(head, samples, taken) {
+  const h = String(head).trim().toLowerCase(), s = samples.some(v => /[؀-ۿ]/.test(v)) ? 'ar' : 'lat';
+  for (const [f, words] of GUESS) {
+    const k = ['full', 'first', 'last'].includes(f) ? f + '_' + s : f;
+    if (words.some(w => h.includes(w)) && !taken.has(k)) return k;
+  }
+  return '';
+}
+
+const CIVILITY = /^\s*(السيد\s*\(ة\)|السيدة|السيد|monsieur|madame|mme|mlle|mr\.?|m\.)\s+/i;
+const GENDER_WORDS = {m: 'm', f: 'f', 'ذكر': 'm', 'أنثى': 'f', h: 'm', homme: 'm', 'm.': 'm', male: 'm', femme: 'f', mme: 'f', female: 'f', 'السيد': 'm', 'السيدة': 'f',
+  monsieur: 'm', mr: 'm', 'mr.': 'm', madame: 'f', mlle: 'f'};
+function importRow(map, r) {  // one row as the server takes it, or null when it is empty
+  const v = {};
+  map.forEach((k, i) => { if (k) v[k] = String(r[i] == null ? '' : r[i]).trim(); });
+  if (!Object.values(v).some(Boolean)) return null;
+  for (const s of ['ar', 'lat']) {  // one "full name" column: its title (السيدة, Mme...) gives the gender, then first word and the rest
+    if (!('full_' + s in v)) continue;
+    let full = v['full_' + s];
+    delete v['full_' + s];
+    const c = full.match(CIVILITY);
+    if (c) {
+      full = full.slice(c[0].length);
+      if (!v.gender) v.gender = GENDER_WORDS[c[1].toLowerCase()] || '';
+    }
+    if (full && !v['first_' + s] && !v['last_' + s]) [v['first_' + s], v['last_' + s]] = [full.split(/\s+/)[0], full.split(/\s+/).slice(1).join(' ')];
+  }
+  const out = {};
+  Object.entries(v).forEach(([k, x]) => {
+    if (k.startsWith('x:')) (out.x = out.x || {})[k.slice(2)] = x;
+    else if (k === 'gender') { if (GENDER_WORDS[x.toLowerCase()]) out.gender = GENDER_WORDS[x.toLowerCase()]; }
+    else if (k === 'present') out.present = ['نعم', '1', 'x', 'yes', 'oui', 'true', '✓'].includes(x.toLowerCase());
+    else if (k === 'attended') out.attended = (x.match(/\d+/g) || []).map(Number);
+    else if (k === 'cert_type') { if (x) out.type = x; }
+    else out[k] = x;
+  });
+  return out;
+}
+
+function importSheet(a, close, reload) {
+  const file = el('input', {type: 'file', accept: '.xlsx,.xls,.csv,.ods', ariaLabel: t('dImport')}), box = el('div'), say = el('p', {className: 'hint'});
+  file.onchange = async () => {
+    say.textContent = '';
+    box.replaceChildren();
+    let rows;
+    try {
+      await lib('xlsx');
+      const wb = XLSX.read(await file.files[0].arrayBuffer());
+      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header: 1, defval: '', raw: false}).map(r => r.map(c => String(c).trim()));
+    } catch (e) { say.textContent = t('imBad'); return; }
+    while (rows.length && rows[0].filter(Boolean).length < 2) rows.shift();  // a title line above the headers
+    rows = rows.filter((r, i) => !i || r.some(Boolean)).slice(0, 3001);
+    if (rows.length < 2) { say.textContent = t('imEmpty'); return; }
+    const head = rows[0], qs = a.questions || [], F = t('imFields');
+    const exact = {};
+    XL_COLS.forEach(([k, l]) => { if (IM_FIELDS.includes(k)) exact[l] = exact[k] = k; });
+    qs.forEach(q => { exact[q.title] = 'x:' + q.key; });
+    const taken = new Set(), map = head.map(h => exact[h] && !taken.has(exact[h]) ? (taken.add(exact[h]), exact[h]) : null);
+    head.forEach((h, i) => { if (map[i] === null) taken.add(map[i] = guessField(h, rows.slice(1, 6).map(r => r[i] || '').filter(Boolean), taken)); });
+    const fields = [...IM_FIELDS.map(k => [k, F[k]]), ...qs.map(q => ['x:' + q.key, q.title])];
+    const sels = head.map((h, i) => el('select', {ariaLabel: h || t('imCol')}, el('option', {value: '', textContent: t('imSkip')}),
+      ...fields.map(([k, l]) => el('option', {value: k, selected: map[i] === k, textContent: l}))));
+    const go = el('button', {type: 'button', className: 'lg'}, ic('plus'), t('imGo')(rows.length - 1));
+    go.onclick = async () => {
+      const m = sels.map(s => s.value);
+      if (!m.some(k => /^(id|(first|last|full)_(ar|lat))$/.test(k))) return toast(t('imNoName'));
+      const data = rows.slice(1).map(r => importRow(m, r)).filter(Boolean), sum = {added: 0, updated: 0, issued: 0, skipped: 0};
+      go.disabled = true;
+      for (let i = 0; i < data.length; i += 400) {
+        const r = await call('importrows', {id: a.id, rows: data.slice(i, i + 400)}).catch(() => ({}));
+        if (r.status !== 'ok') {  // what went in stays in, and the message says how much (a new try would add those rows again)
+          toast(t('reqFail') + (sum.added + sum.updated ? ' — ' + t('imDone')(sum) : ''));
+          go.disabled = false;
+          return;
+        }
+        Object.keys(sum).forEach(k => { sum[k] += r[k] || 0; });
+      }
+      toast(t('imDone')(sum));
+      close();
+      reload();
+    };
+    box.replaceChildren(el('div', {className: 'tablewrap'}, el('table', {},
+      el('thead', {}, el('tr', {}, el('th', {textContent: t('imCol')}), el('th', {textContent: t('imEx')}), el('th', {textContent: t('imIs')}))),
+      el('tbody', {}, ...head.map((h, i) => el('tr', {}, el('td', {dir: 'auto', textContent: h}),
+        el('td', {className: 'muted', dir: 'auto', textContent: rows.slice(1, 4).map(r => r[i]).filter(Boolean).join(' · ')}), el('td', {}, sels[i])))))),
+      el('div', {className: 'bar', style: 'margin-top:12px'}, go));
+  };
+  return el('div', {}, el('h2', {className: 'ch'}, ic('sheet'), t('dImport')), el('p', {className: 'muted', textContent: t('imD')}),
+    el('div', {className: 'bar'}, file, btn(t('imTpl'), () => templateXlsx(a), 'ghost')), say, box,
+    el('div', {className: 'bar', style: 'margin-top:12px'}, btn(t('close'), close, 'ghost')));
 }
 
 function webIssue(a, todo, reload) {  // the present people without a certificate, issued one by one from this page
