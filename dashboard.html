@@ -294,7 +294,10 @@ const T = {
     allDone: 'اكتملت كل المراحل', nReg: 'مسجل', nHere: 'حاضر', nCert: 'شهادة', copyLink: 'نسخ الرابط', noDate: 'بدون تاريخ',
     platVerify: 'أي شخص يتحقق من صحة شهادة برقمها أو برمز QR فيها.', platMe: 'المشاركون يجدون كل شواهدهم بحسابهم.',
     platPrivacy: 'ما تحفظه المنصة من بيانات وكيف تُستعمل.', nPrivacy: 'سياسة الخصوصية', allOrgs: 'كل الجهات', more: 'المزيد', close: 'إغلاق',
-    dupAct: 'نسخ كنشاط جديد (مع التصاميم)', archAct: 'أرشفة النشاط', unarchAct: 'إخراج من الأرشيف', archOk: 'أُرشف النشاط', unarchOk: 'عاد النشاط إلى القائمة',
+    dupAct: 'نسخ كنشاط جديد (مع التصاميم)', archAct: 'أرشفة النشاط', formOn: 'الاستمارة تقبل التسجيلات', formOff: 'الاستمارة موقوفة: لا تقبل تسجيلات', formStop: 'إيقاف التسجيل ومزامنة',
+    formReopen: 'إعادة فتح الاستمارة', formStopSure: 'إيقاف استقبال التسجيلات الآن؟ تصل الردود الأخيرة مباشرة، ويمكن إعادة الفتح متى شئت.',
+    formStopped: n => 'أُوقفت الاستمارة' + (n ? '، ووصل ' + n + ' تسجيلاً جديداً' : ''), formReopened: 'أُعيد فتح الاستمارة', formNoPerm: 'تعذر: أذن لـ Google Forms في Apps Script (autoriser)',
+    newRegs: n => 'وصل ' + n + ' تسجيلاً جديداً', unarchAct: 'إخراج من الأرشيف', archOk: 'أُرشف النشاط', unarchOk: 'عاد النشاط إلى القائمة',
     archList: 'الأرشيف', actList: 'الأنشطة الجارية', archT: 'الأنشطة المؤرشفة', teamT: 'فريق النشاط', teamD: 'حسابات جهتك التي تعمل على هذا النشاط (إضافة إلى من أنشأه).',
     teamNone: 'لا توجد حسابات أخرى في هذه الجهة', teamOk: 'حُفظ الفريق', saveB: 'حفظ', addTypeT: 'شهادة أخرى لهذا الشخص', addTypeB: 'إضافة',
     typeOk: 'أُضيفت الشهادة؛ تصدر متى كان تصميمها جاهزاً', typeWait: 'هذا الشخص أُضيف للتو: انتظر دقيقة ثم أعد المحاولة', typeHave: 'لهذا الشخص كل الأصناف',
@@ -441,7 +444,10 @@ const T = {
     nReg: 'inscrits', nHere: 'présents', nCert: 'attestations', copyLink: 'Copier le lien', noDate: 'Sans date',
     platVerify: 'Chacun vérifie une attestation par son numéro ou son code QR.', platMe: 'Les participants retrouvent toutes leurs attestations.',
     platPrivacy: 'Les données conservées et leur usage.', nPrivacy: 'Confidentialité', allOrgs: 'Tous les organismes', more: 'Plus', close: 'Fermer',
-    dupAct: 'Dupliquer (avec les modèles)', archAct: 'Archiver l’activité', unarchAct: 'Désarchiver', archOk: 'Activité archivée', unarchOk: 'Activité de retour dans la liste',
+    dupAct: 'Dupliquer (avec les modèles)', archAct: 'Archiver l’activité', formOn: 'Le formulaire accepte les inscriptions', formOff: 'Formulaire fermé : plus d’inscriptions', formStop: 'Fermer et synchroniser',
+    formReopen: 'Rouvrir le formulaire', formStopSure: 'Fermer les inscriptions maintenant ? Les dernières réponses arrivent tout de suite ; vous pourrez rouvrir.',
+    formStopped: n => 'Formulaire fermé' + (n ? ', ' + n + ' nouvelle(s) inscription(s)' : ''), formReopened: 'Formulaire rouvert', formNoPerm: 'Échec : autorisez Google Forms dans Apps Script (autoriser)',
+    newRegs: n => n + ' nouvelle(s) inscription(s)', unarchAct: 'Désarchiver', archOk: 'Activité archivée', unarchOk: 'Activité de retour dans la liste',
     archList: 'Archives', actList: 'Activités en cours', archT: 'Activités archivées', teamT: 'Équipe de l’activité', teamD: 'Les comptes de votre organisme qui travaillent sur cette activité (en plus de son créateur).',
     teamNone: 'Aucun autre compte dans cet organisme', teamOk: 'Équipe enregistrée', saveB: 'Enregistrer', addTypeT: 'Une autre attestation pour cette personne', addTypeB: 'Ajouter',
     typeOk: 'Attestation ajoutée ; émise dès que son modèle est prêt', typeWait: 'Personne ajoutée à l’instant : réessayez dans une minute', typeHave: 'Cette personne a déjà tous les types',
@@ -592,7 +598,10 @@ const T = {
     st: ['Registration form', 'Attendance', 'Issuing', 'Emailing'], nextStep: 'Next step: ', allDone: 'Every step is done', nReg: 'registered',
     nHere: 'present', nCert: 'certificates', copyLink: 'Copy link', noDate: 'No date', platVerify: 'Anyone checks a certificate by its number or QR code.',
     platMe: 'Participants find all their certificates.', platPrivacy: 'What the platform keeps and how it is used.', nPrivacy: 'Privacy',
-    allOrgs: 'All organizers', more: 'More', close: 'Close', dupAct: 'Duplicate (with designs)', archAct: 'Archive the activity', unarchAct: 'Unarchive', archOk: 'Activity archived', unarchOk: 'Activity back in the list',
+    allOrgs: 'All organizers', more: 'More', close: 'Close', dupAct: 'Duplicate (with designs)', archAct: 'Archive the activity', formOn: 'The form accepts registrations', formOff: 'Form closed: no more registrations', formStop: 'Close and sync',
+    formReopen: 'Reopen the form', formStopSure: 'Close registration now? The last answers come in at once; you can reopen any time.',
+    formStopped: n => 'Form closed' + (n ? ', ' + n + ' new registration(s)' : ''), formReopened: 'Form reopened', formNoPerm: 'Failed: allow Google Forms in Apps Script (autoriser)',
+    newRegs: n => n + ' new registration(s)', unarchAct: 'Unarchive', archOk: 'Activity archived', unarchOk: 'Activity back in the list',
     archList: 'Archive', actList: 'Current activities', archT: 'Archived activities', teamT: 'Activity team', teamD: 'Accounts of your organizer working on this activity (besides its creator).',
     teamNone: 'No other accounts in this organizer', teamOk: 'Team saved', saveB: 'Save', addTypeT: 'Another certificate for this person', addTypeB: 'Add',
     typeOk: 'Certificate added; issued once its design is ready', typeWait: 'Just added: try again in a minute', typeHave: 'This person already has every type',
@@ -1043,6 +1052,8 @@ const sessionsOf = p => [...new Set(String(p.attended || '').split(',').filter(B
 const pcTag = () => el('span', {className: 'pclock', title: t('onPcT')}, ic('lock'), t('onPc'));
 const pcBtn = (label, icon) => el('span', {className: 'pcbtn', title: t('onPcT'), ariaDisabled: 'true'}, ic(icon || 'lock'), label, pcTag());
 const pcLink = (icon, label) => el('span', {className: 'pclink', title: t('onPcT')}, ic(icon), label, pcTag());
+const gLink = (icon, label, url) => url && /^[\w:/.#?=-]+$/.test(url)  // the activity's Google file, or locked when it has none yet
+  ? el('a', {className: 'pclink', href: url, target: '_blank', rel: 'noopener'}, ic(icon), label) : pcLink(icon, label);
 const pcDoc = (key, sub) => el('span', {className: 'doclink locked', title: t('onPcT')}, el('b', {}, t(key), pcTag()), sub ? el('small', {textContent: sub}) : null);
 const okEmail = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
 const quality = p => [!(p.name_ar || p.name_lat || p.name) && t('qName'), p.email && !okEmail(p.email) && t('qEmail')].filter(Boolean);
@@ -1117,8 +1128,21 @@ async function showActivity(id, tab) {
   function register() {
     return [el('div', {className: 'grid2'},
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('form'), t('formT')),
-        /^https:/.test(a.form || '') ? [el('p', {className: 'muted', style: 'margin-top:0', textContent: t('formD')}), linkBox(a.form, a.title),
-          el('div', {className: 'links'}, pcLink('sheet', t('lSheet')), pcLink('folder', t('lFolder')), pcLink('chart', t('lResp')))]
+        /^https:/.test(a.form || '') ? [el('div', {className: 'bar', style: 'margin-bottom:8px'},
+          el('span', {className: 'badge ' + (a.form_closed ? 'err' : 'ok')}, ic(a.form_closed ? 'lock' : 'check'), t(a.form_closed ? 'formOff' : 'formOn')), el('span', {className: 'sp'}),
+          el('button', {type: 'button', className: a.form_closed ? 'sec sm' : 'danger sm', onclick: async e => {
+            if (!a.form_closed && !confirm(t('formStopSure'))) return;
+            const b = e.currentTarget;
+            b.disabled = true;
+            const r = await call('formopen', {id: a.id, on: !!a.form_closed}).catch(() => ({}));
+            if (r.status === 'ok') { toast(a.form_closed ? t('formReopened') : t('formStopped')(r.added || 0)); return reload(); }
+            toast(r.status === 'fail' ? t('formNoPerm') : t('saveFail'));
+            b.disabled = false;
+          }}, ic(a.form_closed ? 'sync' : 'lock'), t(a.form_closed ? 'formReopen' : 'formStop'))),
+          el('p', {className: 'muted', style: 'margin-top:0', textContent: t('formD')}), linkBox(a.form, a.title),
+          el('div', {className: 'links'}, gLink('sheet', t('lSheet'), a.sheet_id && 'https://docs.google.com/spreadsheets/d/' + a.sheet_id),
+            gLink('folder', t('lFolder'), a.folder_id && 'https://drive.google.com/drive/folders/' + a.folder_id),
+            gLink('chart', t('lResp'), a.form_id && 'https://docs.google.com/forms/d/' + a.form_id + '/edit#responses'))]
           : [el('p', {textContent: t('noFormD')}), el('button', {type: 'button', onclick: async e => {
             const b = e.currentTarget;
             b.disabled = true;
@@ -1334,6 +1358,11 @@ async function showActivity(id, tab) {
 
   app.replaceChildren(head, nav, body);
   open(tab);
+  if (org && a.form && !a.form_closed) {  // a second pass finds nothing new: no loop
+    call('import', {id: a.id}).then(r => {
+      if (r.status === 'ok' && (r.added || 0) > 0 && location.hash.startsWith('#a' + a.id)) { toast(t('newRegs')(r.added)); reload(); }
+    }).catch(() => {});
+  }
 }
 
 function scanCard(a, token, code, reload) {  // the phones' scanning link and its code: made here, they work at once and the previous ones stop
