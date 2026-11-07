@@ -269,7 +269,7 @@ const T = {
     resendSure: e => 'إعادة إرسال رسالة الشهادة نفسها إلى ' + e + '؟', resent: 'وُضعت الرسالة في طابور الإرسال',
     resendOld: 'نص الرسالة لم يعد محفوظاً (أقدم من 30 يوماً): أعد الإرسال من المنصة', edit: 'تعديل', del: 'حذف',
     delSure: n => 'حذف ' + n + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)', deleted: 'حُذف، ويصل الحذف إلى المنصة عند المزامنة',
-    fixT: n => 'تصحيح: ' + n, newPersonT: 'مشارك جديد (دون بطاقة)', hasCert: 'له شهادة: تُعاد بالرقم والرابط نفسيهما عند المزامنة.', saveFix: 'حفظ التصحيح',
+    fixT: n => 'تصحيح: ' + n, newPersonT: 'مشارك جديد (دون بطاقة)', hasCert: 'له شهادة: تُرسم من جديد بالرقم والرابط نفسيهما بعد الحفظ.', redrawing: 'تُرسم الشهادة المصححة...', redrawn: 'رُسمت الشهادة من جديد: الرقم والرابط كما هما', redrawFail: 'حُفظ التصحيح، وتعذر رسم الشهادة من هنا (لا تصميم جاهز أو لا إذن): يرسمها البرنامج على الحاسوب', saveFix: 'حفظ التصحيح',
     add: 'إضافة', fixed: 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة', added: 'أُضيف، ويصل إلى المنصة عند المزامنة',
     partsD: 'كل من له شهادة صالحة ببريد صحيح يظهر هنا. في صفحة «شواهدي» يفتح حسابه مرة واحدة برقم هاتفه وبريده (يصله رمز تفعيل)، ثم يدخل برقم هاتفه وكلمة سره دون أي بريد، ويستطيع أن يضيف شهادة باسمه برقمها. القائمة تُحدَّث من المنصة على الحاسوب.',
     partsSearch: 'بحث بالاسم أو البريد أو الرقم أو رقم الشهادة...', certsN: n => n + ' شهادة: ', meLink: 'شواهدي', accT: n => `حسابات «شواهدي» (${n})`,
@@ -440,7 +440,7 @@ const T = {
     resendOld: 'Le texte de l’e-mail n’est plus conservé (plus de 30 jours) : renvoyez-le depuis la plateforme', edit: 'Modifier', del: 'Supprimer',
     delSure: n => 'Supprimer ' + n + ' de cette activité ? (corbeille de la plateforme)',
     deleted: 'Supprimé ; la suppression rejoint la plateforme à la synchronisation', fixT: n => 'Correction : ' + n,
-    newPersonT: 'Nouveau participant (sans carte)', hasCert: 'A une attestation : elle sera refaite avec le même numéro et le même lien.',
+    newPersonT: 'Nouveau participant (sans carte)', hasCert: 'A une attestation : elle est refaite après l’enregistrement, même numéro et même lien.', redrawing: 'Attestation corrigée en cours...', redrawn: 'Attestation refaite : même numéro, même lien', redrawFail: 'Correction enregistrée ; l’attestation n’a pas pu être refaite ici (modèle ou autorisation manquant) : l’ordinateur la refera',
     saveFix: 'Enregistrer la correction', add: 'Ajouter', fixed: 'Correction enregistrée ; elle rejoint la plateforme à la synchronisation',
     added: 'Ajouté ; il rejoint la plateforme à la synchronisation',
     partsD: 'Chaque titulaire d’une attestation valide avec un e-mail correct figure ici. Sur « Mes attestations », il ouvre une fois son compte avec son téléphone et son e-mail (code d’activation reçu par e-mail), puis se connecte avec son téléphone et son mot de passe, sans e-mail, et peut ajouter une attestation à son nom par son numéro. Liste mise à jour par la plateforme de l’ordinateur.',
@@ -622,7 +622,7 @@ const T = {
     resendOld: 'The email text is no longer kept (older than 30 days): resend it from the platform', edit: 'Edit', del: 'Delete',
     delSure: n => 'Remove ' + n + ' from this activity? (goes to the platform’s trash)', deleted: 'Deleted; it reaches the platform at the next sync',
     fixT: n => 'Correct: ' + n, newPersonT: 'New participant (no ticket)',
-    hasCert: 'Has a certificate: it is redrawn with the same number and link at the next sync.', saveFix: 'Save correction', add: 'Add',
+    hasCert: 'Has a certificate: it is redrawn after saving, with the same number and link.', redrawing: 'Redrawing the corrected certificate...', redrawn: 'Certificate redrawn: same number and link', redrawFail: 'Correction saved; the certificate could not be redrawn here (no ready design or no permission): the computer will redraw it', saveFix: 'Save correction', add: 'Add',
     fixed: 'Correction saved; it reaches the platform at the next sync', added: 'Added; it reaches the platform at the next sync',
     partsD: 'Everyone with a valid certificate and a correct email is listed here. On “My certificates” they open their account once with their phone and email (an activation code by email), then sign in with their phone and password, no email, and can add a certificate in their name by its number. The platform on the computer keeps this list up to date.',
     partsSearch: 'Search by name, email, number or certificate...', certsN: n => n + ' certificate(s): ', meLink: 'My certificates',
@@ -2013,6 +2013,15 @@ function importSheet(a, close, reload) {
     el('div', {className: 'bar', style: 'margin-top:12px'}, btn(t('close'), close, 'ghost')));
 }
 
+const answersOf = (a, p) => Object.fromEntries(Object.entries(p.answers || {}).map(([k, v]) => ['x:' + k, v]));  // what a design prints of the form
+
+async function redrawCert(a, p) {  // an issued certificate drawn again (a correction): the same number, file and link
+  const d = await call('designget', {id: a.id, type: p.type || a.cert_type});
+  if (d.status !== 'ok' || !d.file) return 'design';
+  const pdf = await certificatePdf(unb64(d.file), d.layout, certValues(a, p, answersOf(a, p)));
+  return (await call('refile', {id: a.id, uid: p.uid, pdf: b64(new Uint8Array(pdf))})).status;
+}
+
 function webIssue(a, todo, reload) {  // the present people without a certificate, issued one by one from this page
   const box = el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('wbT')), el('p', {className: 'muted', textContent: t('dzLoading')}));
   let missingRules = false;
@@ -2043,7 +2052,7 @@ function webIssue(a, todo, reload) {  // the present people without a certificat
           if (!n.file) {
             const d = designs[p.type || a.cert_type];
             const pdf = await certificatePdf(d.bytes, d.layout, certValues(a, Object.assign({}, p, {serial: n.serial}),
-              Object.fromEntries(Object.entries(p.answers || {}).map(([k, v]) => ['x:' + k, v]))));
+              answersOf(a, p)));
             const f = await call('issuefile', {id: a.id, uid: p.uid, pdf: b64(new Uint8Array(pdf))});
             if (f.status !== 'ok') throw new Error(f.status);
           }
@@ -2221,7 +2230,14 @@ function personForm(a, p, done, close) {
     save.disabled = true;
     try {
       const r = await call('edit', p ? {id: a.id, op: 'edit', uid: p.uid, data} : {id: a.id, op: 'add', data});
-      if (r.status === 'ok') { toast(t(p ? 'fixed' : 'added')); return done(); }
+      if (r.status === 'ok') {
+        toast(t(p ? 'fixed' : 'added'));
+        if (p && p.serial && !p.revoked && ['first_ar', 'last_ar', 'first_lat', 'last_lat', 'gender', 'mention'].some(k => k in data)) {
+          save.textContent = t('redrawing');  // its file shows the corrected name: drawn here, put in place of the old one
+          toast(t(await redrawCert(a, Object.assign({}, p, data)).catch(() => 'fail') === 'ok' ? 'redrawn' : 'redrawFail'));
+        }
+        return done();
+      }
       err.textContent = t({noname: 'noname', email: 'badEmail'}[r.status] || 'saveFail');
     } catch (x) { /* toast shown */ }
     save.disabled = false;
