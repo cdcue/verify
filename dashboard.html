@@ -1472,7 +1472,7 @@ async function showActivity(id, tab) {
       el('span', {style: 'color:var(--' + (ok ? 'ok' : 'warn') + ')'}, ic(ok ? 'check' : 'alert')), el('span', {style: ok ? '' : 'font-weight:600', textContent: text}));
     const stat = (n, key) => el('div', {className: 'stat'}, el('b', {textContent: n}), el('span', {textContent: t(key)}));
     const out = [];
-    if (org) out.push(webIssue(a, people.filter(p => (Number(p.present) === 1 || here(p)) && !p.serial && !p.revoked), reload));
+    if (org) out.push(webIssue(a, people.filter(p => (Number(p.present) === 1 || here(p)) && (!p.serial || !p.link) && !p.revoked), reload));
     if (org && jobList(j.jobs)) out.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('sync'), t('reqT')), pcLine(j.pc), jobList(j.jobs)));
     out.push(el('div', {className: 'grid2'},
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('issueT')),
