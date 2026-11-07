@@ -1743,7 +1743,7 @@ function certValues(a, p, extra) {  // as the app's cert_values
     issue_date: two(now.getDate()) + '/' + two(now.getMonth() + 1) + '/' + now.getFullYear(),
     issue_date_long: months ? now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() : UI.fmtDate(now, {day: 'numeric', month: 'long', year: 'numeric'}),
     cert_type: a.lang === 'ar' ? type : ((iss.labels || {})[type] || {})[a.lang] || type,
-    qr: p.serial && iss.verify_url ? iss.verify_url + '?s=' + p.serial : p.serial || '', gender: p.gender, lang: a.lang}, extra || {});
+    qr: p.serial && iss.verify_url ? iss.verify_url + '?s=' + p.serial + (p.code ? '&k=' + p.code : '') : p.serial || '', gender: p.gender, lang: a.lang}, extra || {});  // with its code: whoever scans holds it
 }
 
 // a canvas's picture as bytes, with no fetch (the page's policy allows connections to the script only)
@@ -2110,7 +2110,7 @@ async function issueOne(a, p, d) {  // one certificate: its number (given once, 
   const n = await call('issuenum', {id: a.id, uid: p.uid});
   if (n.status !== 'ok') throw new Error(n.status);
   if (n.file) return p.link || '';
-  const pdf = await certificatePdf(d.bytes, d.layout, certValues(a, Object.assign({}, p, {serial: n.serial}), answersOf(a, p)));
+  const pdf = await certificatePdf(d.bytes, d.layout, certValues(a, Object.assign({}, p, {serial: n.serial, code: n.code}), answersOf(a, p)));
   const f = await call('issuefile', {id: a.id, uid: p.uid, pdf: b64(new Uint8Array(pdf))});
   if (f.status !== 'ok') throw new Error(f.status);
   return f.link;
