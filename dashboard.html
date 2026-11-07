@@ -329,7 +329,7 @@ const T = {
     sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
     cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
     dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
-    dSummary: 'التقرير الختامي للنشاط (PDF)', trT: 'المحذوفات', trD: 'ما حُذف من الموقع أو من الحاسوب خلال آخر 30 يوماً. الاسترجاع يعيده كما كان، ويأخذه الحاسوب في مزامنته التالية.',
+    dSummary: 'التقرير الختامي للنشاط (PDF)', opNames: {edit: 'تعديل مشارك', 'edit:add': 'إضافة مشارك', 'edit:delete': 'حذف مشارك', setsession: 'تغيير الحصة', link: 'رابط مسح جديد', actsave: 'حفظ نشاط', mkform: 'إنشاء الاستمارة', actstate: 'أرشفة أو إرجاع نشاط', team: 'فريق النشاط', addtype: 'صنف شهادة إضافي', revoke: 'إلغاء شهادة أو إرجاعها', formopen: 'إيقاف الاستمارة أو فتحها', designsave: 'حفظ تصميم', mailqueue: 'إرسال الشواهد بالبريد', importrows: 'استيراد Excel', restore: 'استرجاع من المحذوفات', resend: 'إعادة إرسال رسالة', staffsave: 'حساب منظم'}, stCheck: 'تحتاج مراجعة', stCheckNone: 'لا شيء يحتاج مراجعة', stRevoked: 'شواهد ملغاة', stLogD: 'العمليات من لوحة الموقع (عمليات الحاسوب تبقى فيه).', stLogNone: 'لا عمليات بعد', trT: 'المحذوفات', trD: 'ما حُذف من الموقع أو من الحاسوب خلال آخر 30 يوماً. الاسترجاع يعيده كما كان، ويأخذه الحاسوب في مزامنته التالية.',
     trNone: 'لا شيء في المحذوفات', trBack: 'استرجاع', trDone: 'استُرجع', trAct: x => 'نشاط · ' + x.n + ' مشارك', trPerson: x => 'مشارك في «' + x.title + '»', imD: 'ملف Excel أو CSV: سطر لكل شخص. ملف التصدير يصحّح أصحابه بأرقامهم، وكل سطر آخر يُضاف مشاركاً حاضراً. حدّد ما في كل عمود ثم استورد.',
     imTpl: 'تحميل النموذج', imBad: 'تعذرت قراءة الملف', imEmpty: 'الملف فارغ أو بلا صف عناوين', imSkip: '— لا يُستورد —', imGo: n => 'استيراد ' + n + ' سطراً',
     imNoName: 'حدّد عموداً واحداً على الأقل للاسم', imCol: 'العمود', imEx: 'أمثلة', imIs: 'ما فيه',
@@ -499,7 +499,7 @@ const T = {
     sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
     contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
     dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
-    dSummary: 'Rapport final (PDF)', trT: 'Corbeille', trD: 'Ce qui a été supprimé ici ou sur l’ordinateur ces 30 derniers jours. Le restaurer le remet tel quel ; l’ordinateur le reprend à sa prochaine synchronisation.',
+    dSummary: 'Rapport final (PDF)', opNames: {edit: 'Participant modifié', 'edit:add': 'Participant ajouté', 'edit:delete': 'Participant supprimé', setsession: 'Séance changée', link: 'Nouveau lien de scan', actsave: 'Activité enregistrée', mkform: 'Formulaire créé', actstate: 'Activité archivée ou rétablie', team: 'Équipe de l’activité', addtype: 'Attestation supplémentaire', revoke: 'Attestation annulée ou rétablie', formopen: 'Formulaire fermé ou rouvert', designsave: 'Modèle enregistré', mailqueue: 'Envoi des attestations', importrows: 'Import Excel', restore: 'Restauration (corbeille)', resend: 'Message renvoyé', staffsave: 'Compte d’organisateur'}, stCheck: 'À vérifier', stCheckNone: 'Rien à vérifier', stRevoked: 'Attestations annulées', stLogD: 'Les opérations faites sur ce tableau de bord (celles de l’ordinateur y restent).', stLogNone: 'Aucune opération', trT: 'Corbeille', trD: 'Ce qui a été supprimé ici ou sur l’ordinateur ces 30 derniers jours. Le restaurer le remet tel quel ; l’ordinateur le reprend à sa prochaine synchronisation.',
     trNone: 'La corbeille est vide', trBack: 'Restaurer', trDone: 'Restauré', trAct: x => 'Activité · ' + x.n + ' participant(s)', trPerson: x => 'Participant de « ' + x.title + ' »', imD: 'Fichier Excel ou CSV, une ligne par personne. Un fichier exporté corrige les personnes par leur numéro ; toute autre ligne ajoute un participant présent. Indiquez le contenu de chaque colonne, puis importez.',
     imTpl: 'Télécharger le modèle', imBad: 'Fichier illisible', imEmpty: 'Fichier vide ou sans ligne de titres', imSkip: '— non importée —', imGo: n => 'Importer ' + n + ' ligne(s)',
     imNoName: 'Choisissez au moins une colonne pour le nom', imCol: 'Colonne', imEx: 'Exemples', imIs: 'Contenu',
@@ -671,7 +671,7 @@ const T = {
     fPending: 'Changes waiting for the computer', sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
     sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
     qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
-    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', trT: 'Trash', trD: 'What was deleted here or on the computer in the last 30 days. Restoring puts it back as it was; the computer takes it back at its next sync.',
+    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', opNames: {edit: 'Participant changed', 'edit:add': 'Participant added', 'edit:delete': 'Participant deleted', setsession: 'Session changed', link: 'New scanning link', actsave: 'Activity saved', mkform: 'Form made', actstate: 'Activity archived or restored', team: 'Activity team', addtype: 'Extra certificate type', revoke: 'Certificate revoked or restored', formopen: 'Form closed or reopened', designsave: 'Design saved', mailqueue: 'Certificates emailed', importrows: 'Excel import', restore: 'Restored from the trash', resend: 'Message resent', staffsave: 'Organizer account'}, stCheck: 'To check', stCheckNone: 'Nothing to check', stRevoked: 'Revoked certificates', stLogD: 'Operations made on this dashboard (the computer keeps its own).', stLogNone: 'No operations yet', trT: 'Trash', trD: 'What was deleted here or on the computer in the last 30 days. Restoring puts it back as it was; the computer takes it back at its next sync.',
     trNone: 'The trash is empty', trBack: 'Restore', trDone: 'Restored', trAct: x => 'Activity · ' + x.n + ' participant(s)', trPerson: x => 'Participant of “' + x.title + '”', imD: 'An Excel or CSV file, one row per person. An exported file corrects people by their number; any other row adds a present participant. Say what each column holds, then import.',
     imTpl: 'Download the template', imBad: 'The file could not be read', imEmpty: 'The file is empty or has no header row', imSkip: '— not imported —', imGo: n => 'Import ' + n + ' row(s)',
     imNoName: 'Pick at least one column for the name', imCol: 'Column', imEx: 'Examples', imIs: 'Holds',
@@ -2360,7 +2360,9 @@ async function showStats() {  // the platform's statistics page, over the activi
       el('div', {className: 'grid3'},
         el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('award'), t('byTypeT')), bars(count(certs.map(c => c[0] || '—')).sort((x, y) => y[1] - x[1]), 'noCerts')),
         el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('calendar'), t('byYearT')), el('p', {className: 'muted', style: 'margin-top:0', textContent: t('byYearD')}),
-          bars(count(certs.map(c => c[1] || '—')).sort(), 'noCerts'))),
+          bars(count(certs.map(c => c[1] || '—')).sort(), 'noCerts')),
+        el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('alert'), t('stCheck')),  // as the activity page's «problems» filter
+          bars([[t('qName'), sum('noname')], [t('qEmail'), sum('bademail')], [t('dupT'), sum('dup')], [t('stRevoked'), sum('revoked')]].filter(x => x[1]), 'stCheckNone'))),
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('calendar'), t('actsN')(acts.length)),
         el('div', {className: 'tablewrap'}, el('table', {className: 'cards'},
           el('thead', {}, el('tr', {}, ...['#', 'thAct', 'nOrg', 'fDates', 'kReg', 'stHere', 'thRate', 'nCert', 'kMail'].map(k => el('th', {textContent: k === '#' ? k : t(k)})))),
@@ -2372,7 +2374,12 @@ async function showStats() {  // the platform's statistics page, over the activi
             el('td', {className: 'c-wide', dataset: {l: t('thRate')}, style: 'min-width:110px'}, a.registered ? el('div', {className: 'progress', title: Math.round(100 * a.present / a.registered) + '%'},
               el('i', {style: 'width:' + Math.round(100 * a.present / a.registered) + '%'})) : null),
             el('td', {dataset: {l: t('nCert')}, textContent: a.issued}), el('td', {dataset: {l: t('kMail')}, textContent: a.emailed}))))))),
-      el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {style: 'margin:0', textContent: t('recentT')}), el('span', {className: 'sp'}), pcTag())));
+      el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('clock'), t('recentT')), el('p', {className: 'muted', style: 'margin-top:0', textContent: t('stLogD')}),
+        j.log && j.log.length ? el('div', {className: 'tablewrap'}, el('table', {className: 'cards'}, el('tbody', {}, ...j.log
+          .filter(l => !l.id || acts.some(a => a.id === l.id)).map(l => el('tr', {},
+            el('td', {className: 'muted', style: 'white-space:nowrap', textContent: when(l.at)}), el('td', {dir: 'auto', textContent: l.by}),
+            el('td', {}, el('b', {textContent: t('opNames')[l.action + ':' + (l.detail.match(/op=(\w+)/) || [])[1]] || t('opNames')[l.action] || l.action})),
+            el('td', {className: 'c-name'}, l.id ? el('a', {href: '#a' + l.id, dir: 'auto', textContent: l.title}) : null)))))) : el('p', {className: 'empty', textContent: t('stLogNone')})));
   }
   [fy, fk, fo].forEach(x => x.addEventListener('input', draw));
   app.replaceChildren(el('div', {className: 'filters', style: 'justify-content:flex-end'}, fy, fk.length > 2 ? fk : null, fo.length > 2 ? fo : null), body);
