@@ -299,7 +299,10 @@ const T = {
     dzSaved: 'حُفظ التصميم', dzLeave: 'تغييرات غير محفوظة ستضيع. متابعة؟', dzHow: 'اسحب كل متغير إلى مكانه، واختره لتغيير حجمه وخطه. لا يُحفظ شيء إلا بزر «حفظ».',
     dzAdd: 'إضافة متغير', dzText: 'نص', dzImage: 'صورة', dzPick: 'اختر متغيراً لتعديله', dzSize: 'الحجم', dzWidth: 'العرض', dzLines: 'الأسطر', dzAlign: 'المحاذاة',
     dzCenter: 'وسط', dzRight: 'يمين', dzLeft: 'يسار', dzFont: 'الخط', dzDefault: 'الافتراضي', dzColor: 'اللون', dzBold: 'عريض', dzDigits: 'الأرقام', dzDate: 'صيغة التاريخ',
-    dzLong: 'طويلة (7 نونبر 2026)', dzImgPc: 'الصور (شعار، توقيع، ختم) تُضاف من البرنامج على الحاسوب.', dzSampleName: 'اسم المشارك', dzHowShort: 'الملف ومواضع المتغيرات', formOn: 'الاستمارة تقبل التسجيلات', formOff: 'الاستمارة موقوفة: لا تقبل تسجيلات', formStop: 'إيقاف التسجيل ومزامنة',
+    dzLong: 'طويلة (7 نونبر 2026)', dzImgPc: 'الصور (شعار، توقيع، ختم) تُضاف من البرنامج على الحاسوب.', dzSampleName: 'اسم المشارك', wbT: 'الإصدار من هذه الصفحة', wbD: 'تُرسم الشواهد في متصفحك بالتصميم نفسه، وتُرفع إلى Drive وتُسجَّل في صفحة التحقق. أبقِ الصفحة مفتوحة حتى ينتهي.',
+    wbGo: n => 'إصدار ' + n + ' شهادة الآن', wbNone: 'لا توجد شواهد تنتظر الإصدار (الحاضرون ولهم تصميم جاهز)', wbNoDesign: x => 'لا تصميم جاهز لـ«' + x + '» بعد: ' ,
+    wbRun: (i, n) => 'تُصدر ' + i + ' من ' + n + '... لا تغلق الصفحة', wbDone: (n, f) => 'صدرت ' + n + ' شهادة' + (f ? '، وتعذرت ' + f : ''), wbSure: n => 'إصدار ' + n + ' شهادة الآن؟ تأخذ كل شهادة رقماً لا يتغير.',
+    wbLeave: 'الإصدار جارٍ: إن أغلقت الصفحة يتوقف، ويُكمل لاحقاً بنفس الأرقام.', wbRules: 'شغّل البرنامج على الحاسوب مرة بآخر إصدار: ينشر قواعد الطباعة (عنوان التحقق، السيد/السيدة)، ثم أعد تحميل الصفحة.', dzHowShort: 'الملف ومواضع المتغيرات', formOn: 'الاستمارة تقبل التسجيلات', formOff: 'الاستمارة موقوفة: لا تقبل تسجيلات', formStop: 'إيقاف التسجيل ومزامنة',
     formReopen: 'إعادة فتح الاستمارة', formStopSure: 'إيقاف استقبال التسجيلات الآن؟ تصل الردود الأخيرة مباشرة، ويمكن إعادة الفتح متى شئت.',
     formStopped: n => 'أُوقفت الاستمارة' + (n ? '، ووصل ' + n + ' تسجيلاً جديداً' : ''), formReopened: 'أُعيد فتح الاستمارة', formNoPerm: 'تعذر: أذن لـ Google Forms في Apps Script (autoriser)',
     newRegs: n => 'وصل ' + n + ' تسجيلاً جديداً', unarchAct: 'إخراج من الأرشيف', archOk: 'أُرشف النشاط', unarchOk: 'عاد النشاط إلى القائمة',
@@ -454,7 +457,10 @@ const T = {
     dzSaved: 'Modèle enregistré', dzLeave: 'Les changements non enregistrés seront perdus. Continuer ?', dzHow: 'Glissez chaque champ à sa place ; touchez-le pour sa taille et sa police. Rien n’est enregistré sans « Enregistrer ».',
     dzAdd: 'Ajouter un champ', dzText: 'Texte', dzImage: 'Image', dzPick: 'Choisissez un champ', dzSize: 'Taille', dzWidth: 'Largeur', dzLines: 'Lignes', dzAlign: 'Alignement',
     dzCenter: 'Centre', dzRight: 'Droite', dzLeft: 'Gauche', dzFont: 'Police', dzDefault: 'Par défaut', dzColor: 'Couleur', dzBold: 'Gras', dzDigits: 'Chiffres', dzDate: 'Format de date',
-    dzLong: 'Long (7 novembre 2026)', dzImgPc: 'Les images (logo, signature, cachet) s’ajoutent sur l’ordinateur.', dzSampleName: 'Nom du participant', dzHowShort: 'Fichier et champs', formOn: 'Le formulaire accepte les inscriptions', formOff: 'Formulaire fermé : plus d’inscriptions', formStop: 'Fermer et synchroniser',
+    dzLong: 'Long (7 novembre 2026)', dzImgPc: 'Les images (logo, signature, cachet) s’ajoutent sur l’ordinateur.', dzSampleName: 'Nom du participant', wbT: 'Émettre depuis cette page', wbD: 'Les attestations sont dessinées dans votre navigateur avec le même modèle, envoyées sur Drive et inscrites à la vérification. Gardez la page ouverte.',
+    wbGo: n => 'Émettre ' + n + ' attestation(s)', wbNone: 'Aucune attestation en attente (présents avec un modèle prêt)', wbNoDesign: x => 'Pas de modèle prêt pour « ' + x + ' » : ',
+    wbRun: (i, n) => 'Émission ' + i + ' / ' + n + '... ne fermez pas la page', wbDone: (n, f) => n + ' attestation(s) émise(s)' + (f ? ', ' + f + ' échec(s)' : ''), wbSure: n => 'Émettre ' + n + ' attestation(s) ? Chacune reçoit un numéro définitif.',
+    wbLeave: 'Émission en cours : fermer la page l’arrête ; elle reprendra avec les mêmes numéros.', wbRules: 'Lancez une fois la plateforme à jour sur l’ordinateur (elle publie les règles d’impression), puis rechargez.', dzHowShort: 'Fichier et champs', formOn: 'Le formulaire accepte les inscriptions', formOff: 'Formulaire fermé : plus d’inscriptions', formStop: 'Fermer et synchroniser',
     formReopen: 'Rouvrir le formulaire', formStopSure: 'Fermer les inscriptions maintenant ? Les dernières réponses arrivent tout de suite ; vous pourrez rouvrir.',
     formStopped: n => 'Formulaire fermé' + (n ? ', ' + n + ' nouvelle(s) inscription(s)' : ''), formReopened: 'Formulaire rouvert', formNoPerm: 'Échec : autorisez Google Forms dans Apps Script (autoriser)',
     newRegs: n => n + ' nouvelle(s) inscription(s)', unarchAct: 'Désarchiver', archOk: 'Activité archivée', unarchOk: 'Activité de retour dans la liste',
@@ -613,7 +619,10 @@ const T = {
     dzSaved: 'Design saved', dzLeave: 'Unsaved changes will be lost. Continue?', dzHow: 'Drag each field into place; tap it for its size and font. Nothing is saved until “Save”.',
     dzAdd: 'Add a field', dzText: 'Text', dzImage: 'Image', dzPick: 'Pick a field to edit', dzSize: 'Size', dzWidth: 'Width', dzLines: 'Lines', dzAlign: 'Alignment',
     dzCenter: 'Centre', dzRight: 'Right', dzLeft: 'Left', dzFont: 'Font', dzDefault: 'Default', dzColor: 'Colour', dzBold: 'Bold', dzDigits: 'Digits', dzDate: 'Date format',
-    dzLong: 'Long (7 November 2026)', dzImgPc: 'Pictures (logo, signature, stamp) are added on the computer.', dzSampleName: 'Participant name', dzHowShort: 'File and fields', formOn: 'The form accepts registrations', formOff: 'Form closed: no more registrations', formStop: 'Close and sync',
+    dzLong: 'Long (7 November 2026)', dzImgPc: 'Pictures (logo, signature, stamp) are added on the computer.', dzSampleName: 'Participant name', wbT: 'Issue from this page', wbD: 'Certificates are drawn in your browser with the same design, uploaded to Drive and added to verification. Keep the page open.',
+    wbGo: n => 'Issue ' + n + ' certificate(s) now', wbNone: 'No certificates waiting (present people with a ready design)', wbNoDesign: x => 'No ready design for “' + x + '”: ',
+    wbRun: (i, n) => 'Issuing ' + i + ' of ' + n + '... keep the page open', wbDone: (n, f) => n + ' certificate(s) issued' + (f ? ', ' + f + ' failed' : ''), wbSure: n => 'Issue ' + n + ' certificate(s) now? Each gets a permanent number.',
+    wbLeave: 'Issuing in progress: closing the page stops it; it resumes with the same numbers.', wbRules: 'Run the updated platform on the computer once (it publishes the printing rules), then reload.', dzHowShort: 'File and fields', formOn: 'The form accepts registrations', formOff: 'Form closed: no more registrations', formStop: 'Close and sync',
     formReopen: 'Reopen the form', formStopSure: 'Close registration now? The last answers come in at once; you can reopen any time.',
     formStopped: n => 'Form closed' + (n ? ', ' + n + ' new registration(s)' : ''), formReopened: 'Form reopened', formNoPerm: 'Failed: allow Google Forms in Apps Script (autoriser)',
     newRegs: n => n + ' new registration(s)', unarchAct: 'Unarchive', archOk: 'Activity archived', unarchOk: 'Activity back in the list',
@@ -1084,6 +1093,7 @@ async function showActivity(id, tab) {
   if (j.status !== 'ok') return showList();
   const a = j.activity, people = j.people, org = can('organizer');
   a.people = people;  // the person's window lists the types they already have
+  a.choices = j.choices;  // how certificates print (names' titles, the verification address...)
   bar(a.title, '#');
   // present now: recorded by the app (its sessions, or "present" for a one-session activity) or by a phone since
   const here = p => sessionsOf(p).includes(a.session) || (a.sessions === 1 && Number(p.present) === 1);
@@ -1336,6 +1346,7 @@ async function showActivity(id, tab) {
       el('span', {style: 'color:var(--' + (ok ? 'ok' : 'warn') + ')'}, ic(ok ? 'check' : 'alert')), el('span', {style: ok ? '' : 'font-weight:600', textContent: text}));
     const stat = (n, key) => el('div', {className: 'stat'}, el('b', {textContent: n}), el('span', {textContent: t(key)}));
     const out = [];
+    if (org) out.push(webIssue(a, people.filter(p => (Number(p.present) === 1 || here(p)) && !p.serial && !p.revoked), reload));
     if (org) out.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('sync'), t('reqT')), pcLine(j.pc), jobList(j.jobs) || el('p', {className: 'hint', textContent: t('noJobs')})));
     out.push(el('div', {className: 'grid2'},
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('issueT')),
@@ -1552,15 +1563,32 @@ async function drawQr(ctx, f, url, scale) {  // the verification link as a QR co
 }
 
 // what a certificate prints, for one person (as the app's cert_values, the parts the dashboard knows)
-function certValues(a, p, extra) {
-  const civ = {ar: {m: 'السيد ', f: 'السيدة '}, fr: {m: 'M. ', f: 'Mme '}, en: {m: 'Mr. ', f: 'Ms. '}}[a.lang] || {};
-  const nameAr = p.name_ar || [p.first_ar, p.last_ar].filter(Boolean).join(' '), nameLat = p.name_lat || [p.first_lat, p.last_lat].filter(Boolean).join(' ');
-  const base = a.lang === 'ar' ? nameAr || nameLat : nameLat || nameAr;
-  const now = new Date();
-  return Object.assign({name: (civ[p.gender] || '') + base, name_ar: nameAr, name_lat: nameLat, serial: p.serial || 'XXX-' + now.getFullYear() + '-P0001',
+function certValues(a, p, extra) {  // as the app's cert_values
+  const iss = (a.choices || {}).issue || {}, now = new Date(), two = n => String(n).padStart(2, '0');
+  const title = lang => (iss.civ_on !== false && ((iss.civ || {})[lang] || {})[p.gender]) || '';
+  const nm = lang => {
+    const n = lang === 'ar' ? [p.first_ar, p.last_ar].filter(Boolean).join(' ') || p.name_ar
+      : [(p.first_lat || '').trim().replace(/\S+/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase()), (p.last_lat || '').trim().toUpperCase()].filter(Boolean).join(' ') || p.name_lat;
+    return n ? [title(lang), n].filter(Boolean).join(' ') : p.name || '';  // no name parts (an older record): the name as listed, titled already
+  };
+  const type = p.type || a.cert_type, months = (iss.months || {})[a.lang];
+  return Object.assign({name: nm(a.lang), name_ar: nm('ar'), name_lat: nm(a.lang === 'ar' ? 'fr' : a.lang), serial: p.serial || 'XXX-' + now.getFullYear() + '-P0001',
     mention: p.mention || '', title: a.title, dates: a.dates || '', hours: a.hours || '', place: a.place || '', org: a.org || '',
-    issue_date: now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear(), issue_date_long: UI.fmtDate(now, {day: 'numeric', month: 'long', year: 'numeric'}),
-    cert_type: p.type || a.cert_type, qr: p.link || '', gender: p.gender, lang: a.lang}, extra || {});
+    issue_date: two(now.getDate()) + '/' + two(now.getMonth() + 1) + '/' + now.getFullYear(),
+    issue_date_long: months ? now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() : UI.fmtDate(now, {day: 'numeric', month: 'long', year: 'numeric'}),
+    cert_type: a.lang === 'ar' ? type : ((iss.labels || {})[type] || {})[a.lang] || type,
+    qr: p.serial && iss.verify_url ? iss.verify_url + '?s=' + p.serial : p.serial || '', gender: p.gender, lang: a.lang}, extra || {});
+}
+
+// the certificate as a PDF: the design as it is, the texts and QR drawn over it as one picture (the browser shapes Arabic)
+async function certificatePdf(designBytes, layout, values) {
+  await lib('pdflib');
+  const doc = await PDFLib.PDFDocument.load(designBytes), page = doc.getPage(0), {width, height} = page.getSize();
+  const scale = Math.min(4, 3600 / Math.max(width, height)), c = el('canvas', {width: Math.round(width * scale), height: Math.round(height * scale)});
+  await drawCertificate(c.getContext('2d'), layout, values, scale);
+  const png = await doc.embedPng(await (await fetch(c.toDataURL('image/png'))).arrayBuffer());
+  page.drawImage(png, {x: 0, y: 0, width, height});
+  return doc.save();
 }
 
 async function drawCertificate(ctx, layout, values, scale) {
@@ -1595,6 +1623,55 @@ async function designPdf(file) {
 }
 const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 32768) s += String.fromCharCode(...bytes.subarray(i, i + 32768)); return btoa(s); };
 const unb64 = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
+
+function webIssue(a, todo, reload) {  // the present people without a certificate, issued one by one from this page
+  const box = el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('wbT')), el('p', {className: 'muted', textContent: t('dzLoading')}));
+  let missingRules = false;
+  (async () => {
+    const designs = {}, types = [...new Set(todo.map(p => p.type || a.cert_type))];
+    for (const ty of types) {
+      const r = await call('designget', {id: a.id, type: ty}).catch(() => ({}));
+      const ready = r.status === 'ok' && r.file && ['name', 'name_ar', 'name_lat'].some(k => r.layout && r.layout[k]);
+      designs[ty] = ready ? {bytes: unb64(r.file), layout: r.layout} : null;
+    }
+    // the computer publishes how certificates print (titles, the verification address): never issue without it
+    const go = ((a.choices || {}).issue || {}).verify_url ? todo.filter(p => designs[p.type || a.cert_type]) : [];
+    if (!((a.choices || {}).issue || {}).verify_url) missingRules = true;
+    const missing = types.filter(ty => !designs[ty]);
+    const bar = el('div', {className: 'progress', hidden: true}, el('i', {style: 'width:0%'})), state = el('p', {className: 'hint'});
+    const run = el('button', {type: 'button', className: 'btn lg', disabled: !go.length}, ic('cert'), go.length ? t('wbGo')(go.length) : t('wbNone'));
+    run.onclick = async () => {
+      if (!confirm(t('wbSure')(go.length))) return;
+      run.disabled = true; bar.hidden = false;
+      const guard = e => { e.preventDefault(); e.returnValue = t('wbLeave'); };
+      addEventListener('beforeunload', guard);
+      let ok = 0, bad = 0;
+      for (const [i, p] of go.entries()) {
+        state.textContent = t('wbRun')(i + 1, go.length);
+        try {
+          const n = await call('issuenum', {id: a.id, uid: p.uid});
+          if (n.status !== 'ok') throw new Error(n.status);
+          if (!n.file) {
+            const d = designs[p.type || a.cert_type];
+            const pdf = await certificatePdf(d.bytes, d.layout, certValues(a, Object.assign({}, p, {serial: n.serial}),
+              Object.fromEntries(Object.entries(p.answers || {}).map(([k, v]) => ['x:' + k, v]))));
+            const f = await call('issuefile', {id: a.id, uid: p.uid, pdf: b64(new Uint8Array(pdf))});
+            if (f.status !== 'ok') throw new Error(f.status);
+          }
+          ok++;
+        } catch (e) { bad++; console.log('issue', p.uid, e); }
+        bar.firstChild.style.width = Math.round(100 * (i + 1) / go.length) + '%';
+      }
+      removeEventListener('beforeunload', guard);
+      toast(t('wbDone')(ok, bad));
+      reload();
+    };
+    box.replaceChildren(el('h2', {className: 'ch'}, ic('cert'), t('wbT')), el('p', {className: 'muted', textContent: t('wbD')}),
+      missingRules ? el('p', {className: 'err', textContent: t('wbRules')}) : null,
+      ...missing.map(ty => el('p', {className: 'hint'}, t('wbNoDesign')(ty), el('a', {href: '#a' + a.id + '/design', textContent: t('s3')}))), run, bar, state);
+  })();
+  return box;
+}
 
 function designStudio(a, people, reload) {
   const box = el('div', {className: 'card'}, el('p', {className: 'muted', textContent: t('dzLoading')}));
