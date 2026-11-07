@@ -755,6 +755,9 @@ const T = {
 };
 const ROLE = {scanner: 1, organizer: 2, admin: 3, super: 4};
 const {el, svg, t} = UI, app = document.getElementById('app');
+// as el(): what is left out (null, false) is not drawn, and lists are spread (the browser's own would print "null")
+const replace0 = Element.prototype.replaceChildren;
+Element.prototype.replaceChildren = function (...kids) { return replace0.apply(this, kids.flat(Infinity).filter(k => k != null && k !== false)); };
 let session = UI.store.get(KEY) || '', me = null;  // me: the signed-in account, as the Apps Script sees it on each answer
 const remember = s => { session = s; UI.store.set(KEY, s || null); };
 const can = role => me && ROLE[me.role] >= ROLE[role];
@@ -1743,13 +1746,16 @@ function certValues(a, p, extra) {  // as the app's cert_values
     qr: p.serial && iss.verify_url ? iss.verify_url + '?s=' + p.serial : p.serial || '', gender: p.gender, lang: a.lang}, extra || {});
 }
 
+// a canvas's picture as bytes, with no fetch (the page's policy allows connections to the script only)
+const canvasBytes = (c, type, q) => new Promise((ok, bad) => c.toBlob(b => b ? b.arrayBuffer().then(ok, bad) : bad(new Error('canvas')), type, q));
+
 // the certificate as a PDF: the design as it is, the texts and QR drawn over it as one picture (the browser shapes Arabic)
 async function certificatePdf(designBytes, layout, values) {
   await lib('pdflib');
   const doc = await PDFLib.PDFDocument.load(designBytes), page = doc.getPage(0), {width, height} = page.getSize();
   const scale = Math.min(4, 3600 / Math.max(width, height)), c = el('canvas', {width: Math.round(width * scale), height: Math.round(height * scale)});
   await drawCertificate(c.getContext('2d'), layout, values, scale);
-  const png = await doc.embedPng(await (await fetch(c.toDataURL('image/png'))).arrayBuffer());
+  const png = await doc.embedPng(await canvasBytes(c, 'image/png'));
   page.drawImage(png, {x: 0, y: 0, width, height});
   return doc.save();
 }
@@ -1778,7 +1784,7 @@ async function designPdf(file) {
     if (bytes.length <= 3e6 && src.numPages === 1) return bytes;
     const c = el('canvas', {width: Math.round(vp.width * 200 / 72), height: Math.round(vp.height * 200 / 72)});
     await pg.render({canvasContext: c.getContext('2d'), viewport: pg.getViewport({scale: 200 / 72})}).promise;
-    const jpg = await doc.embedJpg(await (await fetch(c.toDataURL('image/jpeg', .85))).arrayBuffer());
+    const jpg = await doc.embedJpg(await canvasBytes(c, 'image/jpeg', .85));
     doc.addPage([vp.width, vp.height]).drawImage(jpg, {x: 0, y: 0, width: vp.width, height: vp.height});
   } else {
     const img = /png$/i.test(file.type) ? await doc.embedPng(bytes) : await doc.embedJpg(bytes);
@@ -2110,22 +2116,20 @@ async function issueOne(a, p, d) {  // one certificate: its number (given once, 
   return f.link;
 }
 
+// a picture loaded (its load event: decode() can hang in some browsers), or a refusal
+const loadImg = src => new Promise((ok, bad) => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => bad(new Error('image')); im.src = src; });
+
 async function withPictures(r) {  // a design as designget sends it, its pictures ready to draw
   for (const [k, p] of Object.entries(r.pics || {})) {
     if (!r.layout[k]) continue;
-    const im = new Image();
-    im.src = 'data:' + p.mime + ';base64,' + p.data;
-    await im.decode().catch(() => {});
-    r.layout[k]._img = im;
+    const im = await loadImg('data:' + p.mime + ';base64,' + p.data).catch(() => null);  // drawn without it when unreadable
+    if (im) r.layout[k]._img = im;
   }
   return r;
 }
 
 async function pngOf(file) {  // a picture as PNG bytes (at most 1500 px), and its height / width
-  const im = new Image(), url = URL.createObjectURL(file);
-  im.src = url;
-  await im.decode();
-  URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(file), im = await loadImg(url).finally(() => URL.revokeObjectURL(url));
   const k = Math.min(1, 1500 / Math.max(im.naturalWidth, im.naturalHeight)), c = el('canvas', {width: Math.round(im.naturalWidth * k), height: Math.round(im.naturalHeight * k)});
   c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
   return {data: c.toDataURL('image/png').split(',')[1], ar: c.height / c.width, img: c};
