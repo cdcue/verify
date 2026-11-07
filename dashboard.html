@@ -233,7 +233,7 @@ const T = {
     reqHint: 'أنشئ نشاطاً من هنا: تُنشأ استمارته وجدوله على الحاسوب، ثم يظهر في هذه اللائحة.', hereNow: 'حاضر الآن',
     noActs: 'لا أنشطة منشورة بعد: زامن نشاطاً في المنصة على الحاسوب، أو أنشئ واحداً من هنا.', activity: 'نشاط',
     sessionsLine: (n, s) => `${n} حصص، المسح الآن للحصة ${s}`, pcOnlyT: 'على الحاسوب',
-    pcOnlyItems: ['صور التصميم (شعار، توقيع، ختم)', 'أسئلة الاستمارة الإضافية', 'الجهات المنظمة والأنواع والإعدادات', 'النسخ الاحتياطية'],
+    pcOnlyItems: ['صور التصميم (شعار، توقيع، ختم)', 'أسئلة الاستمارة الإضافية', 'النسخ الاحتياطية'],
     pcOnlyNote: 'إصدار الشواهد وإرسالها يُطلب من هنا، ويُنفَّذ على الحاسوب.',
     noChoices: 'لم تنشر المنصة على الحاسوب قوائمها بعد (الجهات والأنواع): افتحها مرة واحدة وهي متصلة بالإنترنت.', fTitle: 'العنوان', fKind: 'نوع النشاط',
     fOrg: 'الجهة المنظمة', fLang: 'لغة النشاط والوثائق', langAr: 'العربية', langFr: 'الفرنسية', langEn: 'الإنجليزية', fType: 'نوع الشهادة الرئيسي',
@@ -329,7 +329,15 @@ const T = {
     sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
     cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
     dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
-    dSummary: 'التقرير الختامي للنشاط (PDF)', opNames: {edit: 'تعديل مشارك', 'edit:add': 'إضافة مشارك', 'edit:delete': 'حذف مشارك', setsession: 'تغيير الحصة', link: 'رابط مسح جديد', actsave: 'حفظ نشاط', mkform: 'إنشاء الاستمارة', actstate: 'أرشفة أو إرجاع نشاط', team: 'فريق النشاط', addtype: 'صنف شهادة إضافي', revoke: 'إلغاء شهادة أو إرجاعها', formopen: 'إيقاف الاستمارة أو فتحها', designsave: 'حفظ تصميم', mailqueue: 'إرسال الشواهد بالبريد', importrows: 'استيراد Excel', restore: 'استرجاع من المحذوفات', resend: 'إعادة إرسال رسالة', staffsave: 'حساب منظم'}, stCheck: 'تحتاج مراجعة', stCheckNone: 'لا شيء يحتاج مراجعة', stRevoked: 'شواهد ملغاة', stLogD: 'العمليات من لوحة الموقع (عمليات الحاسوب تبقى فيه).', stLogNone: 'لا عمليات بعد', trT: 'المحذوفات', trD: 'ما حُذف من الموقع أو من الحاسوب خلال آخر 30 يوماً. الاسترجاع يعيده كما كان، ويأخذه الحاسوب في مزامنته التالية.',
+    dSummary: 'التقرير الختامي للنشاط (PDF)', ogNameAr: 'الاسم بالعربية', ogNameFr: 'الاسم بالفرنسية', ogNameEn: 'الاسم بالإنجليزية', ogCode: 'الرمز (في أرقام الشواهد)', ogArch: 'مؤرشفة (لا تظهر في الأنشطة الجديدة)',
+    ogNew: 'جهة منظمة جديدة', ogAdd: 'إضافة الجهة', ogSaved: 'حُفظت الجهة', ogCodeFixed: 'لهذه الجهة شواهد صادرة: رمزها ثابت', ogLogo: 'الشعار يُضاف من البرنامج على الحاسوب.',
+    ogErr: {noname: 'اكتب الاسم بالعربية', code: 'اكتب رمز الجهة', taken: 'هذا الرمز لجهة أخرى', issued: 'لهذه الجهة شواهد صادرة: رمزها ثابت', role: 'ليس من صلاحيتك'},
+    setD: 'تسري هنا فوراً، ويأخذها البرنامج على الحاسوب في مزامنته التالية.', setKinds: 'أنواع الأنشطة (سطر لكل نوع)',
+    setTypes: 'أنواع الشواهد: سطر لكل نوع «عربي|Français|English:الحرف»', setTypesD: 'الحرف يبدأ به رقم الشهادة (P0012). تغيير اسم نوع لا يغيّر الأنشطة التي تحمله.',
+    setLang: 'لغة النشاط الافتراضية', setTickets: 'عدد البطاقات الافتراضي', setCiv: 'السيد/السيدة قبل الاسم في الشهادة والرسالة', setAttach: 'إرفاق ملف الشهادة بالرسالة',
+    setTexts: 'النصوص', setTextsD: 'لكل لغة نشاط نصوصها. في الرسالة: {name} {title} {serial} {link} {verify} {code} {org} {participant} {portal}.',
+    txNames: {civ_m: 'اللقب للذكور', civ_f: 'اللقب للإناث', form_desc: 'وصف الاستمارة', wa: 'قبل رابط قناة واتساب', t_hint: 'التلميح أسفل البطاقة', mail_subject: 'موضوع الرسالة', mail_body: 'نص الرسالة'},
+    setSave: 'حفظ الإعدادات', setSaved: 'حُفظت الإعدادات', setNoTypes: 'نوع شهادة واحد على الأقل', opNames: {edit: 'تعديل مشارك', 'edit:add': 'إضافة مشارك', 'edit:delete': 'حذف مشارك', setsession: 'تغيير الحصة', link: 'رابط مسح جديد', actsave: 'حفظ نشاط', mkform: 'إنشاء الاستمارة', actstate: 'أرشفة أو إرجاع نشاط', team: 'فريق النشاط', addtype: 'صنف شهادة إضافي', revoke: 'إلغاء شهادة أو إرجاعها', formopen: 'إيقاف الاستمارة أو فتحها', designsave: 'حفظ تصميم', mailqueue: 'إرسال الشواهد بالبريد', importrows: 'استيراد Excel', restore: 'استرجاع من المحذوفات', resend: 'إعادة إرسال رسالة', staffsave: 'حساب منظم'}, stCheck: 'تحتاج مراجعة', stCheckNone: 'لا شيء يحتاج مراجعة', stRevoked: 'شواهد ملغاة', stLogD: 'العمليات من لوحة الموقع (عمليات الحاسوب تبقى فيه).', stLogNone: 'لا عمليات بعد', trT: 'المحذوفات', trD: 'ما حُذف من الموقع أو من الحاسوب خلال آخر 30 يوماً. الاسترجاع يعيده كما كان، ويأخذه الحاسوب في مزامنته التالية.',
     trNone: 'لا شيء في المحذوفات', trBack: 'استرجاع', trDone: 'استُرجع', trAct: x => 'نشاط · ' + x.n + ' مشارك', trPerson: x => 'مشارك في «' + x.title + '»', imD: 'ملف Excel أو CSV: سطر لكل شخص. ملف التصدير يصحّح أصحابه بأرقامهم، وكل سطر آخر يُضاف مشاركاً حاضراً. حدّد ما في كل عمود ثم استورد.',
     imTpl: 'تحميل النموذج', imBad: 'تعذرت قراءة الملف', imEmpty: 'الملف فارغ أو بلا صف عناوين', imSkip: '— لا يُستورد —', imGo: n => 'استيراد ' + n + ' سطراً',
     imNoName: 'حدّد عموداً واحداً على الأقل للاسم', imCol: 'العمود', imEx: 'أمثلة', imIs: 'ما فيه',
@@ -389,7 +397,7 @@ const T = {
     reqHint: 'Créez une activité ici : son formulaire et sa feuille sont créés sur l’ordinateur, puis elle apparaît dans cette liste.', hereNow: 'présents',
     noActs: 'Aucune activité publiée : synchronisez-en une sur l’ordinateur, ou créez-en une ici.', activity: 'Activité',
     sessionsLine: (n, s) => `${n} séances, scan en cours : séance ${s}`, pcOnlyT: 'Sur l’ordinateur',
-    pcOnlyItems: ['Images des modèles (logo, signature, cachet)', 'Questions supplémentaires du formulaire', 'Organismes, types et réglages', 'Sauvegardes'],
+    pcOnlyItems: ['Images des modèles (logo, signature, cachet)', 'Questions supplémentaires du formulaire', 'Sauvegardes'],
     pcOnlyNote: 'L’émission et l’envoi des attestations se demandent ici et s’exécutent sur l’ordinateur.',
     noChoices: 'La plateforme de l’ordinateur n’a pas encore publié ses listes (organismes et types) : ouvrez-la une fois connectée à Internet.',
     fTitle: 'Titre', fKind: 'Type d’activité', fOrg: 'Organisme', fLang: 'Langue de l’activité et des documents', langAr: 'Arabe', langFr: 'Français',
@@ -499,7 +507,15 @@ const T = {
     sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
     contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
     dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
-    dSummary: 'Rapport final (PDF)', opNames: {edit: 'Participant modifié', 'edit:add': 'Participant ajouté', 'edit:delete': 'Participant supprimé', setsession: 'Séance changée', link: 'Nouveau lien de scan', actsave: 'Activité enregistrée', mkform: 'Formulaire créé', actstate: 'Activité archivée ou rétablie', team: 'Équipe de l’activité', addtype: 'Attestation supplémentaire', revoke: 'Attestation annulée ou rétablie', formopen: 'Formulaire fermé ou rouvert', designsave: 'Modèle enregistré', mailqueue: 'Envoi des attestations', importrows: 'Import Excel', restore: 'Restauration (corbeille)', resend: 'Message renvoyé', staffsave: 'Compte d’organisateur'}, stCheck: 'À vérifier', stCheckNone: 'Rien à vérifier', stRevoked: 'Attestations annulées', stLogD: 'Les opérations faites sur ce tableau de bord (celles de l’ordinateur y restent).', stLogNone: 'Aucune opération', trT: 'Corbeille', trD: 'Ce qui a été supprimé ici ou sur l’ordinateur ces 30 derniers jours. Le restaurer le remet tel quel ; l’ordinateur le reprend à sa prochaine synchronisation.',
+    dSummary: 'Rapport final (PDF)', ogNameAr: 'Nom en arabe', ogNameFr: 'Nom en français', ogNameEn: 'Nom en anglais', ogCode: 'Code (dans les numéros d’attestation)', ogArch: 'Archivé (absent des nouvelles activités)',
+    ogNew: 'Nouvel organisme', ogAdd: 'Ajouter l’organisme', ogSaved: 'Organisme enregistré', ogCodeFixed: 'Des attestations portent ce code : il ne change plus', ogLogo: 'Le logo s’ajoute sur l’ordinateur.',
+    ogErr: {noname: 'Écrivez le nom en arabe', code: 'Écrivez le code', taken: 'Ce code est déjà pris', issued: 'Des attestations portent ce code : il ne change plus', role: 'Hors de vos droits'},
+    setD: 'Appliqués ici tout de suite ; l’ordinateur les reprend à sa prochaine synchronisation.', setKinds: 'Types d’activités (un par ligne)',
+    setTypes: 'Types d’attestations : une ligne « عربي|Français|English:LETTRE »', setTypesD: 'La lettre commence le numéro (P0012). Renommer un type ne change pas les activités qui le portent.',
+    setLang: 'Langue par défaut des activités', setTickets: 'Nombre de cartes par défaut', setCiv: 'M./Mme devant le nom (attestation et message)', setAttach: 'Joindre le fichier au message',
+    setTexts: 'Textes', setTextsD: 'Chaque langue d’activité a ses textes. Dans le message : {name} {title} {serial} {link} {verify} {code} {org} {participant} {portal}.',
+    txNames: {civ_m: 'Titre (hommes)', civ_f: 'Titre (femmes)', form_desc: 'Description du formulaire', wa: 'Avant le lien WhatsApp', t_hint: 'Indication au bas de la carte', mail_subject: 'Objet du message', mail_body: 'Texte du message'},
+    setSave: 'Enregistrer les réglages', setSaved: 'Réglages enregistrés', setNoTypes: 'Au moins un type d’attestation', opNames: {edit: 'Participant modifié', 'edit:add': 'Participant ajouté', 'edit:delete': 'Participant supprimé', setsession: 'Séance changée', link: 'Nouveau lien de scan', actsave: 'Activité enregistrée', mkform: 'Formulaire créé', actstate: 'Activité archivée ou rétablie', team: 'Équipe de l’activité', addtype: 'Attestation supplémentaire', revoke: 'Attestation annulée ou rétablie', formopen: 'Formulaire fermé ou rouvert', designsave: 'Modèle enregistré', mailqueue: 'Envoi des attestations', importrows: 'Import Excel', restore: 'Restauration (corbeille)', resend: 'Message renvoyé', staffsave: 'Compte d’organisateur'}, stCheck: 'À vérifier', stCheckNone: 'Rien à vérifier', stRevoked: 'Attestations annulées', stLogD: 'Les opérations faites sur ce tableau de bord (celles de l’ordinateur y restent).', stLogNone: 'Aucune opération', trT: 'Corbeille', trD: 'Ce qui a été supprimé ici ou sur l’ordinateur ces 30 derniers jours. Le restaurer le remet tel quel ; l’ordinateur le reprend à sa prochaine synchronisation.',
     trNone: 'La corbeille est vide', trBack: 'Restaurer', trDone: 'Restauré', trAct: x => 'Activité · ' + x.n + ' participant(s)', trPerson: x => 'Participant de « ' + x.title + ' »', imD: 'Fichier Excel ou CSV, une ligne par personne. Un fichier exporté corrige les personnes par leur numéro ; toute autre ligne ajoute un participant présent. Indiquez le contenu de chaque colonne, puis importez.',
     imTpl: 'Télécharger le modèle', imBad: 'Fichier illisible', imEmpty: 'Fichier vide ou sans ligne de titres', imSkip: '— non importée —', imGo: n => 'Importer ' + n + ' ligne(s)',
     imNoName: 'Choisissez au moins une colonne pour le nom', imCol: 'Colonne', imEx: 'Exemples', imIs: 'Contenu',
@@ -564,7 +580,7 @@ const T = {
     reqHint: 'Create an activity here: its form and sheet are created on the computer, then it shows up in this list.', hereNow: 'present now',
     noActs: 'No published activities yet: sync one on the computer, or create one here.', activity: 'Activity',
     sessionsLine: (n, s) => `${n} sessions, now scanning session ${s}`, pcOnlyT: 'On the computer',
-    pcOnlyItems: ['Design pictures (logo, signature, stamp)', 'Extra form questions', 'Organizations, types and settings', 'Backups'],
+    pcOnlyItems: ['Design pictures (logo, signature, stamp)', 'Extra form questions', 'Backups'],
     pcOnlyNote: 'Issuing and emailing certificates are requested here and carried out on the computer.',
     noChoices: 'The platform on the computer has not published its lists yet (organizations and types): open it once while online.', fTitle: 'Title',
     fKind: 'Activity type', fOrg: 'Organization', fLang: 'Language of the activity and documents', langAr: 'Arabic', langFr: 'French', langEn: 'English',
@@ -671,7 +687,15 @@ const T = {
     fPending: 'Changes waiting for the computer', sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
     sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
     qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
-    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', opNames: {edit: 'Participant changed', 'edit:add': 'Participant added', 'edit:delete': 'Participant deleted', setsession: 'Session changed', link: 'New scanning link', actsave: 'Activity saved', mkform: 'Form made', actstate: 'Activity archived or restored', team: 'Activity team', addtype: 'Extra certificate type', revoke: 'Certificate revoked or restored', formopen: 'Form closed or reopened', designsave: 'Design saved', mailqueue: 'Certificates emailed', importrows: 'Excel import', restore: 'Restored from the trash', resend: 'Message resent', staffsave: 'Organizer account'}, stCheck: 'To check', stCheckNone: 'Nothing to check', stRevoked: 'Revoked certificates', stLogD: 'Operations made on this dashboard (the computer keeps its own).', stLogNone: 'No operations yet', trT: 'Trash', trD: 'What was deleted here or on the computer in the last 30 days. Restoring puts it back as it was; the computer takes it back at its next sync.',
+    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', ogNameAr: 'Name in Arabic', ogNameFr: 'Name in French', ogNameEn: 'Name in English', ogCode: 'Code (in certificate numbers)', ogArch: 'Archived (not offered for new activities)',
+    ogNew: 'New organizer', ogAdd: 'Add the organizer', ogSaved: 'Organizer saved', ogCodeFixed: 'Certificates carry this code: it no longer changes', ogLogo: 'The logo is added on the computer.',
+    ogErr: {noname: 'Write the name in Arabic', code: 'Write the code', taken: 'This code is taken', issued: 'Certificates carry this code: it no longer changes', role: 'Not within your rights'},
+    setD: 'Applied here at once; the computer takes them at its next sync.', setKinds: 'Kinds of activities (one per line)',
+    setTypes: 'Certificate types: one line “عربي|Français|English:LETTER”', setTypesD: 'The letter starts the number (P0012). Renaming a type does not change the activities that carry it.',
+    setLang: 'Default activity language', setTickets: 'Default number of cards', setCiv: 'Mr./Ms. before the name (certificate and message)', setAttach: 'Attach the file to the message',
+    setTexts: 'Wording', setTextsD: 'Each activity language has its own. In the message: {name} {title} {serial} {link} {verify} {code} {org} {participant} {portal}.',
+    txNames: {civ_m: 'Title (men)', civ_f: 'Title (women)', form_desc: 'Form description', wa: 'Before the WhatsApp link', t_hint: 'Hint at the foot of the card', mail_subject: 'Message subject', mail_body: 'Message text'},
+    setSave: 'Save the settings', setSaved: 'Settings saved', setNoTypes: 'At least one certificate type', opNames: {edit: 'Participant changed', 'edit:add': 'Participant added', 'edit:delete': 'Participant deleted', setsession: 'Session changed', link: 'New scanning link', actsave: 'Activity saved', mkform: 'Form made', actstate: 'Activity archived or restored', team: 'Activity team', addtype: 'Extra certificate type', revoke: 'Certificate revoked or restored', formopen: 'Form closed or reopened', designsave: 'Design saved', mailqueue: 'Certificates emailed', importrows: 'Excel import', restore: 'Restored from the trash', resend: 'Message resent', staffsave: 'Organizer account'}, stCheck: 'To check', stCheckNone: 'Nothing to check', stRevoked: 'Revoked certificates', stLogD: 'Operations made on this dashboard (the computer keeps its own).', stLogNone: 'No operations yet', trT: 'Trash', trD: 'What was deleted here or on the computer in the last 30 days. Restoring puts it back as it was; the computer takes it back at its next sync.',
     trNone: 'The trash is empty', trBack: 'Restore', trDone: 'Restored', trAct: x => 'Activity · ' + x.n + ' participant(s)', trPerson: x => 'Participant of “' + x.title + '”', imD: 'An Excel or CSV file, one row per person. An exported file corrects people by their number; any other row adds a present participant. Say what each column holds, then import.',
     imTpl: 'Download the template', imBad: 'The file could not be read', imEmpty: 'The file is empty or has no header row', imSkip: '— not imported —', imGo: n => 'Import ' + n + ' row(s)',
     imNoName: 'Pick at least one column for the name', imCol: 'Column', imEx: 'Examples', imIs: 'Holds',
@@ -2386,18 +2410,66 @@ async function showStats() {  // the platform's statistics page, over the activi
   draw();
 }
 
-async function showOrg() {  // «الجهة» (the general administrator: the settings): what is set, edited on the computer
+async function showOrg() {  // «الجهة»: the organizers one runs, and for the first degree the platform's settings (edited here)
   mark('org'); bar(t(can('super') ? 'nSettings' : 'nOrg')); loading();
-  const [h, u] = await Promise.all([call('activities'), call('users')]);
-  const orgs = ((h.choices || {}).orgs || []).filter(o => can('super') || String(o.id) === me.org);
-  const blocks = [el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('people'), t('orgsT')), el('span', {className: 'sp'}), pcTag()),
-    el('p', {className: 'muted', textContent: t('orgEdit')}),
-    el('div', {className: 'plat'}, ...orgs.map(o => el('div', {className: 'tile'}, el('span', {className: 'ico'}, ic('people')),
-      el('div', {className: 'txt'}, el('b', {dir: 'auto', textContent: o.name}), el('p', {className: 'ltr', textContent: o.code ? t('codeOf')(o.code) : ''}),
-        el('div', {className: 'bar', style: 'gap:6px'}, el('span', {className: 'badge', textContent: t('orgActs')(h.activities.filter(a => String(a.org_id) === String(o.id)).length)}),
-          u.status === 'ok' ? el('span', {className: 'badge', textContent: t('orgUsers')(u.users.filter(x => String(x.org) === String(o.id)).length)}) : null))))))];
-  if (can('super')) blocks.push(el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('gear'), t('setT')), el('span', {className: 'sp'}), pcTag()),
-    el('ul', {className: 'pclist', style: 'margin-top:12px'}, ...t('setItems').map(x => el('li', {}, ic('lock'), x)))));
+  const [h, s] = await Promise.all([call('activities'), call('settings')]);
+  if (s.status !== 'ok') return showList();
+  const boss = can('super');
+  const orgCard = o => {  // o null: a new one
+    const v = o || {}, inp = (k, dir) => el('input', {value: v[k] || '', dir});
+    const f = {name_ar: inp('name_ar', 'rtl'), name_fr: inp('name_fr', 'ltr'), name_en: inp('name_en', 'ltr'), code: inp('code', 'ltr')};
+    f.code.disabled = !boss || !!v.issued;
+    const color = el('input', {type: 'color', value: /^#[0-9a-f]{6}$/i.test(v.color || '') ? v.color : '#0b3b5c', style: 'width:64px;height:40px;padding:2px'});
+    const arch = boss && o ? el('input', {type: 'checkbox', checked: !!v.archived}) : null;
+    const save = btn(t(o ? 'saveRow' : 'ogAdd'), async e => {
+      const b = e.currentTarget;
+      b.disabled = true;
+      const data = {name_ar: f.name_ar.value, name_fr: f.name_fr.value, name_en: f.name_en.value, color: color.value};
+      if (!f.code.disabled) data.code = f.code.value;
+      if (arch) data.archived = arch.checked;
+      const r = await call('orgsave', {id: o ? o.id : '', data}).catch(() => ({}));
+      b.disabled = false;
+      if (r.status === 'ok') { toast(t('ogSaved')); return showOrg(); }
+      toast(t('ogErr')[r.status] || t('saveFail'));
+    }, o ? 'sec' : '');
+    return el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('people'), o ? el('span', {dir: 'auto', textContent: v.name_ar}) : t('ogNew'),
+        o ? el('span', {className: 'badge', textContent: t('orgActs')(h.activities.filter(a => String(a.org_id) === String(o.id)).length)}) : null),
+      el('div', {className: 'grid2'}, labelled(t('ogNameAr'), f.name_ar), labelled(t('ogNameFr'), f.name_fr), labelled(t('ogNameEn'), f.name_en),
+        labelled(t('ogCode'), f.code), labelled(t('dzColor'), color)),
+      v.issued ? el('p', {className: 'hint', textContent: t('ogCodeFixed')}) : null,
+      arch ? el('label', {className: 'row', style: 'gap:8px;margin-top:8px'}, arch, t('ogArch')) : null,
+      el('div', {className: 'bar', style: 'margin-top:12px'}, save, el('span', {className: 'hint', textContent: t('ogLogo')})));
+  };
+  const blocks = [el('div', {className: 'card'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('people'), t('orgsT'))), ...s.orgs.map(orgCard)];
+  if (boss) {
+    blocks.push(orgCard(null));
+    const S = s.settings, texts = JSON.parse(JSON.stringify(S.texts));
+    const kinds = el('textarea', {rows: 4, dir: 'auto', value: S.kinds}), types = el('textarea', {rows: 5, dir: 'auto', value: S.cert_types});
+    const lang = select([['ar', t('langAr')], ['fr', t('langFr')], ['en', t('langEn')]], S.default_lang);
+    const tickets = el('input', {type: 'number', min: 0, max: 2000, value: S.default_tickets});
+    const box = on => el('input', {type: 'checkbox', checked: on}), civ = box(S.civ_on_cert !== '0'), attach = box(S.mail_attach !== '0');
+    let tl = 'ar';
+    const tbox = el('div');
+    const drawTexts = () => tbox.replaceChildren(...Object.keys(t('txNames')).map(k => labelled(t('txNames')[k],
+      el(['form_desc', 'mail_body'].includes(k) ? 'textarea' : 'input', {value: texts[tl][k], rows: 5, dir: tl === 'ar' ? 'rtl' : 'ltr', oninput: e => { texts[tl][k] = e.target.value; }}))));
+    const seg = el('div', {className: 'seg'}, ...[['ar', 'langAr'], ['fr', 'langFr'], ['en', 'langEn']].map(([v, key]) => el('button', {type: 'button', textContent: t(key),
+      ariaPressed: String(v === tl), onclick: e => { tl = v; drawTexts(); seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === e.target))); }})));
+    drawTexts();
+    const go = btn(t('setSave'), async () => {
+      go.disabled = true;
+      const r = await call('settingssave', {data: {kinds: kinds.value, cert_types: types.value, default_lang: lang.value, default_tickets: tickets.value,
+        civ_on_cert: civ.checked, mail_attach: attach.checked, texts}}).catch(() => ({}));
+      go.disabled = false;
+      toast(r.status === 'ok' ? t('setSaved') : r.status === 'types' ? t('setNoTypes') : t('saveFail'));
+      if (r.status === 'ok') showOrg();
+    });
+    blocks.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('gear'), t('setT')), el('p', {className: 'muted', style: 'margin-top:0', textContent: t('setD')}),
+      labelled(t('setKinds'), kinds), labelled(t('setTypes'), types), el('p', {className: 'hint', textContent: t('setTypesD')}),
+      el('div', {className: 'grid2'}, labelled(t('setLang'), lang), labelled(t('setTickets'), tickets)),
+      el('label', {className: 'row', style: 'gap:8px'}, civ, t('setCiv')), el('label', {className: 'row', style: 'gap:8px;margin-top:6px'}, attach, t('setAttach')),
+      el('h3', {style: 'margin:18px 0 6px', textContent: t('setTexts')}), el('p', {className: 'hint', style: 'margin-top:0', textContent: t('setTextsD')}), seg, tbox,
+      el('div', {className: 'bar', style: 'margin-top:12px'}, go)));
+  }
   app.replaceChildren(...blocks);
 }
 
