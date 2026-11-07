@@ -25,6 +25,7 @@
   .mycard { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
   .mycard .qr { background: #fff; padding: 10px; border-radius: 12px; line-height: 0; }
   .mycard .qr img { width: 180px; height: 180px; image-rendering: pixelated; }
+  .mycard > div:last-child { min-width: 0; flex: 1 1 200px; } .mycard p.ltr { overflow-wrap: anywhere; }
   @media print { body * { visibility: hidden; } #cardBox, #cardBox * { visibility: visible; } #cardBox { position: absolute; inset: 0 auto auto 0; border: 1px solid #000; }
     #cardBox .btns { display: none; } }
   /* this page only: the sign-in card, the person's summary and the list of certificates */

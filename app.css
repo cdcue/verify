@@ -156,6 +156,10 @@ tr:hover td { background: color-mix(in srgb, var(--pri) 3%, transparent); }
 .menu .items { position: absolute; inset-inline-end: 0; top: calc(100% + 6px); background: var(--card); border: 1px solid var(--line); border-radius: 12px;
   box-shadow: 0 12px 32px rgba(15, 23, 42, .18); min-width: 230px; padding: 6px; z-index: 20; }
 .menu .items form, .menu .items a { display: block; }
+@media (max-width: 900px) {  /* phones and tablets: a panel at the foot of the screen, wherever the button was (never off the screen's edge or below it) */
+  .menu .items { position: fixed; inset-inline: 12px; top: auto; bottom: calc(12px + env(safe-area-inset-bottom)); min-width: 0; max-height: 70vh;
+    overflow-y: auto; z-index: 50; box-shadow: 0 -10px 40px rgba(15, 23, 42, .28); }
+}
 .menu .items button, .menu .items a { width: 100%; justify-content: flex-start; background: none; border: 0; color: var(--ink); padding: 8px 10px; border-radius: 8px; font-weight: 500; }
 .menu .items button:hover, .menu .items a:hover { background: var(--soft); text-decoration: none; filter: none; }
 .menu .items .danger { color: var(--err); }
@@ -294,7 +298,6 @@ h2.ch { display: flex; align-items: center; gap: 8px; }
   .tablewrap:has(table.cards) { border: 0; max-height: none; overflow: visible; }
   table.cards thead { display: none; }
   table.cards[style] { min-width: 0 !important; }  /* a width set for the computer's screen (accounts) */
-  .menu .items { position: fixed; inset-inline: 16px; top: auto; min-width: 0; }  /* opens across the phone, never past its edge */
   table.cards, table.cards tbody { display: block; }
   table.cards tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 12px; padding: 12px; margin-bottom: 10px;
                    border: 1px solid var(--line); border-radius: 12px; background: var(--card); }

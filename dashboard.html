@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?v=1">
+<link rel="stylesheet" href="app.css?v=2">
 <script src="ui.js?v=6"></script>
 <style>
   /* the platform's look (app.css, the same file as on the computer), plus what the public pages' ui.css gave this page */
@@ -70,8 +70,8 @@
   .pclist .ic { color: var(--muted); width: 15px; height: 15px; }
 
   /* sign-in: the platform's colours on one side, the form on the other (stacked on phones) */
-  .signin { min-height: 100vh; display: grid; place-items: center; padding: 20px 16px; position: relative; }
-  .signin .tools { position: absolute; top: 14px; inset-inline-end: 16px; display: flex; gap: 8px; }
+  .signin { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; justify-items: center; align-items: center; padding: 14px 16px 20px; }
+  .signin .tools { justify-self: end; display: flex; gap: 8px; margin-bottom: 12px; }  /* in the flow: a short window never puts the card over it */
   .si-card { width: min(940px, 100%); display: grid; grid-template-columns: 1.05fr 1fr; background: var(--card); border: 1px solid var(--line);
              border-radius: 22px; overflow: hidden; box-shadow: 0 2px 4px rgba(16, 32, 48, .05), 0 24px 60px rgba(16, 32, 48, .14); }
   .si-brand { position: relative; padding: 38px 36px; color: #fff; background: var(--side); overflow: hidden; display: flex; flex-direction: column; gap: 18px; }
@@ -93,7 +93,7 @@
   .si-form .field { position: relative; }
   .si-form .field > .ic { position: absolute; inset-inline-start: 12px; top: 50%; translate: 0 -50%; color: var(--muted); pointer-events: none; }
   .si-form .field input { height: 46px; padding-inline-start: 40px; border-radius: 11px; font-size: 15.5px; }
-  .si-form .eye { position: absolute; inset-inline-end: 6px; top: 50%; translate: 0 -50%; background: none; border: 0; color: var(--pri); font-size: 13px; padding: 6px 8px; }
+  .si-form .eye { min-height: 36px; position: absolute; inset-inline-end: 6px; top: 50%; translate: 0 -50%; background: none; border: 0; color: var(--pri); font-size: 13px; padding: 6px 8px; }
   .si-form button.go { height: 48px; margin-top: 16px; font-size: 16px; border-radius: 11px; }
   .si-form .links { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13.5px; }
   @media (max-width: 760px) {
@@ -103,6 +103,7 @@
     .si-form { padding: 26px 22px; }
   }
 
+  .app button, .app .btn { max-width: 100%; white-space: normal; text-align: center; }  /* a long label wraps, never past the screen */
   /* building blocks */
   .app .card { padding: 16px 18px; }
   .app h2 { font-size: 17px; margin: 0 0 8px; }
@@ -847,6 +848,10 @@ const loading = () => app.replaceChildren(el('div', {className: 'card', ariaBusy
 
 // ---------- small pieces ----------
 
+// an open menu closes when something else is tapped, or once one of its items is chosen
+document.addEventListener('click', e => document.querySelectorAll('details.menu[open]').forEach(m => {
+  if (!m.contains(e.target) || e.target.closest('.items button, .items a')) m.open = false;
+}));
 const btn = (text, onclick, kind) => el('button', {className: 'btn sm' + (kind ? ' ' + kind : ''), type: 'button', textContent: text, onclick});
 const field = (label, props) => { const i = el('input', props); return [el('label', {className: 'fld'}, el('span', {textContent: label}), i), i]; };
 const select = (opts, value) => el('select', {}, ...opts.map(([v, x]) => el('option', {value: v, textContent: x, selected: String(v) === String(value)})));
@@ -1008,7 +1013,7 @@ async function showList(then) {
         a.org ? el('span', {className: 'badge', dir: 'auto', textContent: a.org}) : null, el('span', {className: 'sp'}),
         el('span', {className: 'muted ltr', textContent: '#' + a.id})),
       el('h3', {dir: 'auto', textContent: a.title}),
-      el('div', {className: 'meta'}, el('span', {}, ic('calendar'), a.dates || t('noDate')),
+      el('div', {className: 'meta'}, el('span', {dir: 'auto'}, ic('calendar'), a.dates || t('noDate')),
         a.sessions > 1 ? el('span', {}, ic('clock'), t('sessionsLine')(a.sessions, a.session)) : null),
       el('ol', {className: 'steps', ariaLabel: t('st').join(' · ')}, ...done.map((d, i) => el('li', {className: d ? 'done' : i === now ? 'now' : '', title: t('st')[i] + (d ? ' ✓' : '')}))),
       el('div', {className: 'now-step'}, now < 0 ? el('b', {style: 'color:var(--ok)', textContent: t('allDone')}) : [t('nextStep'), el('b', {textContent: t('st')[now]})]),
@@ -2256,6 +2261,7 @@ function designStudio(a, people, reload) {
 
   async function draw() {
     const picker = a.types.length > 1 ? select(a.types.map(x => [x, x]), type) : null;
+    if (picker) picker.setAttribute('aria-label', t('certType'));
     if (picker) picker.onchange = () => { if (dirty && !confirm(t('dzLeave'))) { picker.value = type; return; } type = picker.value; load(); };
     const fileIn = el('input', {type: 'file', accept: '.pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg', hidden: true, onchange: e => upload(e.target.files[0])});
     const head = el('div', {className: 'bar', style: 'margin-bottom:10px'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('award'), t('designT')), picker, el('span', {className: 'sp'}),
