@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0b3b5c">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src https://fonts.gstatic.com; connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; manifest-src 'self'; base-uri 'none'; form-action 'none'">
 <title>شواهدي · منصة الشواهد</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b3b5c'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' fill='none' stroke='%23d9a441' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -22,6 +22,11 @@
 <link rel="stylesheet" href="ui.css?v=5">
 <script src="ui.js?v=6"></script>
 <style>
+  .mycard { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .mycard .qr { background: #fff; padding: 10px; border-radius: 12px; line-height: 0; }
+  .mycard .qr img { width: 180px; height: 180px; image-rendering: pixelated; }
+  @media print { body * { visibility: hidden; } #cardBox, #cardBox * { visibility: visible; } #cardBox { position: absolute; inset: 0 auto auto 0; border: 1px solid #000; }
+    #cardBox .btns { display: none; } }
   /* this page only: the sign-in card, the person's summary and the list of certificates */
   .narrow { max-width: 460px; margin: 0 auto; }
   .who { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
@@ -65,7 +70,7 @@
 // Every value shown comes from the sheets: text nodes only.
 const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec', KEY = 'shawahid-me';
 const T = {
-  ar: {title: 'شواهدي', lead: 'كل الشواهد التي حصلتَ عليها في مكان واحد: تحميلها، ومشاركتها، ورموز التحقق منها.',
+  ar: {cardT: 'بطاقتي', cardD: 'أظهر هذا الرمز للمنظمين عند الدخول والخروج: يُسجَّل حضورك مباشرة، دون بطاقة ولا استمارة.', cardPrint: 'طباعة البطاقة', title: 'شواهدي', lead: 'كل الشواهد التي حصلتَ عليها في مكان واحد: تحميلها، ومشاركتها، ورموز التحقق منها.',
        tIn: 'الدخول', tNew: 'حساب جديد', phone: 'رقم الهاتف', phoneHelp: 'بأي صيغة: ⁦0612345678⁩ أو ⁦+212 6 12 34 56 78⁩',  // numbers kept left to right in the Arabic line
        password: 'كلمة السر', show: 'إظهار', hide: 'إخفاء', signIn: 'دخول', forgot: 'نسيت كلمة السر؟', noAcc: 'أول مرة هنا؟ افتح حسابك',
        wrongIn: 'الهاتف أو البريد أو كلمة السر غير صحيح.', locked: 'محاولات كثيرة: أعد المحاولة بعد 15 دقيقة.',
@@ -102,7 +107,7 @@ const T = {
        recWait: 'أرسلتَ طلبات كثيرة اليوم: انتظر رد المسؤول.',
        chPh: 'تغيير رقم الهاتف', newPhone: 'رقم الهاتف الجديد', takenP: 'لهذا الرقم حساب آخر.', phChanged: 'تغيّر رقم الهاتف',
        chEm: 'تغيير البريد الإلكتروني', emCode: 'أرسلنا رمزاً إلى البريد الجديد، صالحاً 10 دقائق: اكتبه هنا لتأكيده.', confirm: 'تأكيد', emChanged: 'تغيّر البريد الإلكتروني'},
-  fr: {title: 'Mes attestations', lead: 'Toutes vos attestations au même endroit : téléchargement, partage et codes de vérification.',
+  fr: {cardT: 'Ma carte', cardD: 'Montrez ce code aux organisateurs à l’entrée et à la sortie : votre présence est enregistrée directement, sans carte ni formulaire.', cardPrint: 'Imprimer la carte', title: 'Mes attestations', lead: 'Toutes vos attestations au même endroit : téléchargement, partage et codes de vérification.',
        tIn: 'Connexion', tNew: 'Nouveau compte', phone: 'Numéro de téléphone', phoneHelp: 'Sous toute forme : 0612345678 ou +212 6 12 34 56 78',
        password: 'Mot de passe', show: 'Afficher', hide: 'Masquer', signIn: 'Se connecter', forgot: 'Mot de passe oublié ?', noAcc: 'Première fois ? Ouvrez votre compte',
        wrongIn: 'Téléphone, e-mail ou mot de passe incorrect.', locked: 'Trop d’essais : réessayez dans 15 minutes.',
@@ -139,7 +144,7 @@ const T = {
        recWait: 'Trop de demandes aujourd’hui : attendez la réponse de l’administrateur.',
        chPh: 'Changer de téléphone', newPhone: 'Nouveau numéro', takenP: 'Ce numéro a un autre compte.', phChanged: 'Téléphone changé',
        chEm: 'Changer d’e-mail', emCode: 'Un code valable 10 minutes a été envoyé au nouvel e-mail : saisissez-le ici pour le confirmer.', confirm: 'Confirmer', emChanged: 'E-mail changé'},
-  en: {title: 'My certificates', lead: 'All your certificates in one place: download them, share them, and find their verification codes.',
+  en: {cardT: 'My card', cardD: 'Show this code to the organizers on the way in and out: your attendance is recorded at once, with no ticket or form.', cardPrint: 'Print the card', title: 'My certificates', lead: 'All your certificates in one place: download them, share them, and find their verification codes.',
        tIn: 'Sign in', tNew: 'New account', phone: 'Phone number', phoneHelp: 'Any way you write it: 0612345678 or +212 6 12 34 56 78',
        password: 'Password', show: 'Show', hide: 'Hide', signIn: 'Sign in', forgot: 'Forgot your password?', noAcc: 'First time here? Open your account',
        wrongIn: 'Wrong phone, email or password.', locked: 'Too many tries: try again in 15 minutes.',
@@ -490,8 +495,25 @@ function draw(j) {
     c.revoked ? null : el('div', {className: 'btns'},
       /^https:\/\//.test(c.link) ? el('a', {className: 'btn sm', href: c.link, target: '_blank', rel: 'noopener', textContent: t('download')}) : null,
       el('a', {className: 'btn sm ghost', href: verifyUrl(c), target: '_blank', rel: 'noopener', textContent: t('verify')}))));
-  show(summary, cards.length ? el('div', {className: 'list'}, ...cards) : el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('none')}),
+  show(summary, j.card ? cardBox(j) : null, cards.length ? el('div', {className: 'list'}, ...cards) : el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('none')}),
     el('div', {className: 'list'}, addBox(), accountBox()));
+}
+
+function cardBox(j) {  // the account's own code: scanned by the organizers, attendance without a ticket or a form
+  const img = el('img', {alt: j.card});
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+  s.onload = () => {
+    const q = qrcode(0, 'M');
+    q.addData(j.card);
+    q.make();
+    img.src = q.createDataURL(8, 2);
+  };
+  document.head.append(s);
+  return el('section', {className: 'card pad rise', id: 'cardBox', style: 'margin-top:16px'}, el('h2', {textContent: t('cardT')}),
+    el('div', {className: 'mycard'}, el('div', {className: 'qr'}, img),
+      el('div', {}, el('b', {dir: 'auto', style: 'font-size:18px', textContent: j.name}), el('p', {className: 'ltr', style: 'margin:6px 0;letter-spacing:1px', textContent: j.card}),
+        el('p', {className: 'hint', textContent: t('cardD')}), el('div', {className: 'btns'}, btn('cardPrint', () => print(), true)))));
 }
 
 UI.init({page: 'me', name: 'title', T, onLang: () => view()});

@@ -128,7 +128,7 @@ const T = {
        online: 'متصل بالإنترنت', offline: 'دون إنترنت: المسح يُحفظ في الهاتف ويُرسل عند عودة الاتصال',
        pending: n => `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال`, session: (s, n) => `الحصة ${s} من ${n}`, noNet: 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف',
        noCam: 'تعذر تشغيل الكاميرا. اسمح للمتصفح باستعمالها، أو اكتب أرقام البطاقات.', torch: 'الإضاءة',
-       stop: 'إيقاف الكاميرا', flip: 'تبديل الكاميرا', checking: 'جارٍ التأكيد…', noTicket: 'بلا بطاقة',
+       stop: 'إيقاف الكاميرا', flip: 'تبديل الكاميرا', checking: 'جارٍ التأكيد…', noTicket: 'بلا بطاقة', ownCard: 'بطاقة المشارك',
        ok: 'تم تأكيد حضور', already: 'مؤكد سابقاً في هذه الحصة', unregistered: x => `البطاقة ${x} غير مسجلة في الاستمارة`,
        unregisteredSub: 'احتُفظ بها، وتُؤكَّد عند تسجيل صاحبها', duplicate: x => `البطاقة ${x} مسجلة باسمين`, duplicateSub: 'يُحسم الأمر من لوحة التحكم',
        invalid: x => `الرقم ${x} غير موجود ضمن البطاقات المطبوعة`, goOn: 'متابعة', listed: n => `${n} اسماً في الهاتف: المسح فوري ولو انقطع الإنترنت`, email: 'بريده غير صحيح', emailSub: 'تأكد حضوره؛ اطلب منه تصحيح بريده الآن لتصله الشهادة', saved: x => `حُفظت البطاقة ${x} في الهاتف`, savedSub: 'تُرسل تلقائياً عند عودة الاتصال'},
@@ -140,7 +140,7 @@ const T = {
        pending: n => `${n} carte(s) gardée(s) sur le téléphone en attente de connexion`, session: (s, n) => `séance ${s} sur ${n}`,
        noNet: 'Pas de connexion pour l’instant — les scans sont gardés sur le téléphone',
        noCam: 'Impossible d’activer la caméra. Autorisez-la dans le navigateur, ou saisissez les numéros de carte.', torch: 'Lampe',
-       stop: 'Arrêter la caméra', flip: 'Changer de caméra', checking: 'Vérification…', noTicket: 'Sans carte',
+       stop: 'Arrêter la caméra', flip: 'Changer de caméra', checking: 'Vérification…', noTicket: 'Sans carte', ownCard: 'Carte du participant',
        ok: 'Présence confirmée', already: 'Déjà confirmé pour cette séance', unregistered: x => `La carte ${x} n’est pas inscrite au formulaire`,
        unregisteredSub: 'Elle est gardée et sera confirmée à l’inscription de son titulaire', duplicate: x => `La carte ${x} est inscrite sous deux noms`,
        duplicateSub: 'À régler depuis l’espace organisateurs', invalid: x => `Le numéro ${x} ne fait pas partie des cartes imprimées`, goOn: 'Continuer', listed: n => `${n} noms sur le téléphone : scan immédiat, même sans Internet`, email: 'E-mail incorrect',
@@ -154,7 +154,7 @@ const T = {
        pending: n => `${n} ticket(s) kept on the phone, waiting for the connection`, session: (s, n) => `session ${s} of ${n}`,
        noNet: 'No connection right now — scans are kept on the phone',
        noCam: 'Could not start the camera. Allow it in the browser, or type the ticket numbers.', torch: 'Light',
-       stop: 'Stop the camera', flip: 'Switch camera', checking: 'Checking…', noTicket: 'No ticket',
+       stop: 'Stop the camera', flip: 'Switch camera', checking: 'Checking…', noTicket: 'No ticket', ownCard: 'Participant card',
        ok: 'Attendance confirmed', already: 'Already confirmed for this session', unregistered: x => `Ticket ${x} is not registered in the form`,
        unregisteredSub: 'Kept, and confirmed once its holder registers', duplicate: x => `Ticket ${x} is registered under two names`,
        duplicateSub: 'To be settled from the organizers’ dashboard', invalid: x => `Number ${x} is not among the printed tickets`, goOn: 'Continue', listed: n => `${n} names on this phone: instant scans, even offline`, email: 'Wrong email', emailSub: 'Attendance confirmed; ask them to fix their email now to get the certificate',
@@ -163,7 +163,7 @@ const T = {
 const {t} = UI, $ = id => document.getElementById(id);
 const video = document.querySelector('video'), flash = $('flash'), canvas = document.createElement('canvas');
 let audio = null, mine = 0, about = null, stream = null, running = false, det, facing = 'environment', ctx = null;
-const CODE = /T\d+-\d+|U\d+-\d+/i;  // a ticket (T4-012), or a signing sheet's row of someone without one (U4-57)
+const CODE = /T\d+-\d+|U\d+-\d+|SW-[AP][0-9A-F]{1,32}-[A-Z0-9]{8}/i;  // ... or a participant's own card (SW-A12-XXXXXXXX)  // a ticket (T4-012), or a signing sheet's row of someone without one (U4-57)
 const seen = new Map();  // ticket -> when the camera last saw it: it sees the same ticket many times a second
 const said = new Map();  // ticket -> [text, kind] of its answer, shown again while it stays in front of the camera
 const LOOK = {  // icon, color, main line, second line
@@ -284,7 +284,7 @@ function local(raw) {  // the answer from the list on the phone, or null
 }
 function scan(raw) {  // the read is confirmed at once and the camera goes on; the answer fills its line when it comes
   const s = String(raw).trim(), key = (s.toUpperCase().match(CODE) || [s])[0];
-  const label = key.startsWith('U') ? t('noTicket') : key;  // a row code says nothing to a person: the name comes with the answer
+  const label = key.startsWith('U') ? t('noTicket') : /^SW-/i.test(key) ? t('ownCard') : key;  // a row code says nothing to a person: the name comes with the answer
   const before = seen.get(key) || 0;
   seen.set(key, Date.now());  // a code still in front of the camera is not sent again; 6 s away from it, it can be
   if (!s) return;
