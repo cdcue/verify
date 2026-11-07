@@ -230,17 +230,17 @@ const T = {
     jEmail: 'إرسال الشواهد بالبريد', jActivity: 'نشاط جديد', jUpdate: 'تعديل النشاط', jBundle: 'شواهد لشخص في عدة أنشطة', jsWait: 'ينتظر الحاسوب',
     jsRun: 'قيد التنفيذ', jsDone: 'تم', jsErr: 'تعذّر', copyText: 'نسخ النص والروابط', copiedText: 'نُسخ: الصقه في واتساب أو غيره',
     onePdf: 'ملف واحد بكل الشواهد', newAct: 'نشاط جديد', bundle: 'شواهد لشخص', reqT: 'طلبات للحاسوب',
-    reqHint: 'أنشئ نشاطاً من هنا: تُنشأ استمارته وجدوله على الحاسوب، ثم يظهر في هذه اللائحة.', hereNow: 'حاضر الآن',
-    noActs: 'لا أنشطة منشورة بعد: زامن نشاطاً في المنصة على الحاسوب، أو أنشئ واحداً من هنا.', activity: 'نشاط',
+    reqHint: 'لا طلبات تنتظر الحاسوب.', hereNow: 'حاضر الآن',
+    noActs: 'لا أنشطة بعد: أنشئ أول نشاط من زر «نشاط جديد».', activity: 'نشاط',
     sessionsLine: (n, s) => `${n} حصص، المسح الآن للحصة ${s}`, pcOnlyT: 'على الحاسوب',
-    pcOnlyItems: ['صور التصميم (شعار، توقيع، ختم)', 'أسئلة الاستمارة الإضافية', 'النسخ الاحتياطية'],
-    pcOnlyNote: 'إصدار الشواهد وإرسالها يُطلب من هنا، ويُنفَّذ على الحاسوب.',
+    pcOnlyItems: ['قراءة صور البطاقات المسلَّمة ولوائح التوقيع الموقّعة', 'استيراد الشواهد القديمة (السابقة للمنصة)', 'شعار الجهة على الوثائق المطبوعة'],
+    pcOnlyNote: 'كل ما عدا هذا يتم من هذه اللوحة، والحاسوب غير ضروري.',
     noChoices: 'لم تنشر المنصة على الحاسوب قوائمها بعد (الجهات والأنواع): افتحها مرة واحدة وهي متصلة بالإنترنت.', fTitle: 'العنوان', fKind: 'نوع النشاط',
     fOrg: 'الجهة المنظمة', fLang: 'لغة النشاط والوثائق', langAr: 'العربية', langFr: 'الفرنسية', langEn: 'الإنجليزية', fType: 'نوع الشهادة الرئيسي',
     fDates: 'التاريخ / الأيام', datesPh: 'مثال: 12 و13 مارس 2026', fHours: 'التوقيت أو عدد الساعات', fPlace: 'المكان', fSessions: 'عدد الحصص',
     fMin: 'الحد الأدنى للحضور (حصص)', minPh: 'كل الحصص', fTickets: 'عدد البطاقات المطبوعة', fWa: 'رابط مجموعة واتساب', fTpl: 'أسئلة إضافية من نموذج',
     noTpl: 'بلا أسئلة إضافية', editHint: 'ما يُترك فارغاً يبقى كما هو. العنوان والتاريخ والمكان تتبعها الاستمارة في Google Forms.',
-    newHint: 'يُنشأ النشاط هنا مباشرة مع استمارة Google بلغته ومجلد Drive، وتصل تسجيلاتها إلى المنصة تلقائياً. التصميم والطباعة على الحاسوب.',
+    newHint: 'يُنشأ النشاط هنا مباشرة مع استمارة Google بلغته ومجلد Drive، وتصل تسجيلاتها إلى المنصة تلقائياً.',
     askEdit: 'حفظ التعديل', askNew: 'إنشاء النشاط واستمارته', making: 'جارٍ إنشاء الاستمارة… قد يستغرق ذلك نصف دقيقة', saved: 'حُفظ التعديل',
     madeAct: 'أُنشئ النشاط واستمارته', madeForm: 'أُنشئت الاستمارة', formFail: 'حُفظ النشاط لكن تعذر إنشاء الاستمارة أو تحديثها: أعد المحاولة من خطوة التسجيل',
     badOrg: 'الجهة المنظمة غير موجودة', badVal: 'قيمة غير صالحة (اللغة أو نوع الشهادة)',
@@ -287,7 +287,7 @@ const T = {
     onPc: 'الحاسوب', onPcT: 'يُستعمل من المنصة على الحاسوب', siSub: 'لوحة المنظمين · نسخة الإنترنت', siF1: 'الأنشطة والمشاركون والحضور، من أي هاتف أو حاسوب',
     siF2: 'المسح بالهاتف، وروابطه ورموزه', siF3: 'إصدار الشواهد وإرسالها، طلباً تنفّذه المنصة على الحاسوب', siH: 'تسجيل الدخول',
     siD: 'بحسابك في منصة الشواهد: اسم الدخول وكلمة السر نفسهما.', show: 'إظهار', hide: 'إخفاء',
-    siForgot: 'نسيت كلمة السر؟ يعطيك مسؤول جهتك كلمة سر جديدة من المنصة على الحاسوب.', homeT: 'منصة الشواهد',
+    siForgot: 'نسيت كلمة السر؟ يعطيك مسؤول جهتك كلمة سر جديدة من صفحة «الحسابات».', homeT: 'منصة الشواهد',
     homeD: 'من استمارة التسجيل إلى الشهادة في بريد المشارك: تابع أنشطتك من أي مكان.', kActs: 'نشاط جارٍ', kReg: 'مسجل', kHere: 'حاضر مؤكد',
     kCert: 'شهادة صادرة', kMail: 'بريد مرسل', actsT: 'الأنشطة', fSearch: 'بحث بالعنوان أو التاريخ أو الرقم...', fKinds: 'كل الأنواع', fOrgs: 'كل الجهات',
     noMatch: 'لا نشاط يطابق البحث.', st: ['استمارة التسجيل', 'تأكيد الحضور', 'إصدار الشواهد', 'الإرسال بالبريد'], nextStep: 'الخطوة التالية: ',
@@ -299,7 +299,7 @@ const T = {
     dzSaved: 'حُفظ التصميم', dzLeave: 'تغييرات غير محفوظة ستضيع. متابعة؟', dzHow: 'اسحب كل متغير إلى مكانه، واختره لتغيير حجمه وخطه. لا يُحفظ شيء إلا بزر «حفظ».',
     dzAdd: 'إضافة متغير', dzText: 'نص', dzImage: 'صورة', dzPick: 'اختر متغيراً لتعديله', dzSize: 'الحجم', dzWidth: 'العرض', dzLines: 'الأسطر', dzAlign: 'المحاذاة',
     dzCenter: 'وسط', dzRight: 'يمين', dzLeft: 'يسار', dzFont: 'الخط', dzDefault: 'الافتراضي', dzColor: 'اللون', dzBold: 'عريض', dzDigits: 'الأرقام', dzDate: 'صيغة التاريخ',
-    dzLong: 'طويلة (7 نونبر 2026)', dzImgPc: 'الصور (شعار، توقيع، ختم) تُضاف من البرنامج على الحاسوب.', dzSampleName: 'اسم المشارك', wbT: 'الإصدار من هذه الصفحة', wbD: 'تُرسم الشواهد في متصفحك بالتصميم نفسه، وتُرفع إلى Drive وتُسجَّل في صفحة التحقق. أبقِ الصفحة مفتوحة حتى ينتهي.',
+    dzLong: 'طويلة (7 نونبر 2026)', dzImgPc: 'صورة PNG أو JPG (شعار، توقيع، ختم). حجمها بالعرض، وطولها حسب الصورة.', dzPicBad: 'تعذرت قراءة الصورة', dzSampleName: 'اسم المشارك', wbT: 'الإصدار من هذه الصفحة', wbD: 'تُرسم الشواهد في متصفحك بالتصميم نفسه، وتُرفع إلى Drive وتُسجَّل في صفحة التحقق. أبقِ الصفحة مفتوحة حتى ينتهي.',
     wbGo: n => 'إصدار ' + n + ' شهادة الآن', wbNone: 'لا توجد شواهد تنتظر الإصدار (الحاضرون ولهم تصميم جاهز)', wbNoDesign: x => 'لا تصميم جاهز لـ«' + x + '» بعد: ' ,
     wbRun: (i, n) => 'تُصدر ' + i + ' من ' + n + '... لا تغلق الصفحة', wbDone: (n, f) => 'صدرت ' + n + ' شهادة' + (f ? '، وتعذرت ' + f : ''), wbSure: n => 'إصدار ' + n + ' شهادة الآن؟ تأخذ كل شهادة رقماً لا يتغير.',
     wbLeave: 'الإصدار جارٍ: إن أغلقت الصفحة يتوقف، ويُكمل لاحقاً بنفس الأرقام.', mqOk: n => n ? 'وُضعت ' + n + ' رسالة في الطابور: تُرسل خلال دقائق' : 'لا رسائل تنتظر الإرسال', wbRules: 'شغّل البرنامج على الحاسوب مرة بآخر إصدار: ينشر قواعد الطباعة (عنوان التحقق، السيد/السيدة)، ثم أعد تحميل الصفحة.', dzHowShort: 'الملف ومواضع المتغيرات', formOn: 'الاستمارة تقبل التسجيلات', formOff: 'الاستمارة موقوفة: لا تقبل تسجيلات', formStop: 'إيقاف التسجيل ومزامنة',
@@ -329,7 +329,10 @@ const T = {
     sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
     cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
     dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
-    dSummary: 'التقرير الختامي للنشاط (PDF)', ogNameAr: 'الاسم بالعربية', ogNameFr: 'الاسم بالفرنسية', ogNameEn: 'الاسم بالإنجليزية', ogCode: 'الرمز (في أرقام الشواهد)', ogArch: 'مؤرشفة (لا تظهر في الأنشطة الجديدة)',
+    dSummary: 'التقرير الختامي للنشاط (PDF)', allRun: (i, n) => 'يُجمع ' + i + ' من ' + n + '...', allNone: 'لا شواهد صادرة بعد', zipRun: 'يُجهَّز الملف المضغوط على Drive...', raAsk: 'سبب إلغاء كل الشواهد (يظهر في صفحة التحقق):', raDone: (n, f) => 'أُلغيت ' + n + ' شهادة' + (f ? '، وتعذرت ' + f : ''), daSure: 'حذف هذا النشاط؟ يبقى في المحذوفات 30 يوماً.', daValid: 'له شواهد سارية: ألغها أولاً، أو أرشف النشاط', daDone: 'نُقل النشاط إلى المحذوفات', cpDone: 'أُنشئت نسخة من النشاط', testTo: 'البريد الذي تُرسل إليه الرسالة التجريبية:', testSent: 'أُرسلت الرسالة التجريبية', mailBusy: 'حصة البريد اليومية شارفت على النفاد: تُحفظ للمشاركين', qT: 'الأسئلة الإضافية', qD: 'تُطرح في الاستمارة بعد الأسئلة الأساسية. السؤال الجديد يُضاف إلى الاستمارة فوراً.', qAdd: 'إضافة سؤال', qTitle: 'نص السؤال',
+    qType: 'نوعه', qOpts: 'الخيارات (سطر لكل خيار)', qReq: 'إجابة إلزامية', qHelp: 'توضيح (اختياري)', qAdded: 'أُضيف السؤال إلى الاستمارة', qBad: 'اكتب نص السؤال، وخياراته إن كان اختياراً',
+    qTypes: {text: 'نص قصير', paragraph: 'نص طويل', choice: 'اختيار واحد', dropdown: 'قائمة منسدلة', checkbox: 'اختيارات متعددة', date: 'تاريخ'}, qNone: 'لا أسئلة إضافية',
+    tplT: 'نماذج الأسئلة', tplD: 'تُختار عند إنشاء نشاط جديد فتأتي استمارته بأسئلتها.', tplName: 'اسم النموذج', tplAdd: 'نموذج جديد', tplDel: 'حذف النموذج', bShareT: 'صدرت الشواهد', bShareD: 'نص جاهز للإرسال عبر واتساب أو غيره:', bMailed: 'وُضعت رسالة واحدة بكل الشواهد في طابور الإرسال', bCopy: 'نسخ النص', bFail: 'تعذر الإصدار: ', ogNameAr: 'الاسم بالعربية', ogNameFr: 'الاسم بالفرنسية', ogNameEn: 'الاسم بالإنجليزية', ogCode: 'الرمز (في أرقام الشواهد)', ogArch: 'مؤرشفة (لا تظهر في الأنشطة الجديدة)',
     ogNew: 'جهة منظمة جديدة', ogAdd: 'إضافة الجهة', ogSaved: 'حُفظت الجهة', ogCodeFixed: 'لهذه الجهة شواهد صادرة: رمزها ثابت', ogLogo: 'الشعار يُضاف من البرنامج على الحاسوب.',
     ogErr: {noname: 'اكتب الاسم بالعربية', code: 'اكتب رمز الجهة', taken: 'هذا الرمز لجهة أخرى', issued: 'لهذه الجهة شواهد صادرة: رمزها ثابت', role: 'ليس من صلاحيتك'},
     setD: 'تسري هنا فوراً، ويأخذها البرنامج على الحاسوب في مزامنته التالية.', setKinds: 'أنواع الأنشطة (سطر لكل نوع)',
@@ -372,11 +375,11 @@ const T = {
     orgUsers: n => `${n} حساب`, codeOf: c => 'رمز الشواهد: ' + c, setT: 'إعدادات المنصة',
     setItems: ['حساب Google ومنصة التحقق', 'الأنواع والترقيم', 'نماذج الاستمارات', 'نصوص الوثائق والبريد', 'النسخ الاحتياطي والتحديثات'], myT: 'حسابي',
     pwOldL: 'كلمة السر الحالية', pwNewL: 'كلمة سر جديدة (8 أحرف على الأقل)', pwNew2: 'أعد كتابتها', pwChange: 'تغيير كلمة السر',
-    pwSent: 'أُرسل الطلب: تتغير كلمة السر خلال دقيقة ما دامت المنصة مفتوحة على الحاسوب.', pwMismatch: 'كلمتا السر غير متطابقتين.', rolesT: 'الأدوار',
+    pwSent: 'تغيّرت كلمة السر', pwMismatch: 'كلمتا السر غير متطابقتين.', rolesT: 'الأدوار',
     rolesItems: ['مسؤول الدرجة الأولى (المسؤول العام): كل الجهات وكل الأنشطة، والإعدادات وكل الحسابات.', 'مسؤول الدرجة الثانية (مسؤول جهة): كل أنشطة جهته، وإلغاء الشواهد وحذف الأنشطة والإحصائيات، وحسابات منظميها ومساعديها.', 'مسؤول الدرجة الثالثة (منظم): الأنشطة التي أنشأها أو أُضيف إلى فريقها: التسجيل والحضور والإصدار والإرسال.', 'مسؤول الدرجة الرابعة (مساعد المسح): الحضور في الأنشطة التي أُضيف إليها.'],
-    usersHow: 'كل تغيير هنا طلب تنفّذه المنصة على الحاسوب خلال دقيقة، ثم يظهر هنا. يُضاف المنظم أو المساعد إلى نشاط من المنصة على الحاسوب («فريق النشاط»).',
+    usersHow: 'كل تغيير هنا يسري فوراً. يُضاف المنظم أو المساعد إلى نشاط من صفحة النشاط («فريق النشاط»).',
     unchanged: 'دون تغيير', stateL: 'الحالة', accOpenO: 'مفتوح', accCloseO: 'مغلق', saveRow: 'حفظ', newAccT: 'حساب جديد', fullName: 'الاسم الكامل',
-    pwMin: 'كلمة السر (8 أحرف على الأقل)', createAcc: 'إنشاء الحساب', staffSent: 'أُرسل الطلب: يُنفَّذ على الحاسوب خلال دقيقة.',
+    pwMin: 'كلمة السر (8 أحرف على الأقل)', createAcc: 'إنشاء الحساب', staffSent: 'حُفظ الحساب',
     badnew: 'اسم الدخول (3 إلى 30 حرفاً لاتينياً صغيراً أو رقماً أو . _ -) والاسم الكامل وكلمة السر إلزامية.', orgNeed: 'اختر الجهة التي يعمل فيها هذا الحساب.',
     selfNo: 'لا يغيّر أحد دوره ولا يغلق حسابه بنفسه.', jStaff: 'حساب', jMypw: 'كلمة السر', pendingReq: 'طلبات الحسابات',
   },
@@ -394,18 +397,18 @@ const T = {
     jBundle: 'Attestations d’une personne pour plusieurs activités', jsWait: 'Attend l’ordinateur', jsRun: 'En cours', jsDone: 'Fait', jsErr: 'Échec',
     copyText: 'Copier le texte et les liens', copiedText: 'Copié : collez-le dans WhatsApp ou ailleurs', onePdf: 'Un seul fichier avec toutes les attestations',
     newAct: 'Nouvelle activité', bundle: 'Attestations d’une personne', reqT: 'Demandes à l’ordinateur',
-    reqHint: 'Créez une activité ici : son formulaire et sa feuille sont créés sur l’ordinateur, puis elle apparaît dans cette liste.', hereNow: 'présents',
-    noActs: 'Aucune activité publiée : synchronisez-en une sur l’ordinateur, ou créez-en une ici.', activity: 'Activité',
+    reqHint: 'Aucune demande en attente de l’ordinateur.', hereNow: 'présents',
+    noActs: 'Aucune activité : créez la première avec « Nouvelle activité ».', activity: 'Activité',
     sessionsLine: (n, s) => `${n} séances, scan en cours : séance ${s}`, pcOnlyT: 'Sur l’ordinateur',
-    pcOnlyItems: ['Images des modèles (logo, signature, cachet)', 'Questions supplémentaires du formulaire', 'Sauvegardes'],
-    pcOnlyNote: 'L’émission et l’envoi des attestations se demandent ici et s’exécutent sur l’ordinateur.',
+    pcOnlyItems: ['Lecture des photos de cartes rendues et de feuilles d’émargement signées', 'Import des anciennes attestations', 'Logo de l’organisme sur les documents imprimés'],
+    pcOnlyNote: 'Tout le reste se fait sur ce tableau de bord : l’ordinateur n’est plus nécessaire.',
     noChoices: 'La plateforme de l’ordinateur n’a pas encore publié ses listes (organismes et types) : ouvrez-la une fois connectée à Internet.',
     fTitle: 'Titre', fKind: 'Type d’activité', fOrg: 'Organisme', fLang: 'Langue de l’activité et des documents', langAr: 'Arabe', langFr: 'Français',
     langEn: 'Anglais', fType: 'Type d’attestation principal', fDates: 'Date / jours', datesPh: 'ex. 12 et 13 mars 2026', fHours: 'Horaire ou nombre d’heures',
     fPlace: 'Lieu', fSessions: 'Nombre de séances', fMin: 'Présence minimale (séances)', minPh: 'Toutes les séances', fTickets: 'Nombre de cartes imprimées',
     fWa: 'Lien du groupe WhatsApp', fTpl: 'Questions supplémentaires d’un modèle', noTpl: 'Sans questions supplémentaires',
     editHint: 'Un champ laissé vide reste inchangé. Le titre, la date et le lieu sont repris dans le formulaire Google Forms.',
-    newHint: 'L’activité est créée ici directement, avec son formulaire Google dans sa langue et son dossier Drive ; les inscriptions arrivent seules. Le design et l’impression se font sur l’ordinateur.',
+    newHint: 'L’activité est créée ici directement, avec son formulaire Google dans sa langue et son dossier Drive ; les inscriptions arrivent seules.',
     askEdit: 'Enregistrer', askNew: 'Créer l’activité et son formulaire', making: 'Création du formulaire… jusqu’à une demi-minute', saved: 'Modification enregistrée',
     madeAct: 'Activité et formulaire créés', madeForm: 'Formulaire créé', formFail: 'Activité enregistrée, mais le formulaire n’a pu être créé ou mis à jour : réessayez depuis l’étape Inscription',
     badOrg: 'Organisme introuvable', badVal: 'Valeur non valide (langue ou type d’attestation)',
@@ -462,7 +465,7 @@ const T = {
     siF1: 'Activités, participants et présences, depuis tout téléphone ou ordinateur', siF2: 'Le scan au téléphone, ses liens et ses codes',
     siF3: 'L’émission et l’envoi des attestations, demandés ici et faits par l’ordinateur', siH: 'Connexion',
     siD: 'Avec votre compte de la plateforme : le même identifiant et le même mot de passe.', show: 'Afficher', hide: 'Masquer',
-    siForgot: 'Mot de passe oublié ? Le responsable de votre organisme vous en donne un nouveau depuis la plateforme sur l’ordinateur.',
+    siForgot: 'Mot de passe oublié ? Le responsable de votre organisme vous en donne un nouveau depuis la page « Comptes ».',
     homeT: 'Plateforme des attestations', homeD: 'Du formulaire d’inscription à l’attestation dans la boîte du participant : suivez vos activités de partout.',
     kActs: 'activités en cours', kReg: 'inscrits', kHere: 'présents confirmés', kCert: 'attestations émises', kMail: 'e-mails envoyés', actsT: 'Activités',
     fSearch: 'Rechercher par titre, date ou numéro...', fKinds: 'Tous les types', fOrgs: 'Tous les organismes', noMatch: 'Aucune activité ne correspond.',
@@ -475,7 +478,7 @@ const T = {
     dzSaved: 'Modèle enregistré', dzLeave: 'Les changements non enregistrés seront perdus. Continuer ?', dzHow: 'Glissez chaque champ à sa place ; touchez-le pour sa taille et sa police. Rien n’est enregistré sans « Enregistrer ».',
     dzAdd: 'Ajouter un champ', dzText: 'Texte', dzImage: 'Image', dzPick: 'Choisissez un champ', dzSize: 'Taille', dzWidth: 'Largeur', dzLines: 'Lignes', dzAlign: 'Alignement',
     dzCenter: 'Centre', dzRight: 'Droite', dzLeft: 'Gauche', dzFont: 'Police', dzDefault: 'Par défaut', dzColor: 'Couleur', dzBold: 'Gras', dzDigits: 'Chiffres', dzDate: 'Format de date',
-    dzLong: 'Long (7 novembre 2026)', dzImgPc: 'Les images (logo, signature, cachet) s’ajoutent sur l’ordinateur.', dzSampleName: 'Nom du participant', wbT: 'Émettre depuis cette page', wbD: 'Les attestations sont dessinées dans votre navigateur avec le même modèle, envoyées sur Drive et inscrites à la vérification. Gardez la page ouverte.',
+    dzLong: 'Long (7 novembre 2026)', dzImgPc: 'Image PNG ou JPG (logo, signature, cachet). Sa taille par la largeur, la hauteur suit l’image.', dzPicBad: 'Image illisible', dzSampleName: 'Nom du participant', wbT: 'Émettre depuis cette page', wbD: 'Les attestations sont dessinées dans votre navigateur avec le même modèle, envoyées sur Drive et inscrites à la vérification. Gardez la page ouverte.',
     wbGo: n => 'Émettre ' + n + ' attestation(s)', wbNone: 'Aucune attestation en attente (présents avec un modèle prêt)', wbNoDesign: x => 'Pas de modèle prêt pour « ' + x + ' » : ',
     wbRun: (i, n) => 'Émission ' + i + ' / ' + n + '... ne fermez pas la page', wbDone: (n, f) => n + ' attestation(s) émise(s)' + (f ? ', ' + f + ' échec(s)' : ''), wbSure: n => 'Émettre ' + n + ' attestation(s) ? Chacune reçoit un numéro définitif.',
     wbLeave: 'Émission en cours : fermer la page l’arrête ; elle reprendra avec les mêmes numéros.', mqOk: n => n ? n + ' message(s) en file : envoyés dans quelques minutes' : 'Aucun message en attente', wbRules: 'Lancez une fois la plateforme à jour sur l’ordinateur (elle publie les règles d’impression), puis rechargez.', dzHowShort: 'Fichier et champs', formOn: 'Le formulaire accepte les inscriptions', formOff: 'Formulaire fermé : plus d’inscriptions', formStop: 'Fermer et synchroniser',
@@ -507,7 +510,10 @@ const T = {
     sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
     contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
     dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
-    dSummary: 'Rapport final (PDF)', ogNameAr: 'Nom en arabe', ogNameFr: 'Nom en français', ogNameEn: 'Nom en anglais', ogCode: 'Code (dans les numéros d’attestation)', ogArch: 'Archivé (absent des nouvelles activités)',
+    dSummary: 'Rapport final (PDF)', allRun: (i, n) => 'Assemblage ' + i + ' / ' + n + '...', allNone: 'Aucune attestation émise', zipRun: 'Préparation du ZIP sur Drive...', raAsk: 'Motif d’annulation de toutes les attestations (affiché sur la vérification) :', raDone: (n, f) => n + ' attestation(s) annulée(s)' + (f ? ', ' + f + ' échec(s)' : ''), daSure: 'Supprimer cette activité ? Elle reste 30 jours dans la corbeille.', daValid: 'Elle a des attestations valides : annulez-les d’abord, ou archivez-la', daDone: 'Activité mise à la corbeille', cpDone: 'Copie de l’activité créée', testTo: 'Adresse qui reçoit le message de test :', testSent: 'Message de test envoyé', mailBusy: 'Quota d’e-mails presque épuisé : gardé pour les participants', qT: 'Questions supplémentaires', qD: 'Posées dans le formulaire après les questions de base. Une nouvelle question y est ajoutée tout de suite.', qAdd: 'Ajouter une question', qTitle: 'Texte de la question',
+    qType: 'Type', qOpts: 'Choix (un par ligne)', qReq: 'Réponse obligatoire', qHelp: 'Aide (facultatif)', qAdded: 'Question ajoutée au formulaire', qBad: 'Écrivez la question, et ses choix si c’est un choix',
+    qTypes: {text: 'Texte court', paragraph: 'Texte long', choice: 'Choix unique', dropdown: 'Liste déroulante', checkbox: 'Choix multiples', date: 'Date'}, qNone: 'Aucune question supplémentaire',
+    tplT: 'Modèles de questions', tplD: 'Choisis à la création d’une activité : son formulaire vient avec leurs questions.', tplName: 'Nom du modèle', tplAdd: 'Nouveau modèle', tplDel: 'Supprimer le modèle', bShareT: 'Attestations émises', bShareD: 'Texte prêt à envoyer par WhatsApp ou autre :', bMailed: 'Un message avec toutes les attestations est en file d’envoi', bCopy: 'Copier le texte', bFail: 'Émission impossible : ', ogNameAr: 'Nom en arabe', ogNameFr: 'Nom en français', ogNameEn: 'Nom en anglais', ogCode: 'Code (dans les numéros d’attestation)', ogArch: 'Archivé (absent des nouvelles activités)',
     ogNew: 'Nouvel organisme', ogAdd: 'Ajouter l’organisme', ogSaved: 'Organisme enregistré', ogCodeFixed: 'Des attestations portent ce code : il ne change plus', ogLogo: 'Le logo s’ajoute sur l’ordinateur.',
     ogErr: {noname: 'Écrivez le nom en arabe', code: 'Écrivez le code', taken: 'Ce code est déjà pris', issued: 'Des attestations portent ce code : il ne change plus', role: 'Hors de vos droits'},
     setD: 'Appliqués ici tout de suite ; l’ordinateur les reprend à sa prochaine synchronisation.', setKinds: 'Types d’activités (un par ligne)',
@@ -555,12 +561,12 @@ const T = {
     orgActs: n => `${n} activités`, orgUsers: n => `${n} comptes`, codeOf: c => 'Code des attestations : ' + c, setT: 'Paramètres de la plateforme',
     setItems: ['Compte Google et site de vérification', 'Types et numérotation', 'Modèles de formulaires', 'Textes des documents et e-mails', 'Sauvegardes et mises à jour'],
     myT: 'Mon compte', pwOldL: 'Mot de passe actuel', pwNewL: 'Nouveau mot de passe (8 caractères au moins)', pwNew2: 'Confirmez-le',
-    pwChange: 'Changer le mot de passe', pwSent: 'Demande envoyée : le mot de passe change dans la minute tant que la plateforme est ouverte sur l’ordinateur.',
+    pwChange: 'Changer le mot de passe', pwSent: 'Mot de passe changé',
     pwMismatch: 'Les mots de passe ne correspondent pas.', rolesT: 'Rôles',
     rolesItems: ['Niveau 1 (responsable général) : tous les organismes et activités, les paramètres et tous les comptes.', 'Niveau 2 (responsable d’organisme) : toutes ses activités, annulation, suppression, statistiques, et les comptes de ses organisateurs et assistants.', 'Niveau 3 (organisateur) : les activités créées ou celles de son équipe.', 'Niveau 4 (assistant de scan) : les présences des activités de son équipe.'],
-    usersHow: 'Chaque changement ici est une demande faite par la plateforme sur l’ordinateur dans la minute, puis visible ici. L’équipe d’une activité se règle sur l’ordinateur.',
+    usersHow: 'Chaque changement ici s’applique tout de suite. L’équipe d’une activité se règle sur sa page (« Équipe de l’activité »).',
     unchanged: 'inchangé', stateL: 'État', accOpenO: 'Ouvert', accCloseO: 'Fermé', saveRow: 'Enregistrer', newAccT: 'Nouveau compte', fullName: 'Nom complet',
-    pwMin: 'Mot de passe (8 caractères au moins)', createAcc: 'Créer le compte', staffSent: 'Demande envoyée : faite par l’ordinateur dans la minute.',
+    pwMin: 'Mot de passe (8 caractères au moins)', createAcc: 'Créer le compte', staffSent: 'Compte enregistré',
     badnew: 'Identifiant (3 à 30 lettres latines minuscules, chiffres, . _ -), nom complet et mot de passe sont obligatoires.',
     orgNeed: 'Choisissez l’organisme de ce compte.', selfNo: 'Personne ne change son propre rôle ni ne ferme son propre compte.', jStaff: 'Compte',
     jMypw: 'Mot de passe', pendingReq: 'Demandes de comptes',
@@ -577,18 +583,18 @@ const T = {
     jBundle: 'One person’s certificates in several activities', jsWait: 'Waiting for the computer', jsRun: 'Running', jsDone: 'Done', jsErr: 'Failed',
     copyText: 'Copy text and links', copiedText: 'Copied: paste it in WhatsApp or elsewhere', onePdf: 'One file with all certificates', newAct: 'New activity',
     bundle: 'Certificates for one person', reqT: 'Requests to the computer',
-    reqHint: 'Create an activity here: its form and sheet are created on the computer, then it shows up in this list.', hereNow: 'present now',
-    noActs: 'No published activities yet: sync one on the computer, or create one here.', activity: 'Activity',
+    reqHint: 'No requests waiting for the computer.', hereNow: 'present now',
+    noActs: 'No activities yet: make the first one with “New activity”.', activity: 'Activity',
     sessionsLine: (n, s) => `${n} sessions, now scanning session ${s}`, pcOnlyT: 'On the computer',
-    pcOnlyItems: ['Design pictures (logo, signature, stamp)', 'Extra form questions', 'Backups'],
-    pcOnlyNote: 'Issuing and emailing certificates are requested here and carried out on the computer.',
+    pcOnlyItems: ['Reading photos of returned cards and signed attendance sheets', 'Importing old certificates', 'The organizer’s logo on printed documents'],
+    pcOnlyNote: 'Everything else is done on this dashboard: the computer is no longer needed.',
     noChoices: 'The platform on the computer has not published its lists yet (organizations and types): open it once while online.', fTitle: 'Title',
     fKind: 'Activity type', fOrg: 'Organization', fLang: 'Language of the activity and documents', langAr: 'Arabic', langFr: 'French', langEn: 'English',
     fType: 'Main certificate type', fDates: 'Date / days', datesPh: 'e.g. 12 and 13 March 2026', fHours: 'Time or number of hours', fPlace: 'Place',
     fSessions: 'Number of sessions', fMin: 'Minimum attendance (sessions)', minPh: 'All sessions', fTickets: 'Printed tickets', fWa: 'WhatsApp group link',
     fTpl: 'Extra questions from a template', noTpl: 'No extra questions',
     editHint: 'Fields left empty stay as they are. The Google Form follows the title, date and place.',
-    newHint: 'The activity is created here directly, with its Google form in its language and its Drive folder; registrations arrive by themselves. Design and printing are on the computer.',
+    newHint: 'The activity is created here directly, with its Google form in its language and its Drive folder; registrations arrive by themselves.',
     askEdit: 'Save', askNew: 'Create the activity and its form', making: 'Creating the form… up to half a minute', saved: 'Change saved',
     madeAct: 'Activity and form created', madeForm: 'Form created', formFail: 'The activity is saved, but its form could not be created or updated: try again from the Registration step',
     badOrg: 'Organization not found', badVal: 'Invalid value (language or certificate type)',
@@ -643,7 +649,7 @@ const T = {
     siF1: 'Activities, participants and attendance, from any phone or computer', siF2: 'Phone scanning, its links and codes',
     siF3: 'Issuing and emailing certificates, requested here and done by the computer', siH: 'Sign in',
     siD: 'With your platform account: the same username and password.', show: 'Show', hide: 'Hide',
-    siForgot: 'Forgot your password? Your organizer’s administrator gives you a new one from the platform on the computer.', homeT: 'Certificates platform',
+    siForgot: 'Forgot your password? Your organizer’s administrator gives you a new one from the “Accounts” page.', homeT: 'Certificates platform',
     homeD: 'From the registration form to the certificate in the participant’s inbox: follow your activities from anywhere.', kActs: 'current activities',
     kReg: 'registered', kHere: 'confirmed present', kCert: 'certificates issued', kMail: 'emails sent', actsT: 'Activities',
     fSearch: 'Search by title, date or number...', fKinds: 'All kinds', fOrgs: 'All organizers', noMatch: 'No activity matches.',
@@ -655,7 +661,7 @@ const T = {
     dzSaved: 'Design saved', dzLeave: 'Unsaved changes will be lost. Continue?', dzHow: 'Drag each field into place; tap it for its size and font. Nothing is saved until “Save”.',
     dzAdd: 'Add a field', dzText: 'Text', dzImage: 'Image', dzPick: 'Pick a field to edit', dzSize: 'Size', dzWidth: 'Width', dzLines: 'Lines', dzAlign: 'Alignment',
     dzCenter: 'Centre', dzRight: 'Right', dzLeft: 'Left', dzFont: 'Font', dzDefault: 'Default', dzColor: 'Colour', dzBold: 'Bold', dzDigits: 'Digits', dzDate: 'Date format',
-    dzLong: 'Long (7 November 2026)', dzImgPc: 'Pictures (logo, signature, stamp) are added on the computer.', dzSampleName: 'Participant name', wbT: 'Issue from this page', wbD: 'Certificates are drawn in your browser with the same design, uploaded to Drive and added to verification. Keep the page open.',
+    dzLong: 'Long (7 November 2026)', dzImgPc: 'A PNG or JPG picture (logo, signature, stamp). Sized by its width; its height follows the picture.', dzPicBad: 'The picture could not be read', dzSampleName: 'Participant name', wbT: 'Issue from this page', wbD: 'Certificates are drawn in your browser with the same design, uploaded to Drive and added to verification. Keep the page open.',
     wbGo: n => 'Issue ' + n + ' certificate(s) now', wbNone: 'No certificates waiting (present people with a ready design)', wbNoDesign: x => 'No ready design for “' + x + '”: ',
     wbRun: (i, n) => 'Issuing ' + i + ' of ' + n + '... keep the page open', wbDone: (n, f) => n + ' certificate(s) issued' + (f ? ', ' + f + ' failed' : ''), wbSure: n => 'Issue ' + n + ' certificate(s) now? Each gets a permanent number.',
     wbLeave: 'Issuing in progress: closing the page stops it; it resumes with the same numbers.', mqOk: n => n ? n + ' message(s) queued: sent within minutes' : 'No messages waiting', wbRules: 'Run the updated platform on the computer once (it publishes the printing rules), then reload.', dzHowShort: 'File and fields', formOn: 'The form accepts registrations', formOff: 'Form closed: no more registrations', formStop: 'Close and sync',
@@ -687,7 +693,10 @@ const T = {
     fPending: 'Changes waiting for the computer', sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
     sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
     qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
-    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', ogNameAr: 'Name in Arabic', ogNameFr: 'Name in French', ogNameEn: 'Name in English', ogCode: 'Code (in certificate numbers)', ogArch: 'Archived (not offered for new activities)',
+    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', allRun: (i, n) => 'Gathering ' + i + ' of ' + n + '...', allNone: 'No certificates issued yet', zipRun: 'Preparing the ZIP on Drive...', raAsk: 'Reason for revoking every certificate (shown on verification):', raDone: (n, f) => n + ' certificate(s) revoked' + (f ? ', ' + f + ' failed' : ''), daSure: 'Delete this activity? It stays 30 days in the trash.', daValid: 'It has valid certificates: revoke them first, or archive it', daDone: 'Activity moved to the trash', cpDone: 'Copy of the activity made', testTo: 'Address that gets the test message:', testSent: 'Test message sent', mailBusy: 'The daily email quota is nearly used: kept for the participants', qT: 'Extra questions', qD: 'Asked on the form after the basic ones. A new question is added to the form at once.', qAdd: 'Add a question', qTitle: 'Question text',
+    qType: 'Type', qOpts: 'Choices (one per line)', qReq: 'Answer required', qHelp: 'Help (optional)', qAdded: 'Question added to the form', qBad: 'Write the question, and its choices if it is a choice',
+    qTypes: {text: 'Short text', paragraph: 'Long text', choice: 'Single choice', dropdown: 'Dropdown', checkbox: 'Multiple choice', date: 'Date'}, qNone: 'No extra questions',
+    tplT: 'Question templates', tplD: 'Picked when making a new activity: its form comes with their questions.', tplName: 'Template name', tplAdd: 'New template', tplDel: 'Delete the template', bShareT: 'Certificates issued', bShareD: 'Text ready to send by WhatsApp or elsewhere:', bMailed: 'One message with every certificate is queued', bCopy: 'Copy the text', bFail: 'Could not issue: ', ogNameAr: 'Name in Arabic', ogNameFr: 'Name in French', ogNameEn: 'Name in English', ogCode: 'Code (in certificate numbers)', ogArch: 'Archived (not offered for new activities)',
     ogNew: 'New organizer', ogAdd: 'Add the organizer', ogSaved: 'Organizer saved', ogCodeFixed: 'Certificates carry this code: it no longer changes', ogLogo: 'The logo is added on the computer.',
     ogErr: {noname: 'Write the name in Arabic', code: 'Write the code', taken: 'This code is taken', issued: 'Certificates carry this code: it no longer changes', role: 'Not within your rights'},
     setD: 'Applied here at once; the computer takes them at its next sync.', setKinds: 'Kinds of activities (one per line)',
@@ -733,12 +742,12 @@ const T = {
     orgUsers: n => `${n} accounts`, codeOf: c => 'Certificate code: ' + c, setT: 'Platform settings',
     setItems: ['Google account and verification site', 'Kinds and numbering', 'Form templates', 'Document and email texts', 'Backups and updates'],
     myT: 'My account', pwOldL: 'Current password', pwNewL: 'New password (at least 8 characters)', pwNew2: 'Type it again', pwChange: 'Change the password',
-    pwSent: 'Request sent: the password changes within a minute while the platform is open on the computer.', pwMismatch: 'The passwords do not match.',
+    pwSent: 'Password changed', pwMismatch: 'The passwords do not match.',
     rolesT: 'Roles',
     rolesItems: ['Level 1 (general manager): every organizer and activity, the settings and every account.', 'Level 2 (organization manager): every activity of their organizer, revoking, deleting, statistics, and their organizers’ and helpers’ accounts.', 'Level 3 (organizer): the activities they made or whose team they are on.', 'Level 4 (scan helper): attendance in the activities whose team they are on.'],
-    usersHow: 'Each change here is a request the platform on the computer carries out within a minute, then shown here. An activity’s team is set on the computer.',
+    usersHow: 'Each change here applies at once. An activity’s team is set on its page (“Activity team”).',
     unchanged: 'unchanged', stateL: 'Status', accOpenO: 'Open', accCloseO: 'Closed', saveRow: 'Save', newAccT: 'New account', fullName: 'Full name',
-    pwMin: 'Password (at least 8 characters)', createAcc: 'Create the account', staffSent: 'Request sent: carried out by the computer within a minute.',
+    pwMin: 'Password (at least 8 characters)', createAcc: 'Create the account', staffSent: 'Account saved',
     badnew: 'The username (3 to 30 lowercase Latin letters, digits, . _ -), full name and password are required.', orgNeed: 'Choose this account’s organizer.',
     selfNo: 'Nobody changes their own role or closes their own account.', jStaff: 'Account', jMypw: 'Password', pendingReq: 'Account requests',
   },
@@ -1025,8 +1034,8 @@ async function showList(then) {
       : el('div', {className: 'card empty'}, el('div', {style: 'color:var(--gold)'}, ic('cert')), el('p', {textContent: t('noActs')})));
   const vu = new URL('.', location.href).href;
   const aside = [
-    can('organizer') ? el('section', {className: 'card'}, el('h2', {style: 'display:flex;align-items:center;gap:8px'}, ic('sync'), t('reqT')), pcLine(j.pc),
-      jobList(j.jobs) || el('p', {className: 'hint', textContent: t('reqHint')})) : null,
+    can('organizer') && jobList(j.jobs) ? el('section', {className: 'card'}, el('h2', {style: 'display:flex;align-items:center;gap:8px'}, ic('sync'), t('reqT')), pcLine(j.pc),
+      jobList(j.jobs)) : null,  // only while requests made for the computer are listed
     el('section', {className: 'card'}, el('h2', {style: 'display:flex;align-items:center;gap:8px'}, ic('globe'), t('nPlat')),
       el('div', {className: 'plat'}, tile('verify', t('nVerify'), t('platVerify'), vu), tile('award', t('nMeSite'), t('platMe'), vu + 'me.html'),
         tile('lock', t('nPrivacy'), t('platPrivacy'), vu + 'privacy.html'))),
@@ -1135,11 +1144,27 @@ function bundleForm(ch, acts, done, close) {
       want.has('mention') && !has('mention') && t('mention'), ...[...qs.keys()].filter(x => !data.answers[x])].filter(Boolean);
     if (lack.length) { err.textContent = t('lack') + lack.join('، '); return; }
     save.disabled = true;
-    try {
-      const r = await call('request', {kind: 'bundle', data});
-      if (r.status === 'ok') { toast(t('sent')); return done(); }
-      err.textContent = t({noname: 'noname', email: 'badEmail', exists: 'sameWaiting'}[r.status] || 'reqFail');
-    } catch (x) { /* toast shown */ }
+    try {  // added to each activity here, each certificate drawn by this page, then one message with all of them
+      const r = await call('bundle', {data});
+      if (r.status !== 'ok') throw new Error(t({noname: 'noname', email: 'badEmail'}[r.status] || 'reqFail'));
+      const lines = [];
+      for (const [i, x] of r.people.entries()) {
+        save.textContent = t('wbRun')(i + 1, r.people.length);
+        const j = await call('activity', {id: x.id}), a = Object.assign(j.activity, {choices: j.choices, people: j.people});
+        const p = j.people.find(q => q.uid === x.uid), d = await withPictures(await call('designget', {id: a.id, type: p.type || a.cert_type}));
+        if (d.status !== 'ok' || !d.file) throw new Error(a.title + ': ' + t('noDesign'));
+        lines.push(a.title + ': ' + await issueOne(a, p, {bytes: unb64(d.file), layout: d.layout}));
+      }
+      const m = data.email ? await call('bundlemail', {people: r.people}).catch(() => ({})) : {};
+      const text = [[data.first_ar, data.last_ar].filter(Boolean).join(' ') || [data.first_lat, data.last_lat].filter(Boolean).join(' '), ...lines].join('\n');
+      const ta = el('textarea', {rows: Math.min(10, lines.length + 2), readOnly: true, dir: 'auto', value: text});
+      const closeShare = sheet(el('div', {}, el('h2', {className: 'ch'}, ic('cert'), t('bShareT')), m.queued ? el('p', {className: 'hint', textContent: t('bMailed')}) : null,
+        el('p', {className: 'muted', textContent: t('bShareD')}), ta, el('div', {className: 'bar', style: 'margin-top:12px'},
+          btn(t('bCopy'), async () => { try { await navigator.clipboard.writeText(text); toast(t('linkCopied')); } catch (e) { ta.select(); } }),
+          btn(t('close'), () => closeShare(), 'ghost'))));
+      return done();
+    } catch (x) { err.textContent = t('bFail') + (x.message || ''); }
+    save.textContent = t('bSave');
     save.disabled = false;
   };
   return form;
@@ -1194,8 +1219,21 @@ async function showActivity(id, tab) {
   const more = el('details', {className: 'menu'}, el('summary', {className: 'btn sec', textContent: t('more') + ' ▾'}),
     el('div', {className: 'items'}, el('button', {type: 'button', onclick: () => teamSheet(a, j.staff || [], reload)}, ic('people'), t('teamT')),
       el('button', {type: 'button', onclick: archive}, ic('archive'), t(archived ? 'unarchAct' : 'archAct')),
-      ...[['copy', 'dupAct'], ...(can('admin') ? [['alert', 'revokeAll'], ['trash', 'delAct']] : [])]
-      .map(([icon, key]) => el('div', {className: 'lockrow', title: t('onPcT')}, ic(icon), t(key), el('span', {className: 'sp', style: 'flex:1'}), pcTag()))));
+      el('button', {type: 'button', onclick: async () => {
+        const r = await call('actcopy', {id: a.id}).catch(() => ({}));
+        if (r.status === 'ok') { toast(t('cpDone')); location.hash = '#a' + r.id; } else toast(t('saveFail'));
+      }}, ic('copy'), t('dupAct')),
+      can('admin') ? el('button', {type: 'button', className: 'danger', onclick: async () => {
+        const reason = prompt(t('raAsk'));
+        if (!reason || !reason.trim()) return;
+        const r = await call('revokeall', {id: a.id, reason}).catch(() => ({}));
+        if (r.status === 'ok') { toast(t('raDone')(r.revoked, r.failed)); reload(); } else toast(t('saveFail'));
+      }}, ic('alert'), t('revokeAll')) : null,
+      can('admin') ? el('button', {type: 'button', className: 'danger', onclick: async () => {
+        if (!confirm(t('daSure'))) return;
+        const r = await call('actdelete', {id: a.id}).catch(() => ({}));
+        if (r.status === 'ok') { toast(t('daDone')); location.hash = '#'; } else toast(t(r.status === 'valid' ? 'daValid' : 'saveFail'));
+      }}, ic('trash'), t('delAct')) : null));
   const head = el('header', {className: 'acthead rise'},
     el('nav', {className: 'crumbs', ariaLabel: t('nHome')}, el('a', {href: '#'}, ic('home'), t('nHome')), el('span', {textContent: '/'}), el('span', {className: 'ltr', textContent: '#' + a.id})),
     el('div', {className: 'bar', style: 'align-items:flex-start'},
@@ -1257,7 +1295,7 @@ async function showActivity(id, tab) {
           }}, ic('plus'), t('makeForm'))]),
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('ticketsT')),
         el('p', {className: 'muted', style: 'margin-top:0'}, el('b', {style: 'color:var(--ink)', textContent: t('ticketsN')(a.tickets || 0)}), t('ticketsD')(Math.ceil((a.tickets || 0) / 14))),
-        el('div', {className: 'bar'}, el('button', {type: 'button', disabled: !a.tickets, title: a.form ? null : t('prNoForm'), onclick: () => printTickets(a)}, ic('print'), t('ticketsPdf')), el('button', {type: 'button', className: 'ghost', onclick: editAct}, t('ticketsChange')))))];
+        el('div', {className: 'bar'}, el('button', {type: 'button', disabled: !a.tickets, title: a.form ? null : t('prNoForm'), onclick: () => printTickets(a)}, ic('print'), t('ticketsPdf')), el('button', {type: 'button', className: 'ghost', onclick: editAct}, t('ticketsChange'))))), org ? questionsCard(a, reload) : null];
   }
 
   // 2. attendance and participants
@@ -1427,7 +1465,7 @@ async function showActivity(id, tab) {
     const stat = (n, key) => el('div', {className: 'stat'}, el('b', {textContent: n}), el('span', {textContent: t(key)}));
     const out = [];
     if (org) out.push(webIssue(a, people.filter(p => (Number(p.present) === 1 || here(p)) && !p.serial && !p.revoked), reload));
-    if (org) out.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('sync'), t('reqT')), pcLine(j.pc), jobList(j.jobs) || el('p', {className: 'hint', textContent: t('noJobs')})));
+    if (org && jobList(j.jobs)) out.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('sync'), t('reqT')), pcLine(j.pc), jobList(j.jobs)));
     out.push(el('div', {className: 'grid2'},
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('issueT')),
         el('table', {style: 'margin-bottom:12px'}, el('tr', {}, ...['thType', 'thPresent', 'thTodo'].map(k => el('th', {textContent: t(k)}))),
@@ -1438,7 +1476,18 @@ async function showActivity(id, tab) {
           check(present.length > 0, t('chkPresent')(present.length))),
         org ? ask('issue', t('issueAsk')(present.length), 'issueSure', 'lg') : null,
         el('p', {className: 'muted', textContent: t('issueNote')}),
-        issued.length ? el('div', {style: 'margin-top:8px'}, pcBtn(t('refreshT'), 'sync')) : null),
+        org && issued.length ? el('div', {style: 'margin-top:8px'}, btn(t('refreshT'), async e => {  // after a design change: same numbers and links
+          const b = e.currentTarget, ps = issued.filter(p => !p.revoked && p.link);
+          if (!confirm(t('refreshT') + ' (' + ps.length + ')?')) return;
+          b.disabled = true;
+          let ok = 0;
+          for (const [i, p] of ps.entries()) {
+            toast(t('wbRun')(i + 1, ps.length));
+            if (await redrawCert(a, p).catch(() => 'fail') === 'ok') ok++;
+          }
+          toast(t('wbDone')(ok, ps.length - ok));
+          b.disabled = false;
+        }, 'sec')) : null),
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('mail'), t('mailT')),
         el('div', {className: 'stats', style: 'grid-template-columns:repeat(auto-fit,minmax(90px,1fr));margin:10px 0'},
           stat(emailed.length, 'mSentN'), stat(queued, 'mQueued'), stat(todo, 'mTodo'), stat(failed.length, 'mFailed')),
@@ -1455,14 +1504,34 @@ async function showActivity(id, tab) {
           if (r.status === 'ok') { toast(t('mqOk')(r.queued)); return reload(); }
           toast(t(r.status === 'rules' ? 'wbRules' : 'reqFail'));
           b.disabled = false;
-        }}, ic('mail'), t('emailAsk')(todo)) : null, pcBtn(t('previewT'), 'mail'), pcBtn(t('testT'), 'mail')),
+        }}, ic('mail'), t('emailAsk')(todo)) : null, org ? btn(t('previewT'), async () => {  // in a tab of its own, as the participant sees it
+          const w = open('', '_blank');
+          if (!w) return toast(t('prPopup'));
+          const r = await call('mailpreview', {id: a.id}).catch(() => ({}));
+          if (r.status !== 'ok') { w.close(); return toast(t(r.status === 'rules' ? 'wbRules' : 'reqFail')); }
+          w.document.write('<!doctype html><meta charset="utf-8">');
+          w.document.title = r.subject;
+          w.document.body.innerHTML = r.html;
+        }, 'sec') : null,
+        org ? btn(t('testT'), async () => {
+          const to = prompt(t('testTo'));
+          if (!to) return;
+          const r = await call('mailpreview', {id: a.id, to}).catch(() => ({}));
+          toast(t({ok: 'testSent', email: 'badEmail', busy: 'mailBusy', rules: 'wbRules'}[r.status] || 'reqFail'));
+        }, 'ghost') : null),
         el('p', {className: 'muted', textContent: t('mailNote')}))));
     out.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('folder'), t('docsT')),
       el('div', {className: 'docgroups'},
-        el('div', {}, el('h3', {}, ic('print'), t('gPrint')), pcDoc('docAll'), doc('docSign', () => printSign(a, people)), doc('docSummary', () => printSummary(a, people, isPresent))),
-        el('div', {}, el('h3', {}, ic('chat'), t('gChat')), doc('docReport', () => printRecipients(a, people)), pcDoc('docUndelivered')),
-        el('div', {}, el('h3', {}, ic('sheet'), t('gArchive')), pcDoc('docXlsx'), pcDoc('docZip'))),
-      el('div', {className: 'links'}, pcLink('folder', t('lFolder')), pcLink('sheet', t('lSheet')),
+        el('div', {}, el('h3', {}, ic('print'), t('gPrint')), doc('docAll', () => allCertificates(a, people)), doc('docSign', () => printSign(a, people)), doc('docSummary', () => printSummary(a, people, isPresent))),
+        el('div', {}, el('h3', {}, ic('chat'), t('gChat')), doc('docReport', () => printRecipients(a, people)),
+          doc('docUndelivered', () => printShown(a, people.filter(p => p.serial && !p.revoked && p.mail && ['error', 'bounced'].includes(p.mail.status)), t('docUndelivered'), true))),
+        el('div', {}, el('h3', {}, ic('sheet'), t('gArchive')), doc('docXlsx', () => exportXlsx(a, people)), doc('docZip', async () => {
+          toast(t('zipRun'));
+          const r = await call('certzip', {id: a.id}).catch(() => ({}));
+          if (r.status === 'ok') open(r.url, '_blank', 'noopener'); else toast(t(r.status === 'none' ? 'allNone' : 'reqFail'));
+        }))),
+      el('div', {className: 'links'}, gLink('folder', t('lFolder'), a.folder_id && 'https://drive.google.com/drive/folders/' + a.folder_id),
+        gLink('sheet', t('lSheet'), a.sheet_id && 'https://docs.google.com/spreadsheets/d/' + a.sheet_id),
         el('a', {href: new URL('.', location.href).href, target: '_blank', rel: 'noopener'}, ic('verify'), t('lVerify')))));
     return out;
   }
@@ -1683,7 +1752,11 @@ async function certificatePdf(designBytes, layout, values) {
 async function drawCertificate(ctx, layout, values, scale) {
   for (const [k, f] of Object.entries(layout)) {
     if (k === 'qr') { await drawQr(ctx, f, values.qr, scale); continue; }
-    if (k.startsWith('img')) continue;  // pictures added on the computer: drawn there
+    if (k.startsWith('img')) {  // logo, signature, stamp: width given, height from the picture's proportions (as the app)
+      const w = (Number(f.w) || 100) * scale, h = w * (Number(f.ar) || 1);
+      if (f._img) ctx.drawImage(f._img, f.x * scale - w / 2, f.y * scale - h / 2, w, h);
+      continue;
+    }
     const text = k === 'issue_date' && f.datefmt === 'long' ? values.issue_date_long : values[k] || f.text;
     await drawText(ctx, k, f, text, values.lang, scale);
   }
@@ -2016,10 +2089,87 @@ function importSheet(a, close, reload) {
 const answersOf = (a, p) => Object.fromEntries(Object.entries(p.answers || {}).map(([k, v]) => ['x:' + k, v]));  // what a design prints of the form
 
 async function redrawCert(a, p) {  // an issued certificate drawn again (a correction): the same number, file and link
-  const d = await call('designget', {id: a.id, type: p.type || a.cert_type});
+  const d = await withPictures(await call('designget', {id: a.id, type: p.type || a.cert_type}));
   if (d.status !== 'ok' || !d.file) return 'design';
   const pdf = await certificatePdf(unb64(d.file), d.layout, certValues(a, p, answersOf(a, p)));
   return (await call('refile', {id: a.id, uid: p.uid, pdf: b64(new Uint8Array(pdf))})).status;
+}
+
+async function issueOne(a, p, d) {  // one certificate: its number (given once, kept), then its file drawn here; returns its link
+  const n = await call('issuenum', {id: a.id, uid: p.uid});
+  if (n.status !== 'ok') throw new Error(n.status);
+  if (n.file) return p.link || '';
+  const pdf = await certificatePdf(d.bytes, d.layout, certValues(a, Object.assign({}, p, {serial: n.serial}), answersOf(a, p)));
+  const f = await call('issuefile', {id: a.id, uid: p.uid, pdf: b64(new Uint8Array(pdf))});
+  if (f.status !== 'ok') throw new Error(f.status);
+  return f.link;
+}
+
+async function withPictures(r) {  // a design as designget sends it, its pictures ready to draw
+  for (const [k, p] of Object.entries(r.pics || {})) {
+    if (!r.layout[k]) continue;
+    const im = new Image();
+    im.src = 'data:' + p.mime + ';base64,' + p.data;
+    await im.decode().catch(() => {});
+    r.layout[k]._img = im;
+  }
+  return r;
+}
+
+async function pngOf(file) {  // a picture as PNG bytes (at most 1500 px), and its height / width
+  const im = new Image(), url = URL.createObjectURL(file);
+  im.src = url;
+  await im.decode();
+  URL.revokeObjectURL(url);
+  const k = Math.min(1, 1500 / Math.max(im.naturalWidth, im.naturalHeight)), c = el('canvas', {width: Math.round(im.naturalWidth * k), height: Math.round(im.naturalHeight * k)});
+  c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+  return {data: c.toDataURL('image/png').split(',')[1], ar: c.height / c.width, img: c};
+}
+
+function questionFields(q) {  // the boxes of one extra question; read() gives it as the script takes it
+  const title = el('input', {value: q.title || '', dir: 'auto'}), help = el('input', {value: q.help || '', dir: 'auto'});
+  const type = select(Object.entries(t('qTypes')), q.type || 'text'), opts = el('textarea', {rows: 3, dir: 'auto', value: (q.options || []).join('\n')});
+  const req = el('input', {type: 'checkbox', checked: !!q.required}), optBox = labelled(t('qOpts'), opts);
+  const shown = () => { optBox.hidden = !['choice', 'dropdown', 'checkbox'].includes(type.value); };
+  type.onchange = shown; shown();
+  return {node: el('div', {}, el('div', {className: 'grid2'}, labelled(t('qTitle'), title), labelled(t('qType'), type)), optBox, labelled(t('qHelp'), help),
+    el('label', {className: 'row', style: 'gap:8px'}, req, t('qReq'))),
+    read: () => ({title: title.value.trim(), type: type.value, options: opts.value.split('\n').map(x => x.trim()).filter(Boolean), required: req.checked, help: help.value.trim()})};
+}
+
+function questionsCard(a, reload) {  // the activity's extra questions, and one more added to its form
+  return el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('form'), t('qT')), el('span', {className: 'sp'}),
+      btn(t('qAdd'), () => {
+        const f = questionFields({});
+        const go = btn(t('qAdd'), async () => {
+          go.disabled = true;
+          const r = await call('questionadd', {id: a.id, q: f.read()}).catch(() => ({}));
+          go.disabled = false;
+          if (r.status === 'ok') { toast(t('qAdded')); close(); return reload(); }
+          toast(t(r.status === 'bad' ? 'qBad' : 'saveFail'));
+        });
+        const close = sheet(el('div', {}, el('h2', {className: 'ch'}, ic('form'), t('qAdd')), f.node, el('div', {className: 'bar', style: 'margin-top:12px'}, go, btn(t('cancel'), () => close(), 'ghost'))));
+      }, 'sec')),
+    el('p', {className: 'muted', textContent: t('qD')}),
+    (a.questions || []).length ? el('ul', {className: 'pclist'}, ...a.questions.map(q => el('li', {}, ic('text'), el('span', {dir: 'auto', textContent: q.title}))))
+      : el('p', {className: 'hint', textContent: t('qNone')}));
+}
+
+async function allCertificates(a, people) {  // every valid certificate in one PDF (to print for a ceremony), put together here
+  const ps = people.filter(p => p.serial && !p.revoked && /^https:/.test(p.link || '')).sort(byNum('serial'));
+  if (!ps.length) return toast(t('allNone'));
+  await lib('pdflib');
+  const out = await PDFLib.PDFDocument.create();
+  for (const [i, p] of ps.entries()) {
+    toast(t('allRun')(i + 1, ps.length));
+    const r = await call('certfile', {id: a.id, uid: p.uid}).catch(() => ({}));
+    if (r.status !== 'ok') continue;  // imported old ones have no file here
+    const src = await PDFLib.PDFDocument.load(unb64(r.pdf));
+    (await out.copyPages(src, src.getPageIndices())).forEach(pg => out.addPage(pg));
+  }
+  const url = URL.createObjectURL(new Blob([await out.save()], {type: 'application/pdf'}));
+  el('a', {href: url, download: 'certificates-' + a.id + '.pdf'}).click();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
 function webIssue(a, todo, reload) {  // the present people without a certificate, issued one by one from this page
@@ -2028,7 +2178,7 @@ function webIssue(a, todo, reload) {  // the present people without a certificat
   (async () => {
     const designs = {}, types = [...new Set(todo.map(p => p.type || a.cert_type))];
     for (const ty of types) {
-      const r = await call('designget', {id: a.id, type: ty}).catch(() => ({}));
+      const r = await withPictures(await call('designget', {id: a.id, type: ty}).catch(() => ({})));
       const ready = r.status === 'ok' && r.file && ['name', 'name_ar', 'name_lat'].some(k => r.layout && r.layout[k]);
       designs[ty] = ready ? {bytes: unb64(r.file), layout: r.layout} : null;
     }
@@ -2047,15 +2197,7 @@ function webIssue(a, todo, reload) {  // the present people without a certificat
       for (const [i, p] of go.entries()) {
         state.textContent = t('wbRun')(i + 1, go.length);
         try {
-          const n = await call('issuenum', {id: a.id, uid: p.uid});
-          if (n.status !== 'ok') throw new Error(n.status);
-          if (!n.file) {
-            const d = designs[p.type || a.cert_type];
-            const pdf = await certificatePdf(d.bytes, d.layout, certValues(a, Object.assign({}, p, {serial: n.serial}),
-              answersOf(a, p)));
-            const f = await call('issuefile', {id: a.id, uid: p.uid, pdf: b64(new Uint8Array(pdf))});
-            if (f.status !== 'ok') throw new Error(f.status);
-          }
+          await issueOne(a, p, designs[p.type || a.cert_type]);
           ok++;
         } catch (e) { bad++; console.log('issue', p.uid, e); }
         bar.firstChild.style.width = Math.round(100 * (i + 1) / go.length) + '%';
@@ -2081,7 +2223,7 @@ function designStudio(a, people, reload) {
 
   async function load() {
     box.replaceChildren(el('p', {className: 'muted', textContent: t('dzLoading')}));
-    const r = await call('designget', {id: a.id, type}).catch(() => ({}));
+    const r = await withPictures(await call('designget', {id: a.id, type}).catch(() => ({})));
     if (r.status !== 'ok') { box.replaceChildren(el('p', {className: 'err', textContent: t('dzFail') + (r.error ? ' — ' + r.error : '')})); return; }
     layout = r.layout || {};
     pdfBytes = r.file ? unb64(r.file) : null;
@@ -2104,11 +2246,12 @@ function designStudio(a, people, reload) {
   }
 
   async function save() {
-    const r = await call('designsave', {id: a.id, type, layout}).catch(() => ({}));
+    const pics = Object.fromEntries(Object.entries(layout).filter(([, f]) => f._new).map(([k, f]) => [k, f._new]));
+    const r = await call('designsave', {id: a.id, type, layout, pics}).catch(() => ({}));
     if (r.status !== 'ok') return toast(t('dzFail'));
-    layout = r.layout; dirty = false;
+    dirty = false;
     toast(t('dzSaved'));
-    draw();
+    load();  // the pictures as saved on Drive
   }
 
   async function draw() {
@@ -2126,16 +2269,26 @@ function designStudio(a, people, reload) {
     stage.append(bg, fg);
     const props = el('div', {className: 'card flat', style: 'margin:0'});
     const list = el('div', {className: 'bar', style: 'gap:6px;flex-wrap:wrap;margin:10px 0'});
-    const adds = select([['', '+ ' + t('dzAdd')], ...Object.entries(fieldNames()).filter(([k]) => !layout[k]), ['txt', t('dzText')]], '');
+    const picIn = el('input', {type: 'file', accept: 'image/png,image/jpeg', hidden: true, onchange: async e => {
+      try {
+        const p = await pngOf(e.target.files[0]);
+        let i = 1;
+        while (layout['img' + i]) i++;
+        layout['img' + i] = {x: page[0] / 2, y: page[1] / 2, w: 120, ar: p.ar, file: '', _img: p.img, _new: p.data};
+        sel = 'img' + i; dirty = true; draw();
+      } catch (x) { toast(t('dzPicBad')); }
+    }});
+    const adds = select([['', '+ ' + t('dzAdd')], ...Object.entries(fieldNames()).filter(([k]) => !layout[k]), ['txt', t('dzText')], ['img', t('dzImage')]], '');
     adds.onchange = () => {
       let k = adds.value;
       if (!k) return;
+      if (k === 'img') { adds.value = ''; return picIn.click(); }
       if (k === 'txt') { let i = 1; while (layout['txt' + i]) i++; k = 'txt' + i; }
       layout[k] = Object.assign({x: page[0] / 2, y: page[1] / 2}, defaults(k), k.startsWith('txt') ? {text: t('dzText')} : {});
       sel = k; dirty = true; draw();
     };
     box.replaceChildren(head, el('p', {className: 'hint', style: 'margin:0 0 8px', textContent: t('dzHow')}), stage, list,
-      el('div', {className: 'bar'}, adds, el('span', {className: 'sp'}), el('button', {type: 'button', className: 'btn', onclick: save}, ic('check'), t('saveB'))), props);
+      el('div', {className: 'bar'}, adds, picIn, el('span', {className: 'sp'}), el('button', {type: 'button', className: 'btn', onclick: save}, ic('check'), t('saveB'))), props);
     const W = stage.clientWidth || 800, dpr = window.devicePixelRatio || 1, scale = W * dpr / page[0];
     [bg, fg].forEach(c => { c.width = Math.round(page[0] * scale); c.height = Math.round(page[1] * scale); });
     await pg.render({canvasContext: bg.getContext('2d'), viewport: pg.getViewport({scale})}).promise;
@@ -2184,7 +2337,7 @@ function designStudio(a, people, reload) {
             (() => { const c = el('input', {type: 'checkbox', checked: !!f.bold}); c.onchange = () => { f.bold = c.checked; dirty = true; paint(); }; return el('label', {className: 'row', style: 'gap:8px'}, c, t('dzBold')); })(),
             sel2('digits', t('dzDigits'), [['latin', '123'], ['arabic', '١٢٣']])));
         if (sel === 'issue_date') kids.push(sel2('datefmt', t('dzDate'), [['short', '7/11/2026'], ['long', t('dzLong')]]));
-      } else kids.push(el('p', {className: 'hint', textContent: t('dzImgPc')}));
+      } else kids.push(el('div', {className: 'grid2'}, num('w', t('dzWidth'))), el('p', {className: 'hint', textContent: t('dzImgPc')}));
       props.replaceChildren(...kids);
     };
     list.replaceChildren(...chips());
@@ -2474,11 +2627,22 @@ async function showOrg() {  // «الجهة»: the organizers one runs, and for 
     const go = btn(t('setSave'), async () => {
       go.disabled = true;
       const r = await call('settingssave', {data: {kinds: kinds.value, cert_types: types.value, default_lang: lang.value, default_tickets: tickets.value,
-        civ_on_cert: civ.checked, mail_attach: attach.checked, texts}}).catch(() => ({}));
+        civ_on_cert: civ.checked, mail_attach: attach.checked, texts,
+        templates: tpls.map(x => ({id: x.id, name: x.name.value, questions: x.qs.map(q => q.read())}))}}).catch(() => ({}));
       go.disabled = false;
       toast(r.status === 'ok' ? t('setSaved') : r.status === 'types' ? t('setNoTypes') : t('saveFail'));
       if (r.status === 'ok') showOrg();
     });
+    const tpls = S.templates.map(x => ({id: x.id, name: el('input', {value: x.name, dir: 'auto'}), qs: x.questions.map(questionFields)}));
+    const tplBox = el('div');
+    const drawTpls = () => tplBox.replaceChildren(...tpls.map((x, i) => el('div', {className: 'card flat', style: 'margin:8px 0'},
+      el('div', {className: 'bar'}, labelled(t('tplName'), x.name), el('span', {className: 'sp'}), btn(t('tplDel'), () => { tpls.splice(i, 1); drawTpls(); }, 'ghost danger')),
+      ...x.qs.map((q, j) => el('div', {style: 'border-top:1px solid var(--line);padding-top:8px;margin-top:8px'}, q.node,
+        btn(t('del'), () => { x.qs.splice(j, 1); drawTpls(); }, 'ghost danger'))),
+      btn(t('qAdd'), () => { x.qs.push(questionFields({})); drawTpls(); }, 'sec'))),
+      btn(t('tplAdd'), () => { tpls.push({id: Date.now() % 1e9, name: el('input', {dir: 'auto'}), qs: []}); drawTpls(); }, 'sec'));
+    drawTpls();
+    blocks.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('form'), t('tplT')), el('p', {className: 'muted', style: 'margin-top:0', textContent: t('tplD')}), tplBox));
     blocks.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('gear'), t('setT')), el('p', {className: 'muted', style: 'margin-top:0', textContent: t('setD')}),
       labelled(t('setKinds'), kinds), labelled(t('setTypes'), types), el('p', {className: 'hint', textContent: t('setTypesD')}),
       el('div', {className: 'grid2'}, labelled(t('setLang'), lang), labelled(t('setTickets'), tickets)),
