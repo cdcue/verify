@@ -329,7 +329,10 @@ const T = {
     sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
     cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
     dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
-    dSummary: 'التقرير الختامي للنشاط (PDF)',
+    dSummary: 'التقرير الختامي للنشاط (PDF)', prPopup: 'اسمح للصفحة بفتح نافذة جديدة، ثم أعد المحاولة', prNoForm: 'أنشئ الاستمارة أولاً: رمز كل بطاقة يفتحها', prList: 'طباعة هذه اللائحة كما هي معروضة',
+    smT: 'التقرير الختامي', smInfo: 'معلومات النشاط', smNums: 'الأرقام', smByType: 'الشواهد حسب النوع', smBySess: 'الحضور في كل حصة', smKind: 'نوع النشاط',
+    smOrg: 'الجهة المنظمة', smDates: 'التاريخ', smHours: 'المدة', smPlace: 'المكان', smReg: 'المسجلون', smPresent: 'الحاضرون المستحقون', smIssued: 'الشواهد الصادرة',
+    smRevoked: 'الشواهد الملغاة', smMailed: 'أُرسلت بالبريد', smReview: 'تسجيلات تحتاج مراجعة', smCount: 'العدد', smMade: d => 'أُعدّ في ' + d,
     designT: 'تصميم الشواهد',
     designD: 'تصميم الشهادة يتم في المنصة على الحاسوب: رفع التصميم (PDF من Canva أو غيره)، ووضع الاسم ورقم الشهادة ورمز QR عليه بالنقر، ومعاينته وتصغير حجمه.',
     designItems: ['رفع التصميم لكل نوع شهادة', 'وضع المتغيرات على الشهادة ومعاينتها', 'نسخ تصميم من نشاط آخر', 'تصغير حجم التصميم'],
@@ -489,7 +492,10 @@ const T = {
     sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
     contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
     dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
-    dSummary: 'Rapport final (PDF)',
+    dSummary: 'Rapport final (PDF)', prPopup: 'Autorisez la page à ouvrir une fenêtre, puis réessayez', prNoForm: 'Créez d’abord le formulaire : le code de chaque carte l’ouvre', prList: 'Imprimer cette liste telle qu’affichée',
+    smT: 'Rapport final', smInfo: 'L’activité', smNums: 'Les chiffres', smByType: 'Attestations par type', smBySess: 'Présence par séance', smKind: 'Type d’activité',
+    smOrg: 'Organisateur', smDates: 'Dates', smHours: 'Durée', smPlace: 'Lieu', smReg: 'Inscrits', smPresent: 'Présents éligibles', smIssued: 'Attestations émises',
+    smRevoked: 'Attestations annulées', smMailed: 'Envoyées par e-mail', smReview: 'Inscriptions à vérifier', smCount: 'Nombre', smMade: d => 'Établi le ' + d,
     designT: 'Modèles d’attestation',
     designD: 'La conception se fait dans la plateforme sur l’ordinateur : importer le modèle (PDF de Canva ou autre), y placer le nom, le numéro et le code QR, l’aperçu et la réduction de taille.',
     designItems: ['Importer le modèle de chaque type', 'Placer les champs et prévisualiser', 'Copier le modèle d’une autre activité', 'Réduire la taille du modèle'],
@@ -651,7 +657,10 @@ const T = {
     fPending: 'Changes waiting for the computer', sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
     sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
     qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
-    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)',
+    dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', prPopup: 'Allow the page to open a new window, then try again', prNoForm: 'Make the form first: each card’s code opens it', prList: 'Print this list as shown',
+    smT: 'Final report', smInfo: 'The activity', smNums: 'The numbers', smByType: 'Certificates by type', smBySess: 'Attendance per session', smKind: 'Kind of activity',
+    smOrg: 'Organizer', smDates: 'Dates', smHours: 'Duration', smPlace: 'Place', smReg: 'Registered', smPresent: 'Eligible attendees', smIssued: 'Certificates issued',
+    smRevoked: 'Certificates revoked', smMailed: 'Emailed', smReview: 'Registrations to check', smCount: 'Count', smMade: d => 'Made on ' + d,
     designT: 'Certificate designs',
     designD: 'Designs are made in the platform on the computer: upload the design (a PDF from Canva or elsewhere), place the name, number and QR code on it, preview it and make it smaller.',
     designItems: ['Upload a design for each certificate type', 'Place the fields and preview', 'Copy a design from another activity', 'Make the design smaller'],
@@ -1079,6 +1088,7 @@ const pcLink = (icon, label) => el('span', {className: 'pclink', title: t('onPcT
 const gLink = (icon, label, url) => url && /^[\w:/.#?=-]+$/.test(url)  // the activity's Google file, or locked when it has none yet
   ? el('a', {className: 'pclink', href: url, target: '_blank', rel: 'noopener'}, ic(icon), label) : pcLink(icon, label);
 const pcDoc = (key, sub) => el('span', {className: 'doclink locked', title: t('onPcT')}, el('b', {}, t(key), pcTag()), sub ? el('small', {textContent: sub}) : null);
+const doc = (key, run) => el('a', {className: 'doclink', href: '#', role: 'button', onclick: e => { e.preventDefault(); run(); }}, el('b', {textContent: t(key)}));
 const okEmail = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
 const quality = p => [!(p.name_ar || p.name_lat || p.name) && t('qName'), p.email && !okEmail(p.email) && t('qEmail')].filter(Boolean);
 const pname = p => p.name || p.name_ar || p.name_lat || '';
@@ -1097,6 +1107,7 @@ async function showActivity(id, tab) {
   bar(a.title, '#');
   // present now: recorded by the app (its sessions, or "present" for a one-session activity) or by a phone since
   const here = p => sessionsOf(p).includes(a.session) || (a.sessions === 1 && Number(p.present) === 1);
+  const isPresent = p => Number(p.present) === 1 || here(p);  // has the right to a certificate
   const issued = people.filter(p => p.serial), emailed = people.filter(p => Number(p.emailed) === 1);
   const reload = () => showActivity(a.id, tab);
   const editAct = () => { const close = sheet(activityForm(j.choices, a, () => { close(); reload(); }, () => close())); };
@@ -1179,7 +1190,7 @@ async function showActivity(id, tab) {
           }}, ic('plus'), t('makeForm'))]),
       el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('ticketsT')),
         el('p', {className: 'muted', style: 'margin-top:0'}, el('b', {style: 'color:var(--ink)', textContent: t('ticketsN')(a.tickets || 0)}), t('ticketsD')(Math.ceil((a.tickets || 0) / 14))),
-        el('div', {className: 'bar'}, pcBtn(t('ticketsPdf'), 'print'), el('button', {type: 'button', className: 'ghost', onclick: editAct}, t('ticketsChange')))))];
+        el('div', {className: 'bar'}, el('button', {type: 'button', disabled: !a.tickets, title: a.form ? null : t('prNoForm'), onclick: () => printTickets(a)}, ic('print'), t('ticketsPdf')), el('button', {type: 'button', className: 'ghost', onclick: editAct}, t('ticketsChange')))))];
   }
 
   // 2. attendance and participants
@@ -1295,9 +1306,10 @@ async function showActivity(id, tab) {
                   mail: p => p.mail && p.mail.status === 'error', pending: p => p.pending};
     const order = {name: (x, y) => pname(x).localeCompare(pname(y), 'ar'), ticket: (x, y) => String(x.ticket || '~').localeCompare(String(y.ticket || '~'), 'en', {numeric: true}),
                    serial: (x, y) => String(x.serial || '~').localeCompare(String(y.serial || '~'), 'en', {numeric: true}), here: (x, y) => here(y) - here(x)};
+    let shown = [];
     function draw() {
       const s = q.value.trim().toLowerCase();
-      const shown = persons.filter(p => keep[f.value](p) && (!s || [pname(p), p.name_ar, p.name_lat, p.ticket, p.serial, p.email, p.phone].join(' ').toLowerCase().includes(s)))
+      shown = persons.filter(p => keep[f.value](p) && (!s || [pname(p), p.name_ar, p.name_lat, p.ticket, p.serial, p.email, p.phone].join(' ').toLowerCase().includes(s)))
         .sort(order[so.value]);
       tb.replaceChildren(...shown.map(row));
       count.textContent = '(' + t('countOf')(shown.length, persons.length) + ')';
@@ -1305,7 +1317,8 @@ async function showActivity(id, tab) {
     [q, f, so].forEach(x => x.addEventListener('input', draw));
     draw();
     const docs = el('details', {className: 'menu'}, el('summary', {className: 'btn sec'}, ic('sheet'), t('docsMenu') + ' ▾'),
-      el('div', {className: 'items'}, ...['dExport', 'dImport', 'dSign', 'dLister', 'dSummary'].map(k =>
+      el('div', {className: 'items'}, btn(t('dSign'), () => printSign(a, people), 'ghost'), btn(t('prList'), () => printShown(a, shown, f.selectedOptions[0].textContent, org), 'ghost'),
+        btn(t('dSummary'), () => printSummary(a, people, isPresent), 'ghost'), ...['dExport', 'dImport'].map(k =>
         el('div', {className: 'lockrow', title: t('onPcT')}, t(k), el('span', {style: 'flex:1'}), pcTag()))));
     const cols = [t('hereCol'), t('ticket'), t('name'), t('certType'), t('cert'), ...(org ? [t('contact'), ''] : [])];
     return el('div', {className: 'card'},
@@ -1334,7 +1347,7 @@ async function showActivity(id, tab) {
 
   // 4. issuing and emailing: asked for here, carried out by the computer
   function issue() {
-    const present = people.filter(p => Number(p.present) === 1 || here(p));
+    const present = people.filter(isPresent);
     const types = [...new Set([...a.types, ...people.map(p => p.type).filter(Boolean)])];
     const problems = people.filter(p => quality(p).length).length, pending = people.filter(p => p.pending).length;
     const live = issued.filter(p => !p.revoked);
@@ -1379,8 +1392,8 @@ async function showActivity(id, tab) {
         el('p', {className: 'muted', textContent: t('mailNote')}))));
     out.push(el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('folder'), t('docsT')),
       el('div', {className: 'docgroups'},
-        el('div', {}, el('h3', {}, ic('print'), t('gPrint')), pcDoc('docAll'), pcDoc('docSign'), pcDoc('docSummary')),
-        el('div', {}, el('h3', {}, ic('chat'), t('gChat')), pcDoc('docReport'), pcDoc('docUndelivered')),
+        el('div', {}, el('h3', {}, ic('print'), t('gPrint')), pcDoc('docAll'), doc('docSign', () => printSign(a, people)), doc('docSummary', () => printSummary(a, people, isPresent))),
+        el('div', {}, el('h3', {}, ic('chat'), t('gChat')), doc('docReport', () => printRecipients(a, people)), pcDoc('docUndelivered')),
         el('div', {}, el('h3', {}, ic('sheet'), t('gArchive')), pcDoc('docXlsx'), pcDoc('docZip'))),
       el('div', {className: 'links'}, pcLink('folder', t('lFolder')), pcLink('sheet', t('lSheet')),
         el('a', {href: new URL('.', location.href).href, target: '_blank', rel: 'noopener'}, ic('verify'), t('lVerify')))));
@@ -1631,6 +1644,167 @@ async function designPdf(file) {
 }
 const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 32768) s += String.fromCharCode(...bytes.subarray(i, i + 32768)); return btoa(s); };
 const unb64 = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
+
+// ---------- printables: laid out here, printed by the browser (or saved as PDF from its print window) ----------
+// The tickets and the signing sheet keep the computer's layout (core.tickets_pdf, core.sign_layout): the signing sheet's
+// boxes sit where the reader of signed sheets looks for them, next to each row's code.
+const printWords = a => ((a.choices || {}).print || {})[a.lang];  // published by the computer with the printing rules
+const docColor = a => a.color || (a.choices || {}).color || '#0b3b5c';
+const byNum = k => (x, y) => String(x[k] || '~').localeCompare(String(y[k] || '~'), 'en', {numeric: true});
+const nameIn = (p, lang) => (lang === 'ar' ? p.name_ar || p.name_lat : p.name_lat || p.name_ar) || p.name || '';
+
+function qrImg(text, side, quiet) {  // a QR code as a picture that stays sharp at any size; quiet: its white margin, in modules
+  const q = qrcode(0, 'M');
+  q.addData(text);
+  q.make();
+  const n = q.getModuleCount(), m = quiet || 0;
+  let d = '';
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) d += 'M' + c + ' ' + r + 'h1v1h-1z';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${-m} ${-m} ${n + 2 * m} ${n + 2 * m}" shape-rendering="crispEdges">`
+    + `<rect x="${-m}" y="${-m}" width="${n + 2 * m}" height="${n + 2 * m}" fill="#fff"/><path d="${d}"/></svg>`;
+  return el('img', {alt: '', style: `width:${side}pt;height:${side}pt;display:block`, src: 'data:image/svg+xml,' + encodeURIComponent(svg)});
+}
+
+// the document in a new tab, then the browser's print window; the tab opens before anything is awaited (pop-up blockers)
+async function printDoc(name, lang, css, build) {
+  const w = open('', '_blank');
+  if (!w) return toast(t('prPopup'));
+  const d = w.document, font = f => 'url(' + new URL(f, location.href).href + ')';
+  d.open();
+  d.write('<!doctype html><html><head><meta charset="utf-8"></head><body></body></html>');
+  d.close();
+  d.title = name;
+  Object.assign(d.documentElement, {lang, dir: lang === 'ar' ? 'rtl' : 'ltr'});
+  d.head.append(el('style', {textContent: `@font-face {font-family: plex; src: ${font('IBMPlexSansArabic-Regular.ttf')};}
+@font-face {font-family: plex; font-weight: bold; src: ${font('IBMPlexSansArabic-Bold.ttf')};}
+* {box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+body {margin: 0; font-family: plex, sans-serif; color: #1b2433; background: #fff;}
+.pg {position: relative; overflow: hidden; break-after: page;} .pg:last-child {break-after: auto;}
+@media screen {body {background: #e9edf2; padding: 12px 0;} .pg, .doc {background: #fff; margin: 0 auto 12px; box-shadow: 0 1px 4px #0003;} .doc {max-width: 190mm; padding: 12mm;}}
+.doc h1 {text-align: center; font-size: 17px; margin: 2px 0;} .doc p.sub {text-align: center; font-size: 10px; color: #5d6b7a; margin: 2px 0;}
+.doc h3 {font-size: 12px; margin: 16px 0 5px;} .doc table {border-collapse: collapse; width: 100%; margin-top: 10px;}
+.doc th, .doc td {border: 1px solid #d3dae3; padding: 5px 6px; font-size: 10px; text-align: start;} .doc th {color: #fff; font-weight: bold;}
+.doc tr:nth-child(even) td {background: #f4f7fa;} .doc thead {display: table-header-group;} .doc tr {break-inside: avoid;}
+.ltr {direction: ltr; unicode-bidi: embed;}
+` + css}));
+  try {
+    await lib('qr');
+    d.body.append(...[].concat(await build()));
+  } catch (e) {
+    console.log('print', e);
+    w.close();
+    return toast(t('reqFail'));
+  }
+  await Promise.all(['normal', 'bold'].map(x => d.fonts.load(x + ' 10pt plex', 'اب'))).catch(() => {});
+  w.focus();
+  w.print();
+}
+
+function printTickets(a) {  // 14 cards per A4 sheet, each QR opens the form with its number filled in
+  const P = printWords(a), c = docColor(a);
+  if (!P) return toast(t('wbRules'));
+  if (!a.form) return toast(t('prNoForm'));
+  const url = s => a.ticket_q ? a.form + (a.form.includes('?') ? '&' : '?') + 'usp=pp_url&entry.' + parseInt(a.ticket_q, 16) + '=' + s : a.form;
+  printDoc('tickets-' + a.id, a.lang, `@page {size: A4; margin: 0}
+.pg {width: 210mm; height: 296.8mm; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(7, 1fr);}
+.tk {display: flex; border: 0 dashed #bfbfbf; border-width: 0 0 .4pt .4pt; overflow: hidden;}
+.stub {width: 100pt; flex: none; background: ${c}14; border-inline-end: 1.5pt solid ${c}; display: flex; flex-direction: column; align-items: center; padding-top: 10pt; text-align: center;}
+.stub small {font-size: 6.5pt; color: #666; margin-top: 2pt;} .stub b {font: bold 13pt Helvetica, Arial, sans-serif; color: ${c}; margin: auto 0 8pt;}
+.bd {flex: 1; min-width: 0; padding: 8pt 12pt 7pt; display: flex; flex-direction: column;}
+.org {font-size: 7pt; color: ${c}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.ti {font-size: 10pt; font-weight: bold; line-height: 1.2; max-height: 24pt; overflow: hidden; margin-top: 1pt;} .dt {font-size: 7pt; color: #666;}
+.ln {font-size: 6.5pt; color: #666; height: 21pt; display: flex; align-items: flex-end; border-bottom: .5pt solid #b8b8b8;}
+.hint {font-size: 5.5pt; color: #888; margin-top: auto;}`, () => {
+    const pages = [];
+    for (let i = 1; i <= (a.tickets || 0); i++) {
+      if (i % 14 === 1) pages.push(el('div', {className: 'pg'}));
+      const s = 'T' + a.id + '-' + String(i).padStart(3, '0');
+      pages[pages.length - 1].append(el('div', {className: 'tk'},
+        el('div', {className: 'stub'}, qrImg(url(s), 72, 2), el('small', {textContent: P.t_ticket}), el('b', {textContent: s})),
+        el('div', {className: 'bd'}, el('div', {className: 'org', textContent: a.org || ''}), el('div', {className: 'ti', textContent: a.title}),
+          el('div', {className: 'dt', textContent: a.dates || ''}), el('div', {className: 'ln', textContent: P.t_name_ar}),
+          el('div', {className: 'ln', textContent: P.t_name_lat}), el('div', {className: 'hint', textContent: a.t_hint || P.t_hint}))));
+    }
+    return pages;
+  });
+}
+
+function printSign(a, people) {  // the signing sheet: a code on each row, a box per session (one box past 6 sessions)
+  const P = printWords(a), c = docColor(a);
+  if (!P) return toast(t('wbRules'));
+  const n = a.sessions > 1 && a.sessions <= 6 ? a.sessions : 1, land = n > 3, W = land ? 841.89 : 595.28, H = land ? 595.28 : 841.89;
+  const inner = W - 60, signW = n === 1 ? 120 : Math.max(64, Math.min(110, (inner - 26 - 36 - 54 - 170) / n));  // as core.sign_layout
+  const widths = [26, 36, inner - 26 - 36 - 54 - signW * n, 54, ...Array(n).fill(signW)], per = Math.floor((H - 44 - 96 - 22) / 36);
+  const rows = people.filter(p => !p.of).sort((x, y) => !x.ticket - !y.ticket || byNum('ticket')(x, y))
+    .map(p => [p.ticket || (p.pid ? 'U' + a.id + '-' + p.pid : ''), nameIn(p, a.lang), p.ticket || '']).concat(Array(5).fill(['', '', '']));
+  const heads = [P.h_no, '', P.h_name, P.h_ticket, ...Array.from({length: n}, (_, i) => n === 1 ? P.h_sign : P.h_sign + ' ' + (i + 1))];
+  const pages = Math.ceil(rows.length / per);
+  printDoc('sign-' + a.id, a.lang, `@page {size: A4 ${land ? 'landscape' : 'portrait'}; margin: 0}
+.pg {width: ${W}pt; height: ${H - .5}pt;}
+.pg h1, .pg .sub, .ft {position: absolute; left: 30pt; right: 30pt; margin: 0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.pg h1 {top: 22pt; font-size: 15pt; line-height: 24pt; color: ${c};} .pg .sub {top: 48pt; font-size: 9pt; color: #5d6b7a;}
+table {position: absolute; top: 96pt; left: 30pt; width: ${inner}pt; border-collapse: collapse; table-layout: fixed; border: .8pt solid #b3bcc9;}
+th {height: 22pt; padding: 0 3pt; background: ${c}; color: #fff; font-size: 8.5pt; border: .6pt solid #d4d9e3;}
+td {height: 36pt; padding: 0; border: .6pt solid #d4d9e3; text-align: center; font: 9pt Helvetica, Arial, sans-serif; color: #334050;}
+td.nm {font: 10pt plex, sans-serif; color: #1b2433; text-align: start; padding: 0 6pt; line-height: 1.25; overflow: hidden;} td.qr {vertical-align: top; padding: 5pt;}
+tr:nth-child(even) td {background: #f4f7fa;}
+.ft {bottom: 16pt; font-size: 7.5pt; color: #7a8796; display: flex; justify-content: space-between; border-top: .6pt solid #d4d9e3; padding-top: 4pt;}`,
+  () => Array.from({length: pages}, (_, k) => el('div', {className: 'pg'},
+    el('h1', {textContent: P.sign_title + ' — ' + a.title}), el('p', {className: 'sub', textContent: [a.org, a.dates].filter(Boolean).join(' · ')}),
+    el('table', {}, el('colgroup', {}, ...widths.map(x => el('col', {style: 'width:' + x + 'pt'}))),
+      el('thead', {}, el('tr', {}, ...heads.map(h => el('th', {textContent: h})))),
+      el('tbody', {}, ...rows.slice(k * per, (k + 1) * per).map(([code, name, ticket], i) => el('tr', {},
+        el('td', {textContent: k * per + i + 1}), el('td', {className: 'qr'}, code ? qrImg(code, 26) : null),
+        el('td', {className: 'nm', dir: 'auto', textContent: name}), el('td', {textContent: ticket}), ...Array.from({length: n}, () => el('td')))))),
+    el('div', {className: 'ft'}, el('span', {textContent: [a.org, a.title].filter(Boolean).join(' — ')}), el('span', {className: 'ltr', textContent: (k + 1) + ' / ' + pages})))));
+}
+
+function docPage(a, title, sub, ...body) {  // a flowing document (lists, report) in the organizer's colour
+  const c = docColor(a);
+  return el('div', {className: 'doc'}, el('h1', {style: 'color:' + c, textContent: title}), el('p', {className: 'sub', textContent: sub}), ...body);
+}
+function docTable(a, heads, rows, widths) {
+  const c = docColor(a);
+  return el('table', {}, widths ? el('colgroup', {}, ...widths.map(x => el('col', {style: 'width:' + x + '%'}))) : null,
+    heads ? el('thead', {}, el('tr', {}, ...heads.map(h => el('th', {style: 'background:' + c, textContent: h})))) : null,
+    el('tbody', {}, ...rows.map(r => el('tr', {}, ...r.map(v => el('td', {dir: 'auto'}, v == null ? '' : v))))));
+}
+const DOC_CSS = '@page {size: A4; margin: 14mm 12mm}';
+
+function printRecipients(a, people) {  // the valid certificates, with their links (clickable in the saved PDF)
+  const P = printWords(a), iss = (a.choices || {}).issue || {};
+  if (!P) return toast(t('wbRules'));
+  const rows = people.filter(p => p.serial && !p.revoked).sort(byNum('serial')).map((p, i) => [i + 1, certValues(a, p).name,
+    el('span', {className: 'ltr', textContent: p.serial}), /^https:\/\//.test(p.link) ? el('a', {href: p.link, style: 'color:' + docColor(a), textContent: P.h_link}) : '']);
+  printDoc('list-' + a.id, a.lang, DOC_CSS, () => docPage(a, P.list_title + ' — ' + a.title, [a.org, a.dates].filter(Boolean).join(' · '),
+    iss.verify_url ? el('p', {className: 'sub ltr', textContent: iss.verify_url}) : null,
+    docTable(a, [P.h_no, P.h_name, P.h_serial, P.h_link], rows, [8, 50, 24, 18])));
+}
+
+function printShown(a, shown, what, org) {  // the people's table as it is filtered on the screen, in the interface's language
+  const rows = shown.map((p, i) => [i + 1, el('span', {className: 'ltr', textContent: p.ticket || ''}), pname(p), sessionsOf(p).length || Number(p.present) === 1 ? '✓' : '',
+    p.type || a.cert_type || '', el('span', {className: 'ltr', textContent: p.serial || ''}), ...(org ? [el('span', {className: 'ltr', textContent: [p.email, p.phone].filter(Boolean).join(' · ')})] : [])]);
+  printDoc('people-' + a.id, UI.lang, DOC_CSS, () => docPage(a, a.title, [a.org, a.dates, what + ' (' + shown.length + ')'].filter(Boolean).join(' · '),
+    docTable(a, ['#', t('ticket'), t('name'), t('hereCol'), t('certType'), t('cert'), ...(org ? [t('contact')] : [])], rows)));
+}
+
+function printSummary(a, people, present) {  // the final report, as the computer's summary.pdf (without the form's answers)
+  const persons = people.filter(p => !p.of), issued = people.filter(p => p.serial && !p.revoked), n = persons.length;
+  const pct = (k, m) => m ? k + ' (' + Math.round(100 * k / m) + '%)' : String(k);
+  const sec = (title, heads, rows) => rows.length ? [el('h3', {style: 'color:' + docColor(a), textContent: title}), docTable(a, heads, rows, heads ? null : [40, 60])] : [];
+  const kv = rows => rows.filter(r => r[1] !== '' && r[1] != null);
+  const types = {};
+  issued.forEach(p => { const k = p.type || a.cert_type; types[k] = (types[k] || 0) + 1; });
+  printDoc('summary-' + a.id, UI.lang, DOC_CSS, () => docPage(a, t('smT') + ' — ' + a.title,
+    [a.org, a.dates, t('smMade')(UI.fmtDate(new Date(), {day: 'numeric', month: 'long', year: 'numeric'}))].filter(Boolean).join(' · '),
+    ...sec(t('smInfo'), null, kv([[t('smKind'), a.kind || ''], [t('smOrg'), a.org || ''], [t('smDates'), a.dates || ''], [t('smHours'), a.hours || ''], [t('smPlace'), a.place || '']])),
+    ...sec(t('smNums'), null, [[t('smReg'), n], [t('smPresent'), pct(persons.filter(present).length, n)], [t('smIssued'), issued.length],
+      [t('smRevoked'), people.filter(p => p.revoked).length], [t('smMailed'), pct(issued.filter(p => Number(p.emailed) === 1 || (p.mail && p.mail.status === 'sent')).length, issued.length)],
+      [t('smReview'), persons.filter(p => quality(p).length).length]]),
+    ...sec(t('smByType'), [t('certType'), t('smCount')], Object.entries(types).sort((x, y) => y[1] - x[1])),
+    ...(a.sessions > 1 ? sec(t('smBySess'), ['', t('smCount')], Array.from({length: a.sessions}, (_, i) =>
+      [t('sessionN')(i + 1), pct(persons.filter(p => sessionsOf(p).includes(i + 1)).length, n)])) : [])));
+}
 
 function webIssue(a, todo, reload) {  // the present people without a certificate, issued one by one from this page
   const box = el('div', {className: 'card'}, el('h2', {className: 'ch'}, ic('cert'), t('wbT')), el('p', {className: 'muted', textContent: t('dzLoading')}));
