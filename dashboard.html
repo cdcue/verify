@@ -7,8 +7,8 @@
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0b3b5c">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  font-src https://fonts.gstatic.com; connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; worker-src blob: https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com; connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data: blob:; manifest-src 'self'; base-uri 'none'; form-action 'none'">
 <title>لوحة المنظمين · منصة الشواهد</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b3b5c'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' fill='none' stroke='%23d9a441' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -294,7 +294,12 @@ const T = {
     allDone: 'اكتملت كل المراحل', nReg: 'مسجل', nHere: 'حاضر', nCert: 'شهادة', copyLink: 'نسخ الرابط', noDate: 'بدون تاريخ',
     platVerify: 'أي شخص يتحقق من صحة شهادة برقمها أو برمز QR فيها.', platMe: 'المشاركون يجدون كل شواهدهم بحسابهم.',
     platPrivacy: 'ما تحفظه المنصة من بيانات وكيف تُستعمل.', nPrivacy: 'سياسة الخصوصية', allOrgs: 'كل الجهات', more: 'المزيد', close: 'إغلاق',
-    dupAct: 'نسخ كنشاط جديد (مع التصاميم)', archAct: 'أرشفة النشاط', formOn: 'الاستمارة تقبل التسجيلات', formOff: 'الاستمارة موقوفة: لا تقبل تسجيلات', formStop: 'إيقاف التسجيل ومزامنة',
+    dupAct: 'نسخ كنشاط جديد (مع التصاميم)', archAct: 'أرشفة النشاط', dzFields: {name: 'الاسم الكامل (بلغة النشاط)', name_ar: 'الاسم بالعربية', name_lat: 'الاسم باللاتينية', serial: 'رقم الشهادة', qr: 'رمز QR للتحقق', mention: 'الميزة / النتيجة', title: 'عنوان النشاط', dates: 'تاريخ النشاط', hours: 'المدة / الساعات', place: 'المكان', org: 'الجهة المنظمة', issue_date: 'تاريخ الإصدار', cert_type: 'نوع الشهادة'}, dzLoading: 'جارٍ تحميل التصميم...', dzFail: 'تعذر', dzNone: 'لا يوجد تصميم لهذا النوع بعد: ارفع ملف التصميم (PDF من Canva، أو صورة PNG/JPG).',
+    dzUpload: 'رفع ملف التصميم', dzReplace: 'تغيير ملف التصميم', dzPreparing: 'يُجهَّز الملف...', dzBig: 'الملف كبير جداً بعد التصغير', dzUploaded: 'رُفع التصميم',
+    dzSaved: 'حُفظ التصميم', dzLeave: 'تغييرات غير محفوظة ستضيع. متابعة؟', dzHow: 'اسحب كل متغير إلى مكانه، واختره لتغيير حجمه وخطه. لا يُحفظ شيء إلا بزر «حفظ».',
+    dzAdd: 'إضافة متغير', dzText: 'نص', dzImage: 'صورة', dzPick: 'اختر متغيراً لتعديله', dzSize: 'الحجم', dzWidth: 'العرض', dzLines: 'الأسطر', dzAlign: 'المحاذاة',
+    dzCenter: 'وسط', dzRight: 'يمين', dzLeft: 'يسار', dzFont: 'الخط', dzDefault: 'الافتراضي', dzColor: 'اللون', dzBold: 'عريض', dzDigits: 'الأرقام', dzDate: 'صيغة التاريخ',
+    dzLong: 'طويلة (7 نونبر 2026)', dzImgPc: 'الصور (شعار، توقيع، ختم) تُضاف من البرنامج على الحاسوب.', dzSampleName: 'اسم المشارك', dzHowShort: 'الملف ومواضع المتغيرات', formOn: 'الاستمارة تقبل التسجيلات', formOff: 'الاستمارة موقوفة: لا تقبل تسجيلات', formStop: 'إيقاف التسجيل ومزامنة',
     formReopen: 'إعادة فتح الاستمارة', formStopSure: 'إيقاف استقبال التسجيلات الآن؟ تصل الردود الأخيرة مباشرة، ويمكن إعادة الفتح متى شئت.',
     formStopped: n => 'أُوقفت الاستمارة' + (n ? '، ووصل ' + n + ' تسجيلاً جديداً' : ''), formReopened: 'أُعيد فتح الاستمارة', formNoPerm: 'تعذر: أذن لـ Google Forms في Apps Script (autoriser)',
     newRegs: n => 'وصل ' + n + ' تسجيلاً جديداً', unarchAct: 'إخراج من الأرشيف', archOk: 'أُرشف النشاط', unarchOk: 'عاد النشاط إلى القائمة',
@@ -444,7 +449,12 @@ const T = {
     nReg: 'inscrits', nHere: 'présents', nCert: 'attestations', copyLink: 'Copier le lien', noDate: 'Sans date',
     platVerify: 'Chacun vérifie une attestation par son numéro ou son code QR.', platMe: 'Les participants retrouvent toutes leurs attestations.',
     platPrivacy: 'Les données conservées et leur usage.', nPrivacy: 'Confidentialité', allOrgs: 'Tous les organismes', more: 'Plus', close: 'Fermer',
-    dupAct: 'Dupliquer (avec les modèles)', archAct: 'Archiver l’activité', formOn: 'Le formulaire accepte les inscriptions', formOff: 'Formulaire fermé : plus d’inscriptions', formStop: 'Fermer et synchroniser',
+    dupAct: 'Dupliquer (avec les modèles)', archAct: 'Archiver l’activité', dzFields: {name: 'Nom complet (langue de l’activité)', name_ar: 'Nom en arabe', name_lat: 'Nom en latin', serial: 'Numéro', qr: 'QR de vérification', mention: 'Mention / résultat', title: 'Titre de l’activité', dates: 'Dates', hours: 'Durée / heures', place: 'Lieu', org: 'Organisateur', issue_date: 'Date d’émission', cert_type: 'Type d’attestation'}, dzLoading: 'Chargement du modèle...', dzFail: 'Échec', dzNone: 'Pas encore de modèle pour ce type : envoyez le fichier (PDF de Canva, ou image PNG/JPG).',
+    dzUpload: 'Envoyer le modèle', dzReplace: 'Changer le fichier', dzPreparing: 'Préparation du fichier...', dzBig: 'Fichier trop lourd même réduit', dzUploaded: 'Modèle envoyé',
+    dzSaved: 'Modèle enregistré', dzLeave: 'Les changements non enregistrés seront perdus. Continuer ?', dzHow: 'Glissez chaque champ à sa place ; touchez-le pour sa taille et sa police. Rien n’est enregistré sans « Enregistrer ».',
+    dzAdd: 'Ajouter un champ', dzText: 'Texte', dzImage: 'Image', dzPick: 'Choisissez un champ', dzSize: 'Taille', dzWidth: 'Largeur', dzLines: 'Lignes', dzAlign: 'Alignement',
+    dzCenter: 'Centre', dzRight: 'Droite', dzLeft: 'Gauche', dzFont: 'Police', dzDefault: 'Par défaut', dzColor: 'Couleur', dzBold: 'Gras', dzDigits: 'Chiffres', dzDate: 'Format de date',
+    dzLong: 'Long (7 novembre 2026)', dzImgPc: 'Les images (logo, signature, cachet) s’ajoutent sur l’ordinateur.', dzSampleName: 'Nom du participant', dzHowShort: 'Fichier et champs', formOn: 'Le formulaire accepte les inscriptions', formOff: 'Formulaire fermé : plus d’inscriptions', formStop: 'Fermer et synchroniser',
     formReopen: 'Rouvrir le formulaire', formStopSure: 'Fermer les inscriptions maintenant ? Les dernières réponses arrivent tout de suite ; vous pourrez rouvrir.',
     formStopped: n => 'Formulaire fermé' + (n ? ', ' + n + ' nouvelle(s) inscription(s)' : ''), formReopened: 'Formulaire rouvert', formNoPerm: 'Échec : autorisez Google Forms dans Apps Script (autoriser)',
     newRegs: n => n + ' nouvelle(s) inscription(s)', unarchAct: 'Désarchiver', archOk: 'Activité archivée', unarchOk: 'Activité de retour dans la liste',
@@ -598,7 +608,12 @@ const T = {
     st: ['Registration form', 'Attendance', 'Issuing', 'Emailing'], nextStep: 'Next step: ', allDone: 'Every step is done', nReg: 'registered',
     nHere: 'present', nCert: 'certificates', copyLink: 'Copy link', noDate: 'No date', platVerify: 'Anyone checks a certificate by its number or QR code.',
     platMe: 'Participants find all their certificates.', platPrivacy: 'What the platform keeps and how it is used.', nPrivacy: 'Privacy',
-    allOrgs: 'All organizers', more: 'More', close: 'Close', dupAct: 'Duplicate (with designs)', archAct: 'Archive the activity', formOn: 'The form accepts registrations', formOff: 'Form closed: no more registrations', formStop: 'Close and sync',
+    allOrgs: 'All organizers', more: 'More', close: 'Close', dupAct: 'Duplicate (with designs)', archAct: 'Archive the activity', dzFields: {name: 'Full name (activity language)', name_ar: 'Name in Arabic', name_lat: 'Name in Latin letters', serial: 'Certificate number', qr: 'Verification QR', mention: 'Grade / result', title: 'Activity title', dates: 'Dates', hours: 'Duration / hours', place: 'Place', org: 'Organizer', issue_date: 'Issue date', cert_type: 'Certificate type'}, dzLoading: 'Loading the design...', dzFail: 'Failed', dzNone: 'No design for this type yet: upload its file (PDF from Canva, or a PNG/JPG image).',
+    dzUpload: 'Upload the design', dzReplace: 'Change the file', dzPreparing: 'Preparing the file...', dzBig: 'File too large even reduced', dzUploaded: 'Design uploaded',
+    dzSaved: 'Design saved', dzLeave: 'Unsaved changes will be lost. Continue?', dzHow: 'Drag each field into place; tap it for its size and font. Nothing is saved until “Save”.',
+    dzAdd: 'Add a field', dzText: 'Text', dzImage: 'Image', dzPick: 'Pick a field to edit', dzSize: 'Size', dzWidth: 'Width', dzLines: 'Lines', dzAlign: 'Alignment',
+    dzCenter: 'Centre', dzRight: 'Right', dzLeft: 'Left', dzFont: 'Font', dzDefault: 'Default', dzColor: 'Colour', dzBold: 'Bold', dzDigits: 'Digits', dzDate: 'Date format',
+    dzLong: 'Long (7 November 2026)', dzImgPc: 'Pictures (logo, signature, stamp) are added on the computer.', dzSampleName: 'Participant name', dzHowShort: 'File and fields', formOn: 'The form accepts registrations', formOff: 'Form closed: no more registrations', formStop: 'Close and sync',
     formReopen: 'Reopen the form', formStopSure: 'Close registration now? The last answers come in at once; you can reopen any time.',
     formStopped: n => 'Form closed' + (n ? ', ' + n + ' new registration(s)' : ''), formReopened: 'Form reopened', formNoPerm: 'Failed: allow Google Forms in Apps Script (autoriser)',
     newRegs: n => n + ' new registration(s)', unarchAct: 'Unarchive', archOk: 'Activity archived', unarchOk: 'Activity back in the list',
@@ -1107,7 +1122,7 @@ async function showActivity(id, tab) {
   // the steps, as on the computer; a helper has the attendance only
   const steps = (org ? [['register', 's1', /^https:/.test(a.form || ''), t(a.form ? 'formReady' : 'noForm')],
     ['people', 's2', people.some(here), people.length ? t('hereOf')(people.filter(here).length, people.length) : t('noPeople')],
-    ['design', 's3', null, t('onPcT')],
+    ['design', 's3', false, t('dzHowShort')],
     ['issue', 's4', issued.length > 0, issued.length ? t('issuedSent')(issued.length, emailed.length) : t('noIssued')]]
     : [['people', 's2', people.some(here), t('hereOf')(people.filter(here).length, people.length)]]);
   tab = {overview: 'people', requests: 'issue'}[tab] || tab;
@@ -1304,10 +1319,7 @@ async function showActivity(id, tab) {
 
   // 3. designs: made on the computer
   function design() {
-    return [el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('award'), t('designT')), el('span', {className: 'sp'}), pcTag()),
-      el('p', {className: 'muted', textContent: t('designD')}),
-      a.types.length ? el('div', {className: 'bar'}, ...a.types.map(x => el('span', {className: 'badge', dir: 'auto', textContent: t('certOf')(x)}))) : null,
-      el('ul', {className: 'pclist', style: 'margin-top:14px'}, ...t('designItems').map(x => el('li', {}, ic('lock'), x))))];
+    return [designStudio(a, people, reload)];
   }
 
   // 4. issuing and emailing: asked for here, carried out by the computer
@@ -1470,6 +1482,242 @@ function teamSheet(a, staff, reload) {  // who works on the activity besides who
     toast(t('saveFail')); save.disabled = false;
   };
   close = sheet(form);
+}
+
+// ---------- certificate designs, edited here (as on the computer): the design's PDF, the fields drawn on it ----------
+// Texts are drawn by the browser with the platform's own Arabic fonts (fonts served with these pages), in the boxes the
+// app's MuPDF fills: (x, y) is a field's centre in PDF points; a text that does not fit its box is made smaller.
+const CDN = 'https://cdnjs.cloudflare.com/ajax/libs/';
+const LIBS = {pdfjs: CDN + 'pdf.js/3.11.174/pdf.min.js', pdflib: CDN + 'pdf-lib/1.17.1/pdf-lib.min.js', qr: CDN + 'qrcode-generator/1.4.4/qrcode.min.js'};
+const libs = {};
+function lib(name) {  // a script from the CDN, loaded once, when a design is first opened
+  return libs[name] = libs[name] || new Promise((ok, bad) => document.head.append(el('script', {src: LIBS[name], onload: ok, onerror: () => bad(new Error(name))})));
+}
+const FONT_FILES = ['Amiri-Regular.ttf', 'Amiri-Bold.ttf', 'IBMPlexSansArabic-Regular.ttf', 'IBMPlexSansArabic-Bold.ttf',
+  'NotoNaskhArabic-Regular.ttf', 'NotoNaskhArabic-Bold.ttf', 'Tajawal-Regular.ttf', 'Tajawal-Bold.ttf'];
+const LATIN_FIELDS = ['serial', 'name_lat', 'issue_date', 'verify_code'];
+const fontsReady = {};
+function useFont(file) {  // the CSS family of a font file (loaded once); '' : the default Arabic one
+  const f = FONT_FILES.includes(file) ? file : 'NotoNaskhArabic-Regular.ttf', fam = 'cf-' + f.replace(/\W/g, '');
+  if (!fontsReady[f]) fontsReady[f] = new FontFace(fam, 'url(' + f + ')').load().then(x => { document.fonts.add(x); return fam; })
+    .catch(() => 'serif');  // a font that does not load: the text is still drawn, in the browser's own
+  return fontsReady[f];
+}
+const AR_DIGITS = s => s.replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+
+// one text field on a canvas at `scale` canvas pixels per PDF point
+async function drawText(ctx, k, f, text, lang, scale) {
+  if (!text) return;
+  text = String(text);
+  if (f.digits === 'arabic') text = AR_DIGITS(text);
+  const rtl = !LATIN_FIELDS.includes(k) && lang === 'ar', fam = await useFont(f.font || '');
+  const w = (Number(f.w) || 400) * scale, lines = Number(f.lines) || 1;
+  let size = (Number(f.size) || 20) * scale;
+  const font = s => (f.bold ? 'bold ' : '') + s + 'px "' + fam + '", sans-serif';
+  const wrap = s => {  // the words in lines of at most w
+    ctx.font = font(s);
+    if (lines === 1) return [text];
+    const out = [];
+    let cur = '';
+    text.split(/\s+/).forEach(word => { const t = cur ? cur + ' ' + word : word; if (cur && ctx.measureText(t).width > w) { out.push(cur); cur = word; } else cur = t; });
+    if (cur) out.push(cur);
+    return out;
+  };
+  let ls = wrap(size);
+  for (let i = 0; i < 40 && (ls.length > lines || Math.max(...ls.map(l => ctx.measureText(l).width)) > w); i++) { size *= .95; ls = wrap(size); }
+  ctx.save();
+  ctx.font = font(size);
+  ctx.fillStyle = /^#[0-9a-f]{6}$/i.test(f.color || '') ? f.color : '#000000';
+  ctx.direction = rtl ? 'rtl' : 'ltr';
+  ctx.textBaseline = 'alphabetic';
+  const align = f.align || 'center', x = f.x * scale;
+  ctx.textAlign = align === 'center' ? 'center' : align;
+  const ax = align === 'center' ? x : align === 'left' ? x - w / 2 : x + w / 2;
+  const full = (Number(f.size) || 20) * scale;  // the box's top stays where the field's full size puts it (as MuPDF's htmlbox)
+  const top = lines === 1 ? f.y * scale - full * .75 : f.y * scale - full * 1.4 * lines / 2;
+  ls.forEach((l, i) => ctx.fillText(l, ax, top + size * 1.05 + i * size * 1.4));
+  ctx.restore();
+}
+
+async function drawQr(ctx, f, url, scale) {  // the verification link as a QR code, at its square
+  await lib('qr');
+  const q = qrcode(0, 'M');
+  q.addData(url || 'https://cdcue.github.io/verify/');
+  q.make();
+  const n = q.getModuleCount(), side = f.size * scale, cell = side / (n + 2), x0 = f.x * scale - side / 2, y0 = f.y * scale - side / 2;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(x0, y0, side, side);
+  ctx.fillStyle = '#000000';
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) ctx.fillRect(x0 + (c + 1) * cell, y0 + (r + 1) * cell, cell + .5, cell + .5);
+}
+
+// what a certificate prints, for one person (as the app's cert_values, the parts the dashboard knows)
+function certValues(a, p, extra) {
+  const civ = {ar: {m: 'السيد ', f: 'السيدة '}, fr: {m: 'M. ', f: 'Mme '}, en: {m: 'Mr. ', f: 'Ms. '}}[a.lang] || {};
+  const nameAr = p.name_ar || [p.first_ar, p.last_ar].filter(Boolean).join(' '), nameLat = p.name_lat || [p.first_lat, p.last_lat].filter(Boolean).join(' ');
+  const base = a.lang === 'ar' ? nameAr || nameLat : nameLat || nameAr;
+  const now = new Date();
+  return Object.assign({name: (civ[p.gender] || '') + base, name_ar: nameAr, name_lat: nameLat, serial: p.serial || 'XXX-' + now.getFullYear() + '-P0001',
+    mention: p.mention || '', title: a.title, dates: a.dates || '', hours: a.hours || '', place: a.place || '', org: a.org || '',
+    issue_date: now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear(), issue_date_long: UI.fmtDate(now, {day: 'numeric', month: 'long', year: 'numeric'}),
+    cert_type: p.type || a.cert_type, qr: p.link || '', gender: p.gender, lang: a.lang}, extra || {});
+}
+
+async function drawCertificate(ctx, layout, values, scale) {
+  for (const [k, f] of Object.entries(layout)) {
+    if (k === 'qr') { await drawQr(ctx, f, values.qr, scale); continue; }
+    if (k.startsWith('img')) continue;  // pictures added on the computer: drawn there
+    const text = k === 'issue_date' && f.datefmt === 'long' ? values.issue_date_long : values[k] || f.text;
+    await drawText(ctx, k, f, text, values.lang, scale);
+  }
+}
+
+// a design file for the web: a PDF as it is when small, else its first page as one picture (as the app's flatten_pdf)
+async function designPdf(file) {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  await lib('pdflib');
+  const doc = await PDFLib.PDFDocument.create();
+  if (/pdf$/i.test(file.type) || /\.pdf$/i.test(file.name)) {
+    await lib('pdfjs');
+    const src = await pdfjsLib.getDocument({data: bytes.slice()}).promise, pg = await src.getPage(1), vp = pg.getViewport({scale: 1});
+    if (bytes.length <= 3e6 && src.numPages === 1) return bytes;
+    const c = el('canvas', {width: Math.round(vp.width * 200 / 72), height: Math.round(vp.height * 200 / 72)});
+    await pg.render({canvasContext: c.getContext('2d'), viewport: pg.getViewport({scale: 200 / 72})}).promise;
+    const jpg = await doc.embedJpg(await (await fetch(c.toDataURL('image/jpeg', .85))).arrayBuffer());
+    doc.addPage([vp.width, vp.height]).drawImage(jpg, {x: 0, y: 0, width: vp.width, height: vp.height});
+  } else {
+    const img = /png$/i.test(file.type) ? await doc.embedPng(bytes) : await doc.embedJpg(bytes);
+    const r = img.height / img.width, a4 = Math.abs(r - 595 / 842) < .03 || Math.abs(r - 842 / 595) < .03;  // A4 exports: A4 pages
+    const w = a4 ? (r < 1 ? 842 : 595) : 842, h = w * r;
+    doc.addPage([w, h]).drawImage(img, {x: 0, y: 0, width: w, height: h});
+  }
+  return doc.save();
+}
+const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 32768) s += String.fromCharCode(...bytes.subarray(i, i + 32768)); return btoa(s); };
+const unb64 = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
+
+function designStudio(a, people, reload) {
+  const box = el('div', {className: 'card'}, el('p', {className: 'muted', textContent: t('dzLoading')}));
+  let type = a.cert_type, layout = {}, page = null, pdfBytes = null, sel = null, dirty = false;
+  const fieldNames = () => Object.assign({}, t('dzFields'), ...(a.questions || []).map(q => ({['x:' + q.key]: q.title})));
+  const label = k => k.startsWith('txt') ? t('dzText') + ': ' + ((layout[k] || {}).text || '').slice(0, 18) : k.startsWith('img') ? t('dzImage') : fieldNames()[k] || k;
+  const defaults = k => k === 'qr' ? {size: 70} : {size: k.startsWith('name') ? 28 : 16, w: k.startsWith('name') ? 460 : 320, lines: 1, color: '#000000', font: '', bold: k.startsWith('name'), align: 'center'};
+  const sample = people.find(p => p.name_ar || p.name_lat) || {name_ar: t('dzSampleName'), name_lat: 'Sample Name', gender: 'm'};
+
+  async function load() {
+    box.replaceChildren(el('p', {className: 'muted', textContent: t('dzLoading')}));
+    const r = await call('designget', {id: a.id, type}).catch(() => ({}));
+    if (r.status !== 'ok') { box.replaceChildren(el('p', {className: 'err', textContent: t('dzFail') + (r.error ? ' — ' + r.error : '')})); return; }
+    layout = r.layout || {};
+    pdfBytes = r.file ? unb64(r.file) : null;
+    sel = Object.keys(layout)[0] || null;
+    dirty = false;
+    await draw();
+  }
+
+  async function upload(file) {
+    if (!file) return;
+    toast(t('dzPreparing'));
+    try {
+      const bytes = await designPdf(file);
+      if (bytes.length > 8e6) return toast(t('dzBig'));
+      const r = await call('designsave', {id: a.id, type, pdf: b64(bytes), layout: Object.keys(layout).length ? layout : null}).catch(() => ({}));
+      if (r.status !== 'ok') return toast(t('dzFail'));
+      toast(t('dzUploaded'));
+      load();
+    } catch (e) { toast(t('dzFail') + ' — ' + e.message); }
+  }
+
+  async function save() {
+    const r = await call('designsave', {id: a.id, type, layout}).catch(() => ({}));
+    if (r.status !== 'ok') return toast(t('dzFail'));
+    layout = r.layout; dirty = false;
+    toast(t('dzSaved'));
+    draw();
+  }
+
+  async function draw() {
+    const picker = a.types.length > 1 ? select(a.types.map(x => [x, x]), type) : null;
+    if (picker) picker.onchange = () => { if (dirty && !confirm(t('dzLeave'))) { picker.value = type; return; } type = picker.value; load(); };
+    const fileIn = el('input', {type: 'file', accept: '.pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg', hidden: true, onchange: e => upload(e.target.files[0])});
+    const head = el('div', {className: 'bar', style: 'margin-bottom:10px'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('award'), t('designT')), picker, el('span', {className: 'sp'}),
+      fileIn, btn(t(pdfBytes ? 'dzReplace' : 'dzUpload'), () => fileIn.click(), pdfBytes ? 'ghost' : ''));
+    if (!pdfBytes) { box.replaceChildren(head, el('p', {className: 'muted', textContent: t('dzNone')})); return; }
+    await lib('pdfjs');
+    const doc = await pdfjsLib.getDocument({data: pdfBytes.slice()}).promise, pg = await doc.getPage(1), vp = pg.getViewport({scale: 1});
+    page = [vp.width, vp.height];
+    const stage = el('div', {style: 'position:relative;width:100%;touch-action:none;user-select:none;border:1px solid var(--line);border-radius:8px;overflow:hidden'});
+    const bg = el('canvas', {style: 'display:block;width:100%'}), fg = el('canvas', {style: 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none'});
+    stage.append(bg, fg);
+    const props = el('div', {className: 'card flat', style: 'margin:0'});
+    const list = el('div', {className: 'bar', style: 'gap:6px;flex-wrap:wrap;margin:10px 0'});
+    const adds = select([['', '+ ' + t('dzAdd')], ...Object.entries(fieldNames()).filter(([k]) => !layout[k]), ['txt', t('dzText')]], '');
+    adds.onchange = () => {
+      let k = adds.value;
+      if (!k) return;
+      if (k === 'txt') { let i = 1; while (layout['txt' + i]) i++; k = 'txt' + i; }
+      layout[k] = Object.assign({x: page[0] / 2, y: page[1] / 2}, defaults(k), k.startsWith('txt') ? {text: t('dzText')} : {});
+      sel = k; dirty = true; draw();
+    };
+    box.replaceChildren(head, el('p', {className: 'hint', style: 'margin:0 0 8px', textContent: t('dzHow')}), stage, list,
+      el('div', {className: 'bar'}, adds, el('span', {className: 'sp'}), el('button', {type: 'button', className: 'btn', onclick: save}, ic('check'), t('saveB'))), props);
+    const W = stage.clientWidth || 800, dpr = window.devicePixelRatio || 1, scale = W * dpr / page[0];
+    [bg, fg].forEach(c => { c.width = Math.round(page[0] * scale); c.height = Math.round(page[1] * scale); });
+    await pg.render({canvasContext: bg.getContext('2d'), viewport: pg.getViewport({scale})}).promise;
+    const paint = async () => {
+      const ctx = fg.getContext('2d');
+      ctx.clearRect(0, 0, fg.width, fg.height);
+      await drawCertificate(ctx, layout, certValues(a, sample, Object.fromEntries((a.questions || []).map(q => ['x:' + q.key, q.title]))), scale);
+      stage.querySelectorAll('.mk').forEach(m => m.remove());
+      Object.entries(layout).forEach(([k, f]) => {
+        const w = k === 'qr' ? f.size : k.startsWith('img') ? f.w : f.w || 400, h = k === 'qr' ? f.size : k.startsWith('img') ? f.w * f.ar : f.size * 1.4 * (f.lines || 1);
+        const m = el('div', {className: 'mk', title: label(k), style: `position:absolute;left:${(f.x - w / 2) / page[0] * 100}%;top:${(f.y - h / 2) / page[1] * 100}%;width:${w / page[0] * 100}%;height:${h / page[1] * 100}%;`
+          + `border:${k === sel ? '2px solid var(--gold)' : '1px dashed rgba(60,90,160,.7)'};border-radius:4px;cursor:move;background:${k === sel ? 'rgba(201,162,39,.08)' : 'transparent'}`});
+        m.onpointerdown = e => {
+          e.preventDefault(); sel = k; drawProps(); list.replaceChildren(...chips());
+          const r = stage.getBoundingClientRect(), ox = f.x, oy = f.y, sx = e.clientX, sy = e.clientY;
+          let moved = false;
+          const mv = ev => {  // a click only selects: a hand's tremble must not move the field
+            moved = moved || Math.hypot(ev.clientX - sx, ev.clientY - sy) > 5;
+            if (!moved) return;
+            f.x = Math.round((ox + (ev.clientX - sx) / r.width * page[0]) * 10) / 10;
+            f.y = Math.round((oy + (ev.clientY - sy) / r.height * page[1]) * 10) / 10;
+            m.style.left = (f.x - w / 2) / page[0] * 100 + '%'; m.style.top = (f.y - h / 2) / page[1] * 100 + '%';
+          };
+          const up = () => { removeEventListener('pointermove', mv); removeEventListener('pointerup', up); if (moved) { dirty = true; paint(); } else paint(); };
+          addEventListener('pointermove', mv); addEventListener('pointerup', up);
+        };
+        stage.append(m);
+      });
+    };
+    const chips = () => Object.keys(layout).map(k => el('button', {type: 'button', className: 'badge' + (k === sel ? ' gold' : ''), style: 'cursor:pointer;border:0',
+      onclick: () => { sel = k; drawProps(); list.replaceChildren(...chips()); paint(); }}, label(k)));
+    const drawProps = () => {
+      const f = layout[sel];
+      if (!f) { props.replaceChildren(el('p', {className: 'muted', textContent: t('dzPick')})); return; }
+      const num = (key, lbl, step) => { const [l, i] = field(lbl, {type: 'number', step: step || 1, value: f[key] ?? ''}); i.oninput = () => { f[key] = Number(i.value); dirty = true; paint(); }; return l; };
+      const sel2 = (key, lbl, opts) => { const s = select(opts, f[key] ?? ''); s.onchange = () => { f[key] = s.value; dirty = true; paint(); }; return labelled(lbl, s); };
+      const kids = [el('div', {className: 'bar'}, el('b', {textContent: label(sel)}), el('span', {className: 'sp'}),
+        btn(t('del'), () => { delete layout[sel]; sel = Object.keys(layout)[0] || null; dirty = true; draw(); }, 'ghost danger'))];
+      if (sel === 'qr') kids.push(el('div', {className: 'grid2'}, num('size', t('dzSize'))));
+      else if (!sel.startsWith('img')) {
+        if (sel.startsWith('txt')) { const [l, i] = field(t('dzText'), {value: f.text || ''}); i.oninput = () => { f.text = i.value; dirty = true; paint(); list.replaceChildren(...chips()); }; kids.push(l); }
+        kids.push(el('div', {className: 'grid2'}, num('size', t('dzSize')), num('w', t('dzWidth')), num('lines', t('dzLines')),
+          sel2('align', t('dzAlign'), [['center', t('dzCenter')], ['right', t('dzRight')], ['left', t('dzLeft')]])),
+          el('div', {className: 'grid2'}, sel2('font', t('dzFont'), [['', t('dzDefault')], ...FONT_FILES.map(x => [x, x.replace('.ttf', '')])]),
+            (() => { const c = el('input', {type: 'color', value: f.color || '#000000'}); c.oninput = () => { f.color = c.value; dirty = true; paint(); }; return labelled(t('dzColor'), c); })(),
+            (() => { const c = el('input', {type: 'checkbox', checked: !!f.bold}); c.onchange = () => { f.bold = c.checked; dirty = true; paint(); }; return el('label', {className: 'row', style: 'gap:8px'}, c, t('dzBold')); })(),
+            sel2('digits', t('dzDigits'), [['latin', '123'], ['arabic', '١٢٣']])));
+        if (sel === 'issue_date') kids.push(sel2('datefmt', t('dzDate'), [['short', '7/11/2026'], ['long', t('dzLong')]]));
+      } else kids.push(el('p', {className: 'hint', textContent: t('dzImgPc')}));
+      props.replaceChildren(...kids);
+    };
+    list.replaceChildren(...chips());
+    drawProps();
+    await paint();
+  }
+  load();
+  return box;
 }
 
 // add (p null) or correct a person; the app applies it at its next sync, like the same action on the computer
