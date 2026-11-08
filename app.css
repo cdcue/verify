@@ -119,7 +119,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 form.inline { display: inline; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th, td { border-bottom: 1px solid var(--line); padding: 8px 6px; text-align: start; vertical-align: middle; }
-th { color: var(--muted); font-weight: 600; font-size: 13px; background: var(--soft); position: sticky; top: 0; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; background: var(--soft); position: sticky; top: 0; z-index: 2; }
 tr:hover td { background: color-mix(in srgb, var(--pri) 3%, transparent); }
 .tablewrap { overflow: auto; max-height: 70vh; border: 1px solid var(--line); border-radius: 10px; }
 .badge { display: inline-flex; align-items: center; gap: 4px; padding: 1px 9px; border-radius: 20px; font-size: 12px; font-weight: 600;
