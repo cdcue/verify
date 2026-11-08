@@ -126,7 +126,7 @@ const T = {
        codeWrong: 'الرمز غير صحيح، أو تغيّر مع رابط جديد، أو انتهى النشاط.', codeBusy: 'محاولات كثيرة: أعد المحاولة بعد 10 دقائق.', codeNet: 'تعذر الاتصال: تأكد من الإنترنت ثم أعد المحاولة.',
        present: 'حضور مؤكد', total: 'مسجل', mine: 'مسحتَ الآن', start: 'تشغيل الكاميرا وبدء المسح', manualPh: 'أو اكتب رقم البطاقة: 12', confirm: 'تأكيد',
        online: 'متصل بالإنترنت', offline: 'دون إنترنت: المسح يُحفظ في الهاتف ويُرسل عند عودة الاتصال',
-       pending: n => `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال`, session: (s, n) => `الحصة ${s} من ${n}`, noNet: 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف',
+       pending: n => `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال`, session: (s, n) => `الحصة ${s} من ${n}`, moved: (s, n) => `انتقل المسح إلى الحصة ${s} من ${n}`, noNet: 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف',
        noCam: 'تعذر تشغيل الكاميرا. اسمح للمتصفح باستعمالها، أو اكتب أرقام البطاقات.', torch: 'الإضاءة',
        stop: 'إيقاف الكاميرا', flip: 'تبديل الكاميرا', checking: 'جارٍ التأكيد…', noTicket: 'بلا بطاقة', ownCard: 'بطاقة المشارك',
        ok: 'تم تأكيد حضور', already: 'مؤكد سابقاً في هذه الحصة', unregistered: x => `البطاقة ${x} غير مسجلة في الاستمارة`,
@@ -137,7 +137,7 @@ const T = {
        codeWrong: 'Code incorrect, remplacé par un nouveau lien, ou activité terminée.', codeBusy: 'Trop d’essais : réessayez dans 10 minutes.', codeNet: 'Connexion impossible : vérifiez Internet puis réessayez.',
        present: 'présences confirmées', total: 'inscrits', mine: 'scannés ici', start: 'Activer la caméra et scanner', manualPh: 'ou saisissez le n° de carte : 12', confirm: 'Valider',
        online: 'Connecté à Internet', offline: 'Hors ligne : les scans sont gardés sur le téléphone et envoyés au retour de la connexion',
-       pending: n => `${n} carte(s) gardée(s) sur le téléphone en attente de connexion`, session: (s, n) => `séance ${s} sur ${n}`,
+       pending: n => `${n} carte(s) gardée(s) sur le téléphone en attente de connexion`, session: (s, n) => `séance ${s} sur ${n}`, moved: (s, n) => `Le scan passe à la séance ${s} sur ${n}`,
        noNet: 'Pas de connexion pour l’instant — les scans sont gardés sur le téléphone',
        noCam: 'Impossible d’activer la caméra. Autorisez-la dans le navigateur, ou saisissez les numéros de carte.', torch: 'Lampe',
        stop: 'Arrêter la caméra', flip: 'Changer de caméra', checking: 'Vérification…', noTicket: 'Sans carte', ownCard: 'Carte du participant',
@@ -151,7 +151,7 @@ const T = {
        codeWrong: 'Wrong code, replaced with a new link, or the activity has ended.', codeBusy: 'Too many tries: try again in 10 minutes.', codeNet: 'Could not connect: check the Internet and try again.',
        present: 'confirmed', total: 'registered', mine: 'scanned here', start: 'Start the camera and scan', manualPh: 'or type the ticket number: 12', confirm: 'Confirm',
        online: 'Online', offline: 'Offline: scans are kept on the phone and sent when the connection is back',
-       pending: n => `${n} ticket(s) kept on the phone, waiting for the connection`, session: (s, n) => `session ${s} of ${n}`,
+       pending: n => `${n} ticket(s) kept on the phone, waiting for the connection`, session: (s, n) => `session ${s} of ${n}`, moved: (s, n) => `Scanning moved to session ${s} of ${n}`,
        noNet: 'No connection right now — scans are kept on the phone',
        noCam: 'Could not start the camera. Allow it in the browser, or type the ticket numbers.', torch: 'Light',
        stop: 'Stop the camera', flip: 'Switch camera', checking: 'Checking…', noTicket: 'No ticket', ownCard: 'Participant card',
@@ -366,7 +366,7 @@ function start(token) {  // the page goes on with this link, kept on the phone f
   history.replaceState(null, '', '#' + encodeURIComponent(token));
   UI.store.set('shawahid-scan', token);
   $('codeBox').hidden = true; $('main').hidden = false; $('main').style.display = 'grid';
-  keptNames(); info(); setInterval(info, 20000); names(); setInterval(names, 60000); showNet(); retry();
+  keptNames(); info(); setInterval(info, 10000); names(); setInterval(names, 60000); showNet(); retry();
 }
 function describe() {
   if (about) $('what').removeAttribute('data-t');  // from now on its text is the activity's, not "loading"
@@ -377,8 +377,15 @@ async function info() {
   try {
     const j = await call({action: 'info'});
     if (j.status === 'denied') return denied();
+    const moved = about && about !== 'off' && j.session && about.session && j.session !== about.session;
     about = j;
     counts(j);
+    if (moved) {  // another session chosen (dashboard or computer): nobody seen in it yet on this phone, and the organizer is told
+      if (NAMES) { NAMES.seen = new Set(); NAMES.session = j.session; keepNames(); }
+      UI.toast(t('moved')(j.session, j.sessions));
+      if (navigator.vibrate) navigator.vibrate([90, 60, 90]);
+      names();
+    }
   } catch (e) { about = 'off'; }
   describe();
 }

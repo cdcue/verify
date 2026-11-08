@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?v=2">
+<link rel="stylesheet" href="app.css?v=3">
 <script src="ui.js?v=7"></script>
 <style>
   /* the platform's look (app.css, the same file as on the computer), plus what the public pages' ui.css gave this page */
@@ -254,7 +254,7 @@ const T = {
     starNote: '* يطبعه تصميم الشهادة في الأنشطة المختارة: أكمله حتى تخرج كل النسخ كاملة ومتطابقة.', bSave: 'طلب إنشاء الشواهد وإرسالها',
     pickOne: 'اختر نشاطاً واحداً على الأقل', lack: 'أكمل ما يطبعه التصميم: ', nameAr: 'الاسم بالعربية', nameLat: 'الاسم باللاتينية',
     noname: 'اكتب الاسم على الأقل', badEmail: 'البريد غير صحيح', sameWaiting: 'الطلب نفسه ما زال ينتظر الحاسوب', tPeople: 'المشاركون',
-    curSession: 'الحصة الجارية (للمسح والتأكيد)', sessionN: i => 'الحصة ' + i, sessionSet: s => 'المسح الآن للحصة ' + s + ' في كل الهواتف',
+    curSession: 'الحصة الجارية (للمسح والتأكيد)', sessionN: i => 'الحصة ' + i, sessionSet: s => 'المسح الآن للحصة ' + s + ' في كل الهواتف', sessNow: (s, n) => 'الحصة الجارية: ' + s + ' من ' + n, sessD: m => 'المسح والتأكيد يُسجَّلان في هذه الحصة، والهواتف تتبعها' + (m ? ' · الشهادة لمن حضر ' + m + ' على الأقل' : ''), sessNext: s => 'الانتقال إلى الحصة ' + s + ' ←', sessAsk: s => 'تسجيل الحضور في الحصة ' + s + '؟ كل مسح بعد الآن يُحسب للحصة ' + s + '، وتتبعها هواتف المسح.', sessLast: 'الحصة الأخيرة',
     addPerson: 'إضافة مشارك', search: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fAll: 'الكل', fHere: 'حاضرون', fHereIn: s => 'حاضرون في الحصة ' + s,
     fAway: 'غير مؤكدين', fIssued: 'لهم شهادة', fMail: 'مشكلة في البريد', countOf: (n, m) => `${n} من ${m}`,
     syncNote: d => `البيانات كما في آخر مزامنة للمنصة (${d}). ما تؤكده أو تعدّله هنا يظهر فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`,
@@ -425,7 +425,7 @@ const T = {
     bSave: 'Demander la création et l’envoi', pickOne: 'Choisissez au moins une activité', lack: 'Complétez ce que le design imprime : ',
     nameAr: 'nom en arabe', nameLat: 'nom en latin', noname: 'Saisissez au moins le nom', badEmail: 'E-mail incorrect',
     sameWaiting: 'La même demande attend encore l’ordinateur', tPeople: 'Participants', curSession: 'Séance en cours (scan et confirmation)',
-    sessionN: i => 'Séance ' + i, sessionSet: s => 'Scan en cours : séance ' + s + ' sur tous les téléphones', addPerson: 'Ajouter un participant',
+    sessionN: i => 'Séance ' + i, sessionSet: s => 'Scan en cours : séance ' + s + ' sur tous les téléphones', sessNow: (s, n) => 'Séance en cours : ' + s + ' sur ' + n, sessD: m => 'Scans et présences sont enregistrés pour cette séance ; les téléphones la suivent' + (m ? ' · attestation dès ' + m + ' séance(s)' : ''), sessNext: s => 'Passer à la séance ' + s + ' →', sessAsk: s => 'Enregistrer la présence pour la séance ' + s + ' ? Chaque scan comptera désormais pour la séance ' + s + '.', sessLast: 'Dernière séance', addPerson: 'Ajouter un participant',
     search: 'Rechercher par nom, carte, numéro d’attestation ou e-mail...', fAll: 'Tous', fHere: 'Présents', fHereIn: s => 'Présents à la séance ' + s,
     fAway: 'Non confirmés', fIssued: 'Avec attestation', fMail: 'Problème d’e-mail', countOf: (n, m) => `${n} sur ${m}`,
     syncNote: d => `Données de la dernière synchronisation (${d}). Ce que vous confirmez ou modifiez ici s’affiche aussitôt et rejoint la plateforme à la synchronisation.`,
@@ -613,7 +613,7 @@ const T = {
     bSave: 'Request the certificates and email', pickOne: 'Pick at least one activity', lack: 'Fill in what the design prints: ', nameAr: 'name in Arabic',
     nameLat: 'name in Latin script', noname: 'Enter at least the name', badEmail: 'Invalid email',
     sameWaiting: 'The same request is still waiting for the computer', tPeople: 'Participants', curSession: 'Current session (scanning and confirming)',
-    sessionN: i => 'Session ' + i, sessionSet: s => 'All phones now scan session ' + s, addPerson: 'Add participant',
+    sessionN: i => 'Session ' + i, sessionSet: s => 'All phones now scan session ' + s, sessNow: (s, n) => 'Current session: ' + s + ' of ' + n, sessD: m => 'Scans and attendance are recorded for this session; the phones follow it' + (m ? ' · certificate from ' + m + ' session(s)' : ''), sessNext: s => 'Move to session ' + s + ' →', sessAsk: s => 'Record attendance for session ' + s + '? Every scan from now on counts for session ' + s + '.', sessLast: 'Last session', addPerson: 'Add participant',
     search: 'Search by name, ticket, certificate number or email...', fAll: 'All', fHere: 'Present', fHereIn: s => 'Present in session ' + s,
     fAway: 'Not confirmed', fIssued: 'With certificate', fMail: 'Email problem', countOf: (n, m) => `${n} of ${m}`,
     syncNote: d => `Data as of the platform’s last sync (${d}). What you confirm or change here shows at once, and reaches the platform at the next sync.`,
@@ -1315,11 +1315,19 @@ async function showActivity(id, tab) {
   // 2. attendance and participants
   function attendance() {
     let sess = null;
-    if (a.sessions > 1 && org) {
-      sess = el('select', {ariaLabel: t('curSession'), style: 'width:auto', onchange: async () => {
-        const r = await call('setsession', {id: a.id, s: Number(sess.value)}).catch(() => ({}));
-        if (r.status === 'ok') { toast(t('sessionSet')(r.session)); reload(); }
-      }}, ...Array.from({length: a.sessions}, (_, i) => el('option', {value: i + 1, selected: i + 1 === a.session, textContent: t('sessionN')(i + 1)})));
+    if (a.sessions > 1) {  // the session being scanned: plain to see, one button to the next (organizers), every session to go back
+      const go = async s => {
+        if (!confirm(t('sessAsk')(s))) return;
+        const r = await call('setsession', {id: a.id, s}).catch(() => ({}));
+        if (r.status === 'ok') { toast(t('sessionSet')(r.session)); reload(); } else toast(t('reqFail'));
+      };
+      sess = el('div', {className: 'sessbar'}, el('div', {className: 'grow'}, el('b', {textContent: t('sessNow')(a.session, a.sessions)}),
+          el('small', {className: 'muted', textContent: t('sessD')(a.min_sessions)})),
+        org ? el('div', {className: 'bar', role: 'group', ariaLabel: t('curSession')},
+          ...Array.from({length: a.sessions}, (_, i) => el('button', {type: 'button', className: 'chip' + (i + 1 === a.session ? ' on' : ''), disabled: i + 1 === a.session,
+            ariaCurrent: i + 1 === a.session ? 'true' : null, textContent: String(i + 1), onclick: () => go(i + 1)})),
+          a.session < a.sessions ? el('button', {type: 'button', textContent: t('sessNext')(a.session + 1), onclick: () => go(a.session + 1)})
+            : el('span', {className: 'muted', textContent: t('sessLast')})) : null);
     }
     const code = j.code ? j.code.slice(0, 4) + '-' + j.code.slice(4) : '';
     const methods = el('div', {className: 'methods'},
@@ -1329,7 +1337,7 @@ async function showActivity(id, tab) {
       method('text', t('mNumbers'), t('mNumbersD'), () => { const close = sheet(numbers(() => close())); }),
       org ? method('print', t('mSign'), t('mSignD')) : null);
     return [el('div', {className: 'card'}, el('div', {className: 'sec-h'}, el('h2', {}, ic('check'), t('attT')),
-      sess ? [el('span', {className: 'sp'}), el('span', {className: 'muted', textContent: t('sessPick')}), sess] : null), methods),
+), sess, methods),
       peopleCard(),
       org ? el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('people'), t('teamT')), el('span', {className: 'sp'}),
         btn(t('edit'), () => teamSheet(a, j.staff || [], reload), 'sec')),

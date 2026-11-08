@@ -354,3 +354,10 @@ details.fold[open] > summary { margin-bottom: 12px; }
 .lookup-item { display: grid; gap: 2px; text-align: start; justify-content: stretch; background: var(--card); color: var(--ink); border: 1px solid var(--line); font-weight: 500; }
 .lookup-item:hover { border-color: var(--pri); filter: none; }
 .lookup-item small { color: var(--muted); font-size: 12px; white-space: normal; }
+
+/* the session being scanned, on an activity's page (here and on the dashboard) */
+.sessbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 14px; padding: 12px 14px; border-radius: 12px;
+           background: var(--pri-soft); border: 1px solid var(--field); }
+.sessbar .grow { flex: 1 1 260px; display: flex; flex-direction: column; gap: 2px; } .sessbar b { font-size: 17px; }
+.sessbar .chip { min-width: 40px; padding: 6px 0; background: var(--card); color: var(--ink); border: 1px solid var(--field); }
+.sessbar .chip.on { background: var(--pri); color: var(--on-pri); border-color: transparent; opacity: 1; cursor: default; }
