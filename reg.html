@@ -40,6 +40,10 @@
   .ticket .name { font-size: 20px; font-weight: 700; margin: 4px 0; }
   .state { font-size: 13.5px; color: var(--muted); margin: 6px 0 12px; }
   .state.ok { color: var(--ok); } .state.wait { color: var(--gold); }
+  .here .tick { width: 76px; height: 76px; border-radius: 50%; background: var(--ok); color: #fff; font: 700 42px/76px system-ui, sans-serif; margin: 8px auto 12px; animation: pop .45s ease-out; }
+  .here h2 { margin: 0 0 6px; color: var(--ok); } .here .act { font-weight: 700; margin: 10px 0 2px; }
+  @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .here .tick { animation: none; } }
   .btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
   .saved img { max-width: 100%; border-radius: 12px; margin-top: 10px; border: 1px solid var(--line); }
   .others { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 10px; }
@@ -68,7 +72,7 @@ const T = {
        saveImg: 'حفظ كصورة في الهاتف', longPress: 'إن لم تُحفظ الصورة تلقائياً: اضغط عليها مطولاً واختر «حفظ الصورة».', another: 'تسجيل شخص آخر من هذا الهاتف',
        already: 'سجّلت من قبل في هذا النشاط؟ استرجع رمزك', findT: 'استرجاع رمز الحضور', findPhone: 'رقم الهاتف الذي سجّلت به', findFirst: 'اسمك الشخصي',
        find: 'استرجاع', notFound: 'لم نجد تسجيلاً بهذا الهاتف والاسم في هذا النشاط.', busy: 'طلبات كثيرة الآن، أعد المحاولة بعد قليل.', back: 'رجوع',
-       mine: 'التسجيلات من هذا الهاتف:', nameMissing: 'اكتب الاسم على الأقل'},
+       mine: 'التسجيلات من هذا الهاتف:', here: 'تم تأكيد حضورك', hereIn: 'تم تأكيد حضورك في الحصة {n} من {m}', hereThanks: 'شكراً لحضورك. تصلك شهادتك على بريدك الإلكتروني عند صدورها.', hereNext: 'يظهر رمزك هنا من جديد في الحصة القادمة.', showMine: 'إظهار رمزي', nameMissing: 'اكتب الاسم على الأقل'},
   fr: {title: 'Inscription à l’activité', lead: 'Inscrivez-vous et gardez votre code de présence : il est scanné à la fin.', loading: 'Chargement...', net: 'Pas de connexion Internet', retry: 'Serveur occupé ou connexion faible, nouvel essai automatique...',
        bad: 'Inscription indisponible. Si l’activité vient d’être créée, rouvrez le lien dans une minute ; sinon demandez le lien aux organisateurs.', closed: 'Les inscriptions à cette activité sont fermées.', send: 'S’inscrire',
        male: 'Homme', female: 'Femme', required: 'Champ obligatoire', badEmail: 'E-mail incorrect', yourCode: 'Votre code de présence',
@@ -77,7 +81,7 @@ const T = {
        saveImg: 'Enregistrer en image', longPress: 'Si l’image ne s’enregistre pas : appuyez longuement dessus, puis « Enregistrer l’image ».', another: 'Inscrire une autre personne depuis ce téléphone',
        already: 'Déjà inscrit à cette activité ? Retrouvez votre code', findT: 'Retrouver le code de présence', findPhone: 'Le téléphone de l’inscription', findFirst: 'Votre prénom',
        find: 'Retrouver', notFound: 'Aucune inscription avec ce téléphone et ce prénom dans cette activité.', busy: 'Trop de demandes, réessayez dans un instant.', back: 'Retour',
-       mine: 'Inscriptions depuis ce téléphone :', nameMissing: 'Écrivez au moins le nom'},
+       mine: 'Inscriptions depuis ce téléphone :', here: 'Présence confirmée', hereIn: 'Présence confirmée : séance {n} sur {m}', hereThanks: 'Merci de votre présence. Votre attestation vous parviendra par e-mail dès son émission.', hereNext: 'Votre code réapparaît ici à la prochaine séance.', showMine: 'Afficher mon code', nameMissing: 'Écrivez au moins le nom'},
   en: {title: 'Register for the activity', lead: 'Register and keep your attendance code: it is scanned at the end.', loading: 'Loading...', net: 'No Internet connection', retry: 'Server busy or weak connection, trying again...',
        bad: 'Registration is not available. If the activity is new, open the link again in a minute; otherwise ask the organizers for it.', closed: 'Registration for this activity is closed.', send: 'Register',
        male: 'Male', female: 'Female', required: 'Required', badEmail: 'Wrong email', yourCode: 'Your attendance code',
@@ -86,7 +90,7 @@ const T = {
        saveImg: 'Save as a picture', longPress: 'If the picture is not saved: press and hold it, then “Save image”.', another: 'Register someone else from this phone',
        already: 'Registered already? Get your code back', findT: 'Get your attendance code back', findPhone: 'The phone you registered with', findFirst: 'Your first name',
        find: 'Find', notFound: 'No registration with this phone and first name in this activity.', busy: 'Too many requests, try again shortly.', back: 'Back',
-       mine: 'Registrations from this phone:', nameMissing: 'Write the name at least'},
+       mine: 'Registrations from this phone:', here: 'Attendance confirmed', hereIn: 'Attendance confirmed: session {n} of {m}', hereThanks: 'Thank you for attending. Your certificate will reach your email once issued.', hereNext: 'Your code shows here again at the next session.', showMine: 'Show my code', nameMissing: 'Write the name at least'},
 };
 
 const EXEC = 'https://script.google.com/macros/s/AKfycbyhQdedASgHUcB7vIZ6mAtgzy1fo6TFTa0bGybYmjnnU5JV79VRCzwudv8wMSJnL71i/exec';
@@ -155,13 +159,53 @@ addEventListener('online', sendPending);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') sendPending(); });  // a locked phone stops its timers: sent when it is looked at again
 
 // ---------- the person's code: the QR, their number, a picture to keep ----------
+// ---------- scanned by the organizers: the page asks (from the server's cache, never a sheet) every 20 s or so while it shows ----------
+// One session: the code gives way to the confirmation for good. Several: confirmed for this session, the code comes back at the next.
+const here = r => !!(r.done || (r.seenIn && r.seenIn === r.cur));
+let seenBusy = false, seenTimer = null, codeAnyway = null;
+async function checkSeen() {
+  clearTimeout(seenTimer); seenTimer = null;
+  const r = current;
+  if (!r || r.done || seenBusy || document.visibilityState !== 'visible') return;  // hidden: asked again when looked at
+  seenBusy = true;
+  let wait = 18000 + Math.random() * 6000;  // spread out: hundreds of phones while everyone leaves
+  try {
+    const j = await call('regseen', {t: r.ticket || '', u: r.uid}), was = here(r);
+    if (j.status === 'ok') {
+      Object.assign(r, {cur: j.session, sessions: j.sessions});
+      if (j.seen) Object.assign(r, {seenIn: j.session}, j.session >= j.sessions ? {done: true} : {});
+      save(STORE, regs);
+      if (here(r) !== was && current === r) { codeAnyway = null; showTicket(r); }
+      if (here(r)) wait = 60000;  // confirmed for this session: only the next session changes it
+    } else wait = 60000;
+  } catch (e) { wait = 60000; }  // busy or offline: later, gently
+  seenBusy = false;
+  if (current && !current.done) seenTimer = setTimeout(checkSeen, wait);
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkSeen(); });
+const othersOf = r => regs.length > 1 ? el('div', {}, el('p', {className: 'hint', style: 'margin:0 0 6px', textContent: t('mine')}), el('div', {className: 'others'},
+  ...regs.map(x => el('button', {type: 'button', ariaPressed: String(x === r), textContent: x.name, onclick: () => showTicket(x)})))) : null;
+
+function showHere(r) {
+  const next = !r.done && r.sessions > 1;
+  show(card(othersOf(r), el('div', {className: 'ticket here'},
+    el('div', {className: 'tick', ariaHidden: 'true', textContent: '✓'}),
+    el('h2', {textContent: r.sessions > 1 ? t('hereIn').replace('{n}', r.seenIn).replace('{m}', r.sessions) : t('here')}),
+    el('div', {className: 'name', dir: 'auto', textContent: r.name}),
+    info ? el('p', {className: 'act', dir: 'auto', textContent: info.title}) : null, info && intro() ? el('p', {className: 'hint', dir: 'auto', style: 'margin:0', textContent: intro()}) : null,
+    r.ticket ? el('div', {style: 'margin-top:10px'}, el('div', {className: 'hint', textContent: t('number')}), el('div', {className: 'num', textContent: numOf(r.ticket)})) : null,
+    el('p', {className: 'state ok', textContent: next ? t('hereNext') : t('hereThanks')}),
+    next ? el('div', {className: 'btns'}, el('button', {className: 'btn ghost', type: 'button', textContent: t('showMine'), onclick: () => { codeAnyway = r; showTicket(r); }})) : null)));
+}
+
 async function showTicket(r) {
   current = r;
   view = () => showTicket(r);
+  if (!seenTimer && !seenBusy) seenTimer = setTimeout(checkSeen, 1500);
+  if (here(r) && codeAnyway !== r) return showHere(r);
   const drawn = r.qr && r.qrFor === codeOf(r), img = el('img', drawn ? {alt: t('yourCode'), src: r.qr} : {alt: t('yourCode')});  // drawn already: shown at once
   const st = r.ok ? el('p', {className: 'state ok', textContent: r.again ? t('again') : t('confirmed')}) : el('p', {className: 'state wait', textContent: t('pending')});
-  const others = regs.length > 1 ? el('div', {}, el('p', {className: 'hint', style: 'margin:0 0 6px', textContent: t('mine')}), el('div', {className: 'others'},
-    ...regs.map(x => el('button', {type: 'button', ariaPressed: String(x === r), textContent: x.name, onclick: () => showTicket(x)})))) : null;
+  const others = othersOf(r);
   const saved = el('div', {className: 'saved'});
   show(card(others, el('div', {className: 'ticket'},
       el('h2', {style: 'margin:0', textContent: t('yourCode')}), el('div', {className: 'name', dir: 'auto', textContent: r.name}),
