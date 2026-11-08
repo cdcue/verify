@@ -25,7 +25,12 @@
   .fld small { color: var(--muted); font-size: 12.5px; }
   .grid2 { display: grid; gap: 0 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   @media (max-width: 520px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
-  .opts { display: grid; gap: 6px; } .opts label { display: flex; gap: 8px; align-items: center; font-weight: 500; }
+  .opts { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+  .opts label { display: flex; gap: 10px; align-items: center; font-weight: 500; min-height: 50px; padding: 10px 14px; border: 1.5px solid var(--line);
+    border-radius: 12px; background: var(--surface-2); cursor: pointer; transition: border-color .15s, background .15s; }
+  .opts label:has(input:checked) { border-color: var(--brand-2); background: color-mix(in srgb, var(--brand-2) 14%, var(--surface-2)); }
+  .opts input { width: 20px; height: 20px; margin: 0; padding: 0; flex: none; accent-color: var(--brand-2); box-shadow: none; }  /* not the text boxes' size */
+  .fld select, .fld textarea { width: 100%; min-height: 52px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--ink); font: inherit; padding: 10px 14px; }
   .req { color: var(--err); }
   .hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); opacity: 0; pointer-events: none; }  /* for robots only (never off to a side: an RTL page would scroll to it) */
   .ticket { text-align: center; }
@@ -123,23 +128,26 @@ async function qrUrl(r) {
 // ---------- sending: until the server keeps it (a busy moment, a lost connection: tried again by itself) ----------
 let sending = false;
 async function sendPending() {
-  if (sending || !navigator.onLine) return;
+  if (sending || !navigator.onLine || !regs.some(x => !x.ok && !x.refused)) return;  // nothing waiting: the page stays as it is
   sending = true;
+  let changed = false;
   try {
-    for (const r of regs.filter(x => !x.ok)) {
+    for (const r of regs.filter(x => !x.ok && !x.refused)) {
       const j = await call('reg', {uid: r.uid, data: r.data, hp: r.hp || ''});
       if (j.status === 'ok') {
         if (j.uid && j.uid !== r.uid) { r.uid = j.uid; r.again = true; }  // registered before: their own code
         Object.assign(r, {ok: true, ticket: j.ticket, name: j.name || r.name});
         delete r.data;
-      } else if (['bad', 'noname', 'email', 'missing', 'closed', 'missing_answer'].includes(j.status)) {
+        changed = true;
+      } else if (['bad', 'noname', 'email', 'closed', 'missing_answer'].includes(j.status)) {  // 'missing': a new activity not yet online, tried again
         Object.assign(r, {ok: false, refused: j.status});  // kept on the phone: its code still shows
+        changed = true;
       }
       save(STORE, regs);
     }
   } catch (e) { /* offline or busy: tried again shortly */ }
   sending = false;
-  if (current) showTicket(current);
+  if (changed && current) showTicket(current);  // redrawn only when its state changed (a redraw every 15 s made the code blink)
 }
 setInterval(sendPending, 15000);
 addEventListener('online', sendPending);
@@ -148,7 +156,7 @@ addEventListener('online', sendPending);
 async function showTicket(r) {
   current = r;
   view = () => showTicket(r);
-  const img = el('img', {alt: t('yourCode')});
+  const drawn = r.qr && r.qrFor === codeOf(r), img = el('img', drawn ? {alt: t('yourCode'), src: r.qr} : {alt: t('yourCode')});  // drawn already: shown at once
   const st = r.ok ? el('p', {className: 'state ok', textContent: r.again ? t('again') : t('confirmed')}) : el('p', {className: 'state wait', textContent: t('pending')});
   const others = regs.length > 1 ? el('div', {}, el('p', {className: 'hint', style: 'margin:0 0 6px', textContent: t('mine')}), el('div', {className: 'others'},
     ...regs.map(x => el('button', {type: 'button', ariaPressed: String(x === r), textContent: x.name, onclick: () => showTicket(x)})))) : null;
@@ -160,7 +168,7 @@ async function showTicket(r) {
       st, el('p', {className: 'hint', textContent: t('show')}),
       el('div', {className: 'btns'}, el('button', {className: 'btn', type: 'button', textContent: t('saveImg'), onclick: () => picture(r, img, saved)}),
         el('button', {className: 'btn ghost', type: 'button', textContent: t('another'), onclick: () => form()})), saved)));
-  img.src = await qrUrl(r).catch(() => '');
+  if (!drawn) img.src = await qrUrl(r).catch(() => '');
 }
 
 function picture(r, img, box) {  // the code, the name, the number and the activity on one picture
@@ -173,10 +181,15 @@ function picture(r, img, box) {  // the code, the name, the number and the activ
   x.imageSmoothingEnabled = false; x.drawImage(img, 120, 230, 480, 480);
   if (r.ticket) { x.fillStyle = '#555555'; x.font = '24px "IBM Plex Sans Arabic", sans-serif'; x.fillText(t('number'), W / 2, 770);
     x.fillStyle = '#0b3b5c'; x.font = 'bold 64px monospace'; x.direction = 'ltr'; x.fillText(numOf(r.ticket), W / 2, 850); }
+  x.direction = 'rtl'; x.fillStyle = '#555555'; x.font = '22px "IBM Plex Sans Arabic", sans-serif'; x.fillText((info ? intro() : '').slice(0, 60), W / 2, 925);
+  x.fillStyle = '#0b3b5c'; x.fillRect(0, 960, W, 20);
   const url = c.toDataURL('image/png');
   box.replaceChildren(el('p', {className: 'hint', textContent: t('longPress')}), el('img', {src: url, alt: t('yourCode')}));
   el('a', {href: url, download: 'code-' + AID + '-' + numOf(r.ticket || r.uid.slice(0, 6)) + '.png'}).click();
 }
+
+// the form's description without its last paragraph (the paper card's instructions) and its empty dashes: who, when
+const intro = () => (info.desc || '').split(/\n\s*\n/)[0].split('\n').map(x => x.replace(/^\s*—\s*$/, '').replace(/\s*—\s*$/, '').trim()).filter(Boolean).join(' · ');
 
 // ---------- the questions: the activity's form, made from what the platform knows ----------
 function form() {
@@ -197,7 +210,7 @@ function form() {
   });
   const hp = el('input', {name: 'website', tabIndex: -1, autocomplete: 'off', ariaHidden: 'true'});
   const go = el('button', {className: 'btn', type: 'submit', textContent: t('send'), style: 'width:100%'});
-  const f = el('form', {noValidate: true}, info.desc ? el('p', {className: 'desc', dir: 'auto', textContent: info.desc}) : null,
+  const f = el('form', {noValidate: true}, intro() ? el('p', {className: 'desc', dir: 'auto', textContent: intro()}) : null,
     el('div', {className: 'grid2'}, fld('first_ar', {dir: 'rtl'}, 1), fld('last_ar', {dir: 'rtl'}, 1), fld('first_lat', {dir: 'ltr'}, 1), fld('last_lat', {dir: 'ltr'}, 1)),
     el('div', {className: 'fld'}, el('span', {}, L.gender, el('span', {className: 'req', textContent: ' *'})), gender),
     fld('phone', {type: 'tel', dir: 'ltr', inputMode: 'tel', autocomplete: 'tel'}, 1), fld('email', {type: 'email', dir: 'ltr', autocomplete: 'email'}, 1),
@@ -247,16 +260,17 @@ function findForm() {  // a new phone, a cleared browser: the code again by phon
 async function start() {
   if (!/^\d+$/.test(AID || '') || !KEYC) return show(card(el('p', {textContent: t('bad')})));
   document.getElementById('actTitle').textContent = info ? info.title : t('title');
-  if (regs.length) showTicket(regs[0]); else show(card(el('p', {className: 'muted', textContent: t('loading')})));
+  if (regs.length) showTicket(regs[0]); else if (info) form(); else show(card(el('p', {className: 'muted', textContent: t('loading')})));  // kept questions: at once
+  const had = info;
   try {  // the activity's questions, kept on the phone for the next visit
     const j = await call('reginfo');
     if (j.status === 'missing') { info = null; save(INFO, null); return regs.length ? null : show(card(el('p', {textContent: t('bad')}))); }
-    const first = !info;
     info = j; save(INFO, j);
     document.getElementById('actTitle').textContent = j.title;
-    if (first && UI.lang !== j.lang && !UI.store.get('lang')) UI.setLang(j.lang);  // the activity's language, unless chosen
+    if (!had && UI.lang !== j.lang && !UI.store.get('lang')) UI.setLang(j.lang);  // the activity's language, unless chosen
   } catch (e) { if (!info && !regs.length) return show(card(el('p', {textContent: t('net')}))); }
-  if (!regs.length) form(); else sendPending();
+  if (regs.length) sendPending();
+  else if (!had || JSON.stringify(had) !== JSON.stringify(info)) form();  // drawn again only when the questions changed
 }
 
 UI.init({page: 'reg', name: 'title', T, onLang: () => view()});
