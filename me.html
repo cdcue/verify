@@ -49,7 +49,38 @@
   .seg button { flex: 1; min-height: 44px; border: 0; border-radius: 10px; background: none; color: var(--muted); font: inherit; font-weight: 600; cursor: pointer; }
   .seg button[aria-selected="true"] { background: var(--brand); color: var(--on-brand); }
   .eye { display: block; margin-top: 6px; font-size: 13px; }
-  details > summary { cursor: pointer; font-weight: 700; font-size: 17px; }
+  /* folding cards («بطاقتي», «أضف شهادة», «حسابي»): a title line that opens and closes, remembered on this device */
+  .fold { margin-top: 16px; }
+  .fold > summary { list-style: none; display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: var(--radius); cursor: pointer;
+    transition: background .15s; }
+  .fold > summary::-webkit-details-marker { display: none; }
+  .fold > summary:hover { background: var(--surface-2); }
+  .fold .ico { flex: none; width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; background: var(--gold-soft); color: var(--gold); }
+  .fold .ttl { flex: 1; min-width: 0; }
+  .fold .ttl b { display: block; font-size: 16.5px; }
+  .fold .ttl small { display: block; margin-top: 2px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+  .fold .chev { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: var(--muted);
+    background: var(--surface-2); border: 1px solid var(--line); transition: transform .25s ease; }
+  .fold[open] .chev { transform: rotate(180deg); }
+  .fold[open] > summary { border-end-start-radius: 0; border-end-end-radius: 0; }
+  .fold .body { padding: 4px 18px 20px; animation: unfold .28s ease; }
+  @keyframes unfold { from { opacity: 0; transform: translateY(-6px); } }
+  .duo { display: grid; gap: 0 12px; align-items: start; }
+  @media (min-width: 760px) { .duo { grid-template-columns: 1fr 1fr; } }
+  /* the certificates' search and filters */
+  .finder { margin-top: 16px; padding: 14px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .finder input { height: 46px; font-size: 15.5px; }
+  .frow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .chips { flex: 1 1 260px; min-width: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: none; display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; transition: background .15s, color .15s; }
+  .chip i { font-style: normal; font-size: 12px; min-width: 22px; padding: 1px 7px; border-radius: 999px; background: var(--surface); color: var(--muted); text-align: center; }
+  .chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+  .chip[aria-pressed="true"] i { background: color-mix(in srgb, var(--on-brand) 22%, transparent); color: var(--on-brand); }
+  .finder select { height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink);
+    font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .found { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
   h3 { font-size: 16px; margin: 0; }
   .btn.danger { color: var(--err); }
 </style>
@@ -108,7 +139,10 @@ const T = {
        recSend: 'إرسال الطلب', recSent: 'وصل طلبك. بعد أن يتحقق المسؤول من هويتك، اختر «نسيت كلمة السر» واكتب بريدك الجديد.',
        recWait: 'أرسلتَ طلبات كثيرة اليوم: انتظر رد المسؤول.',
        chPh: 'تغيير رقم الهاتف', newPhone: 'رقم الهاتف الجديد', takenP: 'لهذا الرقم حساب آخر.', phChanged: 'تغيّر رقم الهاتف',
-       chEm: 'تغيير البريد الإلكتروني', emCode: 'أرسلنا رمزاً إلى البريد الجديد، صالحاً 10 دقائق: اكتبه هنا لتأكيده.', confirm: 'تأكيد', emChanged: 'تغيّر البريد الإلكتروني'},
+       chEm: 'تغيير البريد الإلكتروني', emCode: 'أرسلنا رمزاً إلى البريد الجديد، صالحاً 10 دقائق: اكتبه هنا لتأكيده.', confirm: 'تأكيد', emChanged: 'تغيّر البريد الإلكتروني',
+       cardS: 'رمز حضورك: أظهره للمنظمين عند الدخول والخروج', addS: 'شهادة صدرت دون بريد أو بغير بريدك', accS: 'الهاتف، البريد، كلمة السر',
+       findPh: 'ابحث بعنوان النشاط أو رقم الشهادة أو الجهة أو النوع', allTypes: 'الكل', allYears: 'كل السنوات', lType: 'نوع الشهادة', lYear: 'السنة',
+       shown: (n, m) => `${n} من ${m}`, clear: 'مسح البحث', noMatch: 'لا شهادة تطابق بحثك.'},
   fr: {cardT: 'Ma carte', cardD: 'Montrez ce code aux organisateurs à l’entrée et à la sortie : votre présence est enregistrée directement, sans carte ni formulaire.', cardPrint: 'Enregistrer la carte en image', cardShare: 'Partager la carte', cardHold: 'Si l’image ne s’enregistre pas : appuyez longuement dessus et choisissez « Enregistrer l’image ».', lEmail: 'E-mail', lPhone: 'Téléphone', lNum: 'N° de participant', lCerts: 'Attestations', title: 'Mes attestations', lead: 'Toutes vos attestations au même endroit : téléchargement, partage et codes de vérification.',
        tIn: 'Connexion', tNew: 'Nouveau compte', phone: 'Numéro de téléphone', phoneHelp: 'Sous toute forme : 0612345678 ou +212 6 12 34 56 78',
        password: 'Mot de passe', show: 'Afficher', hide: 'Masquer', signIn: 'Se connecter', forgot: 'Mot de passe oublié ?', noAcc: 'Première fois ? Ouvrez votre compte',
@@ -145,7 +179,10 @@ const T = {
        recSend: 'Envoyer la demande', recSent: 'Demande reçue. Une fois votre identité vérifiée, choisissez « Mot de passe oublié » avec votre nouvel e-mail.',
        recWait: 'Trop de demandes aujourd’hui : attendez la réponse de l’administrateur.',
        chPh: 'Changer de téléphone', newPhone: 'Nouveau numéro', takenP: 'Ce numéro a un autre compte.', phChanged: 'Téléphone changé',
-       chEm: 'Changer d’e-mail', emCode: 'Un code valable 10 minutes a été envoyé au nouvel e-mail : saisissez-le ici pour le confirmer.', confirm: 'Confirmer', emChanged: 'E-mail changé'},
+       chEm: 'Changer d’e-mail', emCode: 'Un code valable 10 minutes a été envoyé au nouvel e-mail : saisissez-le ici pour le confirmer.', confirm: 'Confirmer', emChanged: 'E-mail changé',
+       cardS: 'Votre code de présence : montrez-le aux organisateurs à l’entrée et à la sortie', addS: 'Une attestation émise sans e-mail ou avec un autre', accS: 'Téléphone, e-mail, mot de passe',
+       findPh: 'Rechercher par activité, numéro, organisme ou type', allTypes: 'Toutes', allYears: 'Toutes les années', lType: 'Type d’attestation', lYear: 'Année',
+       shown: (n, m) => `${n} sur ${m}`, clear: 'Effacer la recherche', noMatch: 'Aucune attestation ne correspond à votre recherche.'},
   en: {cardT: 'My card', cardD: 'Show this code to the organizers on the way in and out: your attendance is recorded at once, with no ticket or form.', cardPrint: 'Save the card as a picture', cardShare: 'Share the card', cardHold: 'If the picture is not saved: press and hold it, then choose “Save image”.', lEmail: 'Email', lPhone: 'Phone', lNum: 'Participant no.', lCerts: 'Certificates', title: 'My certificates', lead: 'All your certificates in one place: download them, share them, and find their verification codes.',
        tIn: 'Sign in', tNew: 'New account', phone: 'Phone number', phoneHelp: 'Any way you write it: 0612345678 or +212 6 12 34 56 78',
        password: 'Password', show: 'Show', hide: 'Hide', signIn: 'Sign in', forgot: 'Forgot your password?', noAcc: 'First time here? Open your account',
@@ -182,7 +219,10 @@ const T = {
        recSend: 'Send the request', recSent: 'Request received. Once your identity is checked, choose “Forgot your password?” with your new email.',
        recWait: 'Too many requests today: wait for the administrator’s answer.',
        chPh: 'Change the phone number', newPhone: 'New phone number', takenP: 'This number has another account.', phChanged: 'Phone number changed',
-       chEm: 'Change the email', emCode: 'We sent a code valid for 10 minutes to the new email: type it here to confirm it.', confirm: 'Confirm', emChanged: 'Email changed'},
+       chEm: 'Change the email', emCode: 'We sent a code valid for 10 minutes to the new email: type it here to confirm it.', confirm: 'Confirm', emChanged: 'Email changed',
+       cardS: 'Your attendance code: show it to the organisers on the way in and out', addS: 'A certificate issued without an email, or to another one', accS: 'Phone, email, password',
+       findPh: 'Search by activity, number, organisation or type', allTypes: 'All', allYears: 'All years', lType: 'Certificate type', lYear: 'Year',
+       shown: (n, m) => `${n} of ${m}`, clear: 'Clear the search', noMatch: 'No certificate matches your search.'},
 };
 
 const {el, t} = UI, app = document.getElementById('app');
@@ -213,6 +253,22 @@ function password(key, auto) {  // a password field with a show/hide button
 const phoneField = (key = 'phone') => input(key, {type: 'tel', dir: 'ltr', inputMode: 'tel', autocomplete: 'tel', required: true, placeholder: '06 12 34 56 78'}, 'phoneHelp');
 const emailField = (key = 'email', help) => input(key, {type: 'email', dir: 'ltr', inputMode: 'email', autocomplete: 'email', required: true, placeholder: 'name@example.com'}, help);
 const idField = () => input('idL', {type: 'text', dir: 'ltr', autocomplete: 'username', autocapitalize: 'none', spellcheck: false, required: true}, 'idHelp');
+const ICON = {card: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M7 10h4M7 14h3"/><rect x="14" y="9" width="4" height="5" rx=".6"/>',
+  plus: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>', user: '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.4-3.8 4.2-5.6 7.5-5.6s6.1 1.8 7.5 5.6"/>',
+  chev: '<path d="M6 9l6 6 6-6"/>', search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>'};
+function icon(cls, d) {  // a fixed icon of this page (never text from the sheets)
+  const s = el('span', {className: cls, ariaHidden: 'true'});
+  s.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  return s;
+}
+function fold(id, title, sub, ico, ...body) {  // a card that opens and closes from its title line; this device remembers it
+  const d = el('details', {className: 'card fold rise', id}), k = 'shawahid-fold-' + id;
+  d.append(el('summary', {}, icon('ico', ICON[ico]), el('span', {className: 'ttl'}, el('b', {textContent: title}), el('small', {textContent: sub})),
+    icon('chev', ICON.chev)), el('div', {className: 'body'}, ...body));
+  d.open = UI.store.get(k) === '1';
+  d.addEventListener('toggle', () => UI.store.set(k, d.open ? '1' : null));
+  return d;
+}
 const said = (r, map) => t(map[r.status] || 'sendFail');
 const form = (...kids) => el('form', {className: 'card pad stack narrow rise', noValidate: true}, ...kids);
 const switcher = on => el('div', {className: 'seg narrow', role: 'tablist'},
@@ -362,8 +418,7 @@ function addBox() {  // a certificate added by its number, when the name on it i
   const [cb, vcode] = input('vcodeL', {dir: 'ltr', autocomplete: 'off', spellcheck: false, maxLength: 8, style: 'text-transform:uppercase'});
   const say = el('p', {className: 'say', role: 'alert'});
   const go = el('button', {className: 'btn', type: 'submit', textContent: t('add')});
-  const f = el('form', {className: 'card pad stack rise', noValidate: true},
-    el('div', {}, el('h2', {textContent: t('addT')}), el('p', {className: 'hint', style: 'margin-top:6px', textContent: t('addD')})), sb, cb, go, say);
+  const f = el('form', {className: 'stack', noValidate: true}, el('p', {className: 'hint', textContent: t('addD')}), sb, cb, go, say);
   f.onsubmit = async e => {
     e.preventDefault();
     if (!serial.value.trim()) return serial.focus();
@@ -377,7 +432,7 @@ function addBox() {  // a certificate added by its number, when the name on it i
     } catch (e2) { /* toast shown */ }
     done();
   };
-  return f;
+  return fold('addBox', t('addT'), t('addS'), 'plus', f);
 }
 
 function phoneBox() {  // a new phone number, with the password
@@ -451,9 +506,8 @@ function accountBox() {  // the account's own settings: its phone, its email, it
     } catch (e2) { /* toast shown */ }
   }, true);
   del.classList.add('sm', 'danger');
-  return el('details', {className: 'card pad rise'}, el('summary', {textContent: t('accT')}),
-    el('div', {className: 'stack', style: 'margin-top:16px'}, phoneBox(), emailBox(), f, el('div', {className: 'stack'},
-      el('h3', {textContent: t('del')}), el('p', {className: 'hint', textContent: t('delD')}), el('div', {}, del))));
+  return fold('accBox', t('accT'), t('accS'), 'user', el('div', {className: 'stack'}, phoneBox(), emailBox(), f, el('div', {className: 'stack'},
+    el('h3', {textContent: t('del')}), el('p', {className: 'hint', textContent: t('delD')}), el('div', {}, del))));
 }
 
 function draw(j) {
@@ -497,8 +551,55 @@ function draw(j) {
     c.revoked ? null : el('div', {className: 'btns'},
       /^https:\/\//.test(c.link) ? el('a', {className: 'btn sm', href: c.link, target: '_blank', rel: 'noopener', textContent: t('download')}) : null,
       el('a', {className: 'btn sm ghost', href: verifyUrl(c), target: '_blank', rel: 'noopener', textContent: t('verify')}))));
-  show(summary, j.card ? cardBox(j) : null, cards.length ? el('div', {className: 'list'}, ...cards) : el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('none')}),
-    el('div', {className: 'list', style: 'align-items:start'}, addBox(), accountBox()));  // opening «حسابي» does not stretch the other card
+  show(summary, j.card ? cardBox(j) : null, ...[certList(j.certs, cards)].flat(), el('div', {className: 'duo'}, addBox(), accountBox()));
+}
+
+let find = {q: '', type: '', year: ''};  // the list's search and filters, kept when the page is drawn again
+const norm = s => String(s || '').toLowerCase().normalize('NFKD').replace(/[\u064B-\u065F\u0670\u0640\u0300-\u036f]/g, '')
+  .replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');  // «الأستاذة» finds «الاستاذه»
+function yearOf(c) {  // as core.serial_year: '2026' (CDCUE-2026-P0010), '2025/2026' (CDCUE-252601-0001), else the year in its dates
+  const seg = String(c.serial || '').split('-')[1] || '';
+  if (/^20\d\d$/.test(seg)) return seg;
+  if (/^\d{6}$/.test(seg)) return `20${seg.slice(0, 2)}/20${seg.slice(2, 4)}`;
+  return (String(c.dates || '').match(/20\d\d/) || [''])[0];
+}
+
+function certList(certs, cards) {  // the certificates; from 4 of them, a search box, their types and their years to narrow them
+  if (!cards.length) return el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('none')});
+  const list = el('div', {className: 'list'}, ...cards);
+  if (cards.length < 4) return list;
+  const typeOf = c => c.type || t('cert'), keys = certs.map(c => norm([c.activity, c.serial, c.org, typeOf(c), c.dates, c.code].join(' ')));
+  const years = certs.map(yearOf), types = new Map(), ys = [...new Set(years.filter(Boolean))].sort().reverse();
+  certs.forEach(c => types.set(typeOf(c), (types.get(typeOf(c)) || 0) + 1));
+  if (!types.has(find.type)) find.type = '';
+  if (!ys.includes(find.year)) find.year = '';
+  const q = el('input', {type: 'search', value: find.q, placeholder: t('findPh'), ariaLabel: t('findPh'), autocomplete: 'off', spellcheck: false});
+  const chips = el('div', {className: 'chips', role: 'group', ariaLabel: t('lType')},
+    [['', t('allTypes'), certs.length], ...[...types].map(([k, n]) => [k, k, n])].map(([v, label, n]) =>
+      el('button', {type: 'button', className: 'chip', dir: 'auto', dataset: {v}, onclick: () => { find.type = v; run(); }}, label, el('i', {textContent: n}))));
+  const yr = ys.length > 1 ? el('select', {ariaLabel: t('lYear'), onchange: () => { find.year = yr.value; run(); }},
+    el('option', {value: '', textContent: t('allYears')}), ys.map(y => el('option', {value: y, textContent: y}))) : null;
+  if (yr) yr.value = find.year;
+  const found = el('span', {ariaLive: 'polite'}), none = el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('noMatch')});
+  const clear = el('button', {type: 'button', className: 'linkbtn', textContent: t('clear'), onclick: () => {
+    find = {q: '', type: '', year: ''}; q.value = ''; if (yr) yr.value = ''; run(); q.focus();
+  }});
+  function run() {
+    const words = norm(find.q).split(/\s+/).filter(Boolean);
+    let n = 0;
+    cards.forEach((a, i) => {
+      const ok = (!find.type || typeOf(certs[i]) === find.type) && (!find.year || years[i] === find.year) && words.every(w => keys[i].includes(w));
+      a.hidden = !ok; n += ok;
+    });
+    chips.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === find.type)));
+    const on = words.length || find.type || find.year;
+    found.textContent = on ? t('shown')(n, cards.length) : t('count')(cards.length);
+    clear.hidden = !on; none.hidden = n > 0;
+  }
+  q.oninput = () => { find.q = q.value; run(); };
+  run();
+  return [el('section', {className: 'card finder rise'}, el('div', {className: 'field'}, icon('', ICON.search), q),
+    types.size > 1 || yr ? el('div', {className: 'frow'}, types.size > 1 ? chips : null, yr) : null, el('div', {className: 'found'}, found, clear)), list, none];
 }
 
 function cardBox(j) {  // the account's own card, as a picture (the dashboard draws the same): shown here, saved or shared from here
@@ -511,7 +612,6 @@ function cardBox(j) {  // the account's own card, as a picture (the dashboard dr
     pic.src = c.toDataURL('image/png');
     png = await new Promise(ok => c.toBlob(ok, 'image/png'));
   };
-  draw().catch(() => box.replaceChildren(el('p', {className: 'ltr', textContent: j.card})));
   const file = () => new File([png], 'card-' + j.card + '.png', {type: 'image/png'});
   const save = () => {
     if (!png) return;
@@ -520,8 +620,13 @@ function cardBox(j) {  // the account's own card, as a picture (the dashboard dr
   };
   const share = navigator.canShare && navigator.canShare({files: [new File([''], 'x.png', {type: 'image/png'})]})
     ? btn('cardShare', () => png && navigator.share({files: [file()], title: t('cardT')}).catch(() => {}), true) : null;
-  return el('section', {className: 'card pad rise', id: 'cardBox', style: 'margin-top:16px'}, el('h2', {textContent: t('cardT')}),
-    pic, el('p', {className: 'hint', textContent: t('cardD')}), el('div', {className: 'btns'}, btn('cardPrint', save), share), box);
+  const d = fold('cardBox', t('cardT'), t('cardS'), 'card', pic, el('p', {className: 'hint', textContent: t('cardD')}),
+    el('div', {className: 'btns'}, btn('cardPrint', save), share), box);
+  let drawn = false;
+  const open = () => { if (d.open && !drawn) { drawn = true; draw().catch(() => box.replaceChildren(el('p', {className: 'ltr', textContent: j.card}))); } };
+  d.addEventListener('toggle', open);
+  open();  // drawn the first time it is opened, not with every visit
+  return d;
 }
 
 UI.init({page: 'me', name: 'title', T, onLang: () => view()});
