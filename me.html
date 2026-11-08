@@ -498,7 +498,7 @@ function draw(j) {
       /^https:\/\//.test(c.link) ? el('a', {className: 'btn sm', href: c.link, target: '_blank', rel: 'noopener', textContent: t('download')}) : null,
       el('a', {className: 'btn sm ghost', href: verifyUrl(c), target: '_blank', rel: 'noopener', textContent: t('verify')}))));
   show(summary, j.card ? cardBox(j) : null, cards.length ? el('div', {className: 'list'}, ...cards) : el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('none')}),
-    el('div', {className: 'list'}, addBox(), accountBox()));
+    el('div', {className: 'list', style: 'align-items:start'}, addBox(), accountBox()));  // opening «حسابي» does not stretch the other card
 }
 
 function cardBox(j) {  // the account's own card, as a picture (the dashboard draws the same): shown here, saved or shared from here
