@@ -60,7 +60,7 @@
 
 <script>
 const T = {
-  ar: {title: 'التسجيل في النشاط', lead: 'سجّل، واحتفظ برمز حضورك: يُمسح عند نهاية النشاط.', loading: 'جارٍ التحميل...', net: 'تعذر الاتصال بالإنترنت',
+  ar: {title: 'التسجيل في النشاط', lead: 'سجّل، واحتفظ برمز حضورك: يُمسح عند نهاية النشاط.', loading: 'جارٍ التحميل...', net: 'تعذر الاتصال بالإنترنت', retry: 'الخادم مشغول أو الاتصال ضعيف، نعيد المحاولة تلقائياً...',
        bad: 'هذا التسجيل غير متاح. إن كان النشاط جديداً فأعد فتح الرابط بعد دقيقة، وإلا فاطلب الرابط من المنظمين.', closed: 'التسجيل في هذا النشاط مغلق.', send: 'تسجيل',
        male: 'ذكر', female: 'أنثى', required: 'هذه الخانة إلزامية', badEmail: 'البريد غير صحيح', yourCode: 'رمز حضورك',
        show: 'أظهر هذا الرمز للمنظمين عند نهاية النشاط. إن تعذّر مسحه، أعطهم رقم التسجيل.', number: 'رقم التسجيل',
@@ -69,7 +69,7 @@ const T = {
        already: 'سجّلت من قبل في هذا النشاط؟ استرجع رمزك', findT: 'استرجاع رمز الحضور', findPhone: 'رقم الهاتف الذي سجّلت به', findFirst: 'اسمك الشخصي',
        find: 'استرجاع', notFound: 'لم نجد تسجيلاً بهذا الهاتف والاسم في هذا النشاط.', busy: 'طلبات كثيرة الآن، أعد المحاولة بعد قليل.', back: 'رجوع',
        mine: 'التسجيلات من هذا الهاتف:', nameMissing: 'اكتب الاسم على الأقل'},
-  fr: {title: 'Inscription à l’activité', lead: 'Inscrivez-vous et gardez votre code de présence : il est scanné à la fin.', loading: 'Chargement...', net: 'Pas de connexion Internet',
+  fr: {title: 'Inscription à l’activité', lead: 'Inscrivez-vous et gardez votre code de présence : il est scanné à la fin.', loading: 'Chargement...', net: 'Pas de connexion Internet', retry: 'Serveur occupé ou connexion faible, nouvel essai automatique...',
        bad: 'Inscription indisponible. Si l’activité vient d’être créée, rouvrez le lien dans une minute ; sinon demandez le lien aux organisateurs.', closed: 'Les inscriptions à cette activité sont fermées.', send: 'S’inscrire',
        male: 'Homme', female: 'Femme', required: 'Champ obligatoire', badEmail: 'E-mail incorrect', yourCode: 'Votre code de présence',
        show: 'Montrez ce code aux organisateurs à la fin de l’activité. S’il ne se scanne pas, donnez-leur le numéro d’inscription.', number: 'Numéro d’inscription',
@@ -78,7 +78,7 @@ const T = {
        already: 'Déjà inscrit à cette activité ? Retrouvez votre code', findT: 'Retrouver le code de présence', findPhone: 'Le téléphone de l’inscription', findFirst: 'Votre prénom',
        find: 'Retrouver', notFound: 'Aucune inscription avec ce téléphone et ce prénom dans cette activité.', busy: 'Trop de demandes, réessayez dans un instant.', back: 'Retour',
        mine: 'Inscriptions depuis ce téléphone :', nameMissing: 'Écrivez au moins le nom'},
-  en: {title: 'Register for the activity', lead: 'Register and keep your attendance code: it is scanned at the end.', loading: 'Loading...', net: 'No Internet connection',
+  en: {title: 'Register for the activity', lead: 'Register and keep your attendance code: it is scanned at the end.', loading: 'Loading...', net: 'No Internet connection', retry: 'Server busy or weak connection, trying again...',
        bad: 'Registration is not available. If the activity is new, open the link again in a minute; otherwise ask the organizers for it.', closed: 'Registration for this activity is closed.', send: 'Register',
        male: 'Male', female: 'Female', required: 'Required', badEmail: 'Wrong email', yourCode: 'Your attendance code',
        show: 'Show this code to the organizers at the end of the activity. If it does not scan, give them the registration number.', number: 'Registration number',
@@ -130,7 +130,7 @@ let sending = false;
 async function sendPending() {
   if (sending || !navigator.onLine || !regs.some(x => !x.ok && !x.refused)) return;  // nothing waiting: the page stays as it is
   sending = true;
-  let changed = false;
+  let changed = false, soon = false;
   try {
     for (const r of regs.filter(x => !x.ok && !x.refused)) {
       const j = await call('reg', {uid: r.uid, data: r.data, hp: r.hp || ''});
@@ -142,15 +142,17 @@ async function sendPending() {
       } else if (['bad', 'noname', 'email', 'closed', 'missing_answer'].includes(j.status)) {  // 'missing': a new activity not yet online, tried again
         Object.assign(r, {ok: false, refused: j.status});  // kept on the phone: its code still shows
         changed = true;
-      }
+      } else if (j.status === 'queued') soon = true;  // in line on the server: its number is ready in a few seconds
       save(STORE, regs);
     }
   } catch (e) { /* offline or busy: tried again shortly */ }
   sending = false;
+  if (soon) setTimeout(sendPending, 4000 + Math.random() * 3000);
   if (changed && current) showTicket(current);  // redrawn only when its state changed (a redraw every 15 s made the code blink)
 }
 setInterval(sendPending, 15000);
 addEventListener('online', sendPending);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') sendPending(); });  // a locked phone stops its timers: sent when it is looked at again
 
 // ---------- the person's code: the QR, their number, a picture to keep ----------
 async function showTicket(r) {
@@ -268,7 +270,9 @@ async function start() {
     info = j; save(INFO, j);
     document.getElementById('actTitle').textContent = j.title;
     if (!had && UI.lang !== j.lang && !UI.store.get('lang')) UI.setLang(j.lang);  // the activity's language, unless chosen
-  } catch (e) { if (!info && !regs.length) return show(card(el('p', {textContent: t('net')}))); }
+  } catch (e) {  // no connection, or hundreds opening at once (the server turns some away): tried again by itself
+    if (!info && !regs.length) { show(card(el('p', {className: 'muted', textContent: t('retry')}))); return setTimeout(start, 3000 + Math.random() * 4000); }
+  }
   if (regs.length) sendPending();
   else if (!had || JSON.stringify(had) !== JSON.stringify(info)) form();  // drawn again only when the questions changed
 }
