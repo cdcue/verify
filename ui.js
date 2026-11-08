@@ -132,6 +132,74 @@
     setLang(lang);
   }
 
-  window.UI = {init, setLang, setTheme, paint, t, el, svg, toast, fmtDate, store, brand, langSwitch, themeButton, NAME, LANGS, THEMES,
+  // A participant's card as a picture (an ID card's shape): the platform's seal as a watermark, the name, a few facts, the QR
+  // code the organizers scan. o: {code, name, kind, rows: [[label, value]], foot, scale}. Needs qrcode-generator loaded.
+  // Returns a canvas; «شواهدي» and the dashboard draw the same card.
+  const CARD_TXT = {ar: {kind: 'بطاقة المشارك', foot: 'أظهر هذا الرمز للمنظمين عند الدخول والخروج: يُسجَّل حضورك مباشرة'},
+                    fr: {kind: 'Carte du participant', foot: 'Montrez ce code aux organisateurs à l’entrée et à la sortie : présence enregistrée aussitôt'},
+                    en: {kind: 'Participant card', foot: 'Show this code to the organizers on the way in and out: attendance recorded at once'}};
+  const SHIELD = 'M12 2l7 3v6c0 5-3.4 8.6-7 10-3.6-1.4-7-5-7-10V5l7-3z', CHECK = 'M8.5 12l2.5 2.5 4.5-5';
+  async function cardCanvas(o) {
+    const F = '"IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif', k = o.scale || 1, W = 1700, H = 1070;
+    await Promise.all(['400', '600', '700'].map(w => document.fonts.load(w + ' 40px "IBM Plex Sans Arabic"', 'شواهد').catch(() => null)));
+    const c = document.createElement('canvas'), x = c.getContext('2d'), rtl = lang === 'ar', ct = CARD_TXT[lang] || CARD_TXT.ar;
+    c.width = Math.round(W * k); c.height = Math.round(H * k); x.scale(k, k);
+    x.beginPath(); x.roundRect(0, 0, W, H, 56); x.clip();
+    const g = x.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, '#06263c'); g.addColorStop(.55, '#0b3b5c'); g.addColorStop(1, '#14608f');
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.strokeStyle = 'rgba(255,255,255,.045)'; x.lineWidth = 2;  // fine rings, as on printed papers of value
+    for (let r = 80; r < 1700; r += 30) { x.beginPath(); x.arc(rtl ? 260 : W - 260, H + 120, r, 0, 2 * Math.PI); x.stroke(); }
+    const seal = (cx, cy, size, alpha, width) => {  // the platform's seal (its 24-unit drawing)
+      x.save(); x.translate(cx - size / 2, cy - size / 2); x.scale(size / 24, size / 24);
+      x.strokeStyle = 'rgba(226,182,90,' + alpha + ')'; x.lineWidth = width; x.lineCap = x.lineJoin = 'round';
+      x.stroke(new Path2D(SHIELD)); x.stroke(new Path2D(CHECK)); x.restore();
+    };
+    const side = (v, w) => rtl ? W - v - (w || 0) : v;  // a position from the start of the reading side
+    seal(side(600), 560, 760, .07, 1.2);  // the watermark, behind the facts
+    const pad = 96, qs = 430, qx = rtl ? pad : W - pad - qs, qy = 300;
+    // the header: seal, platform, kind of card; a gold rule
+    seal(side(pad + 40), 132, 80, 1, 2.2);
+    x.textAlign = rtl ? 'right' : 'left'; x.direction = rtl ? 'rtl' : 'ltr'; x.textBaseline = 'alphabetic';
+    x.fillStyle = '#ffffff'; x.font = '700 46px ' + F; x.fillText(NAME[lang] || NAME.ar, side(pad + 108), 128);
+    x.fillStyle = 'rgba(255,255,255,.72)'; x.font = '400 30px ' + F; x.fillText(o.kind || ct.kind, side(pad + 108), 172);
+    const gold = x.createLinearGradient(0, 0, W, 0);
+    gold.addColorStop(0, 'rgba(226,182,90,0)'); gold.addColorStop(rtl ? .2 : .8, 'rgba(226,182,90,.95)'); gold.addColorStop(1, 'rgba(226,182,90,0)');
+    x.fillStyle = gold; x.fillRect(pad, 222, W - 2 * pad, 4);
+    // the code: a white tile, its modules drawn one by one (sharp at any size), its text under it
+    x.fillStyle = '#ffffff'; x.beginPath(); x.roundRect(qx, qy, qs, qs, 30); x.fill();
+    const q = qrcode(0, 'M'); q.addData(o.code); q.make();
+    const n = q.getModuleCount(), m = (qs - 56) / n;
+    x.fillStyle = '#0b2233';
+    for (let r = 0; r < n; r++) for (let cc = 0; cc < n; cc++) if (q.isDark(r, cc)) x.fillRect(qx + 28 + cc * m, qy + 28 + r * m, m + .6, m + .6);
+    x.textAlign = 'center'; x.direction = 'ltr'; x.fillStyle = 'rgba(255,255,255,.85)'; x.font = '600 25px ui-monospace, Consolas, monospace';
+    x.fillText(o.code, qx + qs / 2, qy + qs + 46);
+    // the name (made smaller until it fits), then the facts
+    const colW = W - 2 * pad - qs - 70, at = side(pad);
+    x.textAlign = rtl ? 'right' : 'left'; x.direction = rtl ? 'rtl' : 'ltr';
+    let fs = 76;
+    do { x.font = '700 ' + fs + 'px ' + F; fs -= 4; } while (x.measureText(o.name).width > colW && fs > 34);
+    x.fillStyle = '#ffffff'; x.fillText(o.name, at, 352);
+    let y = 440;
+    for (const [label, value] of (o.rows || []).filter(r => r[1]).slice(0, 4)) {
+      x.direction = rtl ? 'rtl' : 'ltr'; x.fillStyle = 'rgba(226,182,90,.95)'; x.font = '600 25px ' + F; x.fillText(label, at, y);
+      let vs = 36;
+      do { x.font = '500 ' + vs + 'px ' + F; vs -= 2; } while (x.measureText(value).width > colW && vs > 20);
+      x.direction = /[؀-ۿ]/.test(value) ? 'rtl' : 'ltr';  // an email or a phone keeps its own order
+      x.fillStyle = '#ffffff'; x.fillText(value, at, y + 48);
+      y += 112;
+    }
+    // the foot: what the card is for, and where it is checked
+    x.fillStyle = 'rgba(0,0,0,.22)'; x.fillRect(0, H - 118, W, 118);
+    x.direction = rtl ? 'rtl' : 'ltr'; x.textAlign = rtl ? 'right' : 'left'; x.fillStyle = 'rgba(255,255,255,.8)'; x.font = '400 26px ' + F;
+    let ff = 26;
+    while (x.measureText(o.foot || ct.foot).width > W - 2 * pad - 420 && ff > 18) { ff -= 1; x.font = '400 ' + ff + 'px ' + F; }
+    x.fillText(o.foot || ct.foot, side(pad), H - 48);
+    x.textAlign = rtl ? 'left' : 'right'; x.direction = 'ltr'; x.fillStyle = 'rgba(226,182,90,.95)'; x.font = '600 26px ' + F;
+    x.fillText(location.host + location.pathname.replace(/[^/]*$/, ''), rtl ? pad : W - pad, H - 48);
+    return c;
+  }
+
+  window.UI = {init, setLang, setTheme, paint, t, el, svg, toast, fmtDate, store, brand, langSwitch, themeButton, NAME, LANGS, THEMES, cardCanvas,
                get lang() { return lang; }, get theme() { return theme; }};
 })();
