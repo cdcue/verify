@@ -435,7 +435,7 @@ function accountBox() {  // the account's own settings: its phone, its email, it
     const done = busy(go);
     try {
       const r = await call('mepassword', {token, old: old.value, password: pw.value});
-      if (r.status === 'ok') { UI.toast(t('pwChanged')); old.value = pw.value = ''; say.textContent = ''; }
+      if (r.status === 'ok') { if (r.token) keep(r.token); UI.toast(t('pwChanged')); old.value = pw.value = ''; say.textContent = ''; }
       else if (r.status === 'login') return signOut();
       else say.textContent = t(r.status === 'short' ? 'short' : 'wrongPw');
     } catch (e2) { /* toast shown */ }

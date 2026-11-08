@@ -139,8 +139,8 @@ async function sendPending() {
     for (const r of regs.filter(x => !x.ok && !x.refused)) {
       const j = await call('reg', {uid: r.uid, data: r.data, hp: r.hp || ''});
       if (j.status === 'ok') {
-        if (j.uid && j.uid !== r.uid) { r.uid = j.uid; r.again = true; }  // registered before: their own code
-        Object.assign(r, {ok: true, ticket: j.ticket, name: j.name || r.name});
+        if (j.uid && j.uid !== r.uid) Object.assign(r, {uid: j.uid, again: true, name: j.name || r.name});  // registered before: their own code
+        Object.assign(r, {ok: true, ticket: j.ticket});  // its own name kept (the activity's language): the code drawn stays the same
         delete r.data;
         changed = true;
       } else if (['bad', 'noname', 'email', 'closed', 'missing_answer'].includes(j.status)) {  // 'missing': a new activity not yet online, tried again
