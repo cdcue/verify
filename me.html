@@ -80,6 +80,7 @@
   @keyframes unfold { from { opacity: 0; transform: translateY(-6px); } }
   .duo { display: grid; gap: 0 12px; align-items: start; }
   @media (min-width: 760px) { .duo { grid-template-columns: 1fr 1fr; } }
+  .duo:not(:has(> .fold:not([open]))) { align-items: stretch; }  /* both open: the same height; one closed: it stays a line */
   /* the certificates' search and filters */
   .finder { margin-top: 16px; padding: 14px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .finder input { height: 46px; font-size: 15.5px; }
