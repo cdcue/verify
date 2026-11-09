@@ -1,4 +1,4 @@
-// Shared by the public pages: language (ar/fr/en, saved), theme (device/light/dark, saved), the header bar and the footer.
+// Shared by the public pages: language (ar/fr/en, saved), theme (the device's, or light/dark once chosen, saved), the header bar and the footer.
 // Loaded in <head> so the saved theme and language apply before the page is drawn; a page then calls
 // UI.init({page, T, onLang}) at the end of <body> with its own texts (T[lang][key], shown in [data-t] elements).
 (function () {
@@ -59,19 +59,21 @@
     return isNaN(d) ? v : new Intl.DateTimeFormat(LOCALE[lang], opts || {day: 'numeric', month: 'long', year: 'numeric'}).format(d);
   }
 
+  function isDark() { return theme === 'dark' || (theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches); }
   function applyTheme() {
     if (theme === 'auto') delete root.dataset.theme; else root.dataset.theme = theme;
-    const dark = theme === 'dark' || (theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+    const dark = isDark();
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = dark ? '#08263c' : '#0b3b5c';
     const b = document.getElementById('themeBtn');
     if (b) {
-      b.replaceChildren(svg(ICON[theme]));
-      b.title = t('theme' + theme[0].toUpperCase() + theme.slice(1));
+      b.replaceChildren(svg(ICON[dark ? 'dark' : 'light']));
+      b.title = t(dark ? 'themeDark' : 'themeLight');
       b.setAttribute('aria-label', b.title);
     }
   }
   function setTheme(v) { theme = v; store.set('theme', v === 'auto' ? null : v); applyTheme(); }
+  matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => theme === 'auto' && applyTheme());  // the device switched
 
   function paint(root) {  // the texts of the current language into [data-t], [data-tp] and [data-name] under root
     root.querySelectorAll('[data-t]').forEach(n => { n.textContent = t(n.dataset.t); });
@@ -100,9 +102,8 @@
       ...LANGS.map(l => el('button', {type: 'button', lang: l, textContent: {ar: 'ع', fr: 'FR', en: 'EN'}[l], dataset: {lang: l},
                                        ariaPressed: String(l === lang), onclick: () => setLang(l)})));
   }
-  function themeButton() {  // one button going round: device, light, dark
-    const b = el('button', {type: 'button', className: 'iconbtn', id: 'themeBtn',
-                            onclick: () => setTheme(THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length])});
+  function themeButton() {  // one button: light <-> dark (the device's own until it is pressed)
+    const b = el('button', {type: 'button', className: 'iconbtn', id: 'themeBtn', onclick: () => setTheme(isDark() ? 'light' : 'dark')});
     queueMicrotask(applyTheme);
     return b;
   }
