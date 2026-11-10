@@ -70,7 +70,7 @@ const T = {
        show: 'أظهر هذا الرمز للمنظمين عند نهاية النشاط. إن تعذّر مسحه، أعطهم رقم التسجيل.', number: 'رقم التسجيل',
        confirmed: 'التسجيل مؤكَّد ✓', pending: 'الرمز صالح. يُرسَل التسجيل إلى المنصة... (يكتمل وحده عند عودة الاتصال)', again: 'كنت مسجّلاً من قبل: هذا رمزك نفسه.',
        saveImg: 'حفظ كصورة في الهاتف', longPress: 'إن لم تُحفظ الصورة تلقائياً: اضغط عليها مطولاً واختر «حفظ الصورة».', another: 'تسجيل شخص آخر من هذا الهاتف',
-       already: 'سجّلت من قبل في هذا النشاط؟ استرجع رمزك', findT: 'استرجاع رمز الحضور', findPhone: 'رقم الهاتف الذي سجّلت به', findFirst: 'اسمك الشخصي',
+       already: 'سجّلت من قبل في هذا النشاط؟ استرجع رمزك', onPhone: 'الرموز المسجّلة من هذا الهاتف:', findT: 'استرجاع رمز الحضور', findPhone: 'رقم الهاتف الذي سجّلت به', findFirst: 'اسمك الشخصي',
        find: 'استرجاع', notFound: 'لم نجد تسجيلاً بهذا الهاتف والاسم في هذا النشاط.', busy: 'طلبات كثيرة الآن، أعد المحاولة بعد قليل.', back: 'رجوع',
        mine: 'التسجيلات من هذا الهاتف:', here: 'تم تأكيد حضورك', hereIn: 'تم تأكيد حضورك في الحصة {n} من {m}', hereThanks: 'شكراً لحضورك. تصلك شهادتك على بريدك الإلكتروني عند صدورها.', hereNext: 'يظهر رمزك هنا من جديد في الحصة القادمة.', showMine: 'إظهار رمزي', nameMissing: 'اكتب الاسم على الأقل'},
   fr: {title: 'Inscription à l’activité', lead: 'Inscrivez-vous et gardez votre code de présence : il est scanné à la fin.', loading: 'Chargement...', net: 'Pas de connexion Internet', retry: 'Serveur occupé ou connexion faible, nouvel essai automatique...',
@@ -79,7 +79,7 @@ const T = {
        show: 'Montrez ce code aux organisateurs à la fin de l’activité. S’il ne se scanne pas, donnez-leur le numéro d’inscription.', number: 'Numéro d’inscription',
        confirmed: 'Inscription confirmée ✓', pending: 'Le code est valable. Envoi de l’inscription... (elle se termine seule au retour de la connexion)', again: 'Vous étiez déjà inscrit : voici votre code.',
        saveImg: 'Enregistrer en image', longPress: 'Si l’image ne s’enregistre pas : appuyez longuement dessus, puis « Enregistrer l’image ».', another: 'Inscrire une autre personne depuis ce téléphone',
-       already: 'Déjà inscrit à cette activité ? Retrouvez votre code', findT: 'Retrouver le code de présence', findPhone: 'Le téléphone de l’inscription', findFirst: 'Votre prénom',
+       already: 'Déjà inscrit à cette activité ? Retrouvez votre code', onPhone: 'Codes inscrits depuis ce téléphone :', findT: 'Retrouver le code de présence', findPhone: 'Le téléphone de l’inscription', findFirst: 'Votre prénom',
        find: 'Retrouver', notFound: 'Aucune inscription avec ce téléphone et ce prénom dans cette activité.', busy: 'Trop de demandes, réessayez dans un instant.', back: 'Retour',
        mine: 'Inscriptions depuis ce téléphone :', here: 'Présence confirmée', hereIn: 'Présence confirmée : séance {n} sur {m}', hereThanks: 'Merci de votre présence. Votre attestation vous parviendra par e-mail dès son émission.', hereNext: 'Votre code réapparaît ici à la prochaine séance.', showMine: 'Afficher mon code', nameMissing: 'Écrivez au moins le nom'},
   en: {title: 'Register for the activity', lead: 'Register and keep your attendance code: it is scanned at the end.', loading: 'Loading...', net: 'No Internet connection', retry: 'Server busy or weak connection, trying again...',
@@ -88,7 +88,7 @@ const T = {
        show: 'Show this code to the organizers at the end of the activity. If it does not scan, give them the registration number.', number: 'Registration number',
        confirmed: 'Registration confirmed ✓', pending: 'The code is valid. Sending the registration... (it completes by itself when the connection is back)', again: 'You were registered already: this is your code.',
        saveImg: 'Save as a picture', longPress: 'If the picture is not saved: press and hold it, then “Save image”.', another: 'Register someone else from this phone',
-       already: 'Registered already? Get your code back', findT: 'Get your attendance code back', findPhone: 'The phone you registered with', findFirst: 'Your first name',
+       already: 'Registered already? Get your code back', onPhone: 'Codes registered from this phone:', findT: 'Get your attendance code back', findPhone: 'The phone you registered with', findFirst: 'Your first name',
        find: 'Find', notFound: 'No registration with this phone and first name in this activity.', busy: 'Too many requests, try again shortly.', back: 'Back',
        mine: 'Registrations from this phone:', here: 'Attendance confirmed', hereIn: 'Attendance confirmed: session {n} of {m}', hereThanks: 'Thank you for attending. Your certificate will reach your email once issued.', hereNext: 'Your code shows here again at the next session.', showMine: 'Show my code', nameMissing: 'Write the name at least'},
 };
@@ -282,7 +282,11 @@ function form() {
     showTicket(r);  // the code at once; the registration leaves behind it
     sendPending();
   };
-  show(card(f), card(el('button', {className: 'btn ghost', type: 'button', style: 'width:100%', textContent: t('already'), onclick: findForm})));
+  // registered already from this phone (then «another person», changed one's mind): back to each code in one tap
+  const mine = regs.length ? card(el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('onPhone')}),
+    ...regs.map(r => el('button', {className: 'btn ghost', type: 'button', style: 'width:100%;margin-top:6px', onclick: () => showTicket(r)},
+      t('yourCode') + ': ', el('bdi', {textContent: r.name || r.ticket || ''})))) : null;
+  show(mine, card(f), card(el('button', {className: 'btn ghost', type: 'button', style: 'width:100%', textContent: t('already'), onclick: findForm})));
 }
 
 function findForm() {  // a new phone, a cleared browser: the code again by phone and first name
