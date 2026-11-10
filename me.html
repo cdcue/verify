@@ -84,7 +84,7 @@
   /* the certificates' search and filters */
   .finder { margin-top: 16px; padding: 14px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .finder input { height: 46px; font-size: 15.5px; }
-  .frow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .frow { display: flex; align-items: center; gap: 10px; }
   .chips { flex: 1 1 260px; min-width: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; }
   .chips::-webkit-scrollbar { display: none; }
   .chip { flex: none; display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 0 14px; border-radius: 999px; cursor: pointer;
@@ -92,7 +92,7 @@
   .chip i { font-style: normal; font-size: 12px; min-width: 22px; padding: 1px 7px; border-radius: 999px; background: var(--surface); color: var(--muted); text-align: center; }
   .chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
   .chip[aria-pressed="true"] i { background: color-mix(in srgb, var(--on-brand) 22%, transparent); color: var(--on-brand); }
-  .finder select { height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink);
+  .finder select { flex: none; max-width: 46%; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink);
     font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
   .found { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
   h3 { font-size: 16px; margin: 0; }
@@ -576,7 +576,7 @@ function draw(j) {
   show(summary, j.card ? cardBox(j) : null, ...[certList(j.certs, cards)].flat(), el('div', {className: 'duo'}, addBox(), accountBox()));
 }
 
-let find = {q: '', type: '', year: '', mode: UI.store.get('shawahid-years') || 'season'};  // the list's search and filters, kept when the page is drawn again
+let find = {q: '', type: '', year: ''};  // the list's search and filters, kept when the page is drawn again
 const norm = s => String(s || '').toLowerCase().normalize('NFKD').replace(/[\u064B-\u065F\u0670\u0640\u0300-\u036f]/g, '')
   .replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');  // «الأستاذة» finds «الاستاذه»
 // A certificate's day: the activity's date as written on it («27 غشت 2026», «14/11/2026», «3 septembre 2025»: its first day),
@@ -610,29 +610,31 @@ function certList(certs, cards) {  // the certificates; from 4 of them, a search
   const list = el('div', {className: 'list'}, ...cards);
   if (cards.length < 4) return list;
   const typeOf = c => c.type || t('cert'), keys = certs.map(c => norm([c.activity, c.serial, c.org, typeOf(c), c.dates, c.code].join(' ')));
-  const season = find.mode !== 'year', years = certs.map(c => yearOf(c, season)), types = new Map(), ys = [...new Set(years.filter(Boolean))].sort().reverse();
+  // one list of years, in two groups: academic years ('s:2025/2026', 1 September - 31 August) and calendar years ('y:2026')
+  const years = certs.map(c => ['s:' + yearOf(c, true), 'y:' + yearOf(c, false)]), types = new Map();
+  const of = k => [...new Set(years.map(y => y[k === 's' ? 0 : 1]).filter(y => y.length > 2))].sort().reverse();
+  const ss = of('s'), cy = of('y');
   certs.forEach(c => types.set(typeOf(c), (types.get(typeOf(c)) || 0) + 1));
   if (!types.has(find.type)) find.type = '';
-  if (!ys.includes(find.year)) find.year = '';
+  if (![...ss, ...cy].includes(find.year)) find.year = '';
   const q = el('input', {type: 'search', value: find.q, placeholder: t('findPh'), ariaLabel: t('findPh'), autocomplete: 'off', spellcheck: false});
   const chips = el('div', {className: 'chips', role: 'group', ariaLabel: t('lType')},
     [['', t('allTypes'), certs.length], ...[...types].map(([k, n]) => [k, k, n])].map(([v, label, n]) =>
       el('button', {type: 'button', className: 'chip', dir: 'auto', dataset: {v}, onclick: () => { find.type = v; run(); }}, label, el('i', {textContent: n}))));
-  const yr = ys.length > 1 ? el('select', {ariaLabel: t('lYear'), onchange: () => { find.year = yr.value; run(); }},
-    el('option', {value: '', textContent: t('allYears')}), ys.map(y => el('option', {value: y, textContent: y}))) : null;
+  const yr = ss.length ? el('select', {ariaLabel: t('lYear'), onchange: () => { find.year = yr.value; run(); }},
+    el('option', {value: '', textContent: t('allYears')}),
+    el('optgroup', {label: t('bySeason')}, ss.map(y => el('option', {value: y, textContent: y.slice(2)}))),
+    el('optgroup', {label: t('byYear')}, cy.map(y => el('option', {value: y, textContent: y.slice(2)})))) : null;
   if (yr) yr.value = find.year;
-  const mode = ys.length > 1 || certs.length > 1 ? el('div', {className: 'chips', role: 'group', ariaLabel: t('lYear'), style: 'flex:none'},
-    [['season', t('bySeason')], ['year', t('byYear')]].map(([v, label]) => el('button', {type: 'button', className: 'chip', ariaPressed: String((season ? 'season' : 'year') === v),
-      onclick: () => { if ((season ? 'season' : 'year') === v) return; find.mode = v; find.year = ''; UI.store.set('shawahid-years', v); draw(data); }}, label))) : null;
   const found = el('span', {ariaLive: 'polite'}), none = el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('noMatch')});
   const clear = el('button', {type: 'button', className: 'linkbtn', textContent: t('clear'), onclick: () => {
-    find = {q: '', type: '', year: '', mode: find.mode}; q.value = ''; if (yr) yr.value = ''; run(); q.focus();
+    find = {q: '', type: '', year: ''}; q.value = ''; if (yr) yr.value = ''; run(); q.focus();
   }});
   function run() {
     const words = norm(find.q).split(/\s+/).filter(Boolean);
     let n = 0;
     cards.forEach((a, i) => {
-      const ok = (!find.type || typeOf(certs[i]) === find.type) && (!find.year || years[i] === find.year) && words.every(w => keys[i].includes(w));
+      const ok = (!find.type || typeOf(certs[i]) === find.type) && (!find.year || years[i].includes(find.year)) && words.every(w => keys[i].includes(w));
       a.hidden = !ok; n += ok;
     });
     chips.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === find.type)));
@@ -643,7 +645,7 @@ function certList(certs, cards) {  // the certificates; from 4 of them, a search
   q.oninput = () => { find.q = q.value; run(); };
   run();
   return [el('section', {className: 'card finder rise'}, el('div', {className: 'field'}, icon('', ICON.search), q),
-    types.size > 1 || yr ? el('div', {className: 'frow'}, types.size > 1 ? chips : null, el('div', {className: 'frow', style: 'flex:none;gap:6px'}, mode, yr)) : null, el('div', {className: 'found'}, found, clear)), list, none];
+    types.size > 1 || yr ? el('div', {className: 'frow'}, types.size > 1 ? chips : null, yr) : null, el('div', {className: 'found'}, found, clear)), list, none];
 }
 
 function cardBox(j) {  // the account's own card, as a picture (the dashboard draws the same): shown here, saved or shared from here
