@@ -257,21 +257,21 @@ const T = {
     curSession: 'الحصة الجارية (للمسح والتأكيد)', sessionN: i => 'الحصة ' + i, sessionSet: s => 'المسح الآن للحصة ' + s + ' في كل الهواتف', sessNow: (s, n) => 'الحصة الجارية: ' + s + ' من ' + n, sessD: m => 'المسح والتأكيد يُسجَّلان في هذه الحصة، والهواتف تتبعها' + (m ? ' · الشهادة لمن حضر ' + m + ' على الأقل' : ''), sessNext: s => 'الانتقال إلى الحصة ' + s + ' ←', sessAsk: s => 'تسجيل الحضور في الحصة ' + s + '؟ كل مسح بعد الآن يُحسب للحصة ' + s + '، وتتبعها هواتف المسح.', sessLast: 'الحصة الأخيرة',
     addPerson: 'إضافة مشارك', search: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fAll: 'الكل', fHere: 'حاضرون', fHereIn: s => 'حاضرون في الحصة ' + s,
     fAway: 'غير مؤكدين', fIssued: 'لهم شهادة', fMail: 'مشكلة في البريد', countOf: (n, m) => `${n} من ${m}`,
-    syncNote: d => `البيانات كما في آخر مزامنة للمنصة (${d}). ما تؤكده أو تعدّله هنا يظهر فوراً في هذه اللوحة، ويصل إلى المنصة عند المزامنة.`,
+    syncNote: 'ما تؤكده أو تعدّله هنا يُحفظ فوراً على الإنترنت، ولا يحتاج الحاسوب.',
     scanT: 'رابط المسح للمنظمين', scanD: 'يفتح صفحة مسح البطاقات بكاميرا الهاتف، دون حساب ودون الحاجة للحاسوب.', scanMake: 'إنشاء رابط المسح',
     scanNew: 'رابط جديد', scanSure: 'إنشاء رابط جديد؟ الرابط الحالي يتوقف فوراً في كل الهواتف.', scanMade: 'أُنشئ رابط المسح: أرسله إلى المنظمين',
     scanFail: 'تعذر إنشاء الرابط', scanTitle: 'مسح الحضور', scanCodeT: 'أو برمز المسح',
     scanCodeD: page => `يفتح المساعد ${page} ويكتب هذا الرمز، دون رابط ولا رمز QR. يتغير مع كل رابط جديد، ويتوقف بأرشفة النشاط.`, copyCode: 'نسخ الرمز',
     codeCopied: 'نُسخ الرمز', issue: 'إصدار الشواهد',
     emailSure: 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟', sync: 'جلب التسجيلات الآن', editAct: 'تعديل النشاط', noTicket: 'دون بطاقة',
-    pending: 'تعديل ينتظر المزامنة', hereIn: s => 'حاضر في الحصة ' + s, here: 'حاضر', away: 'غير مؤكد', sessions: 'الحصص: ', certOf: x => 'شهادة ' + x,
+    hereIn: s => 'حاضر في الحصة ' + s, here: 'حاضر', away: 'غير مؤكد', sessions: 'الحصص: ', certOf: x => 'شهادة ' + x,
     revoked: 'ملغاة', code: 'رمز التحقق', download: 'تحميل', mSent: 'أُرسل البريد', mErr: 'تعذر الإرسال', mPending: 'في الطابور', mStopped: 'أُوقف',
-    markIn: s => 'حاضر في الحصة ' + s, mark: 'تأكيد الحضور', marked: 'سُجّل الحضور، ويصل إلى المنصة عند المزامنة', resend: 'إعادة إرسال البريد',
+    markIn: s => 'حاضر في الحصة ' + s, mark: 'تأكيد الحضور', marked: 'سُجّل الحضور', resend: 'إعادة إرسال البريد',
     resendSure: e => 'إعادة إرسال رسالة الشهادة نفسها إلى ' + e + '؟', resent: 'وُضعت الرسالة في طابور الإرسال',
     resendOld: 'نص الرسالة لم يعد محفوظاً (أقدم من 30 يوماً): أعد الإرسال من المنصة', edit: 'تعديل', del: 'حذف',
-    delSure: n => 'حذف ' + n + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)', deleted: 'حُذف، ويصل الحذف إلى المنصة عند المزامنة',
+    delSure: n => 'حذف ' + n + ' من هذا النشاط؟ (يذهب إلى سلة المحذوفات في المنصة)', deleted: 'حُذف',
     fixT: n => 'تصحيح: ' + n, newPersonT: 'مشارك جديد (دون بطاقة)', hasCert: 'له شهادة: تُرسم من جديد بالرقم والرابط نفسيهما بعد الحفظ.', redrawing: 'تُرسم الشهادة المصححة...', redrawn: 'رُسمت الشهادة من جديد: الرقم والرابط كما هما', redrawFail: 'حُفظ التصحيح، وتعذر رسم الشهادة من هنا (لا تصميم جاهز أو لا إذن): يرسمها البرنامج على الحاسوب', saveFix: 'حفظ التصحيح',
-    add: 'إضافة', fixed: 'حُفظ التصحيح، ويصل إلى المنصة عند المزامنة', added: 'أُضيف، ويصل إلى المنصة عند المزامنة',
+    add: 'إضافة', fixed: 'حُفظ التصحيح', added: 'أُضيف',
     partsD: 'كل من له شهادة صالحة ببريد صحيح يظهر هنا. في صفحة «شواهدي» يفتح حسابه مرة واحدة برقم هاتفه وبريده (يصله رمز تفعيل)، ثم يدخل برقم هاتفه وكلمة سره دون أي بريد، ويستطيع أن يضيف شهادة باسمه برقمها. القائمة تُحدَّث من المنصة على الحاسوب.',
     partsSearch: 'بحث بالاسم أو البريد أو الرقم أو رقم الشهادة...', certsN: n => n + ' شهادة: ', meLink: 'شواهدي', accT: n => `حسابات «شواهدي» (${n})`,
     accD: 'الحسابات المفعّلة برقم الهاتف. أغلق حساباً فُتح برقم هاتف شخص آخر، أو بطلب صاحبه: يتحرر الرقم ليُفتح به حساب جديد، والشواهد لا تتغير.',
@@ -325,8 +325,8 @@ const T = {
     mNumbers: 'إدخال أرقام البطاقات', mNumbersD: 'بلوحة المفاتيح أو بقارئ QR يدوي', mSign: 'لائحة التوقيع الموقّعة',
     mSignD: 'صوّرها بعد النشاط: يُقرأ من وقّع تلقائياً',
     numbersD: 'اكتب أرقام البطاقات المسلَّمة (7 أو T4-007)، مفصولة بفاصلة أو مسافة أو سطر: يُسجَّل أصحابها حاضرين في الحصة الحالية.', markThese: 'تسجيل الحضور',
-    marking: (d, n) => `${d} من ${n}...`, markedN: n => `سُجّل ${n} حاضراً`, notReg: 'غير مسجلة بعد (تُحفظ وتُطابق عند المزامنة): ',
-    pSearch: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fProblem: 'تحتاج مراجعة', fPending: 'تعديلات تنتظر الحاسوب', sName: 'الترتيب: الاسم',
+    marking: (d, n) => `${d} من ${n}...`, markedN: n => `سُجّل ${n} حاضراً`, notReg: 'غير مسجلة بعد (حُفظ حضورها، ويُطابَق تلقائياً حين يسجّل صاحبها): ',
+    pSearch: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fProblem: 'تحتاج مراجعة', sName: 'الترتيب: الاسم',
     sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
     cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
     dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
@@ -359,7 +359,7 @@ const T = {
     designItems: ['رفع التصميم لكل نوع شهادة', 'وضع المتغيرات على الشهادة ومعاينتها', 'نسخ تصميم من نشاط آخر', 'تصغير حجم التصميم'],
     issueT: 'إصدار الشواهد ورفعها', thType: 'النوع', thPresent: 'حاضرون', thTodo: 'بلا شهادة', beforeT: 'قبل الإصدار',
     chkProblems: n => `${n} تسجيل يحتاج مراجعة (اسم ناقص أو بريد غير صالح)`, chkOk: 'التسجيلات مراجَعة: لا أسماء ناقصة ولا بريد غير صالح',
-    chkPending: n => `${n} تعديل ينتظر الحاسوب: يُطبَّق قبل الإصدار`, chkPresent: n => `${n} حاضراً يستحقون الشهادة`,
+    chkPresent: n => `${n} حاضراً يستحقون الشهادة`,
     issueNote: 'كل حاضر يأخذ رقماً نهائياً لا يتكرر. الإصدار من هذه الصفحة (أعلاه)، دون الحاجة إلى الحاسوب: تُرفع الشهادة إلى Drive وتُسجَّل في منصة التحقق.',
     refreshT: 'تحديث كل الشواهد بعد خطأ في التصميم', mailT: 'الإرسال بالبريد', mSentN: 'أُرسلت', mQueued: 'في الطابور', mTodo: 'لم تُرسل بعد', mFailed: 'تعذرت',
     mailErrT: 'لم تصل الشهادة إلى هؤلاء: صحّح البريد بزر «تصحيح» ثم أعد الإرسال.', emailAsk: n => `طلب الإرسال (${n})`, previewT: 'معاينة البريد',
@@ -428,7 +428,7 @@ const T = {
     sessionN: i => 'Séance ' + i, sessionSet: s => 'Scan en cours : séance ' + s + ' sur tous les téléphones', sessNow: (s, n) => 'Séance en cours : ' + s + ' sur ' + n, sessD: m => 'Scans et présences sont enregistrés pour cette séance ; les téléphones la suivent' + (m ? ' · attestation dès ' + m + ' séance(s)' : ''), sessNext: s => 'Passer à la séance ' + s + ' →', sessAsk: s => 'Enregistrer la présence pour la séance ' + s + ' ? Chaque scan comptera désormais pour la séance ' + s + '.', sessLast: 'Dernière séance', addPerson: 'Ajouter un participant',
     search: 'Rechercher par nom, carte, numéro d’attestation ou e-mail...', fAll: 'Tous', fHere: 'Présents', fHereIn: s => 'Présents à la séance ' + s,
     fAway: 'Non confirmés', fIssued: 'Avec attestation', fMail: 'Problème d’e-mail', countOf: (n, m) => `${n} sur ${m}`,
-    syncNote: d => `Données de la dernière synchronisation (${d}). Ce que vous confirmez ou modifiez ici s’affiche aussitôt et rejoint la plateforme à la synchronisation.`,
+    syncNote: 'Ce que vous confirmez ou modifiez ici est enregistré en ligne aussitôt, sans l’ordinateur.',
     scanT: 'Lien de scan des organisateurs', scanD: 'Ouvre la page de scan des cartes avec l’appareil photo du téléphone, sans compte ni ordinateur.',
     scanMake: 'Créer le lien de scan', scanNew: 'Nouveau lien',
     scanSure: 'Créer un nouveau lien ? L’actuel cesse aussitôt de fonctionner sur tous les téléphones.',
@@ -438,17 +438,17 @@ const T = {
     copyCode: 'Copier le code', codeCopied: 'Code copié', issue: 'Émettre les attestations',
    
     emailSure: 'Mettre en file d’envoi les e-mails de ceux qui n’ont pas encore reçu leur attestation ?', sync: 'Récupérer les inscriptions', editAct: 'Modifier l’activité',
-    noTicket: 'Sans carte', pending: 'Modification en attente de synchronisation', hereIn: s => 'Présent séance ' + s, here: 'Présent', away: 'Non confirmé',
+    noTicket: 'Sans carte', hereIn: s => 'Présent séance ' + s, here: 'Présent', away: 'Non confirmé',
     sessions: 'Séances : ', certOf: x => 'Attestation ' + x, revoked: 'Annulée', code: 'Code de vérification', download: 'Télécharger', mSent: 'E-mail envoyé',
     mErr: 'Envoi échoué', mPending: 'En file d’attente', mStopped: 'Arrêté', markIn: s => 'Présent séance ' + s, mark: 'Confirmer la présence',
-    marked: 'Présence enregistrée ; elle rejoint la plateforme à la synchronisation', resend: 'Renvoyer l’e-mail',
+    marked: 'Présence enregistrée', resend: 'Renvoyer l’e-mail',
     resendSure: e => 'Renvoyer le même e-mail d’attestation à ' + e + ' ?', resent: 'E-mail remis en file d’envoi',
     resendOld: 'Le texte de l’e-mail n’est plus conservé (plus de 30 jours) : renvoyez-le depuis la plateforme', edit: 'Modifier', del: 'Supprimer',
     delSure: n => 'Supprimer ' + n + ' de cette activité ? (corbeille de la plateforme)',
-    deleted: 'Supprimé ; la suppression rejoint la plateforme à la synchronisation', fixT: n => 'Correction : ' + n,
+    deleted: 'Supprimé', fixT: n => 'Correction : ' + n,
     newPersonT: 'Nouveau participant (sans carte)', hasCert: 'A une attestation : elle est refaite après l’enregistrement, même numéro et même lien.', redrawing: 'Attestation corrigée en cours...', redrawn: 'Attestation refaite : même numéro, même lien', redrawFail: 'Correction enregistrée ; l’attestation n’a pas pu être refaite ici (modèle ou autorisation manquant) : l’ordinateur la refera',
-    saveFix: 'Enregistrer la correction', add: 'Ajouter', fixed: 'Correction enregistrée ; elle rejoint la plateforme à la synchronisation',
-    added: 'Ajouté ; il rejoint la plateforme à la synchronisation',
+    saveFix: 'Enregistrer la correction', add: 'Ajouter', fixed: 'Correction enregistrée',
+    added: 'Ajouté',
     partsD: 'Chaque titulaire d’une attestation valide avec un e-mail correct figure ici. Sur « Mes attestations », il ouvre une fois son compte avec son téléphone et son e-mail (code d’activation reçu par e-mail), puis se connecte avec son téléphone et son mot de passe, sans e-mail, et peut ajouter une attestation à son nom par son numéro. Liste mise à jour par la plateforme de l’ordinateur.',
     partsSearch: 'Rechercher par nom, e-mail, numéro ou attestation...', certsN: n => n + ' attestation(s) : ', meLink: 'Mes attestations',
     accT: n => `Comptes « Mes attestations » (${n})`,
@@ -508,8 +508,8 @@ const T = {
     mSignD: 'Photographiée après l’activité : les signatures sont lues',
     numbersD: 'Saisissez les numéros des cartes rendues (7 ou T4-007), séparés par virgule, espace ou ligne : leurs titulaires sont marqués présents pour la séance en cours.',
     markThese: 'Marquer présents', marking: (d, n) => `${d} sur ${n}...`, markedN: n => `${n} marqués présents`,
-    notReg: 'Pas encore inscrits (gardés et rapprochés à la synchronisation) : ', pSearch: 'Rechercher par nom, carte, attestation ou e-mail...',
-    fProblem: 'À revoir', fPending: 'Changements en attente de l’ordinateur', sName: 'Tri : nom', sTicket: 'Tri : numéro de carte',
+    notReg: 'Pas encore inscrits (présence gardée, rapprochée dès l’inscription) : ', pSearch: 'Rechercher par nom, carte, attestation ou e-mail...',
+    fProblem: 'À revoir', sName: 'Tri : nom', sTicket: 'Tri : numéro de carte',
     sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
     contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
     dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
@@ -542,7 +542,7 @@ const T = {
     designItems: ['Importer le modèle de chaque type', 'Placer les champs et prévisualiser', 'Copier le modèle d’une autre activité', 'Réduire la taille du modèle'],
     issueT: 'Émettre et publier les attestations', thType: 'Type', thPresent: 'Présents', thTodo: 'Sans attestation', beforeT: 'Avant l’émission',
     chkProblems: n => `${n} inscriptions à revoir (nom incomplet ou e-mail invalide)`, chkOk: 'Inscriptions revues : ni nom incomplet ni e-mail invalide',
-    chkPending: n => `${n} changements en attente de l’ordinateur : appliqués avant l’émission`, chkPresent: n => `${n} présents ont droit à l’attestation`,
+    chkPresent: n => `${n} présents ont droit à l’attestation`,
    
     issueNote: 'Chaque présent reçoit un numéro définitif. L’émission se fait depuis cette page (ci-dessus), sans l’ordinateur : l’attestation est publiée sur Drive et inscrite au registre de vérification.',
     refreshT: 'Mettre à jour toutes les attestations après une erreur de modèle', mailT: 'Envoi par e-mail', mSentN: 'Envoyés', mQueued: 'En file',
@@ -616,7 +616,7 @@ const T = {
     sessionN: i => 'Session ' + i, sessionSet: s => 'All phones now scan session ' + s, sessNow: (s, n) => 'Current session: ' + s + ' of ' + n, sessD: m => 'Scans and attendance are recorded for this session; the phones follow it' + (m ? ' · certificate from ' + m + ' session(s)' : ''), sessNext: s => 'Move to session ' + s + ' →', sessAsk: s => 'Record attendance for session ' + s + '? Every scan from now on counts for session ' + s + '.', sessLast: 'Last session', addPerson: 'Add participant',
     search: 'Search by name, ticket, certificate number or email...', fAll: 'All', fHere: 'Present', fHereIn: s => 'Present in session ' + s,
     fAway: 'Not confirmed', fIssued: 'With certificate', fMail: 'Email problem', countOf: (n, m) => `${n} of ${m}`,
-    syncNote: d => `Data as of the platform’s last sync (${d}). What you confirm or change here shows at once, and reaches the platform at the next sync.`,
+    syncNote: 'What you confirm or change here is saved online at once, without the computer.',
     scanT: 'Organizers’ scanning link', scanD: 'Opens the ticket-scanning page with the phone camera, no account and no computer needed.',
     scanMake: 'Create scanning link', scanNew: 'New link', scanSure: 'Create a new link? The current one stops at once on every phone.',
     scanMade: 'Scanning link created: send it to the organizers', scanFail: 'Could not create the link', scanTitle: 'Attendance scan',
@@ -625,16 +625,16 @@ const T = {
     copyCode: 'Copy the code', codeCopied: 'Code copied', issue: 'Issue certificates',
    
     emailSure: 'Queue the emails of everyone who has not received their certificate yet?', sync: 'Fetch registrations now', editAct: 'Edit activity', noTicket: 'No ticket',
-    pending: 'Change waiting for sync', hereIn: s => 'Present in session ' + s, here: 'Present', away: 'Not confirmed', sessions: 'Sessions: ',
+    hereIn: s => 'Present in session ' + s, here: 'Present', away: 'Not confirmed', sessions: 'Sessions: ',
     certOf: x => 'Certificate: ' + x, revoked: 'Revoked', code: 'Verification code', download: 'Download', mSent: 'Email sent', mErr: 'Email failed',
     mPending: 'Queued', mStopped: 'Stopped', markIn: s => 'Present in session ' + s, mark: 'Confirm attendance',
-    marked: 'Attendance recorded; it reaches the platform at the next sync', resend: 'Resend email',
+    marked: 'Attendance recorded', resend: 'Resend email',
     resendSure: e => 'Send the same certificate email again to ' + e + '?', resent: 'The email is back in the sending queue',
     resendOld: 'The email text is no longer kept (older than 30 days): resend it from the platform', edit: 'Edit', del: 'Delete',
-    delSure: n => 'Remove ' + n + ' from this activity? (goes to the platform’s trash)', deleted: 'Deleted; it reaches the platform at the next sync',
+    delSure: n => 'Remove ' + n + ' from this activity? (goes to the platform’s trash)', deleted: 'Deleted',
     fixT: n => 'Correct: ' + n, newPersonT: 'New participant (no ticket)',
     hasCert: 'Has a certificate: it is redrawn after saving, with the same number and link.', redrawing: 'Redrawing the corrected certificate...', redrawn: 'Certificate redrawn: same number and link', redrawFail: 'Correction saved; the certificate could not be redrawn here (no ready design or no permission): the computer will redraw it', saveFix: 'Save correction', add: 'Add',
-    fixed: 'Correction saved; it reaches the platform at the next sync', added: 'Added; it reaches the platform at the next sync',
+    fixed: 'Correction saved', added: 'Added',
     partsD: 'Everyone with a valid certificate and a correct email is listed here. On “My certificates” they open their account once with their phone and email (an activation code by email), then sign in with their phone and password, no email, and can add a certificate in their name by its number. The platform on the computer keeps this list up to date.',
     partsSearch: 'Search by name, email, number or certificate...', certsN: n => n + ' certificate(s): ', meLink: 'My certificates',
     accT: n => `“My certificates” accounts (${n})`,
@@ -694,8 +694,8 @@ const T = {
     mSignD: 'Photographed after the activity: signatures are read',
     numbersD: 'Type the numbers of the returned cards (7 or T4-007), separated by commas, spaces or lines: their holders are marked present for the current session.',
     markThese: 'Mark present', marking: (d, n) => `${d} of ${n}...`, markedN: n => `${n} marked present`,
-    notReg: 'Not registered yet (kept and matched at the sync): ', pSearch: 'Search by name, card, certificate number or email...', fProblem: 'To review',
-    fPending: 'Changes waiting for the computer', sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
+    notReg: 'Not registered yet (attendance kept, matched once they register): ', pSearch: 'Search by name, card, certificate number or email...', fProblem: 'To review',
+    sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
     sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
     qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
     dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', erT: 'Online registration (no cards)', erD: 'A registration page with the form’s questions. Each participant gets an attendance code and a number on their phone, scanned at the end. It closes with the form.',
@@ -727,7 +727,7 @@ const T = {
     designItems: ['Upload a design for each certificate type', 'Place the fields and preview', 'Copy a design from another activity', 'Make the design smaller'],
     issueT: 'Issue and publish certificates', thType: 'Type', thPresent: 'Present', thTodo: 'Without certificate', beforeT: 'Before issuing',
     chkProblems: n => `${n} registrations to review (name missing or invalid email)`, chkOk: 'Registrations reviewed: no missing name or invalid email',
-    chkPending: n => `${n} changes waiting for the computer: applied before issuing`, chkPresent: n => `${n} present are entitled to a certificate`,
+    chkPresent: n => `${n} present are entitled to a certificate`,
    
     issueNote: 'Each present person gets a final number. Issuing is done from this page (above), without the computer: the certificate is uploaded to Drive and recorded for verification.',
     refreshT: 'Update every certificate after a design mistake', mailT: 'Emailing', mSentN: 'Sent', mQueued: 'Queued', mTodo: 'Not sent yet', mFailed: 'Failed',
@@ -1195,7 +1195,7 @@ const gLink = (icon, label, url) => url && /^[\w:/.#?=-]+$/.test(url)  // the ac
   ? el('a', {className: 'pclink', href: url, target: '_blank', rel: 'noopener'}, ic(icon), label) : pcLink(icon, label);
 const pcDoc = (key, sub) => el('span', {className: 'doclink locked', title: t('onPcT')}, el('b', {}, t(key), pcTag()), sub ? el('small', {textContent: sub}) : null);
 const doc = (key, run) => el('a', {className: 'doclink', href: '#', role: 'button', onclick: e => { e.preventDefault(); run(); }}, el('b', {textContent: t(key)}));
-const okEmail = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
+const okEmail = e => /^[!-?A-~]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(e);
 const quality = p => [!(p.name_ar || p.name_lat || p.name) && t('qName'), p.email && !okEmail(p.email) && t('qEmail')].filter(Boolean);
 const pname = p => p.name || p.name_ar || p.name_lat || '';
 function method(icon, title, sub, onclick) {  // a way to confirm attendance; the ones that need the computer are shown locked
@@ -1369,7 +1369,7 @@ async function showActivity(id, tab) {
     const opt = (v, key) => el('option', {value: v, textContent: key});
     const f = el('select', {ariaLabel: t('tPeople'), style: 'flex:1;min-width:150px'}, opt('all', t('fAll')),
       opt('here', a.sessions > 1 ? t('fHereIn')(a.session) : t('fHere')), opt('away', t('fAway')), opt('issued', t('fIssued')),
-      ...(org ? [opt('problem', t('fProblem')), opt('mail', t('fMail')), opt('pending', t('fPending'))] : []));
+      ...(org ? [opt('problem', t('fProblem')), opt('mail', t('fMail'))] : []));
     const so = el('select', {ariaLabel: t('sName'), style: 'flex:1;min-width:150px'}, opt('name', t('sName')), opt('ticket', t('sTicket')),
       opt('serial', t('sSerial')), opt('here', t('sHereFirst')));
     const count = el('span', {className: 'muted', style: 'font-weight:400'});
@@ -1412,7 +1412,7 @@ async function showActivity(id, tab) {
           ? (tickets[p.ticket] > 1 ? el('span', {className: 'badge err', title: t('dupT'), textContent: p.ticket}) : p.ticket)
           : el('span', {className: 'badge', textContent: t('noTicket')})),
         el('td', {className: 'c-name'}, el('b', {dir: 'auto', style: 'font-weight:600', textContent: pname(p)}),
-          p.pending ? [' ', el('span', {className: 'badge warn', textContent: t('pending')})] : null, ...qs.map(x => [' ', el('span', {className: 'badge warn', textContent: x})]),
+          ...qs.map(x => [' ', el('span', {className: 'badge warn', textContent: x})]),
           p.name_lat && p.name_ar ? el('div', {className: 'muted', dir: 'auto', textContent: p.name_lat}) : null),
         el('td', {dataset: {l: t('certType')}, dir: 'auto'}, p.type || '—', ...(extras[p.pid] || []).map(x => el('div', {style: 'margin-top:4px'},
           el('button', {type: 'button', className: 'badge gold', title: t('extraT'), style: 'cursor:pointer;border:0', disabled: !org,
@@ -1422,7 +1422,7 @@ async function showActivity(id, tab) {
         org ? el('td', {className: 'c-edit'}, el('div', {className: 'bar', style: 'gap:4px;justify-content:flex-end'}, ...actions(p))) : null);
     };
     const keep = {all: () => true, here, away: p => !here(p), issued: p => p.serial, problem: p => quality(p).length || tickets[p.ticket] > 1,
-                  mail: p => p.mail && p.mail.status === 'error', pending: p => p.pending};
+                  mail: p => p.mail && p.mail.status === 'error'};
     const order = {name: (x, y) => pname(x).localeCompare(pname(y), 'ar'), ticket: (x, y) => String(x.ticket || '~').localeCompare(String(y.ticket || '~'), 'en', {numeric: true}),
                    serial: (x, y) => String(x.serial || '~').localeCompare(String(y.serial || '~'), 'en', {numeric: true}), here: (x, y) => here(y) - here(x)};
     let shown = [];
@@ -1453,7 +1453,7 @@ async function showActivity(id, tab) {
         }}, ic('sync'), t('sync')) : null,
         org ? el('button', {type: 'button', className: 'sec', onclick: () => { const close = sheet(personForm(a, null, () => { close(); reload(); }, () => close())); }}, ic('plus'), t('addPerson')) : null,
         org ? docs : null),
-      el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('syncNote')(when(a.updated) || '—')}),
+      el('p', {className: 'hint', style: 'margin:0 0 10px', textContent: t('syncNote')}),
       people.length ? [el('div', {className: 'bar', style: 'margin-bottom:10px'}, q, f, so),
         el('div', {className: 'tablewrap'}, el('table', {className: 'cards'}, el('thead', {}, el('tr', {}, ...cols.map(c => el('th', {textContent: c})))), tb))]
         : el('p', {className: 'empty', textContent: t('noPeople')}));
@@ -1468,7 +1468,7 @@ async function showActivity(id, tab) {
   function issue() {
     const present = people.filter(isPresent);
     const types = [...new Set([...a.types, ...people.map(p => p.type).filter(Boolean)])];
-    const problems = people.filter(p => quality(p).length).length, pending = people.filter(p => p.pending).length;
+    const problems = people.filter(p => quality(p).length).length;
     const live = issued.filter(p => !p.revoked);
     const failed = live.filter(p => p.mail && p.mail.status === 'error' && Number(p.emailed) !== 1);
     const queued = live.filter(p => p.mail && p.mail.status === 'pending').length;
@@ -1486,7 +1486,7 @@ async function showActivity(id, tab) {
           ...types.map(x => el('tr', {}, el('td', {dir: 'auto', textContent: x}), el('td', {textContent: present.filter(p => (p.type || a.types[0]) === x).length}),
             el('td', {textContent: present.filter(p => (p.type || a.types[0]) === x && !p.serial).length})))),
         el('div', {className: 'card flat', style: 'margin:0 0 12px;padding:10px 12px'}, el('b', {style: 'font-size:14px', textContent: t('beforeT')}),
-          check(!problems, problems ? t('chkProblems')(problems) : t('chkOk')), pending ? check(false, t('chkPending')(pending)) : null,
+          check(!problems, problems ? t('chkProblems')(problems) : t('chkOk')),
           check(present.length > 0, t('chkPresent')(present.length))),
         el('p', {className: 'muted', textContent: t('issueNote')}),
         org && issued.length ? el('div', {style: 'margin-top:8px'}, btn(t('refreshT'), async e => {  // after a design change: same numbers and links
@@ -1581,7 +1581,6 @@ function personCard(a, p, here, reload) {
   const att = sessionsOf(p);
   const draw = () => {
     const tags = el('div', {className: 'row'});
-    if (p.pending) tags.append(el('span', {className: 'badge warn', textContent: t('pending')}));
     tags.append(here(p) ? el('span', {className: 'badge ok', textContent: a.sessions > 1 ? t('hereIn')(a.session) : t('here')})
                         : el('span', {className: 'badge', textContent: t('away')}));
     if (a.sessions > 1 && att.length) tags.append(el('span', {className: 'hint', textContent: t('sessions') + att.join('، ')}));

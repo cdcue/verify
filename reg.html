@@ -275,7 +275,7 @@ function form() {
     }
     const missing = ['first_ar', 'last_ar', 'first_lat', 'last_lat', 'phone', 'email'].find(k => !d[k]);
     if (missing || !d.gender) { err.textContent = tw(missing ? L[missing] : L.gender) + ' — ' + t('required'); return (missing ? inputs[missing] : f.querySelector('input[name=gender]')).focus(); }
-    if (!/^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$/.test(d.email)) { err.textContent = t('badEmail'); return inputs.email.focus(); }
+    if (!/^[!-?A-~]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(d.email)) { err.textContent = t('badEmail'); return inputs.email.focus(); }
     const r = {uid: newUid(), name: nameOf(d, info.lang), data: d, hp: hp.value, ok: false, at: Date.now()};
     regs.unshift(r);
     save(STORE, regs);
