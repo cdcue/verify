@@ -262,7 +262,7 @@ const T = {
     scanNew: 'رابط جديد', scanSure: 'إنشاء رابط جديد؟ الرابط الحالي يتوقف فوراً في كل الهواتف.', scanMade: 'أُنشئ رابط المسح: أرسله إلى المنظمين',
     scanFail: 'تعذر إنشاء الرابط', scanTitle: 'مسح الحضور', scanCodeT: 'أو برمز المسح',
     scanCodeD: page => `يفتح المساعد ${page} ويكتب هذا الرمز، دون رابط ولا رمز QR. يتغير مع كل رابط جديد، ويتوقف بأرشفة النشاط.`, copyCode: 'نسخ الرمز',
-    codeCopied: 'نُسخ الرمز', issue: 'إصدار الشواهد', issueSure: 'إصدار شواهد كل الحاضرين المؤكدين (بعد مزامنة الحضور)؟',
+    codeCopied: 'نُسخ الرمز', issue: 'إصدار الشواهد',
     emailSure: 'وضع رسائل من لم يصله بريد شهادته في طابور الإرسال؟', sync: 'جلب التسجيلات الآن', editAct: 'تعديل النشاط', noTicket: 'دون بطاقة',
     pending: 'تعديل ينتظر المزامنة', hereIn: s => 'حاضر في الحصة ' + s, here: 'حاضر', away: 'غير مؤكد', sessions: 'الحصص: ', certOf: x => 'شهادة ' + x,
     revoked: 'ملغاة', code: 'رمز التحقق', download: 'تحميل', mSent: 'أُرسل البريد', mErr: 'تعذر الإرسال', mPending: 'في الطابور', mStopped: 'أُوقف',
@@ -359,8 +359,8 @@ const T = {
     designItems: ['رفع التصميم لكل نوع شهادة', 'وضع المتغيرات على الشهادة ومعاينتها', 'نسخ تصميم من نشاط آخر', 'تصغير حجم التصميم'],
     issueT: 'إصدار الشواهد ورفعها', thType: 'النوع', thPresent: 'حاضرون', thTodo: 'بلا شهادة', beforeT: 'قبل الإصدار',
     chkProblems: n => `${n} تسجيل يحتاج مراجعة (اسم ناقص أو بريد غير صالح)`, chkOk: 'التسجيلات مراجَعة: لا أسماء ناقصة ولا بريد غير صالح',
-    chkPending: n => `${n} تعديل ينتظر الحاسوب: يُطبَّق قبل الإصدار`, chkPresent: n => `${n} حاضراً يستحقون الشهادة`, issueAsk: n => `طلب إصدار الشواهد (${n})`,
-    issueNote: 'كل حاضر يأخذ رقماً نهائياً لا يتكرر، وتُنشأ شهادته على الحاسوب وتُرفع إلى Drive وتُسجَّل في منصة التحقق.',
+    chkPending: n => `${n} تعديل ينتظر الحاسوب: يُطبَّق قبل الإصدار`, chkPresent: n => `${n} حاضراً يستحقون الشهادة`,
+    issueNote: 'كل حاضر يأخذ رقماً نهائياً لا يتكرر. الإصدار من هذه الصفحة (أعلاه)، دون الحاجة إلى الحاسوب: تُرفع الشهادة إلى Drive وتُسجَّل في منصة التحقق.',
     refreshT: 'تحديث كل الشواهد بعد خطأ في التصميم', mailT: 'الإرسال بالبريد', mSentN: 'أُرسلت', mQueued: 'في الطابور', mTodo: 'لم تُرسل بعد', mFailed: 'تعذرت',
     mailErrT: 'لم تصل الشهادة إلى هؤلاء: صحّح البريد بزر «تصحيح» ثم أعد الإرسال.', emailAsk: n => `طلب الإرسال (${n})`, previewT: 'معاينة البريد',
     testT: 'إرسال تجريبي إلى بريدي', mailNote: 'من استلم لا يُرسل إليه مرة ثانية. الرسائل تخرج من حساب Google المتصل بالمنصة، برابط الشهادة.',
@@ -436,7 +436,7 @@ const T = {
     scanCodeT: 'Ou avec le code de scan',
     scanCodeD: page => `L’assistant ouvre ${page} et saisit ce code, sans lien ni code QR. Il change à chaque nouveau lien et s’arrête quand l’activité est archivée.`,
     copyCode: 'Copier le code', codeCopied: 'Code copié', issue: 'Émettre les attestations',
-    issueSure: 'Émettre les attestations de tous les présents confirmés (après synchronisation des présences) ?',
+   
     emailSure: 'Mettre en file d’envoi les e-mails de ceux qui n’ont pas encore reçu leur attestation ?', sync: 'Récupérer les inscriptions', editAct: 'Modifier l’activité',
     noTicket: 'Sans carte', pending: 'Modification en attente de synchronisation', hereIn: s => 'Présent séance ' + s, here: 'Présent', away: 'Non confirmé',
     sessions: 'Séances : ', certOf: x => 'Attestation ' + x, revoked: 'Annulée', code: 'Code de vérification', download: 'Télécharger', mSent: 'E-mail envoyé',
@@ -543,8 +543,8 @@ const T = {
     issueT: 'Émettre et publier les attestations', thType: 'Type', thPresent: 'Présents', thTodo: 'Sans attestation', beforeT: 'Avant l’émission',
     chkProblems: n => `${n} inscriptions à revoir (nom incomplet ou e-mail invalide)`, chkOk: 'Inscriptions revues : ni nom incomplet ni e-mail invalide',
     chkPending: n => `${n} changements en attente de l’ordinateur : appliqués avant l’émission`, chkPresent: n => `${n} présents ont droit à l’attestation`,
-    issueAsk: n => `Demander l’émission (${n})`,
-    issueNote: 'Chaque présent reçoit un numéro définitif ; son attestation est créée sur l’ordinateur, publiée sur Drive et inscrite au registre de vérification.',
+   
+    issueNote: 'Chaque présent reçoit un numéro définitif. L’émission se fait depuis cette page (ci-dessus), sans l’ordinateur : l’attestation est publiée sur Drive et inscrite au registre de vérification.',
     refreshT: 'Mettre à jour toutes les attestations après une erreur de modèle', mailT: 'Envoi par e-mail', mSentN: 'Envoyés', mQueued: 'En file',
     mTodo: 'Pas encore envoyés', mFailed: 'Échecs', mailErrT: 'L’attestation n’est pas parvenue à ces personnes : corrigez l’e-mail puis renvoyez.',
     emailAsk: n => `Demander l’envoi (${n})`, previewT: 'Aperçu de l’e-mail', testT: 'Envoi de test',
@@ -623,7 +623,7 @@ const T = {
     scanCodeT: 'Or with the scanning code',
     scanCodeD: page => `The assistant opens ${page} and types this code, no link or QR code needed. It changes with every new link and stops when the activity is archived.`,
     copyCode: 'Copy the code', codeCopied: 'Code copied', issue: 'Issue certificates',
-    issueSure: 'Issue certificates to every confirmed attendee (after syncing attendance)?',
+   
     emailSure: 'Queue the emails of everyone who has not received their certificate yet?', sync: 'Fetch registrations now', editAct: 'Edit activity', noTicket: 'No ticket',
     pending: 'Change waiting for sync', hereIn: s => 'Present in session ' + s, here: 'Present', away: 'Not confirmed', sessions: 'Sessions: ',
     certOf: x => 'Certificate: ' + x, revoked: 'Revoked', code: 'Verification code', download: 'Download', mSent: 'Email sent', mErr: 'Email failed',
@@ -728,8 +728,8 @@ const T = {
     issueT: 'Issue and publish certificates', thType: 'Type', thPresent: 'Present', thTodo: 'Without certificate', beforeT: 'Before issuing',
     chkProblems: n => `${n} registrations to review (name missing or invalid email)`, chkOk: 'Registrations reviewed: no missing name or invalid email',
     chkPending: n => `${n} changes waiting for the computer: applied before issuing`, chkPresent: n => `${n} present are entitled to a certificate`,
-    issueAsk: n => `Ask to issue (${n})`,
-    issueNote: 'Each present person gets a final number; the certificate is made on the computer, uploaded to Drive and recorded for verification.',
+   
+    issueNote: 'Each present person gets a final number. Issuing is done from this page (above), without the computer: the certificate is uploaded to Drive and recorded for verification.',
     refreshT: 'Update every certificate after a design mistake', mailT: 'Emailing', mSentN: 'Sent', mQueued: 'Queued', mTodo: 'Not sent yet', mFailed: 'Failed',
     mailErrT: 'The certificate did not reach these people: correct the email, then send again.', emailAsk: n => `Ask to send (${n})`, previewT: 'Email preview',
     testT: 'Test email', mailNote: 'Nobody gets it twice. Emails leave from the Google account linked to the platform, with the certificate’s link.',
@@ -878,8 +878,8 @@ function pcLine(pc) {  // requests are carried out by the app on the computer: s
   return el('p', {className: 'pc'}, Date.now() - pc < 3 * 60e3 ? el('span', {className: 'badge ok', textContent: '● ' + t('pcOn')})
     : el('span', {className: 'badge warn', textContent: '● ' + t('pcOff')(when(pc))}));
 }
-function jobList(jobs) {
-  if (!jobs || !jobs.length) return null;
+function jobList(jobs) {  // shown only while a request still waits for the computer
+  if (!(jobs || []).some(j => j.status === '' || j.status === 'running')) return null;
   const kind = {sync: 'jSync', issue: 'jIssue', email: 'jEmail', activity: 'jActivity', update: 'jUpdate', bundle: 'jBundle', staff: 'jStaff', mypw: 'jMypw'};
   return el('div', {}, ...jobs.map(j => el('div', {className: 'job'},
     el('div', {className: 'row'}, el('b', {textContent: kind[j.kind] ? t(kind[j.kind]) : j.kind}),
@@ -1217,14 +1217,6 @@ async function showActivity(id, tab) {
   const issued = people.filter(p => p.serial), emailed = people.filter(p => Number(p.emailed) === 1);
   const reload = () => showActivity(a.id, tab);
   const editAct = () => { const close = sheet(activityForm(j.choices, a, () => { close(); reload(); }, () => close())); };
-  const ask = (kind, label, sure, kindClass) => el('button', {type: 'button', className: kindClass || '', onclick: async e => {
-    if (sure && !confirm(t(sure))) return;
-    e.currentTarget.disabled = true;
-    const r = await call('request', {id: a.id, kind}).catch(() => ({}));
-    if (r.status === 'ok') { toast(t('sent')); return reload(); }
-    toast(t(r.status === 'exists' ? 'exists' : 'reqFail'));
-    e.target.disabled = false;
-  }}, ic({issue: 'cert', email: 'mail', sync: 'sync'}[kind]), label);
   const archived = String(a.archived) === '1';
   const archive = async () => {
     const r = await call('actstate', {id: a.id, on: !archived}).catch(() => ({}));
@@ -1496,7 +1488,6 @@ async function showActivity(id, tab) {
         el('div', {className: 'card flat', style: 'margin:0 0 12px;padding:10px 12px'}, el('b', {style: 'font-size:14px', textContent: t('beforeT')}),
           check(!problems, problems ? t('chkProblems')(problems) : t('chkOk')), pending ? check(false, t('chkPending')(pending)) : null,
           check(present.length > 0, t('chkPresent')(present.length))),
-        org ? ask('issue', t('issueAsk')(present.length), 'issueSure', 'lg') : null,
         el('p', {className: 'muted', textContent: t('issueNote')}),
         org && issued.length ? el('div', {style: 'margin-top:8px'}, btn(t('refreshT'), async e => {  // after a design change: same numbers and links
           const b = e.currentTarget, ps = issued.filter(p => !p.revoked && p.link);
