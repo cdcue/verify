@@ -333,7 +333,7 @@ const T = {
     dSummary: 'التقرير الختامي للنشاط (PDF)', erT: 'التسجيل الإلكتروني (دون بطاقات)', erD: 'صفحة تسجيل بأسئلة الاستمارة نفسها. بعد التسجيل يأخذ كل مشارك رمز حضور ورقماً على هاتفه، يُمسحان عند نهاية النشاط. تُغلق مع الاستمارة.',
     erPoster: 'طباعة ملصق التسجيل (A4)', erClosed: 'التسجيل مغلق الآن (الاستمارة موقوفة).', erHow: ['امسح الرمز بكاميرا هاتفك', 'املأ التسجيل', 'احتفظ برمز حضورك: يُمسح عند نهاية النشاط'],
     erScan: 'سجّل حضورك', erSub: 'من هاتفك، في دقيقة، دون ورق', erTip: 'لا يقرأ هاتفك الرمز؟ اكتب الرابط أعلاه في المتصفح.', erFoot: 'رمز حضورك على هاتفك: لا بطاقة ولا ورقة', erBrand: 'منصة الشواهد', lkT: 'سبق له التسجيل في نشاط آخر؟ ابحث عنه', lkPh: 'الاسم، أو البريد، أو الهاتف...', lkNone: 'لا أحد بهذا الاسم أو البريد أو الهاتف', pcCard: 'حفظ البطاقة كصورة', pcLEmail: 'البريد الإلكتروني', pcLNum: 'رقم المشارك', pcLCerts: 'الشواهد', pcCards: n => 'طباعة بطاقات المشاركين المعروضين (' + n + ')', pcCardD: 'امسح هذا الرمز عند الدخول والخروج: يُسجَّل الحضور دون استمارة', allRun: (i, n) => 'يُجمع ' + i + ' من ' + n + '...', allNone: 'لا شواهد صادرة بعد', zipRun: 'يُجهَّز الملف المضغوط على Drive...', raAsk: 'سبب إلغاء كل الشواهد (يظهر في صفحة التحقق):', raDone: (n, f) => 'أُلغيت ' + n + ' شهادة' + (f ? '، وتعذرت ' + f : ''), daSure: 'حذف هذا النشاط؟ يبقى في المحذوفات 30 يوماً.', daValid: 'له شواهد سارية: ألغها أولاً، أو أرشف النشاط', daDone: 'نُقل النشاط إلى المحذوفات', cpDone: 'أُنشئت نسخة من النشاط', testTo: 'البريد الذي تُرسل إليه الرسالة التجريبية:', testSent: 'أُرسلت الرسالة التجريبية', mailBusy: 'حصة البريد اليومية شارفت على النفاد: تُحفظ للمشاركين', qT: 'الأسئلة الإضافية', qD: 'تُطرح في الاستمارة بعد الأسئلة الأساسية. السؤال الجديد يُضاف إلى الاستمارة فوراً.', qAdd: 'إضافة سؤال', qTitle: 'نص السؤال',
-    qType: 'نوعه', qOpts: 'الخيارات (سطر لكل خيار)', qReq: 'إجابة إلزامية', qHelp: 'توضيح (اختياري)', qAdded: 'أُضيف السؤال إلى الاستمارة', qBad: 'اكتب نص السؤال، وخياراته إن كان اختياراً',
+    qType: 'نوعه', qOpts: 'الخيارات (سطر لكل خيار)', qReq: 'إجابة إلزامية', qHelp: 'توضيح (اختياري)', qTr: 'الترجمة للمشاركين بلغة أخرى', qTrD: 'تظهر بين قوسين بجانب السؤال. صحّحها إن لم تكن دقيقة.', qTrSug: 'اقتراح Google من جديد', qTrBusy: 'جارٍ جلب الترجمة المقترحة...', qTrFail: 'تعذر جلب الترجمة المقترحة: اكتبها بنفسك.', qLn: {ar: 'العربية', fr: 'الفرنسية', en: 'الإنجليزية'}, qAdded: 'أُضيف السؤال إلى الاستمارة', qBad: 'اكتب نص السؤال، وخياراته إن كان اختياراً',
     qTypes: {text: 'نص قصير', paragraph: 'نص طويل', choice: 'اختيار واحد', dropdown: 'قائمة منسدلة', checkbox: 'اختيارات متعددة', date: 'تاريخ'}, qNone: 'لا أسئلة إضافية',
     tplT: 'نماذج الأسئلة', tplD: 'تُختار عند إنشاء نشاط جديد فتأتي استمارته بأسئلتها.', tplName: 'اسم النموذج', tplAdd: 'نموذج جديد', tplDel: 'حذف النموذج', bShareT: 'صدرت الشواهد', bShareD: 'نص جاهز للإرسال عبر واتساب أو غيره:', bMailed: 'وُضعت رسالة واحدة بكل الشواهد في طابور الإرسال', bCopy: 'نسخ النص', bFail: 'تعذر الإصدار: ', ogNameAr: 'الاسم بالعربية', ogNameFr: 'الاسم بالفرنسية', ogNameEn: 'الاسم بالإنجليزية', ogCode: 'الرمز (في أرقام الشواهد)', ogArch: 'مؤرشفة (لا تظهر في الأنشطة الجديدة)',
     ogNew: 'جهة منظمة جديدة', ogAdd: 'إضافة الجهة', ogSaved: 'حُفظت الجهة', ogCodeFixed: 'لهذه الجهة شواهد صادرة: رمزها ثابت', ogLogo: 'الشعار يُضاف من البرنامج على الحاسوب.',
@@ -516,7 +516,7 @@ const T = {
     dSummary: 'Rapport final (PDF)', erT: 'Inscription en ligne (sans cartes)', erD: 'Une page d’inscription avec les questions du formulaire. Chaque participant reçoit un code de présence et un numéro sur son téléphone, scannés à la fin. Elle ferme avec le formulaire.',
     erPoster: 'Imprimer l’affiche d’inscription (A4)', erClosed: 'Inscriptions fermées (formulaire arrêté).', erHow: ['Scannez le code avec votre téléphone', 'Remplissez l’inscription', 'Gardez votre code de présence : il est scanné à la fin'],
     erScan: 'Inscrivez-vous', erSub: 'Depuis votre téléphone, en une minute, sans papier', erTip: 'Votre téléphone ne lit pas le code ? Tapez le lien ci-dessus dans le navigateur.', erFoot: 'Votre code de présence est sur votre téléphone : ni carte ni papier', erBrand: 'Plateforme des attestations', lkT: 'Déjà inscrit à une autre activité ? Cherchez-le', lkPh: 'Nom, e-mail ou téléphone...', lkNone: 'Personne avec ce nom, e-mail ou téléphone', pcCard: 'Enregistrer la carte en image', pcLEmail: 'E-mail', pcLNum: 'N° de participant', pcLCerts: 'Attestations', pcCards: n => 'Imprimer les cartes affichées (' + n + ')', pcCardD: 'Scannez ce code à l’entrée et à la sortie : présence enregistrée sans formulaire', allRun: (i, n) => 'Assemblage ' + i + ' / ' + n + '...', allNone: 'Aucune attestation émise', zipRun: 'Préparation du ZIP sur Drive...', raAsk: 'Motif d’annulation de toutes les attestations (affiché sur la vérification) :', raDone: (n, f) => n + ' attestation(s) annulée(s)' + (f ? ', ' + f + ' échec(s)' : ''), daSure: 'Supprimer cette activité ? Elle reste 30 jours dans la corbeille.', daValid: 'Elle a des attestations valides : annulez-les d’abord, ou archivez-la', daDone: 'Activité mise à la corbeille', cpDone: 'Copie de l’activité créée', testTo: 'Adresse qui reçoit le message de test :', testSent: 'Message de test envoyé', mailBusy: 'Quota d’e-mails presque épuisé : gardé pour les participants', qT: 'Questions supplémentaires', qD: 'Posées dans le formulaire après les questions de base. Une nouvelle question y est ajoutée tout de suite.', qAdd: 'Ajouter une question', qTitle: 'Texte de la question',
-    qType: 'Type', qOpts: 'Choix (un par ligne)', qReq: 'Réponse obligatoire', qHelp: 'Aide (facultatif)', qAdded: 'Question ajoutée au formulaire', qBad: 'Écrivez la question, et ses choix si c’est un choix',
+    qType: 'Type', qOpts: 'Choix (un par ligne)', qReq: 'Réponse obligatoire', qHelp: 'Aide (facultatif)', qTr: 'Traduction pour les participants d’une autre langue', qTrD: 'Affichée entre parenthèses à côté de la question. Corrigez-la si besoin.', qTrSug: 'Nouvelle suggestion de Google', qTrBusy: 'Traduction suggérée en cours...', qTrFail: 'Suggestion impossible : écrivez-la vous-même.', qLn: {ar: 'Arabe', fr: 'Français', en: 'Anglais'}, qAdded: 'Question ajoutée au formulaire', qBad: 'Écrivez la question, et ses choix si c’est un choix',
     qTypes: {text: 'Texte court', paragraph: 'Texte long', choice: 'Choix unique', dropdown: 'Liste déroulante', checkbox: 'Choix multiples', date: 'Date'}, qNone: 'Aucune question supplémentaire',
     tplT: 'Modèles de questions', tplD: 'Choisis à la création d’une activité : son formulaire vient avec leurs questions.', tplName: 'Nom du modèle', tplAdd: 'Nouveau modèle', tplDel: 'Supprimer le modèle', bShareT: 'Attestations émises', bShareD: 'Texte prêt à envoyer par WhatsApp ou autre :', bMailed: 'Un message avec toutes les attestations est en file d’envoi', bCopy: 'Copier le texte', bFail: 'Émission impossible : ', ogNameAr: 'Nom en arabe', ogNameFr: 'Nom en français', ogNameEn: 'Nom en anglais', ogCode: 'Code (dans les numéros d’attestation)', ogArch: 'Archivé (absent des nouvelles activités)',
     ogNew: 'Nouvel organisme', ogAdd: 'Ajouter l’organisme', ogSaved: 'Organisme enregistré', ogCodeFixed: 'Des attestations portent ce code : il ne change plus', ogLogo: 'Le logo s’ajoute sur l’ordinateur.',
@@ -701,7 +701,7 @@ const T = {
     dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', erT: 'Online registration (no cards)', erD: 'A registration page with the form’s questions. Each participant gets an attendance code and a number on their phone, scanned at the end. It closes with the form.',
     erPoster: 'Print the registration poster (A4)', erClosed: 'Registration is closed (form stopped).', erHow: ['Scan the code with your phone', 'Fill in the registration', 'Keep your attendance code: it is scanned at the end'],
     erScan: 'Register', erSub: 'From your phone, in a minute, no paper', erTip: 'Your phone does not read the code? Type the link above in the browser.', erFoot: 'Your attendance code is on your phone: no card, no paper', erBrand: 'Certificates platform', lkT: 'Registered in another activity? Find them', lkPh: 'Name, email or phone...', lkNone: 'Nobody with this name, email or phone', pcCard: 'Save the card as a picture', pcLEmail: 'Email', pcLNum: 'Participant no.', pcLCerts: 'Certificates', pcCards: n => 'Print the cards shown (' + n + ')', pcCardD: 'Scan this code on the way in and out: attendance recorded without a form', allRun: (i, n) => 'Gathering ' + i + ' of ' + n + '...', allNone: 'No certificates issued yet', zipRun: 'Preparing the ZIP on Drive...', raAsk: 'Reason for revoking every certificate (shown on verification):', raDone: (n, f) => n + ' certificate(s) revoked' + (f ? ', ' + f + ' failed' : ''), daSure: 'Delete this activity? It stays 30 days in the trash.', daValid: 'It has valid certificates: revoke them first, or archive it', daDone: 'Activity moved to the trash', cpDone: 'Copy of the activity made', testTo: 'Address that gets the test message:', testSent: 'Test message sent', mailBusy: 'The daily email quota is nearly used: kept for the participants', qT: 'Extra questions', qD: 'Asked on the form after the basic ones. A new question is added to the form at once.', qAdd: 'Add a question', qTitle: 'Question text',
-    qType: 'Type', qOpts: 'Choices (one per line)', qReq: 'Answer required', qHelp: 'Help (optional)', qAdded: 'Question added to the form', qBad: 'Write the question, and its choices if it is a choice',
+    qType: 'Type', qOpts: 'Choices (one per line)', qReq: 'Answer required', qHelp: 'Help (optional)', qTr: 'Translation for participants in another language', qTrD: 'Shown in brackets beside the question. Correct it if needed.', qTrSug: 'New suggestion from Google', qTrBusy: 'Getting the suggested translation...', qTrFail: 'No suggestion: write it yourself.', qLn: {ar: 'Arabic', fr: 'French', en: 'English'}, qAdded: 'Question added to the form', qBad: 'Write the question, and its choices if it is a choice',
     qTypes: {text: 'Short text', paragraph: 'Long text', choice: 'Single choice', dropdown: 'Dropdown', checkbox: 'Multiple choice', date: 'Date'}, qNone: 'No extra questions',
     tplT: 'Question templates', tplD: 'Picked when making a new activity: its form comes with their questions.', tplName: 'Template name', tplAdd: 'New template', tplDel: 'Delete the template', bShareT: 'Certificates issued', bShareD: 'Text ready to send by WhatsApp or elsewhere:', bMailed: 'One message with every certificate is queued', bCopy: 'Copy the text', bFail: 'Could not issue: ', ogNameAr: 'Name in Arabic', ogNameFr: 'Name in French', ogNameEn: 'Name in English', ogCode: 'Code (in certificate numbers)', ogArch: 'Archived (not offered for new activities)',
     ogNew: 'New organizer', ogAdd: 'Add the organizer', ogSaved: 'Organizer saved', ogCodeFixed: 'Certificates carry this code: it no longer changes', ogLogo: 'The logo is added on the computer.',
@@ -2193,21 +2193,53 @@ function regPoster(a, url) {  // one A4 sheet to hang, in the activity's languag
       el('div', {className: 'foot'}, el('span', {textContent: L.erFoot}), el('b', {textContent: L.erBrand}))));
 }
 
-function questionFields(q) {  // the boxes of one extra question; read() gives it as the script takes it
+function questionFields(q, from = 'ar') {  // the boxes of one extra question; read() gives it as the script takes it
   const title = el('input', {value: q.title || '', dir: 'auto'}), help = el('input', {value: q.help || '', dir: 'auto'});
   const type = select(Object.entries(t('qTypes')), q.type || 'text'), opts = el('textarea', {rows: 3, dir: 'auto', value: (q.options || []).join('\n')});
   const req = el('input', {type: 'checkbox', checked: !!q.required}), optBox = labelled(t('qOpts'), opts);
-  const shown = () => { optBox.hidden = !['choice', 'dropdown', 'checkbox'].includes(type.value); };
+  const lines = x => x.value.split('\n').map(y => y.trim());
+  // its wording in the other languages (in brackets beside it on the registration page): Google's suggestion, to correct
+  const langs = ['ar', 'fr', 'en'].filter(l => l !== from), tr = {}, say = el('span', {className: 'muted'});
+  langs.forEach(l => {
+    const x = (q.tr || {})[l] || {};
+    tr[l] = {title: el('input', {value: x.title || '', dir: 'auto'}), help: el('input', {value: x.help || '', dir: 'auto'}),
+             options: el('textarea', {rows: 2, dir: 'auto', value: (x.options || []).join('\n')})};
+    tr[l].optBox = labelled(t('qOpts'), tr[l].options);
+  });
+  const suggest = async fresh => {
+    const ops = lines(opts).filter(Boolean), texts = [title.value.trim(), help.value.trim(), ...ops].filter(Boolean);
+    if (!texts.length) return;
+    say.textContent = t('qTrBusy');
+    const r = await call('translate', {texts, from}).catch(() => ({}));
+    if (r.status !== 'ok') { say.textContent = t('qTrFail'); return; }
+    say.textContent = '';
+    langs.forEach(l => {
+      const m = r.tr[l] || {}, x = tr[l];
+      if (fresh || !x.title.value) x.title.value = m[title.value.trim()] || '';
+      if (fresh || !x.help.value) x.help.value = m[help.value.trim()] || '';
+      if (fresh || !x.options.value) x.options.value = ops.map(o => m[o] || '').join('\n');
+    });
+  };
+  const trBox = el('details', {style: 'margin-top:10px'}, el('summary', {style: 'cursor:pointer;font-weight:600', textContent: t('qTr')}),
+    el('p', {className: 'hint', textContent: t('qTrD')}),
+    ...langs.map(l => el('div', {style: 'margin-top:8px'}, el('b', {textContent: t('qLn')[l]}), labelled(t('qTitle'), tr[l].title), labelled(t('qHelp'), tr[l].help), tr[l].optBox)),
+    el('div', {className: 'bar', style: 'margin-top:6px'}, btn(t('qTrSug'), () => suggest(true), 'ghost'), say));
+  trBox.addEventListener('toggle', () => { if (trBox.open && langs.every(l => !tr[l].title.value)) suggest(false); });
+  const shown = () => {
+    optBox.hidden = !['choice', 'dropdown', 'checkbox'].includes(type.value);
+    langs.forEach(l => { tr[l].optBox.hidden = optBox.hidden; });
+  };
   type.onchange = shown; shown();
   return {node: el('div', {}, el('div', {className: 'grid2'}, labelled(t('qTitle'), title), labelled(t('qType'), type)), optBox, labelled(t('qHelp'), help),
-    el('label', {className: 'row', style: 'gap:8px'}, req, t('qReq'))),
-    read: () => ({title: title.value.trim(), type: type.value, options: opts.value.split('\n').map(x => x.trim()).filter(Boolean), required: req.checked, help: help.value.trim()})};
+    el('label', {className: 'row', style: 'gap:8px'}, req, t('qReq')), trBox),
+    read: () => ({title: title.value.trim(), type: type.value, options: lines(opts).filter(Boolean), required: req.checked, help: help.value.trim(),
+      tr: Object.fromEntries(langs.map(l => [l, {title: tr[l].title.value.trim(), help: tr[l].help.value.trim(), options: lines(tr[l].options)}]))})};
 }
 
 function questionsCard(a, reload) {  // the activity's extra questions, and one more added to its form
   return el('div', {className: 'card'}, el('div', {className: 'bar'}, el('h2', {className: 'ch', style: 'margin:0'}, ic('form'), t('qT')), el('span', {className: 'sp'}),
       btn(t('qAdd'), () => {
-        const f = questionFields({});
+        const f = questionFields({}, a.lang || 'ar');
         const go = btn(t('qAdd'), async () => {
           go.disabled = true;
           const r = await call('questionadd', {id: a.id, q: f.read()}).catch(() => ({}));
@@ -2792,7 +2824,7 @@ async function showOrg() {  // «الجهة»: the organizers one runs, and for 
       toast(r.status === 'ok' ? t('setSaved') : r.status === 'types' ? t('setNoTypes') : t('saveFail'));
       if (r.status === 'ok') showOrg();
     });
-    const tpls = S.templates.map(x => ({id: x.id, name: el('input', {value: x.name, dir: 'auto'}), qs: x.questions.map(questionFields)}));
+    const tpls = S.templates.map(x => ({id: x.id, name: el('input', {value: x.name, dir: 'auto'}), qs: x.questions.map(q => questionFields(q))}));
     const tplBox = el('div');
     const drawTpls = () => tplBox.replaceChildren(...tpls.map((x, i) => el('div', {className: 'card flat', style: 'margin:8px 0'},
       el('div', {className: 'bar'}, labelled(t('tplName'), x.name), el('span', {className: 'sp'}), btn(t('tplDel'), () => { tpls.splice(i, 1); drawTpls(); }, 'ghost danger')),

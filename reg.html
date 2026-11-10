@@ -238,6 +238,8 @@ function picture(r, img, box) {  // the code, the name, the number and the activ
 const intro = () => (info.desc || '').split(/\n\s*\n/)[0].split('\n').map(x => x.replace(/^\s*—\s*$/, '').replace(/\s*—\s*$/, '').trim()).filter(Boolean).join(' · ');
 
 // ---------- the questions: the activity's form, made from what the platform knows ----------
+// In another language than the activity's, each question keeps its own words, its translation beside it: «المؤسسة (Établissement)».
+const tw = x => { const y = info && info.tr && info.tr[UI.lang] && info.tr[UI.lang][x]; return y && y !== x ? x + ' ⁨(' + y + ')⁩' : x; };  // isolated: its brackets stay in place beside Arabic
 function form() {
   current = null;
   view = form;
@@ -245,20 +247,20 @@ function form() {
   if (info.status === 'closed') return show(card(el('p', {textContent: t('closed')})), regs.length ? card(el('button', {className: 'btn', type: 'button', textContent: t('yourCode'), onclick: () => showTicket(regs[0])})) : null);
   const L = info.labels, inputs = {}, err = el('p', {className: 'err', role: 'alert'});
   const fld = (k, props, req) => { const i = el('input', Object.assign({name: k}, props)); inputs[k] = i;
-    return el('label', {className: 'fld'}, el('span', {}, L[k], req ? el('span', {className: 'req', textContent: ' *'}) : null), i); };
-  const gender = el('div', {className: 'opts'}, ...[['m', info.male], ['f', info.female]].map(([v, x]) => el('label', {}, el('input', {type: 'radio', name: 'gender', value: v}), x)));
+    return el('label', {className: 'fld'}, el('span', {dir: 'auto'}, tw(L[k]), req ? el('span', {className: 'req', textContent: ' *'}) : null), i); };
+  const gender = el('div', {className: 'opts'}, ...[['m', info.male], ['f', info.female]].map(([v, x]) => el('label', {}, el('input', {type: 'radio', name: 'gender', value: v}), tw(x))));
   const qs = info.questions.map(q => {
     let box;
-    if (['choice', 'checkbox'].includes(q.type)) box = el('div', {className: 'opts'}, ...q.options.map(o => el('label', {}, el('input', {type: q.type === 'choice' ? 'radio' : 'checkbox', name: 'x_' + q.key, value: o}), el('span', {dir: 'auto', textContent: o}))));
-    else if (q.type === 'dropdown') box = el('select', {name: 'x_' + q.key}, el('option', {value: '', textContent: '—'}), ...q.options.map(o => el('option', {value: o, textContent: o})));
+    if (['choice', 'checkbox'].includes(q.type)) box = el('div', {className: 'opts'}, ...q.options.map(o => el('label', {}, el('input', {type: q.type === 'choice' ? 'radio' : 'checkbox', name: 'x_' + q.key, value: o}), el('span', {dir: 'auto', textContent: tw(o)}))));
+    else if (q.type === 'dropdown') box = el('select', {name: 'x_' + q.key}, el('option', {value: '', textContent: '—'}), ...q.options.map(o => el('option', {value: o, textContent: tw(o)})));
     else box = el(q.type === 'paragraph' ? 'textarea' : 'input', {name: 'x_' + q.key, type: q.type === 'date' ? 'date' : 'text', rows: 3, dir: 'auto'});
-    return el('div', {className: 'fld'}, el('span', {dir: 'auto'}, q.title, q.required ? el('span', {className: 'req', textContent: ' *'}) : null), q.help ? el('small', {dir: 'auto', textContent: q.help}) : null, box);
+    return el('div', {className: 'fld'}, el('span', {dir: 'auto'}, tw(q.title), q.required ? el('span', {className: 'req', textContent: ' *'}) : null), q.help ? el('small', {dir: 'auto', textContent: tw(q.help)}) : null, box);
   });
   const hp = el('input', {name: 'website', tabIndex: -1, autocomplete: 'off', ariaHidden: 'true'});
   const go = el('button', {className: 'btn', type: 'submit', textContent: t('send'), style: 'width:100%'});
   const f = el('form', {noValidate: true}, intro() ? el('p', {className: 'desc', dir: 'auto', textContent: intro()}) : null,
     el('div', {className: 'grid2'}, fld('first_ar', {dir: 'rtl'}, 1), fld('last_ar', {dir: 'rtl'}, 1), fld('first_lat', {dir: 'ltr'}, 1), fld('last_lat', {dir: 'ltr'}, 1)),
-    el('div', {className: 'fld'}, el('span', {}, L.gender, el('span', {className: 'req', textContent: ' *'})), gender),
+    el('div', {className: 'fld'}, el('span', {dir: 'auto'}, tw(L.gender), el('span', {className: 'req', textContent: ' *'})), gender),
     fld('phone', {type: 'tel', dir: 'ltr', inputMode: 'tel', autocomplete: 'tel'}, 1), fld('email', {type: 'email', dir: 'ltr', autocomplete: 'email'}, 1),
     ...qs, el('div', {className: 'hp', ariaHidden: 'true'}, hp), go, err);
   f.onsubmit = e => {
@@ -269,10 +271,10 @@ function form() {
     for (const q of info.questions) {
       const vals = [...f.querySelectorAll(`[name="x_${q.key}"]`)].filter(i => !['radio', 'checkbox'].includes(i.type) || i.checked).map(i => i.value.trim()).filter(Boolean);
       d.x[q.key] = q.type === 'checkbox' ? vals : vals[0] || '';
-      if (q.required && !vals.length) { err.textContent = q.title + ' — ' + t('required'); return; }
+      if (q.required && !vals.length) { err.textContent = tw(q.title) + ' — ' + t('required'); return; }
     }
     const missing = ['first_ar', 'last_ar', 'first_lat', 'last_lat', 'phone', 'email'].find(k => !d[k]);
-    if (missing || !d.gender) { err.textContent = (missing ? L[missing] : L.gender) + ' — ' + t('required'); return (missing ? inputs[missing] : f.querySelector('input[name=gender]')).focus(); }
+    if (missing || !d.gender) { err.textContent = tw(missing ? L[missing] : L.gender) + ' — ' + t('required'); return (missing ? inputs[missing] : f.querySelector('input[name=gender]')).focus(); }
     if (!/^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$/.test(d.email)) { err.textContent = t('badEmail'); return inputs.email.focus(); }
     const r = {uid: newUid(), name: nameOf(d, info.lang), data: d, hp: hp.value, ok: false, at: Date.now()};
     regs.unshift(r);
