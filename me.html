@@ -155,7 +155,7 @@ const T = {
        chPh: 'تغيير رقم الهاتف', newPhone: 'رقم الهاتف الجديد', takenP: 'لهذا الرقم حساب آخر.', phChanged: 'تغيّر رقم الهاتف',
        chEm: 'تغيير البريد الإلكتروني', emCode: 'أرسلنا رمزاً إلى البريد الجديد، صالحاً 10 دقائق: اكتبه هنا لتأكيده.', confirm: 'تأكيد', emChanged: 'تغيّر البريد الإلكتروني',
        cardS: 'رمز حضورك: أظهره للمنظمين عند الدخول والخروج', addS: 'شهادة صدرت دون بريد أو بغير بريدك', accS: 'الهاتف، البريد، كلمة السر',
-       findPh: 'ابحث بعنوان النشاط أو رقم الشهادة أو الجهة أو النوع', allTypes: 'الكل', allYears: 'كل السنوات', lType: 'نوع الشهادة', lYear: 'السنة',
+       findPh: 'ابحث بعنوان النشاط أو رقم الشهادة أو الجهة أو النوع', allTypes: 'الكل', allYears: 'كل السنوات', lType: 'نوع الشهادة', lYear: 'السنة', bySeason: 'الموسم الجامعي', byYear: 'السنة',
        shown: (n, m) => `${n} من ${m}`, clear: 'مسح البحث', noMatch: 'لا شهادة تطابق بحثك.'},
   fr: {cardT: 'Ma carte', cardD: 'Montrez ce code aux organisateurs à l’entrée et à la sortie : votre présence est enregistrée directement, sans carte ni formulaire.', cardPrint: 'Enregistrer la carte en image', cardShare: 'Partager la carte', cardHold: 'Si l’image ne s’enregistre pas : appuyez longuement dessus et choisissez « Enregistrer l’image ».', lEmail: 'E-mail', lPhone: 'Téléphone', lNum: 'N° de participant', lCerts: 'Attestations', title: 'Mes attestations', lead: 'Toutes vos attestations au même endroit : téléchargement, partage et codes de vérification.',
        tIn: 'Connexion', tNew: 'Nouveau compte', phone: 'Numéro de téléphone', phoneHelp: 'Sous toute forme : 0612345678 ou +212 6 12 34 56 78',
@@ -195,7 +195,7 @@ const T = {
        chPh: 'Changer de téléphone', newPhone: 'Nouveau numéro', takenP: 'Ce numéro a un autre compte.', phChanged: 'Téléphone changé',
        chEm: 'Changer d’e-mail', emCode: 'Un code valable 10 minutes a été envoyé au nouvel e-mail : saisissez-le ici pour le confirmer.', confirm: 'Confirmer', emChanged: 'E-mail changé',
        cardS: 'Votre code de présence : montrez-le aux organisateurs à l’entrée et à la sortie', addS: 'Une attestation émise sans e-mail ou avec un autre', accS: 'Téléphone, e-mail, mot de passe',
-       findPh: 'Rechercher par activité, numéro, organisme ou type', allTypes: 'Toutes', allYears: 'Toutes les années', lType: 'Type d’attestation', lYear: 'Année',
+       findPh: 'Rechercher par activité, numéro, organisme ou type', allTypes: 'Toutes', allYears: 'Toutes les années', lType: 'Type d’attestation', lYear: 'Année', bySeason: 'Année universitaire', byYear: 'Année civile',
        shown: (n, m) => `${n} sur ${m}`, clear: 'Effacer la recherche', noMatch: 'Aucune attestation ne correspond à votre recherche.'},
   en: {cardT: 'My card', cardD: 'Show this code to the organizers on the way in and out: your attendance is recorded at once, with no ticket or form.', cardPrint: 'Save the card as a picture', cardShare: 'Share the card', cardHold: 'If the picture is not saved: press and hold it, then choose “Save image”.', lEmail: 'Email', lPhone: 'Phone', lNum: 'Participant no.', lCerts: 'Certificates', title: 'My certificates', lead: 'All your certificates in one place: download them, share them, and find their verification codes.',
        tIn: 'Sign in', tNew: 'New account', phone: 'Phone number', phoneHelp: 'Any way you write it: 0612345678 or +212 6 12 34 56 78',
@@ -235,7 +235,7 @@ const T = {
        chPh: 'Change the phone number', newPhone: 'New phone number', takenP: 'This number has another account.', phChanged: 'Phone number changed',
        chEm: 'Change the email', emCode: 'We sent a code valid for 10 minutes to the new email: type it here to confirm it.', confirm: 'Confirm', emChanged: 'Email changed',
        cardS: 'Your attendance code: show it to the organisers on the way in and out', addS: 'A certificate issued without an email, or to another one', accS: 'Phone, email, password',
-       findPh: 'Search by activity, number, organisation or type', allTypes: 'All', allYears: 'All years', lType: 'Certificate type', lYear: 'Year',
+       findPh: 'Search by activity, number, organisation or type', allTypes: 'All', allYears: 'All years', lType: 'Certificate type', lYear: 'Year', bySeason: 'Academic year', byYear: 'Calendar year',
        shown: (n, m) => `${n} of ${m}`, clear: 'Clear the search', noMatch: 'No certificate matches your search.'},
 };
 
@@ -576,14 +576,33 @@ function draw(j) {
   show(summary, j.card ? cardBox(j) : null, ...[certList(j.certs, cards)].flat(), el('div', {className: 'duo'}, addBox(), accountBox()));
 }
 
-let find = {q: '', type: '', year: ''};  // the list's search and filters, kept when the page is drawn again
+let find = {q: '', type: '', year: '', mode: UI.store.get('shawahid-years') || 'season'};  // the list's search and filters, kept when the page is drawn again
 const norm = s => String(s || '').toLowerCase().normalize('NFKD').replace(/[\u064B-\u065F\u0670\u0640\u0300-\u036f]/g, '')
   .replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');  // «الأستاذة» finds «الاستاذه»
-function yearOf(c) {  // as core.serial_year: '2026' (CDCUE-2026-P0010), '2025/2026' (CDCUE-252601-0001), else the year in its dates
-  const seg = String(c.serial || '').split('-')[1] || '';
-  if (/^20\d\d$/.test(seg)) return seg;
-  if (/^\d{6}$/.test(seg)) return `20${seg.slice(0, 2)}/20${seg.slice(2, 4)}`;
-  return (String(c.dates || '').match(/20\d\d/) || [''])[0];
+// A certificate's day: the activity's date as written on it («27 غشت 2026», «14/11/2026», «3 septembre 2025»: its first day),
+// else the day it was issued. Its year is January to December; its academic year 1 September to 31 August.
+const MONTHS = [['يناير', 'ينير', 'جانفي', 'janvier', 'january', 'jan'], ['فبراير', 'فبرير', 'فيفري', 'fevrier', 'february', 'feb'],
+  ['مارس', 'mars', 'march', 'mar'], ['ابريل', 'افريل', 'avril', 'april', 'apr'], ['ماي', 'مايو', 'mai', 'may'], ['يونيو', 'يونيه', 'جوان', 'juin', 'june', 'jun'],
+  ['يوليوز', 'يوليو', 'جويليه', 'juillet', 'july', 'jul'], ['غشت', 'اغسطس', 'اوت', 'aout', 'august', 'aug'], ['شتنبر', 'سبتمبر', 'septembre', 'september', 'sep', 'sept'],
+  ['اكتوبر', 'octobre', 'october', 'oct'], ['نونبر', 'نوفمبر', 'novembre', 'november', 'nov'], ['دجنبر', 'ديسمبر', 'decembre', 'december', 'dec']];
+function dayOf(c) {  // [year, month 1-12] or null
+  const s = norm(c.dates).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+  let m = s.match(/(20\d\d)-(\d{1,2})-\d{1,2}/);
+  if (m) return [+m[1], +m[2]];
+  m = s.match(/\d{1,2}\s*[\/.-]\s*(\d{1,2})\s*[\/.-]\s*(20\d\d)/);
+  if (m && +m[1] >= 1 && +m[1] <= 12) return [+m[2], +m[1]];
+  const y = s.match(/20\d\d/), words = s.split(/[^a-z\u0621-\u064a]+/);
+  const mo = words.reduce((f, w) => f || MONTHS.findIndex(names => names.includes(w)) + 1, 0);
+  if (y && mo) return [+y[0], mo];
+  m = String(c.issued || '').match(/(20\d\d)-(\d{2})/);
+  return m ? [+m[1], +m[2]] : null;
+}
+function yearOf(c, season) {  // '2026', or the academic year '2025/2026'; '' when it has no date at all
+  const d = dayOf(c);
+  if (!d) return '';
+  if (!season) return String(d[0]);
+  const y = d[1] >= 9 ? d[0] : d[0] - 1;
+  return y + '/' + (y + 1);
 }
 
 function certList(certs, cards) {  // the certificates; from 4 of them, a search box, their types and their years to narrow them
@@ -591,7 +610,7 @@ function certList(certs, cards) {  // the certificates; from 4 of them, a search
   const list = el('div', {className: 'list'}, ...cards);
   if (cards.length < 4) return list;
   const typeOf = c => c.type || t('cert'), keys = certs.map(c => norm([c.activity, c.serial, c.org, typeOf(c), c.dates, c.code].join(' ')));
-  const years = certs.map(yearOf), types = new Map(), ys = [...new Set(years.filter(Boolean))].sort().reverse();
+  const season = find.mode !== 'year', years = certs.map(c => yearOf(c, season)), types = new Map(), ys = [...new Set(years.filter(Boolean))].sort().reverse();
   certs.forEach(c => types.set(typeOf(c), (types.get(typeOf(c)) || 0) + 1));
   if (!types.has(find.type)) find.type = '';
   if (!ys.includes(find.year)) find.year = '';
@@ -602,9 +621,12 @@ function certList(certs, cards) {  // the certificates; from 4 of them, a search
   const yr = ys.length > 1 ? el('select', {ariaLabel: t('lYear'), onchange: () => { find.year = yr.value; run(); }},
     el('option', {value: '', textContent: t('allYears')}), ys.map(y => el('option', {value: y, textContent: y}))) : null;
   if (yr) yr.value = find.year;
+  const mode = ys.length > 1 || certs.length > 1 ? el('div', {className: 'chips', role: 'group', ariaLabel: t('lYear'), style: 'flex:none'},
+    [['season', t('bySeason')], ['year', t('byYear')]].map(([v, label]) => el('button', {type: 'button', className: 'chip', ariaPressed: String((season ? 'season' : 'year') === v),
+      onclick: () => { if ((season ? 'season' : 'year') === v) return; find.mode = v; find.year = ''; UI.store.set('shawahid-years', v); draw(data); }}, label))) : null;
   const found = el('span', {ariaLive: 'polite'}), none = el('div', {className: 'card empty', style: 'margin-top:16px', textContent: t('noMatch')});
   const clear = el('button', {type: 'button', className: 'linkbtn', textContent: t('clear'), onclick: () => {
-    find = {q: '', type: '', year: ''}; q.value = ''; if (yr) yr.value = ''; run(); q.focus();
+    find = {q: '', type: '', year: '', mode: find.mode}; q.value = ''; if (yr) yr.value = ''; run(); q.focus();
   }});
   function run() {
     const words = norm(find.q).split(/\s+/).filter(Boolean);
@@ -621,7 +643,7 @@ function certList(certs, cards) {  // the certificates; from 4 of them, a search
   q.oninput = () => { find.q = q.value; run(); };
   run();
   return [el('section', {className: 'card finder rise'}, el('div', {className: 'field'}, icon('', ICON.search), q),
-    types.size > 1 || yr ? el('div', {className: 'frow'}, types.size > 1 ? chips : null, yr) : null, el('div', {className: 'found'}, found, clear)), list, none];
+    types.size > 1 || yr ? el('div', {className: 'frow'}, types.size > 1 ? chips : null, el('div', {className: 'frow', style: 'flex:none;gap:6px'}, mode, yr)) : null, el('div', {className: 'found'}, found, clear)), list, none];
 }
 
 function cardBox(j) {  // the account's own card, as a picture (the dashboard draws the same): shown here, saved or shared from here
