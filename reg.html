@@ -66,6 +66,8 @@
 const T = {
   ar: {title: 'التسجيل في النشاط', lead: 'سجّل، واحتفظ برمز حضورك: يُمسح عند نهاية النشاط.', loading: 'جارٍ التحميل...', net: 'تعذر الاتصال بالإنترنت', retry: 'الخادم مشغول أو الاتصال ضعيف، نعيد المحاولة تلقائياً...',
        bad: 'هذا التسجيل غير متاح. إن كان النشاط جديداً فأعد فتح الرابط بعد دقيقة، وإلا فاطلب الرابط من المنظمين.', closed: 'التسجيل في هذا النشاط مغلق.', send: 'تسجيل',
+       q_gender: 'الجنس', q_first_ar: 'الاسم الشخصي بالعربية', q_last_ar: 'الاسم العائلي بالعربية', q_first_lat: 'الاسم الشخصي بالحروف اللاتينية',
+       q_last_lat: 'الاسم العائلي بالحروف اللاتينية', q_phone: 'رقم الهاتف', q_email: 'بريدك الإلكتروني الشخصي (تصلك عليه الشهادة)', moreQs: 'جارٍ تحميل باقي الأسئلة...',
        male: 'ذكر', female: 'أنثى', required: 'هذه الخانة إلزامية', badEmail: 'البريد غير صحيح', yourCode: 'رمز حضورك',
        show: 'أظهر هذا الرمز للمنظمين عند نهاية النشاط. إن تعذّر مسحه، أعطهم رقم التسجيل.', number: 'رقم التسجيل',
        confirmed: 'التسجيل مؤكَّد ✓', pending: 'الرمز صالح. يُرسَل التسجيل إلى المنصة... (يكتمل وحده عند عودة الاتصال)', again: 'كنت مسجّلاً من قبل: هذا رمزك نفسه.',
@@ -75,6 +77,8 @@ const T = {
        mine: 'التسجيلات من هذا الهاتف:', here: 'تم تأكيد حضورك', hereIn: 'تم تأكيد حضورك في الحصة {n} من {m}', hereThanks: 'شكراً لحضورك. تصلك شهادتك على بريدك الإلكتروني عند صدورها.', hereNext: 'يظهر رمزك هنا من جديد في الحصة القادمة.', showMine: 'إظهار رمزي', nameMissing: 'اكتب الاسم على الأقل'},
   fr: {title: 'Inscription à l’activité', lead: 'Inscrivez-vous et gardez votre code de présence : il est scanné à la fin.', loading: 'Chargement...', net: 'Pas de connexion Internet', retry: 'Serveur occupé ou connexion faible, nouvel essai automatique...',
        bad: 'Inscription indisponible. Si l’activité vient d’être créée, rouvrez le lien dans une minute ; sinon demandez le lien aux organisateurs.', closed: 'Les inscriptions à cette activité sont fermées.', send: 'S’inscrire',
+       q_gender: 'Genre', q_first_ar: 'Prénom en arabe', q_last_ar: 'Nom en arabe', q_first_lat: 'Prénom en lettres latines', q_last_lat: 'Nom en lettres latines',
+       q_phone: 'Téléphone', q_email: 'Votre e-mail personnel (l’attestation y sera envoyée)', moreQs: 'Chargement des autres questions...',
        male: 'Homme', female: 'Femme', required: 'Champ obligatoire', badEmail: 'E-mail incorrect', yourCode: 'Votre code de présence',
        show: 'Montrez ce code aux organisateurs à la fin de l’activité. S’il ne se scanne pas, donnez-leur le numéro d’inscription.', number: 'Numéro d’inscription',
        confirmed: 'Inscription confirmée ✓', pending: 'Le code est valable. Envoi de l’inscription... (elle se termine seule au retour de la connexion)', again: 'Vous étiez déjà inscrit : voici votre code.',
@@ -84,6 +88,8 @@ const T = {
        mine: 'Inscriptions depuis ce téléphone :', here: 'Présence confirmée', hereIn: 'Présence confirmée : séance {n} sur {m}', hereThanks: 'Merci de votre présence. Votre attestation vous parviendra par e-mail dès son émission.', hereNext: 'Votre code réapparaît ici à la prochaine séance.', showMine: 'Afficher mon code', nameMissing: 'Écrivez au moins le nom'},
   en: {title: 'Register for the activity', lead: 'Register and keep your attendance code: it is scanned at the end.', loading: 'Loading...', net: 'No Internet connection', retry: 'Server busy or weak connection, trying again...',
        bad: 'Registration is not available. If the activity is new, open the link again in a minute; otherwise ask the organizers for it.', closed: 'Registration for this activity is closed.', send: 'Register',
+       q_gender: 'Gender', q_first_ar: 'First name in Arabic', q_last_ar: 'Last name in Arabic', q_first_lat: 'First name in Latin letters', q_last_lat: 'Last name in Latin letters',
+       q_phone: 'Phone', q_email: 'Your personal email (the certificate is sent there)', moreQs: 'Loading the other questions...',
        male: 'Male', female: 'Female', required: 'Required', badEmail: 'Wrong email', yourCode: 'Your attendance code',
        show: 'Show this code to the organizers at the end of the activity. If it does not scan, give them the registration number.', number: 'Registration number',
        confirmed: 'Registration confirmed ✓', pending: 'The code is valid. Sending the registration... (it completes by itself when the connection is back)', again: 'You were registered already: this is your code.',
@@ -195,7 +201,8 @@ function showHere(r) {
     info ? el('p', {className: 'act', dir: 'auto', textContent: info.title}) : null, info && intro() ? el('p', {className: 'hint', dir: 'auto', style: 'margin:0', textContent: intro()}) : null,
     r.ticket ? el('div', {style: 'margin-top:10px'}, el('div', {className: 'hint', textContent: t('number')}), el('div', {className: 'num', textContent: numOf(r.ticket)})) : null,
     el('p', {className: 'state ok', textContent: next ? t('hereNext') : t('hereThanks')}),
-    next ? el('div', {className: 'btns'}, el('button', {className: 'btn ghost', type: 'button', textContent: t('showMine'), onclick: () => { codeAnyway = r; showTicket(r); }})) : null)));
+    el('div', {className: 'btns'}, next ? el('button', {className: 'btn ghost', type: 'button', textContent: t('showMine'), onclick: () => { codeAnyway = r; showTicket(r); }}) : null,
+      el('button', {className: 'btn ghost', type: 'button', textContent: t('another'), onclick: () => form()})))));
 }
 
 async function showTicket(r) {
@@ -240,16 +247,23 @@ const intro = () => (info.desc || '').split(/\n\s*\n/)[0].split('\n').map(x => x
 // ---------- the questions: the activity's form, made from what the platform knows ----------
 // In another language than the activity's, each question keeps its own words, its translation beside it: «المؤسسة (Établissement)».
 const tw = x => { const y = info && info.tr && info.tr[UI.lang] && info.tr[UI.lang][x]; return y && y !== x ? x + ' ⁨(' + y + ')⁩' : x; };  // isolated: its brackets stay in place beside Arabic
+// Before the server answers (2-4 s, more when hundreds open the link at once) the form is drawn with the fixed questions in the
+// page's language; the activity's own questions join it when they come, and what was typed stays.
+const FIXED = ['gender', 'first_ar', 'last_ar', 'first_lat', 'last_lat', 'phone', 'email'];
+const early = () => ({status: 'ok', early: true, lang: UI.lang, questions: [], male: t('male'), female: t('female'),
+  labels: Object.fromEntries(FIXED.map(k => [k, t('q_' + k)]))});
 function form() {
   current = null;
   view = form;
-  if (!info) return show(card(el('p', {className: 'muted', textContent: t('net')})));
-  if (info.status === 'closed') return show(card(el('p', {textContent: t('closed')})), regs.length ? card(el('button', {className: 'btn', type: 'button', textContent: t('yourCode'), onclick: () => showTicket(regs[0])})) : null);
-  const L = info.labels, inputs = {}, err = el('p', {className: 'err', role: 'alert'});
+  const typed = [...(app.querySelector('form.reg') || {elements: []}).elements].filter(x => x.name).map(x => [x.name, x.type, x.value, x.checked]);
+  const focus = (document.activeElement || {}).name;
+  const I = info || early();  // the activity's form, or the fixed questions until it comes
+  if (I.status === 'closed') return show(card(el('p', {textContent: t('closed')})), regs.length ? card(el('button', {className: 'btn', type: 'button', textContent: t('yourCode'), onclick: () => showTicket(regs[0])})) : null);
+  const L = I.labels, inputs = {}, err = el('p', {className: 'err', role: 'alert'});
   const fld = (k, props, req) => { const i = el('input', Object.assign({name: k}, props)); inputs[k] = i;
     return el('label', {className: 'fld'}, el('span', {dir: 'auto'}, tw(L[k]), req ? el('span', {className: 'req', textContent: ' *'}) : null), i); };
-  const gender = el('div', {className: 'opts'}, ...[['m', info.male], ['f', info.female]].map(([v, x]) => el('label', {}, el('input', {type: 'radio', name: 'gender', value: v}), tw(x))));
-  const qs = info.questions.map(q => {
+  const gender = el('div', {className: 'opts'}, ...[['m', I.male], ['f', I.female]].map(([v, x]) => el('label', {}, el('input', {type: 'radio', name: 'gender', value: v}), tw(x))));
+  const qs = I.questions.map(q => {
     let box;
     if (['choice', 'checkbox'].includes(q.type)) box = el('div', {className: 'opts'}, ...q.options.map(o => el('label', {}, el('input', {type: q.type === 'choice' ? 'radio' : 'checkbox', name: 'x_' + q.key, value: o}), el('span', {dir: 'auto', textContent: tw(o)}))));
     else if (q.type === 'dropdown') box = el('select', {name: 'x_' + q.key}, el('option', {value: '', textContent: '—'}), ...q.options.map(o => el('option', {value: o, textContent: tw(o)})));
@@ -257,18 +271,21 @@ function form() {
     return el('div', {className: 'fld'}, el('span', {dir: 'auto'}, tw(q.title), q.required ? el('span', {className: 'req', textContent: ' *'}) : null), q.help ? el('small', {dir: 'auto', textContent: tw(q.help)}) : null, box);
   });
   const hp = el('input', {name: 'website', tabIndex: -1, autocomplete: 'off', ariaHidden: 'true'});
-  const go = el('button', {className: 'btn', type: 'submit', textContent: t('send'), style: 'width:100%'});
-  const f = el('form', {noValidate: true}, intro() ? el('p', {className: 'desc', dir: 'auto', textContent: intro()}) : null,
+  const go = el('button', {className: 'btn', type: 'submit', textContent: I.early ? t('moreQs') : t('send'), style: 'width:100%', disabled: !!I.early});
+  const f = el('form', {className: 'reg', noValidate: true}, !I.early && intro() ? el('p', {className: 'desc', dir: 'auto', textContent: intro()}) : null,
     el('div', {className: 'grid2'}, fld('first_ar', {dir: 'rtl'}, 1), fld('last_ar', {dir: 'rtl'}, 1), fld('first_lat', {dir: 'ltr'}, 1), fld('last_lat', {dir: 'ltr'}, 1)),
     el('div', {className: 'fld'}, el('span', {dir: 'auto'}, tw(L.gender), el('span', {className: 'req', textContent: ' *'})), gender),
     fld('phone', {type: 'tel', dir: 'ltr', inputMode: 'tel', autocomplete: 'tel'}, 1), fld('email', {type: 'email', dir: 'ltr', autocomplete: 'email'}, 1),
-    ...qs, el('div', {className: 'hp', ariaHidden: 'true'}, hp), go, err);
+    ...qs, I.early ? el('p', {className: 'hint', textContent: t('moreQs')}) : null, el('div', {className: 'hp', ariaHidden: 'true'}, hp), go, err);
+  typed.forEach(([n, ty, v, on]) => f.querySelectorAll(`[name="${n}"]`).forEach(x => {  // drawn again (its questions came): nothing typed is lost
+    if (['radio', 'checkbox'].includes(ty)) { if (x.value === v && on) x.checked = true; } else if (!['radio', 'checkbox'].includes(x.type)) x.value = v;
+  }));
   f.onsubmit = e => {
     e.preventDefault();
     const d = Object.fromEntries(Object.entries(inputs).map(([k, i]) => [k, i.value.trim()]));
     d.gender = (f.querySelector('input[name=gender]:checked') || {}).value || '';
     d.x = {};
-    for (const q of info.questions) {
+    for (const q of I.questions) {
       const vals = [...f.querySelectorAll(`[name="x_${q.key}"]`)].filter(i => !['radio', 'checkbox'].includes(i.type) || i.checked).map(i => i.value.trim()).filter(Boolean);
       d.x[q.key] = q.type === 'checkbox' ? vals : vals[0] || '';
       if (q.required && !vals.length) { err.textContent = tw(q.title) + ' — ' + t('required'); return; }
@@ -276,7 +293,7 @@ function form() {
     const missing = ['first_ar', 'last_ar', 'first_lat', 'last_lat', 'phone', 'email'].find(k => !d[k]);
     if (missing || !d.gender) { err.textContent = tw(missing ? L[missing] : L.gender) + ' — ' + t('required'); return (missing ? inputs[missing] : f.querySelector('input[name=gender]')).focus(); }
     if (!/^[!-?A-~]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(d.email)) { err.textContent = t('badEmail'); return inputs.email.focus(); }
-    const r = {uid: newUid(), name: nameOf(d, info.lang), data: d, hp: hp.value, ok: false, at: Date.now()};
+    const r = {uid: newUid(), name: nameOf(d, I.lang), data: d, hp: hp.value, ok: false, at: Date.now()};
     regs.unshift(r);
     save(STORE, regs);
     showTicket(r);  // the code at once; the registration leaves behind it
@@ -287,6 +304,7 @@ function form() {
     ...regs.map(r => el('button', {className: 'btn ghost', type: 'button', style: 'width:100%;margin-top:6px', onclick: () => showTicket(r)},
       t('yourCode') + ': ', el('bdi', {textContent: r.name || r.ticket || ''})))) : null;
   show(mine, card(f), card(el('button', {className: 'btn ghost', type: 'button', style: 'width:100%', textContent: t('already'), onclick: findForm})));
+  if (focus && f.elements[focus] && f.elements[focus].focus) f.elements[focus].focus();
 }
 
 function findForm() {  // a new phone, a cleared browser: the code again by phone and first name
@@ -312,7 +330,7 @@ function findForm() {  // a new phone, a cleared browser: the code again by phon
 async function start() {
   if (!/^\d+$/.test(AID || '') || !KEYC) return show(card(el('p', {textContent: t('bad')})));
   document.getElementById('actTitle').textContent = info ? info.title : t('title');
-  if (regs.length) showTicket(regs[0]); else if (info) form(); else show(card(el('p', {className: 'muted', textContent: t('loading')})));  // kept questions: at once
+  if (regs.length) showTicket(regs[0]); else form();  // the kept questions, or the fixed ones: at once
   const had = info;
   try {  // the activity's questions, kept on the phone for the next visit
     const j = await call('reginfo');
@@ -324,7 +342,7 @@ async function start() {
     if (!info && !regs.length) { show(card(el('p', {className: 'muted', textContent: t('retry')}))); return setTimeout(start, 3000 + Math.random() * 4000); }
   }
   if (regs.length) sendPending();
-  else if (!had || JSON.stringify(had) !== JSON.stringify(info)) form();  // drawn again only when the questions changed
+  else if (view === form && (!had || JSON.stringify(had) !== JSON.stringify(info))) form();  // its questions came or changed: what was typed stays
 }
 
 UI.init({page: 'reg', name: 'title', T, onLang: () => view()});

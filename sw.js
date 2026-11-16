@@ -1,10 +1,11 @@
 // Pages and their files come from the network first; the last copy is kept, so a page already opened once
 // (the scanning page at an event, above all) still opens when the connection drops. Calls to Google are never cached.
-const CACHE = 'shawahid-v8';
-const KEEP = ['scan.html', 'ui.css?v=5', 'ui.js?v=8'];
+const CACHE = 'shawahid-v9';
+const QR = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+const KEEP = ['scan.html', 'reg.html', 'me.html', 'ui.css?v=5', 'ui.js?v=8', QR];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(KEEP)).catch(() => {}));
+  e.waitUntil(caches.open(CACHE).then(c => Promise.all(KEEP.map(u => c.add(u).catch(() => {})))));  // one missing never stops the others
   self.skipWaiting();
 });
 self.addEventListener('activate', e => {
@@ -12,7 +13,7 @@ self.addEventListener('activate', e => {
 });
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
-  if (e.request.method !== 'GET' || !(url.origin === location.origin || url.hostname === 'cdn.jsdelivr.net')) return;
+  if (e.request.method !== 'GET' || !(url.origin === location.origin || ['cdn.jsdelivr.net', 'cdnjs.cloudflare.com'].includes(url.hostname))) return;
   // a page asks the server each time (GitHub lets browsers keep it 10 minutes): just published, it is the new one
   const get = e.request.mode === 'navigate' ? fetch(e.request.url, {cache: 'no-cache', credentials: 'same-origin'}) : fetch(e.request);
   e.respondWith(get.then(res => {
