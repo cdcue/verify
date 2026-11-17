@@ -60,6 +60,8 @@
   .manual input { flex: 1; direction: ltr; text-align: center; letter-spacing: 1px; }
   .manual .btn { min-height: 52px; }
   #log { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  #log li .sync { margin-inline-start: auto; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  #log li .sync.yes { color: var(--ok); } #log li .sync.no { color: var(--gold); }
   #log li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: rise .2s ease-out; }
   #log .s { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700; flex: none; }
   #log .n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -126,7 +128,7 @@ const T = {
        codeWrong: 'الرمز غير صحيح، أو تغيّر مع رابط جديد، أو انتهى النشاط.', codeBusy: 'محاولات كثيرة: أعد المحاولة بعد 10 دقائق.', codeNet: 'تعذر الاتصال: تأكد من الإنترنت ثم أعد المحاولة.',
        present: 'حضور مؤكد', total: 'مسجل', mine: 'مسحتَ الآن', start: 'تشغيل الكاميرا وبدء المسح', manualPh: 'أو اكتب رقم البطاقة: 12', confirm: 'تأكيد',
        online: 'متصل بالإنترنت', offline: 'دون إنترنت: المسح يُحفظ في الهاتف ويُرسل عند عودة الاتصال',
-       pending: n => `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال`, session: (s, n) => `الحصة ${s} من ${n}`, moved: (s, n) => `انتقل المسح إلى الحصة ${s} من ${n}`, noNet: 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف',
+       synced: 'وصل', onPhone: 'في الهاتف', pending: n => `${n} بطاقة محفوظة في الهاتف بانتظار الاتصال`, session: (s, n) => `الحصة ${s} من ${n}`, moved: (s, n) => `انتقل المسح إلى الحصة ${s} من ${n}`, noNet: 'لا اتصال بالإنترنت الآن — المسح يُحفظ في الهاتف',
        noCam: 'تعذر تشغيل الكاميرا. اسمح للمتصفح باستعمالها، أو اكتب أرقام البطاقات.', torch: 'الإضاءة',
        stop: 'إيقاف الكاميرا', flip: 'تبديل الكاميرا', checking: 'جارٍ التأكيد…', noTicket: 'بلا بطاقة', ownCard: 'بطاقة المشارك',
        ok: 'تم تأكيد حضور', already: 'مؤكد سابقاً في هذه الحصة', unregistered: x => `البطاقة ${x} غير مسجلة في الاستمارة`,
@@ -137,7 +139,7 @@ const T = {
        codeWrong: 'Code incorrect, remplacé par un nouveau lien, ou activité terminée.', codeBusy: 'Trop d’essais : réessayez dans 10 minutes.', codeNet: 'Connexion impossible : vérifiez Internet puis réessayez.',
        present: 'présences confirmées', total: 'inscrits', mine: 'scannés ici', start: 'Activer la caméra et scanner', manualPh: 'ou saisissez le n° de carte : 12', confirm: 'Valider',
        online: 'Connecté à Internet', offline: 'Hors ligne : les scans sont gardés sur le téléphone et envoyés au retour de la connexion',
-       pending: n => `${n} carte(s) gardée(s) sur le téléphone en attente de connexion`, session: (s, n) => `séance ${s} sur ${n}`, moved: (s, n) => `Le scan passe à la séance ${s} sur ${n}`,
+       synced: 'envoyé', onPhone: 'sur le téléphone', pending: n => `${n} carte(s) gardée(s) sur le téléphone en attente de connexion`, session: (s, n) => `séance ${s} sur ${n}`, moved: (s, n) => `Le scan passe à la séance ${s} sur ${n}`,
        noNet: 'Pas de connexion pour l’instant — les scans sont gardés sur le téléphone',
        noCam: 'Impossible d’activer la caméra. Autorisez-la dans le navigateur, ou saisissez les numéros de carte.', torch: 'Lampe',
        stop: 'Arrêter la caméra', flip: 'Changer de caméra', checking: 'Vérification…', noTicket: 'Sans carte', ownCard: 'Carte du participant',
@@ -151,7 +153,7 @@ const T = {
        codeWrong: 'Wrong code, replaced with a new link, or the activity has ended.', codeBusy: 'Too many tries: try again in 10 minutes.', codeNet: 'Could not connect: check the Internet and try again.',
        present: 'confirmed', total: 'registered', mine: 'scanned here', start: 'Start the camera and scan', manualPh: 'or type the ticket number: 12', confirm: 'Confirm',
        online: 'Online', offline: 'Offline: scans are kept on the phone and sent when the connection is back',
-       pending: n => `${n} ticket(s) kept on the phone, waiting for the connection`, session: (s, n) => `session ${s} of ${n}`, moved: (s, n) => `Scanning moved to session ${s} of ${n}`,
+       synced: 'sent', onPhone: 'on the phone', pending: n => `${n} ticket(s) kept on the phone, waiting for the connection`, session: (s, n) => `session ${s} of ${n}`, moved: (s, n) => `Scanning moved to session ${s} of ${n}`,
        noNet: 'No connection right now — scans are kept on the phone',
        noCam: 'Could not start the camera. Allow it in the browser, or type the ticket numbers.', torch: 'Light',
        stop: 'Stop the camera', flip: 'Switch camera', checking: 'Checking…', noTicket: 'No ticket', ownCard: 'Participant card',
@@ -188,8 +190,20 @@ addEventListener('online', () => { showNet(); retry(); });
 addEventListener('offline', showNet);
 
 async function call(body) {  // text/plain keeps the request simple: no preflight, no Google account needed
-  const r = await fetch(EXEC, {method: 'POST', body: JSON.stringify(Object.assign({token: TOKEN}, body)), credentials: 'omit'});
-  return r.json();
+  const stop = new AbortController(), cut = setTimeout(() => stop.abort(), 25000);  // a request that hangs is given up and sent again
+  try {
+    const r = await fetch(EXEC, {method: 'POST', body: JSON.stringify(Object.assign({token: TOKEN}, body)), credentials: 'omit', signal: stop.signal});
+    return await r.json();
+  } finally { clearTimeout(cut); }
+}
+// The server's word on a scan; anything else (busy, an error page) and it is sent again. Each line shows whether it reached it.
+const FINAL = ['ok', 'already', 'duplicate', 'unregistered', 'email', 'invalid'], inflight = new Set(), rows = new Map();
+const unpend = s => { const p = pending(), i = p.indexOf(s); if (i >= 0) { p.splice(i, 1); setPending(p); } };
+function mark(li, sent) {
+  let m = li.querySelector('.sync');
+  if (!m) li.append(m = UI.el('span', {}));
+  m.className = 'sync ' + (sent ? 'yes' : 'no');
+  m.textContent = sent ? '✓ ' + t('synced') : '⏳ ' + t('onPhone');
 }
 function beep(ok) {
   if (!audio) return;
@@ -314,17 +328,20 @@ function scan(raw) {  // the read is confirmed at once and the camera goes on; t
   shown = key;
   strip(label, t('checking'));
   const li = row(label), mine0 = local(s);
+  setPending(pending().concat([s]));  // kept before it leaves: a page closed or a connection lost mid-way loses nothing
+  rows.set(s, li); inflight.add(s); mark(li, false);
   if (mine0) answer(mine0, li, key, label);
   call({action: 'scan', ticket: s}).then(j => {
+    inflight.delete(s);
     if (j.status === 'denied') return denied();
-    if (!LOOK[j.status]) return;
+    if (!FINAL.includes(j.status)) { if (!mine0) answer({status: 'saved', ticket: label}, li, key, label); return; }  // busy: sent again
+    unpend(s); mark(li, true);
     // the server's word stands when it differs (registered meanwhile, scanned by another phone): not twice the same alarm
     if (!mine0 || (j.status !== mine0.status && !(mine0.status === 'ok' && j.status === 'already') && !(mine0.status === 'email' && j.status === 'ok'))) answer(j, li, key, label);
     else counts(j);
   }).catch(() => {
-    if (mine0) return setPending(pending().concat([s]));  // answered by the phone already: sent when the network is back
-    setPending(pending().concat([s]));
-    answer({status: 'saved', ticket: label}, li, key, label);
+    inflight.delete(s);
+    if (!mine0) answer({status: 'saved', ticket: label}, li, key, label);  // kept already: sent when the network is back
   });
 }
 let sending = false;
@@ -332,10 +349,15 @@ async function retry() {  // scans kept on the phone (network cut, page closed o
   if (sending) return;
   sending = true;
   try {
-    while (pending().length) {
-      const j = await call({action: 'scan', ticket: pending()[0]});
+    for (const s of pending()) {
+      if (inflight.has(s)) continue;  // its first sending is still on its way
+      inflight.add(s);
+      let j;
+      try { j = await call({action: 'scan', ticket: s}); } finally { inflight.delete(s); }
       if (j.status === 'denied') break;  // the link was replaced: kept until the organizer sees it
-      setPending(pending().slice(1));
+      if (!FINAL.includes(j.status)) continue;  // busy: the next round
+      unpend(s);
+      if (rows.has(s)) mark(rows.get(s), true);
       counts(j);
     }
   } catch (e) { /* still offline: tried again in 8 seconds or when the network is back */ }

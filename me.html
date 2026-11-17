@@ -687,6 +687,18 @@ function certList(certs, cards) {  // the certificates; from 4 of them, a search
     types.size > 1 || yr ? el('div', {className: 'frow'}, types.size > 1 ? chips : null, yr) : null, el('div', {className: 'found'}, found, clear)), list, none];
 }
 
+// A picture kept on the phone: the share sheet on an iPhone (its «Save Image»), a downloaded file elsewhere. A link to a data:
+// address, not in the page, did nothing on iPhones and in apps' own browsers.
+async function keepPicture(blob, name) {
+  const f = new File([blob], name, {type: 'image/png'});
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent) && navigator.canShare && navigator.canShare({files: [f]})) {
+    try { await navigator.share({files: [f]}); return; } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const url = URL.createObjectURL(blob), a = el('a', {href: url, download: name});
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
 function cardBox(j) {  // the account's own card, as a picture (the dashboard draws the same): shown here, saved or shared from here
   const pic = el('img', {className: 'cardpic', alt: t('cardT') + ' — ' + nameIn(j)}), box = el('div');
   let png = null;
@@ -698,9 +710,9 @@ function cardBox(j) {  // the account's own card, as a picture (the dashboard dr
     png = await new Promise(ok => c.toBlob(ok, 'image/png'));
   };
   const file = () => new File([png], 'card-' + j.card + '.png', {type: 'image/png'});
-  const save = () => {
+  const save = async () => {
     if (!png) return;
-    el('a', {href: pic.src, download: file().name}).click();
+    await keepPicture(png, file().name);
     box.replaceChildren(el('p', {className: 'hint', textContent: t('cardHold')}));
   };
   const share = navigator.canShare && navigator.canShare({files: [new File([''], 'x.png', {type: 'image/png'})]})

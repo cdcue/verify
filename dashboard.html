@@ -328,7 +328,7 @@ const T = {
     marking: (d, n) => `${d} من ${n}...`, markedN: n => `سُجّل ${n} حاضراً`, notReg: 'غير مسجلة بعد (حُفظ حضورها، ويُطابَق تلقائياً حين يسجّل صاحبها): ',
     pSearch: 'بحث بالاسم أو البطاقة أو رقم الشهادة أو البريد...', fProblem: 'تحتاج مراجعة', sName: 'الترتيب: الاسم',
     sTicket: 'الترتيب: رقم البطاقة', sSerial: 'الترتيب: رقم الشهادة', sHereFirst: 'الحاضرون أولاً', hereCol: 'الحضور', ticket: 'البطاقة', name: 'الاسم',
-    cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', docsMenu: 'Excel والوثائق',
+    cert: 'الشهادة', contact: 'التواصل', qName: 'اسم ناقص', qEmail: 'بريد غير صالح', dupT: 'بطاقة مكررة', regAt: 'سجّل', seenAt: 'أُكّد حضوره', docsMenu: 'Excel والوثائق',
     dExport: 'تصدير اللائحة إلى Excel', dImport: 'استيراد من Excel', dSign: 'لائحة التوقيع (PDF)', dLister: 'منشئ اللوائح',
     dSummary: 'التقرير الختامي للنشاط (PDF)', erT: 'التسجيل الإلكتروني (دون بطاقات)', erD: 'صفحة تسجيل بأسئلة الاستمارة نفسها. بعد التسجيل يأخذ كل مشارك رمز حضور ورقماً على هاتفه، يُمسحان عند نهاية النشاط. تُغلق مع الاستمارة.',
     erPoster: 'طباعة ملصق التسجيل (A4)', erClosed: 'التسجيل مغلق الآن (الاستمارة موقوفة).', erHow: ['امسح الرمز بكاميرا هاتفك', 'املأ التسجيل', 'احتفظ برمز حضورك: يُمسح عند نهاية النشاط'],
@@ -511,7 +511,7 @@ const T = {
     notReg: 'Pas encore inscrits (présence gardée, rapprochée dès l’inscription) : ', pSearch: 'Rechercher par nom, carte, attestation ou e-mail...',
     fProblem: 'À revoir', sName: 'Tri : nom', sTicket: 'Tri : numéro de carte',
     sSerial: 'Tri : numéro d’attestation', sHereFirst: 'Présents d’abord', hereCol: 'Présence', ticket: 'Carte', name: 'Nom', cert: 'Attestation',
-    contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', docsMenu: 'Excel et documents',
+    contact: 'Contact', qName: 'Nom incomplet', qEmail: 'E-mail invalide', dupT: 'Carte en double', regAt: 'Inscrit', seenAt: 'Présence confirmée', docsMenu: 'Excel et documents',
     dExport: 'Exporter vers Excel', dImport: 'Importer depuis Excel', dSign: 'Liste d’émargement (PDF)', dLister: 'Générateur de listes',
     dSummary: 'Rapport final (PDF)', erT: 'Inscription en ligne (sans cartes)', erD: 'Une page d’inscription avec les questions du formulaire. Chaque participant reçoit un code de présence et un numéro sur son téléphone, scannés à la fin. Elle ferme avec le formulaire.',
     erPoster: 'Imprimer l’affiche d’inscription (A4)', erClosed: 'Inscriptions fermées (formulaire arrêté).', erHow: ['Scannez le code avec votre téléphone', 'Remplissez l’inscription', 'Gardez votre code de présence : il est scanné à la fin'],
@@ -697,7 +697,7 @@ const T = {
     notReg: 'Not registered yet (attendance kept, matched once they register): ', pSearch: 'Search by name, card, certificate number or email...', fProblem: 'To review',
     sName: 'Sort: name', sTicket: 'Sort: card number', sSerial: 'Sort: certificate number',
     sHereFirst: 'Present first', hereCol: 'Attendance', ticket: 'Card', name: 'Name', cert: 'Certificate', contact: 'Contact', qName: 'Name missing',
-    qEmail: 'Invalid email', dupT: 'Duplicate card', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
+    qEmail: 'Invalid email', dupT: 'Duplicate card', regAt: 'Registered', seenAt: 'Attendance confirmed', docsMenu: 'Excel and documents', dExport: 'Export to Excel', dImport: 'Import from Excel',
     dSign: 'Attendance sheet (PDF)', dLister: 'List builder', dSummary: 'Final report (PDF)', erT: 'Online registration (no cards)', erD: 'A registration page with the form’s questions. Each participant gets an attendance code and a number on their phone, scanned at the end. It closes with the form.',
     erPoster: 'Print the registration poster (A4)', erClosed: 'Registration is closed (form stopped).', erHow: ['Scan the code with your phone', 'Fill in the registration', 'Keep your attendance code: it is scanned at the end'],
     erScan: 'Register', erSub: 'From your phone, in a minute, no paper', erTip: 'Your phone does not read the code? Type the link above in the browser.', erFoot: 'Your attendance code is on your phone: no card, no paper', erBrand: 'Certificates platform', lkT: 'Registered in another activity? Find them', lkPh: 'Name, email or phone...', lkNone: 'Nobody with this name, email or phone', pcCard: 'Save the card as a picture', pcLEmail: 'Email', pcLNum: 'Participant no.', pcLCerts: 'Certificates', pcCards: n => 'Print the cards shown (' + n + ')', pcCardD: 'Scan this code on the way in and out: attendance recorded without a form', allRun: (i, n) => 'Gathering ' + i + ' of ' + n + '...', allNone: 'No certificates issued yet', zipRun: 'Preparing the ZIP on Drive...', raAsk: 'Reason for revoking every certificate (shown on verification):', raDone: (n, f) => n + ' certificate(s) revoked' + (f ? ', ' + f + ' failed' : ''), daSure: 'Delete this activity? It stays 30 days in the trash.', daValid: 'It has valid certificates: revoke them first, or archive it', daDone: 'Activity moved to the trash', cpDone: 'Copy of the activity made', testTo: 'Address that gets the test message:', testSent: 'Test message sent', mailBusy: 'The daily email quota is nearly used: kept for the participants', qT: 'Extra questions', qD: 'Asked on the form after the basic ones. A new question is added to the form at once.', qAdd: 'Add a question', qTitle: 'Question text',
@@ -777,6 +777,7 @@ const ic = (name, cls) => {  // an icon of the platform's set (the sprite at the
   return n;
 };
 const toast = msg => UI.toast(msg, 4000);
+const timesOf = p => [p.registered && t('regAt') + ' ' + when(p.registered), p.seen_at && t('seenAt') + ' ' + when(p.seen_at)].filter(Boolean).join(' · ');
 const when = s => { const d = new Date(s); return !s || isNaN(d) ? '' : UI.fmtDate(d, {dateStyle: 'medium', timeStyle: 'short'}); };
 
 async function call(action, extra) {
@@ -1412,6 +1413,7 @@ async function showActivity(id, tab) {
           ? (tickets[p.ticket] > 1 ? el('span', {className: 'badge err', title: t('dupT'), textContent: p.ticket}) : p.ticket)
           : el('span', {className: 'badge', textContent: t('noTicket')})),
         el('td', {className: 'c-name'}, el('b', {dir: 'auto', style: 'font-weight:600', textContent: pname(p)}),
+          timesOf(p) ? el('div', {className: 'muted', style: 'font-size:12px', textContent: timesOf(p)}) : null,
           ...qs.map(x => [' ', el('span', {className: 'badge warn', textContent: x})]),
           p.name_lat && p.name_ar ? el('div', {className: 'muted', dir: 'auto', textContent: p.name_lat}) : null),
         el('td', {dataset: {l: t('certType')}, dir: 'auto'}, p.type || '—', ...(extras[p.pid] || []).map(x => el('div', {style: 'margin-top:4px'},
@@ -1593,6 +1595,7 @@ function personCard(a, p, here, reload) {
         /^https:\/\//.test(p.link) ? el('a', {href: p.link, target: '_blank', rel: 'noopener', textContent: t('download')}) : null]));
     const contact = [p.email, p.phone].filter(Boolean).join(' · ');
     if (contact) parts.push(el('div', {className: 'contact ltr', textContent: contact}));
+    if (timesOf(p)) parts.push(el('div', {className: 'hint', textContent: timesOf(p)}));
     if (p.mail) parts.push(el('div', {}, el('span', {className: 'badge ' + ({sent: 'ok', error: 'err', pending: 'warn'}[p.mail.status] || ''),
       textContent: '✉ ' + (t({sent: 'mSent', error: 'mErr', pending: 'mPending', cancelled: 'mStopped'}[p.mail.status] || '') || p.mail.status)}),
       p.mail.error ? el('span', {className: 'hint', textContent: ' ' + p.mail.error}) : null));
@@ -1966,7 +1969,8 @@ function printSummary(a, people, present) {  // the final report, as the compute
 const XL_COLS = [['id', 'المعرف (لا تغيّره)'], ['ticket', 'رقم البطاقة'], ['first_ar', 'الاسم الشخصي بالعربية'], ['last_ar', 'الاسم العائلي بالعربية'],
   ['first_lat', 'الاسم الشخصي باللاتينية'], ['last_lat', 'الاسم العائلي باللاتينية'], ['gender', 'الجنس (m/f)'], ['email', 'البريد'], ['phone', 'الهاتف'],
   ['present', 'حاضر (نعم/لا)'], ['cert_type', 'نوع الشهادة'], ['mention', 'الميزة/النتيجة'], ['serial', 'رقم الشهادة'], ['verify_code', 'رمز التحقق'],
-  ['link', 'رابط الشهادة'], ['verify_link', 'رابط التحقق'], ['emailed', 'أُرسل البريد'], ['mail_note', 'حالة البريد'], ['attended', 'الحصص المحضورة']];  // as the app's XL_COLS
+  ['link', 'رابط الشهادة'], ['verify_link', 'رابط التحقق'], ['emailed', 'أُرسل البريد'], ['mail_note', 'حالة البريد'], ['attended', 'الحصص المحضورة'],
+  ['registered', 'وقت التسجيل'], ['seen_at', 'وقت تأكيد الحضور']];  // as the app's XL_COLS
 const TEMPLATE_COLS = ['ticket', 'first_ar', 'last_ar', 'first_lat', 'last_lat', 'gender', 'email', 'phone', 'cert_type', 'present'];
 const IM_FIELDS = ['id', 'ticket', 'first_ar', 'last_ar', 'full_ar', 'first_lat', 'last_lat', 'full_lat', 'gender', 'email', 'phone', 'cert_type', 'mention', 'present', 'attended'];
 
@@ -1985,7 +1989,7 @@ async function exportXlsx(a, people) {
   await lib('xlsx');
   const iss = (a.choices || {}).issue || {}, qs = a.questions || [];
   const val = {id: p => p.pid, present: p => Number(p.present) === 1 ? 'نعم' : 'لا', emailed: p => Number(p.emailed) === 1 ? 'نعم' : '', cert_type: p => p.type,
-    attended: p => sessionsOf(p).join('، '), verify_code: p => p.code,
+    attended: p => sessionsOf(p).join('، '), verify_code: p => p.code, registered: p => when(p.registered), seen_at: p => when(p.seen_at),
     verify_link: p => p.serial && iss.verify_url ? iss.verify_url + '?s=' + p.serial + (p.code ? '&k=' + p.code : '') : '',
     mail_note: p => !p.mail ? '' : p.mail.status === 'error' ? 'تعذر الإرسال: ' + (p.mail.error || '') : p.mail.status === 'pending' ? 'في الطابور' : ''};
   const rows = [...people].sort((x, y) => byNum('serial')(x, y) || byNum('ticket')(x, y));

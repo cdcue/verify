@@ -224,6 +224,18 @@ async function showTicket(r) {
   if (!drawn) img.src = await qrUrl(r).catch(() => '');
 }
 
+// A picture kept on the phone: the share sheet on an iPhone (its «Save Image»), a downloaded file elsewhere. A link to a data:
+// address, not in the page, did nothing on iPhones and in apps' own browsers.
+async function keepPicture(blob, name) {
+  const f = new File([blob], name, {type: 'image/png'});
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent) && navigator.canShare && navigator.canShare({files: [f]})) {
+    try { await navigator.share({files: [f]}); return; } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const url = URL.createObjectURL(blob), a = el('a', {href: url, download: name});
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
 function picture(r, img, box) {  // the code, the name, the number and the activity on one picture
   const W = 720, c = el('canvas', {width: W, height: 980}), x = c.getContext('2d');
   x.fillStyle = '#ffffff'; x.fillRect(0, 0, W, 980);
@@ -238,7 +250,7 @@ function picture(r, img, box) {  // the code, the name, the number and the activ
   x.fillStyle = '#0b3b5c'; x.fillRect(0, 960, W, 20);
   const url = c.toDataURL('image/png');
   box.replaceChildren(el('p', {className: 'hint', textContent: t('longPress')}), el('img', {src: url, alt: t('yourCode')}));
-  el('a', {href: url, download: 'code-' + AID + '-' + numOf(r.ticket || r.uid.slice(0, 6)) + '.png'}).click();
+  c.toBlob(b => keepPicture(b, 'code-' + AID + '-' + numOf(r.ticket || r.uid.slice(0, 6)) + '.png'), 'image/png');
 }
 
 // the form's description without its last paragraph (the paper card's instructions) and its empty dashes: who, when
